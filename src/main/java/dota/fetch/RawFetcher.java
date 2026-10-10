@@ -62,6 +62,11 @@ class RawFetcher {
         Files.move(tmp, file, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
     }
 
+    void recordFailure(String what, Exception e) {
+        failed++;
+        Log.error("%s: %s", what, e.getMessage());
+    }
+
     int downloaded() {
         return downloaded;
     }
