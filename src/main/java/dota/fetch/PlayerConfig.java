@@ -12,7 +12,11 @@ import java.util.List;
 import java.util.Set;
 
 /** Игроки из config/players.yaml. */
-public record PlayerConfig(List<Player> players) {
+public record PlayerConfig(@JsonProperty("our_team") TeamInfo ourTeam, List<Player> players) {
+
+    /** Название нашей команды и организации — для отчётов. */
+    public record TeamInfo(String name, String organization) {
+    }
 
     public enum Team {
         @JsonProperty("our") OUR,
@@ -27,7 +31,8 @@ public record PlayerConfig(List<Player> players) {
             @JsonProperty("account_id") long accountId,
             String nick,
             Team team,
-            Integer position) {
+            Integer position,
+            String note) {
     }
 
     public static PlayerConfig load(Path path) throws IOException {

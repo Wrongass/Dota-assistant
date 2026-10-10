@@ -66,6 +66,7 @@ class PlayerConfigTest {
     @Test
     void loadsProjectConfig() throws Exception {
         PlayerConfig config = PlayerConfig.load(Path.of("config/players.yaml"));
-        assertEquals("Wrongass", config.players().get(0).nick());
+        assertTrue(config.players().stream().anyMatch(p -> p.accountId() == 138244651L));
+        assertEquals("Team Visual", config.ourTeam().name());
     }
 }

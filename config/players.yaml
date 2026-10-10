@@ -1,6 +1,31 @@
-# team: our | opp; position: 1..5 или пусто
+# team: our | opp; position: 1..5 или пусто; note — свободный комментарий о роли и стиле
+our_team:
+  name: Team Visual
+  organization: Долг
+
 players:
+  - account_id: 168928320
+    nick: kren
+    team: our
+    position: 1
+    note: Керри, чаще семи-керри; больше отвлекающий, главное — не проиграть линию.
   - account_id: 138244651
     nick: Wrongass
     team: our
+    position: 2
+    note: Мид.
+  - account_id: 149535595
+    nick: Артист
+    team: our
+    position: 3
+    note: Хардлайн. Самый высокий ранг; часто берём героя, который может стать керри.
+  - account_id: 137322907
+    nick: Babayka
+    team: our
     position:
+    note: Саппорт.
+  - account_id: 1532851914
+    nick: Enaria
+    team: our
+    position:
+    note: Саппорт. Самый слабый игрок, небольшой пул героев.
