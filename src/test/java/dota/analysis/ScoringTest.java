@@ -9,7 +9,8 @@ class ScoringTest {
     @Test
     void shrinkPullsSmallSamplesToPrior() {
         assertEquals(0.5 + 3.0 / 13 * 0.5, Scoring.shrink(3, 3, 0.5, 10), 1e-9);
-        assertTrue(Scoring.shrink(3, 3, 0.5, 10) < Scoring.shrink(60, 100, 0.5, 10));
+        // 3/3 после сглаживания — 61.5%, а не 100%; 70/100 остаётся выше
+        assertTrue(Scoring.shrink(3, 3, 0.5, 10) < Scoring.shrink(70, 100, 0.5, 10));
     }
 
     @Test
