@@ -7,13 +7,16 @@
 
 - Сборка и тесты: `./gradlew build`
 - Выгрузка: `./gradlew run` (`--args="--refresh"` — перекачать всё, `--only <id>`, `--no-meta`)
+- Отчёты: `./gradlew analyze` → `analysis/` (код в `src/main/java/dota/analysis`, веса в `Scoring`)
 
 Нужен JDK 21: Gradle находит его через toolchain (в т.ч. в `~/.jdks`). Java в PATH может быть старше,
 тогда задайте `JAVA_HOME`.
 
 ## Данные для анализа
 
-При вопросах про игроков, драфт, героев и мету — читать файлы в `data/` (раскладка в README.md).
+При вопросах про игроков, драфт, героев и мету — сначала `analysis/` (готовые выводы; план драфта —
+`analysis/team/draft_plan.md`, написан вручную и после `analyze` не обновляется), детали — в `data/`
+(раскладка в README.md). Состав и роли — `config/players.yaml`.
 Мета патча: `data/meta/{patch}/`, параметры выборки — в `_sample.json` рядом.
 
 Особенности формата (проверено на реальных ответах):

@@ -14,6 +14,7 @@
 ./gradlew run --args="--refresh"                # перекачать всё
 ./gradlew run --args="--only 138244651"         # один игрок
 ./gradlew run --args="--no-meta"                # без данных по патчу
+./gradlew analyze                               # отчёты в analysis/ из data/
 ./gradlew test                                  # тесты
 ```
 
@@ -58,8 +59,23 @@ data/meta/{patch}/
     hero_winrate.json   /explorer  винрейт героев в выборке патча
     hero_synergy.json   /explorer  пары героев в одной команде
     hero_counters.json  /explorer  герой против героя
+    hero_positions.json /explorer  позиция 1–5 героя в разобранных матчах патча
     _sample.json        параметры выборки
 ```
 
 Уже скачанные файлы не перекачиваются без `--refresh`. Подробности и причины решений:
 [docs/decisions/0001-data-fetch.md](docs/decisions/0001-data-fetch.md).
+
+## Анализ
+
+`./gradlew analyze` строит Markdown-отчёты в `analysis/` (начните с [analysis/README.md](analysis/README.md)):
+
+```
+analysis/
+  README.md                 оглавление и как считаются оценки
+  team/draft_plan.md        план драфта (пишется вручную, генератор не трогает)
+  team/roster.md            состав, позиции, ранги, сыгранность
+  team/draft_data.md        пулы, связки внутри команды, неудобные герои, баны
+  meta/patch_{patch}.md     мета патча по позициям, про-сцена, связки, контрпики
+  players/pos{N}_{nick}.md  топ героев игрока и топ под патч на его позиции
+```
