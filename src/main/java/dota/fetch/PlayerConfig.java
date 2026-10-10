@@ -40,21 +40,21 @@ public record PlayerConfig(List<Player> players) {
 
     private void validate() {
         if (players == null || players.isEmpty()) {
-            throw new IllegalArgumentException("players: список пуст");
+            throw new IllegalArgumentException("players: list is empty");
         }
         Set<Long> seen = new HashSet<>();
         for (Player p : players) {
             if (p.accountId() <= 0) {
-                throw new IllegalArgumentException("account_id должен быть > 0: " + p);
+                throw new IllegalArgumentException("account_id must be > 0: " + p);
             }
             if (p.team() == null) {
-                throw new IllegalArgumentException("team должен быть our или opp: " + p);
+                throw new IllegalArgumentException("team must be our or opp: " + p);
             }
             if (p.position() != null && (p.position() < 1 || p.position() > 5)) {
-                throw new IllegalArgumentException("position должен быть 1..5 или пустым: " + p);
+                throw new IllegalArgumentException("position must be 1..5 or empty: " + p);
             }
             if (!seen.add(p.accountId())) {
-                throw new IllegalArgumentException("account_id повторяется: " + p.accountId());
+                throw new IllegalArgumentException("duplicate account_id: " + p.accountId());
             }
         }
     }

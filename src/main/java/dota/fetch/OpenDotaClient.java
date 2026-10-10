@@ -53,7 +53,7 @@ public class OpenDotaClient {
                     throw e;
                 }
                 Duration wait = backoff(attempt, null);
-                Log.error("%s: %s, повтор через %ds", pathAndQuery, e, wait.toSeconds());
+                Log.error("%s: %s, retry in %ds", pathAndQuery, e, wait.toSeconds());
                 Thread.sleep(wait);
                 continue;
             }
@@ -65,10 +65,10 @@ public class OpenDotaClient {
             }
             boolean retryable = status == 429 || status >= 500;
             if (!retryable || attempt >= MAX_RETRIES) {
-                throw new IOException("HTTP " + status + " для " + pathAndQuery + ": " + snippet(response.body()));
+                throw new IOException("HTTP " + status + " for " + pathAndQuery + ": " + snippet(response.body()));
             }
             Duration wait = backoff(attempt, response.headers().firstValue("Retry-After").orElse(null));
-            Log.info("HTTP %d, повтор %d/%d через %ds", status, attempt + 1, MAX_RETRIES, wait.toSeconds());
+            Log.info("HTTP %d, retry %d/%d in %ds", status, attempt + 1, MAX_RETRIES, wait.toSeconds());
             Thread.sleep(wait);
         }
     }
@@ -103,9 +103,9 @@ public class OpenDotaClient {
     private void logRateLimit(String path, int status, HttpResponse<?> response) throws InterruptedException {
         String minute = response.headers().firstValue("X-Rate-Limit-Remaining-Minute").orElse("?");
         String day = response.headers().firstValue("X-Rate-Limit-Remaining-Day").orElse("?");
-        Log.info("GET %s -> %d, осталось: минута=%s, день=%s", path, status, minute, day);
+        Log.info("GET %s -> %d, rate limit left: minute=%s, day=%s", path, status, minute, day);
         if ("0".equals(minute)) {
-            Log.info("Минутный лимит исчерпан, жду 60 с");
+            Log.info("Minute rate limit exhausted, sleeping 60s");
             Thread.sleep(Duration.ofSeconds(60));
         }
     }
