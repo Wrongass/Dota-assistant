@@ -100,8 +100,10 @@ public class Main {
         }
         try {
             long maxId = MetaEndpoints.parseMaxMatchId(client.get(MetaEndpoints.maxMatchIdUrl()));
+            long minParsedId = MetaEndpoints.parseMinMatchId(
+                    client.get(MetaEndpoints.minParsedMatchIdUrl(patch.start().getEpochSecond())));
             var sample = new MetaEndpoints.Sample(maxId, window, minRank, patch.start().getEpochSecond());
-            for (Endpoints.Target t : MetaEndpoints.explorerTargets(dir, sample)) {
+            for (Endpoints.Target t : MetaEndpoints.explorerTargets(dir, sample, minParsedId)) {
                 fetcher.fetch(t);
             }
             MetaEndpoints.writeInfo(dir, patch, sample);

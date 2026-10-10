@@ -17,7 +17,9 @@ import java.util.List;
  *   <li>hero_stats — /heroStats: пики/победы по рангам 1..8 (Herald..Immortal), pro pick/ban, тренд за 7 дней;</li>
  *   <li>lane_roles — /scenarios/laneRoles: винрейт героя по линии и длительности игры;</li>
  *   <li>hero_winrate, hero_synergy, hero_counters — SQL через /explorer по выборке public_matches
- *       (последние {@code window} match_id, средний ранг ≥ {@code minRankTier}, только текущий патч).</li>
+ *       (последние {@code window} match_id, средний ранг ≥ {@code minRankTier}, только текущий патч);</li>
+ *   <li>hero_positions — позиция 1..5 героя по разобранным матчам патча (таблица matches/player_matches:
+ *       в основном про- и high-MMR игры). 4 и 5 — два последних по GPM в команде, иначе по lane_role.</li>
  * </ul>
  */
 final class MetaEndpoints {
@@ -47,14 +49,27 @@ final class MetaEndpoints {
         return new Patch(last.get("name").asText(), Instant.parse(last.get("date").asText()));
     }
 
+    /** Первый разобранный матч патча: нижняя граница по match_id сильно ускоряет запрос по player_matches. */
+    static String minParsedMatchIdUrl(long patchStartEpoch) {
+        return explorer("select min(match_id) as min_match_id from matches where start_time >= " + patchStartEpoch);
+    }
+
+    static long parseMinMatchId(byte[] body) throws IOException {
+        return parseLong(body, "min_match_id");
+    }
+
     static String maxMatchIdUrl() {
         return explorer("select max(match_id) as max_match_id from public_matches");
     }
 
     static long parseMaxMatchId(byte[] body) throws IOException {
-        JsonNode value = JSON.readTree(body).path("rows").path(0).path("max_match_id");
+        return parseLong(body, "max_match_id");
+    }
+
+    private static long parseLong(byte[] body, String column) throws IOException {
+        JsonNode value = JSON.readTree(body).path("rows").path(0).path(column);
         if (!value.canConvertToLong()) {
-            throw new IOException("max_match_id not found in explorer response");
+            throw new IOException(column + " not found in explorer response");
         }
         return value.asLong();
     }
@@ -68,15 +83,37 @@ final class MetaEndpoints {
 
     static List<Path> explorerFiles(Path dir) {
         return List.of(dir.resolve("hero_winrate.json"), dir.resolve("hero_synergy.json"),
-                dir.resolve("hero_counters.json"));
+                dir.resolve("hero_counters.json"), dir.resolve("hero_positions.json"));
     }
 
-    static List<Endpoints.Target> explorerTargets(Path dir, Sample s) {
+    static List<Endpoints.Target> explorerTargets(Path dir, Sample s, long minParsedMatchId) {
         List<Path> files = explorerFiles(dir);
         return List.of(
                 new Endpoints.Target(explorer(heroWinrateSql(s)), files.get(0)),
                 new Endpoints.Target(explorer(synergySql(s)), files.get(1)),
-                new Endpoints.Target(explorer(countersSql(s)), files.get(2)));
+                new Endpoints.Target(explorer(countersSql(s)), files.get(2)),
+                new Endpoints.Target(explorer(positionsSql(minParsedMatchId, s.patchStartEpoch())), files.get(3)));
+    }
+
+    /**
+     * Позиция героя в разобранных матчах патча: 4/5 — два последних по GPM в команде, 1/2/3 — по lane_role
+     * (safe/mid/off). Роумеры и лесники среди коров (lane_role 4) не попадают в выборку.
+     */
+    static String positionsSql(long minMatchId, long patchStartEpoch) {
+        return """
+                with pm as (select pm.match_id, pm.hero_id, pm.gold_per_min, pm.lane_role,
+                                   pm.player_slot < 128 as rad, m.radiant_win
+                            from player_matches pm join matches m using (match_id)
+                            where pm.match_id >= %d and m.start_time >= %d),
+                r as (select hero_id, lane_role, rad = radiant_win as win,
+                             rank() over (partition by match_id, rad order by gold_per_min desc) as gpm_rank
+                      from pm),
+                p as (select hero_id, win,
+                             case when gpm_rank >= 4 then gpm_rank when lane_role in (1, 2, 3) then lane_role end as pos
+                      from r)
+                select hero_id, pos, count(*) as games, sum(case when win then 1 else 0 end) as wins
+                from p where pos is not null
+                group by 1, 2 order by 1, 2""".formatted(minMatchId, patchStartEpoch);
     }
 
     /** Базовый винрейт героя в той же выборке — чтобы считать «прибавку» связки относительно ожидаемого. */
@@ -132,6 +169,7 @@ final class MetaEndpoints {
         info.put("min_avg_rank_tier", s.minRankTier());
         info.put("where", s.where());
         info.put("note", "hero_winrate/synergy/counters: public_matches sample via /explorer; "
+                + "hero_positions: all parsed matches of the patch (mostly pro/high MMR); "
                 + "hero_stats and lane_roles: OpenDota's own recent aggregates (not filtered by us)");
         RawFetcher.writeAtomically(dir.resolve("_sample.json"),
                 JSON.writerWithDefaultPrettyPrinter().writeValueAsBytes(info));

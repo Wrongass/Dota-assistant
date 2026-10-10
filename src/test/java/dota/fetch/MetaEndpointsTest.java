@@ -44,7 +44,7 @@ class MetaEndpointsTest {
     @Test
     void explorerUrlIsEncoded() {
         var s = new MetaEndpoints.Sample(100, 10, 50, 0);
-        String url = MetaEndpoints.explorerTargets(dir, s).get(0).url();
+        String url = MetaEndpoints.explorerTargets(dir, s, 1).get(0).url();
         assertTrue(url.startsWith("/explorer?sql=with+pm+as"));
         assertFalse(url.contains(" "));
     }
