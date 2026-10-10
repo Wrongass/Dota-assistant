@@ -1,0 +1,6 @@
+# team: our | opp; position: 1..5 или пусто
+players:
+  - account_id: 138244651
+    nick: Wrongass
+    team: our
+    position:
