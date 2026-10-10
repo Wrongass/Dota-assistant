@@ -30,6 +30,14 @@ tasks.named<JavaExec>("run") {
     workingDir = rootDir
 }
 
+tasks.register<JavaExec>("analyze") {
+    group = "application"
+    description = "Builds Markdown reports in analysis/ from data/"
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass = "dota.analysis.Analyze"
+    workingDir = rootDir
+}
+
 tasks.test {
     useJUnitPlatform()
 }

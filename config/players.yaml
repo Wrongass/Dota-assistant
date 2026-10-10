@@ -22,10 +22,10 @@ players:
   - account_id: 137322907
     nick: Babayka
     team: our
-    position:
-    note: Саппорт.
+    position: 4
+    note: Саппорт. Позиция 4 выбрана по пулу (Night Stalker, Dragon Knight, Doom, Vengeful Spirit).
   - account_id: 1532851914
     nick: Enaria
     team: our
-    position:
-    note: Саппорт. Самый слабый игрок, небольшой пул героев.
+    position: 5
+    note: Саппорт, позиция 5. Самый слабый игрок, небольшой пул героев (Lich, Crystal Maiden, Lion, Witch Doctor).
