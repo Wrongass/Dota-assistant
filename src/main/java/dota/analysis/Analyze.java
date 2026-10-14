@@ -20,8 +20,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Строит Markdown-отчёты в analysis/ из data/: по игрокам, по мете патча и данные для драфта.
- * Файл analysis/team/draft_plan.md пишется вручную и генератором не трогается.
+ * Строит Markdown-отчёты в analysis/ из data/: по нашим игрокам и соперникам, по мете патча, по турниру.
+ * Файлы *_plan.md пишутся вручную и генератором не трогаются.
  * <pre>
  *   --config &lt;path&gt;   по умолчанию config/players.yaml
  *   --data &lt;dir&gt;      по умолчанию data
@@ -39,13 +39,17 @@ public class Analyze {
     private final Map<PlayerStats, Integer> pos = new LinkedHashMap<>();
     private final Map<PlayerStats, Boolean> posInferred = new HashMap<>();
     private final PlayerConfig.TeamInfo team;
+    private final boolean ours;
+    private final League league;
     private final int teamFrom, teamTo;
     private final String today;
 
-    Analyze(Meta meta, List<PlayerStats> players, PlayerConfig.TeamInfo team) {
+    Analyze(Meta meta, List<PlayerStats> players, PlayerConfig.TeamInfo team, boolean ours, League league) {
         this.meta = meta;
         this.players = players;
         this.team = team;
+        this.ours = ours;
+        this.league = league;
         assignPositions();
         int[] brackets = players.stream().mapToInt(PlayerStats::bracket).sorted().toArray();
         int median = brackets[brackets.length / 2];
@@ -69,27 +73,74 @@ public class Analyze {
 
         PlayerConfig config = PlayerConfig.load(configPath);
         Meta meta = Meta.load(dataDir);
-        List<PlayerConfig.Player> ours = config.players().stream()
-                .filter(p -> p.team() == PlayerConfig.Team.OUR).toList();
-        Set<Long> ids = ours.stream().map(PlayerConfig.Player::accountId).collect(Collectors.toSet());
+        League league = config.league() == null || config.league().id() == null ? null
+                : League.load(dataDir, config.league());
         Instant now = Instant.now();
-        List<PlayerStats> players = new ArrayList<>();
-        for (PlayerConfig.Player p : ours) {
-            players.add(PlayerStats.load(dataDir, p, ids, meta.patchStart, now));
+
+        Analyze ourSquad = new Analyze(meta, loadPlayers(dataDir, config, null, meta, now), config.ourTeam(), true, league);
+        List<Analyze> opponents = new ArrayList<>();
+        if (config.league() != null) {
+            for (PlayerConfig.TeamInfo t : config.league().groupOrEmpty()) {
+                List<PlayerStats> squad = loadPlayers(dataDir, config, t.name(), meta, now);
+                if (!squad.isEmpty()) {
+                    opponents.add(new Analyze(meta, squad, t, false, league));
+                }
+            }
         }
 
-        new Analyze(meta, players, config.ourTeam()).writeAll(out);
+        ourSquad.writeAll(out, opponents);
+        for (Analyze opp : opponents) {
+            opp.writeOpponent(out.resolve("opponents").resolve(opp.slug()), ourSquad);
+        }
+        if (league != null) {
+            write(out.resolve("league/group.md"), groupReport(meta, league, config));
+        }
         System.out.println("Analysis written to " + out.toAbsolutePath());
     }
 
-    void writeAll(Path out) throws IOException {
-        write(out.resolve("README.md"), readme());
+    /** teamName == null — наши игроки, иначе соперники с этим team_name. */
+    private static List<PlayerStats> loadPlayers(Path dataDir, PlayerConfig config, String teamName, Meta meta,
+                                                 Instant now) throws IOException {
+        List<PlayerConfig.Player> squad = config.players().stream()
+                .filter(p -> teamName == null ? p.team() == PlayerConfig.Team.OUR
+                        : p.team() == PlayerConfig.Team.OPP && teamName.equals(p.teamName()))
+                .toList();
+        Set<Long> ids = squad.stream().map(PlayerConfig.Player::accountId).collect(Collectors.toSet());
+        List<PlayerStats> players = new ArrayList<>();
+        for (PlayerConfig.Player p : squad) {
+            players.add(PlayerStats.load(dataDir, p, ids, meta.patchStart, now));
+        }
+        return players;
+    }
+
+    void writeAll(Path out, List<Analyze> opponents) throws IOException {
+        write(out.resolve("README.md"), readme(opponents));
         write(out.resolve("team/roster.md"), roster());
         write(out.resolve("team/draft_data.md"), draftData());
+        if (league != null && team != null && team.teamId() != null) {
+            write(out.resolve("team/tournament.md"), tournament());
+        }
         write(out.resolve("meta/patch_" + meta.patch + ".md"), metaReport());
         for (PlayerStats p : players) {
             write(out.resolve("players").resolve(playerFile(p)), playerReport(p));
         }
+    }
+
+    /** Соперник: analysis/opponents/{slug}/ — та же структура, что у нас, плюс угрозы и как против них играть. */
+    void writeOpponent(Path dir, Analyze ourSquad) throws IOException {
+        write(dir.resolve("README.md"), opponentReadme());
+        write(dir.resolve("team/roster.md"), roster());
+        write(dir.resolve("team/threats.md"), threats(ourSquad));
+        if (league != null && team.teamId() != null) {
+            write(dir.resolve("team/tournament.md"), tournament());
+        }
+        for (PlayerStats p : players) {
+            write(dir.resolve("players").resolve(playerFile(p)), playerReport(p));
+        }
+    }
+
+    String slug() {
+        return team.name().replaceAll("[^\\p{L}\\p{N}]+", "_");
     }
 
     // ---------------------------------------------------------------- позиции
@@ -217,7 +268,7 @@ public class Analyze {
 
     // ---------------------------------------------------------------- отчёты
 
-    private String readme() {
+    private String readme(List<Analyze> opponents) {
         Md md = new Md().h1("Анализ: " + teamName());
         md.line("Сгенерировано %s из `data/` (патч **%s**, начало %s). Пересобрать: `./gradlew analyze`.",
                 today, meta.patch, meta.patchStart.toString().substring(0, 10));
@@ -226,6 +277,14 @@ public class Analyze {
         md.line("| [team/draft_plan.md](team/draft_plan.md) | **План драфта**: выводы и рекомендации (пишется вручную на основе файлов ниже) |");
         md.line("| [team/roster.md](team/roster.md) | Состав, позиции, ранги, на каких позициях кто реально играет, сыгранность |");
         md.line("| [team/draft_data.md](team/draft_data.md) | Цифры для драфта: пулы по позициям, связки внутри команды, неудобные герои, кандидаты в баны |");
+        if (league != null) {
+            md.line("| [team/tournament.md](team/tournament.md) | Наши турнирные матчи: драфты, кто что играл, что банят против нас |");
+            md.line("| [league/group.md](league/group.md) | Группа: результаты и драфты всех матчей группы |");
+        }
+        for (Analyze opp : opponents) {
+            md.line("| [opponents/%s/](opponents/%s/README.md) | Соперник %s: состав, угрозы, турнирные драфты, игроки |",
+                    opp.slug(), opp.slug(), opp.teamName());
+        }
         md.line("| [meta/patch_%s.md](meta/patch_%s.md) | Мета патча: сильные/слабые по позициям, про-сцена (CM), лучшие связки и контрпики |", meta.patch, meta.patch);
         for (PlayerStats p : byPosition()) {
             md.line("| [players/%s](players/%s) | Позиция %d, %s: лучшие герои и герои под патч |",
@@ -584,6 +643,270 @@ public class Analyze {
             }
         }
         th.end();
+        return md.toString();
+    }
+
+    // ---------------------------------------------------------------- турнир и соперники
+
+    private String nickOrPersona(League.Player p) {
+        return players.stream().filter(s -> s.config.accountId() == p.accountId()).findFirst()
+                .map(PlayerStats::nick).orElse(p.personaName().isEmpty() ? String.valueOf(p.accountId()) : p.personaName());
+    }
+
+    /** Турнирные матчи команды (team.teamId): драфты, герои игроков, сводка по пикам и банам. */
+    private String tournament() {
+        long id = team.teamId();
+        List<League.Match> matches = league.of(id);
+        Md md = new Md().h1("Турнир: " + teamName());
+        md.line("Лига OpenDota %d, матчи с начала сезона. Сыграно карт: %d, побед: %d.%s", league.id, matches.size(),
+                matches.stream().filter(m -> m.won(id)).count(),
+                league.remakes > 0 ? " Переигровки (пустая статистика) не учитываются." : "");
+
+        Map<Integer, int[]> picks = new HashMap<>();
+        Map<Integer, Integer> ourBans = new HashMap<>(), bansAgainst = new HashMap<>();
+        Map<Integer, int[]> enemyPicks = new HashMap<>();
+        for (League.Match m : matches) {
+            boolean rad = m.isRadiant(id);
+            boolean won = m.won(id);
+            md.h2(m.date() + " — против " + m.opponentName(id) + ": " + (won ? "победа" : "поражение"));
+            md.line("%s, %d мин, [OpenDota](https://www.opendota.com/matches/%d), [Dotabuff](https://ru.dotabuff.com/matches/%d)",
+                    rad ? "Radiant" : "Dire", m.durationSec() / 60, m.matchId(), m.matchId());
+            Md.Table t = md.table("Игрок", "Герой", "Линия", "GPM", "K/D/A");
+            for (League.Player p : m.side(rad)) {
+                t.row(nickOrPersona(p), meta.name(p.heroId()), lane(p.laneRole()), p.gpm(),
+                        p.kills() + "/" + p.deaths() + "/" + p.assists());
+                picks.computeIfAbsent(p.heroId(), k -> new int[2])[0]++;
+                picks.get(p.heroId())[1] += won ? 1 : 0;
+            }
+            t.end();
+            md.blank().line("Соперник: %s", m.side(!rad).stream()
+                    .map(p -> meta.name(p.heroId()) + " (" + p.personaName() + ")").collect(Collectors.joining(", ")));
+            for (League.Player p : m.side(!rad)) {
+                enemyPicks.computeIfAbsent(p.heroId(), k -> new int[2])[0]++;
+                enemyPicks.get(p.heroId())[1] += won ? 0 : 1;
+            }
+            md.blank().line("Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):").blank();
+            md.line(m.draft().stream().map(d -> {
+                String step = (d.pick() ? "P " : "b ") + meta.name(d.heroId());
+                return d.radiant() == rad ? "**" + step + "**" : step;
+            }).collect(Collectors.joining(" → ")));
+            for (League.DraftStep d : m.draft()) {
+                if (!d.pick()) {
+                    (d.radiant() == rad ? ourBans : bansAgainst).merge(d.heroId(), 1, Integer::sum);
+                }
+            }
+        }
+
+        md.h2("Сводка");
+        md.line("**Пики команды** (в скобках — победы): %s", countList(picks, true));
+        md.blank().line("**Баны команды:** %s", countList(ourBans));
+        md.blank().line("**Банят против команды** (чего боятся соперники): %s", countList(bansAgainst));
+        md.blank().line("**Пики соперников** (в скобках — их победы): %s", countList(enemyPicks, true));
+        return md.toString();
+    }
+
+    private static String lane(int laneRole) {
+        return switch (laneRole) {
+            case 1 -> "safe";
+            case 2 -> "mid";
+            case 3 -> "off";
+            case 4 -> "лес";
+            default -> "—";
+        };
+    }
+
+    private String countList(Map<Integer, Integer> counts) {
+        if (counts.isEmpty()) {
+            return "—";
+        }
+        return counts.entrySet().stream()
+                .sorted(Map.Entry.<Integer, Integer>comparingByValue().reversed().thenComparing(e -> meta.name(e.getKey())))
+                .map(e -> meta.name(e.getKey()) + (e.getValue() > 1 ? " ×" + e.getValue() : ""))
+                .collect(Collectors.joining(", "));
+    }
+
+    private String countList(Map<Integer, int[]> gamesWins, boolean withWins) {
+        if (gamesWins.isEmpty()) {
+            return "—";
+        }
+        return gamesWins.entrySet().stream()
+                .sorted(Comparator.comparingInt((Map.Entry<Integer, int[]> e) -> -e.getValue()[0]).thenComparing(e -> meta.name(e.getKey())))
+                .map(e -> meta.name(e.getKey()) + (e.getValue()[0] > 1 ? " ×" + e.getValue()[0] : "")
+                        + (withWins ? " (" + e.getValue()[1] + ")" : ""))
+                .collect(Collectors.joining(", "));
+    }
+
+    private String opponentReadme() {
+        Md md = new Md().h1("Соперник: " + teamName());
+        md.line("Сгенерировано %s, патч %s. Позиции — по турнирным матчам (см. `config/players.yaml`).", today, meta.patch);
+        md.h2("Файлы");
+        md.line("| Файл | Что внутри |").line("|---|---|");
+        md.line("| [game_plan.md](game_plan.md) | **План на игру** против них (пишется вручную) |");
+        md.line("| [team/threats.md](team/threats.md) | Их опасные герои, что они банят, чем их контрить из наших пулов |");
+        md.line("| [team/tournament.md](team/tournament.md) | Их турнирные матчи и драфты |");
+        md.line("| [team/roster.md](team/roster.md) | Состав, ранги, на каких позициях играют в пабах, сыгранность |");
+        for (PlayerStats p : byPosition()) {
+            md.line("| [players/%s](players/%s) | Позиция %d, %s: лучшие герои и герои под патч |",
+                    playerFile(p), playerFile(p), pos.get(p), p.nick());
+        }
+        md.blank().line("Как считаются оценки — в [README анализа](../../README.md).");
+        return md.toString();
+    }
+
+    record Threat(PlayerStats player, int hero, double score, double skill, double metaStrength, int tourneyPicks) {
+    }
+
+    /** Угрозы соперника (this) с точки зрения нашей команды (ourSquad). */
+    private String threats(Analyze ourSquad) {
+        Md md = new Md().h1("Угрозы: " + teamName());
+        md.line("Сгенерировано %s, патч %s.", today, meta.patch);
+
+        Map<Long, Map<Integer, Integer>> tourneyPicks = new HashMap<>();
+        Map<Integer, Integer> theirBans = new HashMap<>();
+        if (league != null && team.teamId() != null) {
+            for (League.Match m : league.of(team.teamId())) {
+                boolean rad = m.isRadiant(team.teamId());
+                m.side(rad).forEach(p -> tourneyPicks.computeIfAbsent(p.accountId(), k -> new HashMap<>())
+                        .merge(p.heroId(), 1, Integer::sum));
+                m.draft().stream().filter(d -> !d.pick() && d.radiant() == rad)
+                        .forEach(d -> theirBans.merge(d.heroId(), 1, Integer::sum));
+            }
+        }
+
+        md.h2("Пулы по позициям (топ-6 по пригодности в патче)");
+        Md.Table pool = md.table("Поз.", "Игрок", "Ранг", "Кандидаты (пригодность; ▲ — сильный в патче)", "В турнире");
+        for (PlayerStats p : byPosition()) {
+            int[] r = bracketRange(p);
+            Map<Integer, Integer> tp = tourneyPicks.getOrDefault(p.config.accountId(), Map.of());
+            pool.row(pos.get(p), "[" + p.nick() + "](../players/" + playerFile(p) + ")", Meta.bracketName(p.rankTier),
+                    patchFit(p, pos.get(p), 6).stream()
+                            .map(f -> meta.name(f.hero()) + " " + Md.num(f.fit()) + (meta.winrate(f.hero(), r[0], r[1]) >= Meta.STRONG_WR ? " ▲" : ""))
+                            .collect(Collectors.joining(", ")),
+                    tp.isEmpty() ? "—" : countList(tp));
+        }
+        pool.end();
+
+        // Угроза = умение игрока на герое + сила героя в мете; бонус за пик в турнире
+        List<Threat> list = new ArrayList<>();
+        for (PlayerStats p : players) {
+            int[] r = bracketRange(p);
+            Map<Integer, Integer> tp = tourneyPicks.getOrDefault(p.config.accountId(), Map.of());
+            for (PlayerStats.HeroLine h : p.heroes.values()) {
+                if (h.games < 5 || h.wGames < 1.0) {
+                    continue;
+                }
+                int mp = Math.max(1, meta.mainPos(h.heroId));
+                double ms = metaStrength(h.heroId, mp, r[0], r[1]);
+                int picksInTourney = tp.getOrDefault(h.heroId, 0);
+                double score = 0.6 * h.skill / 100 + 0.4 * ms + (picksInTourney > 0 ? 0.1 : 0);
+                list.add(new Threat(p, h.heroId, score, h.skill, ms, picksInTourney));
+            }
+        }
+        list.sort(Comparator.comparingDouble(Threat::score).reversed());
+        // герой может быть у нескольких игроков — оставляем самого опасного
+        Set<Integer> seenHero = new HashSet<>();
+        List<Threat> top = list.stream().filter(t -> seenHero.add(t.hero())).limit(15).toList();
+
+        md.h2("Самые опасные герои (кандидаты в баны)");
+        md.line("Угроза = 60% умение игрока на герое + 40% сила героя в мете на его ранге; +0.1, если герой уже был в турнире.").blank();
+        Md.Table th = md.table("#", "Герой", "Игрок", "Угроза", "Умение", "Сила в мете", "Игр всего / год", "WR за год", "В турнире", "Позиции героя");
+        int i = 1;
+        for (Threat t : top) {
+            PlayerStats.HeroLine h = t.player().heroes.get(t.hero());
+            th.row(i++, meta.name(t.hero()), t.player().nick(), Md.dec(t.score()), Md.num(t.skill()), Md.dec(t.metaStrength()),
+                    h.games + " / " + h.yearGames, h.yearGames == 0 ? "—" : Md.pct((double) h.yearWins / h.yearGames),
+                    t.tourneyPicks() == 0 ? "" : "×" + t.tourneyPicks(), meta.positions(t.hero()));
+        }
+        th.end();
+
+        md.h2("Что они банят в турнире");
+        md.line(countList(theirBans));
+        Set<Integer> ourPool = ourSquad.players.stream()
+                .flatMap(p -> ourSquad.patchFit(p, ourSquad.pos.get(p), 10).stream().filter(f -> f.skill() > 0))
+                .map(Fit::hero).collect(Collectors.toSet());
+        List<String> hitsUs = theirBans.keySet().stream().filter(ourPool::contains).map(meta::name).sorted().toList();
+        md.blank().line("Из наших пулов они уже банили: %s", hitsUs.isEmpty() ? "ничего" : String.join(", ", hitsUs));
+
+        md.h2("Чем контрить их главных героев (из наших пулов)");
+        md.line("Для топ-8 угроз — наши герои (топ-10 пулов, с опытом), у которых преимущество против них ≥ +2%% (минимум %d игр).", MIN_PAIR_GAMES).blank();
+        Md.Table ct = md.table("Их герой", "Игрок", "Наши ответы (игрок, преимущество)");
+        for (Threat t : top.stream().limit(8).toList()) {
+            // герой → кто из наших его играет; лучшие 6 по преимуществу
+            Map<Integer, List<String>> who = new LinkedHashMap<>();
+            for (PlayerStats our : ourSquad.byPosition()) {
+                for (Fit f : ourSquad.patchFit(our, ourSquad.pos.get(our), 10)) {
+                    if (f.skill() > 0 && meta.counterAdvantage(f.hero(), t.hero(), MIN_PAIR_GAMES) >= 0.02) {
+                        who.computeIfAbsent(f.hero(), k -> new ArrayList<>()).add(our.nick());
+                    }
+                }
+            }
+            String answers = who.keySet().stream()
+                    .sorted(Comparator.comparingDouble((Integer h) -> meta.counterAdvantage(h, t.hero(), MIN_PAIR_GAMES)).reversed())
+                    .limit(6)
+                    .map(h -> meta.name(h) + " " + Md.signedPct(meta.counterAdvantage(h, t.hero(), MIN_PAIR_GAMES))
+                            + " (" + String.join("/", who.get(h)) + ")")
+                    .collect(Collectors.joining(", "));
+            ct.row(meta.name(t.hero()), t.player().nick(), answers.isEmpty() ? "—" : answers);
+        }
+        ct.end();
+
+        // против кого они проигрывают: их матчи за 2 года, общий матч — один раз
+        Map<Integer, int[]> vs = new HashMap<>();
+        Set<String> seen = new HashSet<>();
+        for (PlayerStats p : players) {
+            for (PlayerStats.Enemy e : p.enemies) {
+                if (seen.add(e.matchId() + ":" + e.heroId())) {
+                    int[] acc = vs.computeIfAbsent(e.heroId(), k -> new int[2]);
+                    acc[0]++;
+                    acc[1] += e.win() ? 1 : 0;
+                }
+            }
+        }
+        int g = vs.values().stream().mapToInt(a -> a[0]).sum(), w = vs.values().stream().mapToInt(a -> a[1]).sum();
+        double avg = g == 0 ? 0.5 : (double) w / g;
+        md.h2("Против кого они проигрывают");
+        md.line("Их матчи за 2 года (без турбо), сглажено к их среднему (%s) весом 30 игр; минимум 40 игр. ✔ — герой есть в наших пулах.", Md.pct(avg)).blank();
+        Md.Table nem = md.table("#", "Герой", "Их WR против", "Игр", "В наших пулах");
+        i = 1;
+        for (int h : vs.keySet().stream().filter(h -> vs.get(h)[0] >= 40)
+                .sorted(Comparator.comparingDouble(h -> Scoring.shrink(vs.get(h)[1], vs.get(h)[0], avg, 30))).limit(12).toList()) {
+            nem.row(i++, meta.name(h), Md.pct(Scoring.shrink(vs.get(h)[1], vs.get(h)[0], avg, 30)), vs.get(h)[0],
+                    ourPool.contains(h) ? "✔" : "");
+        }
+        nem.end();
+        return md.toString();
+    }
+
+    /** Результаты и драфты всех матчей между командами группы (наша + league.group). */
+    static String groupReport(Meta meta, League league, PlayerConfig config) {
+        Map<Long, String> names = new LinkedHashMap<>();
+        if (config.ourTeam() != null && config.ourTeam().teamId() != null) {
+            names.put(config.ourTeam().teamId(), config.ourTeam().name());
+        }
+        config.league().groupOrEmpty().forEach(t -> names.put(t.teamId(), t.name()));
+        List<League.Match> matches = league.matches.stream()
+                .filter(m -> names.containsKey(m.radiantTeamId()) && names.containsKey(m.direTeamId())).toList();
+
+        Md md = new Md().h1("Группа: " + config.league().name());
+        md.line("Матчи между командами группы из лиги OpenDota %d. Переигровок отброшено (по всей лиге): %d.", league.id, league.remakes);
+        md.h2("Карты");
+        Md.Table st = md.table("Команда", "Карт", "Побед", "Поражений");
+        for (var e : names.entrySet()) {
+            long games = matches.stream().filter(m -> m.involves(e.getKey())).count();
+            long wins = matches.stream().filter(m -> m.involves(e.getKey()) && m.won(e.getKey())).count();
+            st.row(e.getValue(), games, wins, games - wins);
+        }
+        st.end();
+        md.h2("Матчи");
+        Md.Table mt = md.table("Дата", "Radiant", "Dire", "Победитель", "Мин", "Пики Radiant", "Пики Dire", "Матч");
+        for (League.Match m : matches) {
+            mt.row(m.date(), m.radiantName(), m.direName(), m.radiantWin() ? m.radiantName() : m.direName(),
+                    m.durationSec() / 60,
+                    m.side(true).stream().map(p -> meta.name(p.heroId())).collect(Collectors.joining(", ")),
+                    m.side(false).stream().map(p -> meta.name(p.heroId())).collect(Collectors.joining(", ")),
+                    "[" + m.matchId() + "](https://www.opendota.com/matches/" + m.matchId() + ")");
+        }
+        mt.end();
         return md.toString();
     }
 
