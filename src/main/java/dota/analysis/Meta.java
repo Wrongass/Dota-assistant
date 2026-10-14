@@ -27,7 +27,7 @@ final class Meta {
     static final double STRONG_WR = 0.52;
     static final double WEAK_WR = 0.48;
 
-    record Hero(int id, String name, List<String> roles) {
+    record Hero(int id, String name, List<String> roles, String attr) {
     }
 
     /** Пики/победы в пабах по корзинам 1..8 + про-сцена. */
@@ -91,7 +91,8 @@ final class Meta {
         read(constants.resolve("heroes.json")).forEach(h -> {
             List<String> roles = new ArrayList<>();
             h.path("roles").forEach(r -> roles.add(r.asText()));
-            m.heroes.put(h.get("id").asInt(), new Hero(h.get("id").asInt(), h.get("localized_name").asText(), roles));
+            m.heroes.put(h.get("id").asInt(), new Hero(h.get("id").asInt(), h.get("localized_name").asText(), roles,
+                    h.path("primary_attr").asText("")));
         });
 
         long proPicks = 0;

@@ -59,6 +59,31 @@ class WebAppTest {
     }
 
     @Test
+    void draftPageAndApiWork() throws Exception {
+        assertEquals(200, get("/draft?opponent=UPPO_TEAM").statusCode());
+        long started = System.nanoTime();
+        HttpResponse<String> r = HTTP.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:" + app.port() + "/api/draft"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(
+                        "{\"opponent\":\"UPPO_TEAM\",\"weFirst\":true,\"heroes\":[23,22,1,2,31,32,33,42,25]}"))
+                .build(), HttpResponse.BodyHandlers.ofString());
+        long ms = (System.nanoTime() - started) / 1_000_000;
+        assertEquals(200, r.statusCode(), r.body());
+        assertTrue(r.body().contains("theirNextPicks"));
+        assertTrue(r.body().contains("\"theirAssignment\""));
+        assertTrue(ms < 5000, "ответ API " + ms + " мс");
+    }
+
+    @Test
+    void draftApiRejectsUnknownOpponent() throws Exception {
+        HttpResponse<String> r = HTTP.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:" + app.port() + "/api/draft"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString("{\"opponent\":\"nope\",\"weFirst\":true,\"heroes\":[]}"))
+                .build(), HttpResponse.BodyHandlers.ofString());
+        assertEquals(400, r.statusCode());
+    }
+
+    @Test
     void unknownPlayerIs404() throws Exception {
         assertEquals(404, get("/player/1").statusCode());
     }

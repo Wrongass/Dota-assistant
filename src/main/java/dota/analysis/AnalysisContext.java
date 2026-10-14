@@ -110,4 +110,15 @@ public final class AnalysisContext {
     public String heroName(int heroId) {
         return meta.name(heroId);
     }
+
+    /** Герой для сетки драфта: attr — str / agi / int / all. */
+    public record HeroInfo(int id, String name, String attr) {
+    }
+
+    public List<HeroInfo> heroList() {
+        return meta.heroes.values().stream()
+                .sorted(java.util.Comparator.comparing(Meta.Hero::name))
+                .map(h -> new HeroInfo(h.id(), h.name(), h.attr()))
+                .toList();
+    }
 }

@@ -1,6 +1,8 @@
 package dota.web;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dota.analysis.AnalysisContext;
+import dota.analysis.DraftEngine;
 import dota.analysis.Squad;
 import dota.analysis.Views;
 import gg.jte.ContentType;
@@ -15,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Локальный сайт. Запуск: {@code ./gradlew web} → http://127.0.0.1:7070
@@ -27,6 +30,8 @@ import java.util.List;
  * </pre>
  */
 public class WebApp {
+
+    private static final ObjectMapper JSON = new ObjectMapper();
 
     private final Site site;
     private final TemplateEngine templates = TemplateEngine.createPrecompiled(ContentType.Html);
@@ -76,6 +81,8 @@ public class WebApp {
         app.get("/tournament", this::tournament);
         app.get("/group", this::group);
         app.get("/opponent/{slug}", this::opponent);
+        app.get("/draft", this::draftPage);
+        app.post("/api/draft", this::draftApi);
         app.get("/method", ctx -> render(ctx, "method.jte", new Models.Method(page("Методика", "method"))));
         app.post("/reload", ctx -> {
             site.reload();
@@ -165,6 +172,34 @@ public class WebApp {
         render(http, "opponent.jte", new Models.OpponentPage(page(opp.team().name(), "opponents"), opp.slug(),
                 opp.teamName(), plan, opp.roster(), opp.threats(site.ctx().ours),
                 opp.hasTournamentData() ? opp.tournament() : null));
+    }
+
+    // ---------------------------------------------------------------- драфт
+
+    /** Тело POST /api/draft: соперник, кто ходит первым, герои по ходам (0 — ход пропущен). */
+    record DraftRequest(String opponent, boolean weFirst, List<Integer> heroes) {
+    }
+
+    private void draftPage(Context http) throws Exception {
+        AnalysisContext c = site.ctx();
+        Squad next = site.nextOpponent();
+        String requested = http.queryParam("opponent");
+        String opponent = requested != null && c.opponent(requested) != null ? requested
+                : next != null ? next.slug() : c.opponents.isEmpty() ? "" : c.opponents.get(0).slug();
+        List<Models.Link> opponents = c.opponents.stream()
+                .map(o -> new Models.Link(o.slug(), o.teamName())).toList();
+        render(http, "draft.jte", new Models.DraftPage(page("Драфт", "draft"), JSON.writeValueAsString(c.heroList()),
+                JSON.writeValueAsString(opponents), opponent, JSON.writeValueAsString(DraftEngine.SLOTS)));
+    }
+
+    private void draftApi(Context http) {
+        DraftRequest req = http.bodyAsClass(DraftRequest.class);
+        if (req.opponent() == null || site.ctx().opponent(req.opponent()) == null) {
+            http.status(400).json(Map.of("error", "неизвестный соперник: " + req.opponent()));
+            return;
+        }
+        List<Integer> heroes = req.heroes() == null ? List.of() : req.heroes();
+        http.json(new DraftEngine(site.ctx()).advise(new DraftEngine.State(req.opponent(), req.weFirst(), heroes)));
     }
 
     // ---------------------------------------------------------------- общее
