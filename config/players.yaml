@@ -81,3 +81,67 @@ players:
     team_name: UPPO TEAM
     position: 5
     note: В турнире Lion в обеих играх.
+
+  # --- SD Team (GGsel) и Team Polyus: составы и позиции взяты из турнирных матчей лиги (2 карты у каждой):
+  # 1–3 — по линии (safe/mid/off), 4/5 — из двух саппортов выше/ниже по GPM ---
+  - account_id: 74322151
+    nick: Nynge
+    team: opp
+    team_name: SD Team
+    position: 1
+    note: В турнире Clinkz, Windranger (safe).
+  - account_id: 1219463136
+    nick: Caraxes
+    team: opp
+    team_name: SD Team
+    position: 2
+    note: В турнире Sand King, Ember Spirit (mid).
+  - account_id: 194714203
+    nick: XANDR
+    team: opp
+    team_name: SD Team
+    position: 3
+    note: В турнире Tidehunter, Dawnbreaker (off).
+  - account_id: 158409388
+    nick: IRD
+    team: opp
+    team_name: SD Team
+    position: 4
+    note: В турнире Rubick, Mirana.
+  - account_id: 1130725097
+    nick: montekri
+    team: opp
+    team_name: SD Team
+    position: 5
+    note: В турнире Undying, Crystal Maiden.
+
+  - account_id: 357314511
+    nick: Unlearnable
+    team: opp
+    team_name: Team Polyus
+    position: 1
+    note: Против нас Drow Ranger, Juggernaut (safe).
+  - account_id: 480642823
+    nick: ryota
+    team: opp
+    team_name: Team Polyus
+    position: 2
+    note: Против нас Lina, Windranger (mid).
+  - account_id: 154129922
+    nick: ГYYYYYСЬ
+    team: opp
+    team_name: Team Polyus
+    position: 3
+    note: Против нас Underlord дважды (off).
+  - account_id: 112502983
+    nick: Sladkiy_arbyzik
+    team: opp
+    team_name: Team Polyus
+    position: 4
+    note: Против нас Lion, Hoodwink.
+  - account_id: 75865976
+    nick: UshKO
+    team: opp
+    team_name: Team Polyus
+    position: 5
+    note: Против нас Abaddon, Jakiro.

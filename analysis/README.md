@@ -11,7 +11,9 @@
 | [team/draft_data.md](team/draft_data.md) | Цифры для драфта: пулы по позициям, связки внутри команды, неудобные герои, кандидаты в баны |
 | [team/tournament.md](team/tournament.md) | Наши турнирные матчи: драфты, кто что играл, что банят против нас |
 | [league/group.md](league/group.md) | Группа: результаты и драфты всех матчей группы |
+| [opponents/SD_Team/](opponents/SD_Team/README.md) | Соперник SD Team (GGsel): состав, угрозы, турнирные драфты, игроки |
 | [opponents/UPPO_TEAM/](opponents/UPPO_TEAM/README.md) | Соперник UPPO TEAM (УППО): состав, угрозы, турнирные драфты, игроки |
+| [opponents/Team_Polyus/](opponents/Team_Polyus/README.md) | Соперник Team Polyus (НИИ Полюс им. М.Ф. Стельмаха): состав, угрозы, турнирные драфты, игроки |
 | [meta/patch_7.41.md](meta/patch_7.41.md) | Мета патча: сильные/слабые по позициям, про-сцена (CM), лучшие связки и контрпики |
 | [players/pos1_kren.md](players/pos1_kren.md) | Позиция 1, kren: лучшие герои и герои под патч |
 | [players/pos2_Wrongass.md](players/pos2_Wrongass.md) | Позиция 2, Wrongass: лучшие герои и герои под патч |

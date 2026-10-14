@@ -2,7 +2,7 @@
 
 - Steam: Kaiju, account_id 374031341, [OpenDota](https://www.opendota.com/players/374031341), [Dotabuff](https://ru.dotabuff.com/players/374031341)
 - Ранг: Легенда 4 (Legend), оценка MMR 4235
-- Матчей (без турбо): всего 4577, за год 671, в патче 7.41 — 309 (WR 49.5%); Captains Mode: 187
+- Матчей (без турбо): всего 4577, за год 670, в патче 7.41 — 309 (WR 49.5%); Captains Mode: 187
 - Роль: В турнире Dark Willow, Rubick.
 - Мета для этого игрока считается на рангах **Герой–Властелин**.
 
