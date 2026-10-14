@@ -60,6 +60,19 @@ tasks.register<JavaExec>("web") {
     workingDir = rootDir
 }
 
+tasks.register<JavaExec>("draftBacktest") {
+    group = "verification"
+    description = "Replays league drafts and measures DraftEngine predictions"
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass = "dota.analysis.DraftBacktest"
+    workingDir = rootDir
+}
+
+// Русский текст в логах: консоль Windows иначе получает cp1251
+tasks.withType<JavaExec>().configureEach {
+    jvmArgs("-Dstdout.encoding=UTF-8", "-Dstderr.encoding=UTF-8")
+}
+
 tasks.test {
     useJUnitPlatform()
     // GoldenReportTest сверяет генератор с закоммиченным analysis/ — изменения в нём должны перезапускать тесты
