@@ -1,3 +1,5 @@
 gradlew text eol=lf
 *.bat text eol=crlf
 *.jar binary
+deploy/update-data.sh text eol=lf
+deploy/Caddyfile text eol=lf

@@ -14,7 +14,7 @@ public final class Models {
     }
 
     /** Общее для всех страниц: заголовок, активный пункт меню, шапка со свежестью данных. */
-    public record Page(String title, String active, String teamName, String patch, String playersFetched,
+    public record Page(String title, String active, boolean authEnabled, String teamName, String patch, String playersFetched,
                        String metaFetched, List<String> warnings, List<Link> opponents) {
     }
 
@@ -31,6 +31,10 @@ public final class Models {
     }
 
     public record Method(Page page) {
+    }
+
+    /** Страница входа: куда вернуть после входа и текст ошибки (или null). */
+    public record Login(String next, String error) {
     }
 
     // ---------------------------------------------------------------- отчёты

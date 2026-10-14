@@ -22,6 +22,9 @@
             @if(!page.warnings().isEmpty())
                 <a href="/#warnings" title="Предупреждения о данных">⚠ ${page.warnings().size()}</a>
             @endif
+            @if(page.authEnabled())
+                <a href="/logout" title="Выйти на этом устройстве">Выйти</a>
+            @endif
             <form method="post" action="/reload">
                 <button title="Перечитать data/ и config/ с диска без перезапуска (к OpenDota не обращается)">Перечитать данные</button>
             </form>

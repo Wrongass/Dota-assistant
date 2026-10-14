@@ -193,3 +193,9 @@ ol.advice li { margin: 3px 0; }
   .draft-advice { grid-template-columns: 1fr; }
   .hero-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ---------------------------------------------------------------- вход */
+main.login { max-width: 360px; margin: 12vh auto; }
+main.login form { display: flex; flex-direction: column; gap: 10px; }
+main.login h1 { margin: 0; }
+main.login input[type=password] { font-size: 16px; padding: 8px 10px; }

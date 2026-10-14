@@ -127,16 +127,22 @@ data/meta/{patch}/
 Бэктест на 3 матчах группы (30 пиков): реальный пик в топ-5 прогноза — 37%, в топ-10 — 50%, «кто на каком
 герое» — 30/30. Выборка маленькая: это ориентир, а не гарантия.
 
-### Docker
+### Вход по паролю
+
+Если задана переменная окружения `SITE_PASSWORD`, сайт спрашивает общий пароль команды (вход запоминается на
+устройстве на 30 дней). Без неё — открыт, это для локального запуска.
+
+### Docker и сервер
 
 ```bash
+cp .env.example .env              # SITE_PASSWORD, для сервера ещё DOMAIN
 docker compose build
 docker compose run --rm fetch     # обновить data/ из OpenDota
 docker compose up -d              # сайт на http://localhost:8070
+docker compose --profile https up -d   # на сервере: HTTPS через Caddy на https://$DOMAIN
 ```
 
-`data/`, `config/`, `analysis/` монтируются томами; порт публикуется только на 127.0.0.1. Для сервера в сети
-понадобится защита доступа — это после MVP.
+Пошагово для сервера — [docs/deploy.md](docs/deploy.md), решения — [ADR 0004](docs/decisions/0004-server-deploy.md).
 
 ## Анализ
 

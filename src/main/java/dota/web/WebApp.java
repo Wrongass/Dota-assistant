@@ -36,8 +36,15 @@ public class WebApp {
     private final Site site;
     private final TemplateEngine templates = TemplateEngine.createPrecompiled(ContentType.Html);
 
+    private final Auth auth;
+
     WebApp(Site site) {
+        this(site, new Auth(null, java.time.Clock.systemUTC()));
+    }
+
+    WebApp(Site site, Auth auth) {
         this.site = site;
+        this.auth = auth;
     }
 
     public static void main(String[] args) throws IOException {
@@ -60,7 +67,10 @@ public class WebApp {
         long started = System.nanoTime();
         site.reload();
         System.out.printf("Data loaded in %d ms%n", (System.nanoTime() - started) / 1_000_000);
-        new WebApp(site).create().start(host, port);
+        Auth auth = Auth.fromEnvironment();
+        System.out.println(auth.enabled() ? "Вход по паролю включён (SITE_PASSWORD)"
+                : "SITE_PASSWORD не задан — сайт открыт без пароля (только для локального запуска)");
+        new WebApp(site, auth).create().start(host, port);
         System.out.printf("Open http://%s:%d%n", host.equals("0.0.0.0") ? "localhost" : host, port);
     }
 
@@ -72,6 +82,14 @@ public class WebApp {
                 sf.directory = "/static";
                 sf.location = Location.CLASSPATH;
             });
+        });
+        app.before(this::requireLogin);
+        app.get("/health", ctx -> ctx.result("ok"));
+        app.get("/login", this::loginPage);
+        app.post("/login", this::login);
+        app.get("/logout", ctx -> {
+            auth.endSession(ctx);
+            ctx.redirect("/login");
         });
         app.get("/", this::home);
         app.get("/team", this::team);
@@ -91,6 +109,61 @@ public class WebApp {
         });
         app.exception(NotFoundResponse.class, (e, ctx) -> ctx.status(404).result("Не найдено: " + e.getMessage()));
         return app;
+    }
+
+    // ---------------------------------------------------------------- вход
+
+    /** Всё, кроме входа, проверки здоровья и статики, — только после входа (если SITE_PASSWORD задан). */
+    private void requireLogin(Context ctx) {
+        String path = ctx.path();
+        if (!auth.enabled() || path.equals("/login") || path.equals("/health") || path.startsWith("/static/")
+                || auth.loggedIn(ctx)) {
+            return;
+        }
+        if (path.startsWith("/api/")) {
+            ctx.status(401).json(Map.of("error", "нужен вход: откройте сайт и введите пароль"));
+        } else {
+            String next = path + (ctx.queryString() == null ? "" : "?" + ctx.queryString());
+            ctx.redirect("/login?next=" + java.net.URLEncoder.encode(next, java.nio.charset.StandardCharsets.UTF_8));
+        }
+        ctx.skipRemainingHandlers();
+    }
+
+    private void loginPage(Context ctx) {
+        if (!auth.enabled() || auth.loggedIn(ctx)) {
+            ctx.redirect(Auth.safeNext(ctx.queryParam("next")));
+            return;
+        }
+        render(ctx, "login.jte", new Models.Login(Auth.safeNext(ctx.queryParam("next")), null));
+    }
+
+    private void login(Context ctx) throws InterruptedException {
+        String next = Auth.safeNext(ctx.formParam("next"));
+        if (!auth.enabled()) {
+            ctx.redirect(next);
+            return;
+        }
+        String ip = clientIp(ctx);
+        if (auth.tooManyFailures(ip)) {
+            ctx.status(429);
+            render(ctx, "login.jte", new Models.Login(next, "Слишком много попыток. Подождите минуту."));
+            return;
+        }
+        if (auth.checkPassword(ctx.formParam("password"))) {
+            auth.startSession(ctx);
+            ctx.redirect(next);
+            return;
+        }
+        auth.recordFailure(ip);
+        Thread.sleep(500); // замедляем подбор
+        ctx.status(401);
+        render(ctx, "login.jte", new Models.Login(next, "Неверный пароль."));
+    }
+
+    /** За Caddy реальный адрес — первый в X-Forwarded-For (Caddy подставляет его сам, клиентский не доверяет). */
+    private static String clientIp(Context ctx) {
+        String forwarded = ctx.header("X-Forwarded-For");
+        return forwarded == null || forwarded.isBlank() ? ctx.ip() : forwarded.split(",")[0].trim();
     }
 
     // ---------------------------------------------------------------- страницы
@@ -209,7 +282,7 @@ public class WebApp {
         Site.Status s = site.status();
         List<Models.Link> opponents = c.opponents.stream()
                 .map(o -> new Models.Link("/opponent/" + o.slug(), o.team().name())).toList();
-        return new Models.Page(title, active, c.ours.teamName(), s.patch(), s.playersFetched(), s.metaFetched(),
+        return new Models.Page(title, active, auth.enabled(), c.ours.teamName(), s.patch(), s.playersFetched(), s.metaFetched(),
                 s.warnings(), opponents);
     }
 
