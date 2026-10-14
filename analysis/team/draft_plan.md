@@ -2,7 +2,9 @@
 
 > Этот файл написан вручную на основе [draft_data.md](draft_data.md), [roster.md](roster.md),
 > [меты патча](../meta/patch_7.41.md) и отчётов игроков. Генератор (`./gradlew analyze`) его не перезаписывает,
-> поэтому после обновления данных выводы надо перепроверить. Данные на 2026-10-10.
+> поэтому после обновления данных выводы надо перепроверить. Данные на 2026-10-10, раздел «Турнир» — на 2026-10-14.
+>
+> План на ближайшую игру: [против UPPO TEAM](../opponents/UPPO_TEAM/game_plan.md). Группа: [league/group.md](../league/group.md).
 
 ## Коротко
 
@@ -17,6 +19,20 @@
 4. **Баны:** Earth Spirit, Clinkz, Warlock, Juggernaut, Winter Wyvern (подробности ниже).
 5. **Не брать** в этом патче: Shadow Fiend, Nature's Prophet, Queen of Pain, Lina у Wrongass; Doom у Babayka;
    Treant Protector у kren — их личные топы, но в патче они слабые (≤ 48%).
+
+## Что показал турнир (BO2 против Team Polyus, 2:0)
+
+Подробно — [tournament.md](tournament.md).
+
+- **Ядро, которое сработало:** kren — Wraith King, Babayka — Vengeful Spirit, Enaria — Lich. Обе игры, обе победы.
+  WK первым пиком во второй игре — его никто не банит.
+- **Wrongass:** Viper (19/11/21) и Tiny (23/6/16). Tiny в пабах патча слабый (43–44%), но у Wrongass он работает —
+  оставляем как запасной мид, когда OD забанен.
+- **Артист на харде:** Centaur Warrunner и Ogre Magi (офлейн) — не из моего первого списка, но обе игры выиграны.
+  Ogre Magi — его 9-й герой по умению (313 игр, топ <1% игроков героя). Добавлены в основной пул.
+- **Против нас банят:** Outworld Devourer ×2, Dawnbreaker ×2 (а UPPO ещё и Dragon Knight ×2 против всех).
+  Вывод: соперники уже знают про OD — **на OD не рассчитывать**, держать Leshrac/Viper/Tiny.
+- **Наши баны:** Winter Wyvern ×2, Undying ×2, Sniper ×2 + по ситуации. WW банить и дальше (сильна у про, неудобна нам).
 
 ## Состав и роли
 
@@ -36,8 +52,8 @@
 | Поз. | Основные (берём уверенно) | Запасные | Не брать в 7.41 |
 |---|---|---|---|
 | 1 kren | **Wraith King**, **Dragon Knight**, Vengeful Spirit (керри) | Spectre, Phantom Lancer, Sven, Lifestealer | Treant Protector, Phantom Assassin (слабая про-статистика на 1) |
-| 2 Wrongass | **Outworld Devourer**, **Leshrac** | Necrophos, Dragon Knight, Invoker, Viper | Shadow Fiend, Nature's Prophet, Queen of Pain, Lina, Puck |
-| 3 Артист | **Dawnbreaker**, **Wraith King**, Spirit Breaker | Omniknight, Chaos Knight, Abaddon, Enigma, Earthshaker | Jakiro/Lina/NP — из его пабного топа, но слабы |
+| 2 Wrongass | **Leshrac**, **Viper**, Outworld Devourer (часто банят) | Tiny (2:0 в турнире), Necrophos, Dragon Knight, Invoker | Shadow Fiend, Nature's Prophet, Queen of Pain, Lina, Puck |
+| 3 Артист | **Dawnbreaker**, **Ogre Magi**, **Centaur Warrunner** (оба выиграны в турнире) | Wraith King, Spirit Breaker, Omniknight, Chaos Knight, Abaddon, Enigma | Jakiro/Lina/NP — из его пабного топа, но слабы |
 | 4 Babayka | **Grimstroke**, **Vengeful Spirit** | Disruptor, Earthshaker, Crystal Maiden | Doom, Nature's Prophet |
 | 5 Enaria | **Lich**, **Crystal Maiden** | Witch Doctor, Lion | всё вне этих 4 героев |
 
