@@ -1,0 +1,23 @@
+services:
+  web:
+    build: .
+    image: dota-assistant:latest
+    ports:
+      # только этот компьютер; для сервера в сети — убрать 127.0.0.1 и добавить защиту (не в MVP)
+      - "127.0.0.1:7070:7070"
+    volumes:
+      - ./data:/app/data:ro
+      - ./config:/app/config:ro
+      - ./analysis:/app/analysis:ro
+    restart: unless-stopped
+
+  # Обновление данных из OpenDota: docker compose run --rm fetch   (≈140 запросов, пара минут)
+  fetch:
+    image: dota-assistant:latest
+    profiles: ["tools"]
+    entrypoint: ["java", "-Dstdout.encoding=UTF-8", "-cp", "/app/lib/*", "dota.fetch.Main"]
+    environment:
+      - OPENDOTA_API_KEY
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config:ro

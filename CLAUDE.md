@@ -8,6 +8,12 @@
 - Сборка и тесты: `./gradlew build`
 - Выгрузка: `./gradlew run` (`--args="--refresh"` — перекачать всё, `--only <id>`, `--no-meta`)
 - Отчёты: `./gradlew analyze` → `analysis/` (код в `src/main/java/dota/analysis`, веса в `Scoring`)
+- Сайт: `./gradlew web` → http://127.0.0.1:7070 (`dota.web`, шаблоны `src/main/jte`, статика `src/main/resources/static`)
+- Бэктест драфта: `./gradlew draftBacktest`
+
+Архитектура (ADR 0003): `AnalysisContext` грузит всё один раз → `Squad` считает view-модели (`Views`) →
+их показывают `MarkdownRenderer` и сайт. Live-драфт — `DraftEngine`. `GoldenReportTest` сверяет генератор с
+закоммиченным `analysis/`: после изменения данных или расчётов перегенерируйте `analysis/` (`./gradlew analyze`).
 
 Нужен JDK 21: Gradle находит его через toolchain (в т.ч. в `~/.jdks`). Java в PATH может быть старше,
 тогда задайте `JAVA_HOME`.
