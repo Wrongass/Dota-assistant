@@ -4,7 +4,7 @@ services:
     image: dota-assistant:latest
     ports:
       # только этот компьютер; для сервера в сети — убрать 127.0.0.1 и добавить защиту (не в MVP)
-      - "127.0.0.1:7070:7070"
+      - "127.0.0.1:8070:8070"
     volumes:
       - ./data:/app/data:ro
       - ./config:/app/config:ro

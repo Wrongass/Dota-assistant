@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Локальный сайт. Запуск: {@code ./gradlew web} → http://127.0.0.1:7070
+ * Локальный сайт. Запуск: {@code ./gradlew web} → http://127.0.0.1:8070
  * <pre>
- *   --port &lt;n&gt;         по умолчанию 7070
+ *   --port &lt;n&gt;         по умолчанию 8070
  *   --host &lt;addr&gt;      по умолчанию 127.0.0.1 (только этот компьютер); в Docker — 0.0.0.0
  *   --config &lt;path&gt;    по умолчанию config/players.yaml
  *   --data &lt;dir&gt;       по умолчанию data
@@ -41,7 +41,7 @@ public class WebApp {
     }
 
     public static void main(String[] args) throws IOException {
-        int port = 7070;
+        int port = 8070;
         String host = "127.0.0.1";
         Path config = Path.of("config/players.yaml");
         Path data = Path.of("data");

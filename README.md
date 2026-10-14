@@ -9,7 +9,7 @@
 
 ```bash
 ./gradlew run        # скачать/докачать данные (≈140 запросов к OpenDota, пара минут)
-./gradlew web        # сайт: http://127.0.0.1:7070
+./gradlew web        # сайт: http://127.0.0.1:8070
 ```
 
 Перед игрой: `./gradlew run`, затем на сайте кнопка «Перечитать данные» (или перезапуск `web`).
@@ -26,7 +26,7 @@
 ./gradlew run --args="--no-league"              # без матчей лиги
 ./gradlew analyze                               # отчёты в analysis/ из data/
 ./gradlew analyze --args="--date 2026-10-14"    # отчёты на дату (давность матчей считается от неё)
-./gradlew web                                   # сайт на http://127.0.0.1:7070 (--args="--port 8080")
+./gradlew web                                   # сайт на http://127.0.0.1:8070 (--args="--port 8080")
 ./gradlew draftBacktest                         # проверка прогнозов драфта на матчах группы
 ./gradlew build                                 # сборка и тесты
 ```
@@ -95,7 +95,7 @@ data/meta/{patch}/
 
 ## Сайт
 
-`./gradlew web` → http://127.0.0.1:7070 (только этот компьютер). К OpenDota сайт не обращается: читает `data/`,
+`./gradlew web` → http://127.0.0.1:8070 (только этот компьютер). К OpenDota сайт не обращается: читает `data/`,
 `config/players.yaml` и ручные планы из `analysis/`. Кнопка «Перечитать данные» подхватывает изменения без перезапуска.
 
 | Страница | Что на ней |
@@ -128,7 +128,7 @@ data/meta/{patch}/
 ```bash
 docker compose build
 docker compose run --rm fetch     # обновить data/ из OpenDota
-docker compose up -d              # сайт на http://localhost:7070
+docker compose up -d              # сайт на http://localhost:8070
 ```
 
 `data/`, `config/`, `analysis/` монтируются томами; порт публикуется только на 127.0.0.1. Для сервера в сети

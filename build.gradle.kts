@@ -54,7 +54,7 @@ tasks.register<JavaExec>("analyze") {
 
 tasks.register<JavaExec>("web") {
     group = "application"
-    description = "Starts the local web app on http://127.0.0.1:7070"
+    description = "Starts the local web app on http://127.0.0.1:8070"
     classpath = sourceSets["main"].runtimeClasspath
     mainClass = "dota.web.WebApp"
     workingDir = rootDir
