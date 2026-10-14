@@ -49,6 +49,7 @@ public final class DraftEngine {
     public record Advice(int step, boolean finished, boolean oursNext, boolean pickNext, List<Integer> ourPicks,
                          List<Integer> theirPicks, List<Integer> ourBans, List<Integer> theirBans,
                          List<Assignment> theirAssignment, List<Assignment> ourAssignment,
+                         List<Remaining> theirRemaining, List<Remaining> ourRemaining,
                          List<Reasoned> theirNextPicks, List<Reasoned> banSuggestions,
                          List<Reasoned> pickSuggestions, List<Reasoned> theirLikelyBans, long micros) {
     }
@@ -87,7 +88,10 @@ public final class DraftEngine {
             double posFit = meta.posTotal(h) >= 20 ? meta.posShare(h, pos) : 0.1;
             double skill = p.skillOn(h) / 100;
             PlayerStats.HeroLine line = p.heroes.get(h);
-            double share = line == null || p.yearGames == 0 ? 0 : (double) line.yearGames / p.yearGames;
+            // доля героя в играх игрока: поровну за год и за текущий патч — «чем играет в последнее время»
+            double yearShare = line == null || p.yearGames == 0 ? 0 : (double) line.yearGames / p.yearGames;
+            double patchShare = line == null || p.patchGames == 0 ? 0 : (double) line.patchGames / p.patchGames;
+            double share = 0.5 * yearShare + 0.5 * patchShare;
             int t = tourney.getOrDefault(p.config.accountId(), Map.of()).getOrDefault(h, 0);
             return (0.05 + posFit) * (0.15 + skill) * (1 + 1.5 * t) * (1 + 4 * Math.min(share, 0.25));
         }
@@ -254,16 +258,11 @@ public final class DraftEngine {
         List<Reasoned> ourPickList = suggestPicks(us, ourProb, ourPicks, theirPicks, used, theirNextProb);
         List<Reasoned> bans = suggestBans(them, us, ourPicks, used, theirNextProb,
                 ourPickList.stream().limit(3).map(Reasoned::heroId).toList());
-        List<Reasoned> likelyBans = them.bans.entrySet().stream()
-                .filter(e -> !used.contains(e.getKey()))
-                .sorted(Map.Entry.<Integer, Integer>comparingByValue().reversed().thenComparing(e -> meta.name(e.getKey())))
-                .limit(6)
-                .map(e -> new Reasoned(e.getKey(), meta.name(e.getKey()), e.getValue(), null,
-                        List.of("банили ×" + e.getValue() + " в турнире")))
-                .toList();
+        List<Reasoned> likelyBans = predictTheirBans(us, them, ourProb, ourPicks, theirPicks, used);
 
         return new Advice(step, finished, oursNext, next != null && next.pick(), ourPicks, theirPicks, ourBans, theirBans,
-                theirAssignment, ourAssignment, theirNext.stream().limit(10).toList(), bans, ourPickList, likelyBans,
+                theirAssignment, ourAssignment, remaining(them, theirProb), remaining(us, ourProb),
+                theirNext.stream().limit(10).toList(), bans, ourPickList, likelyBans,
                 (System.nanoTime() - started) / 1000);
     }
 
@@ -303,48 +302,124 @@ public final class DraftEngine {
         return best < 0 ? null : meta.name(best) + " " + Md.signedPct(bestValue);
     }
 
+    /** Вероятность пика героя и самый вероятный игрок, который его возьмёт. */
+    record HeroChance(int hero, double probability, PlayerStats player) {
+    }
+
     /**
-     * Их следующий пик: близость свободного игрока × сила в мете × популярность на его ранге × контекст
-     * (связки с их пиками, контрпики наших).
+     * Чей пик и какой герой: у каждого игрока, ещё не выбравшего героя, своё распределение по героям
+     * (близость × сила в мете × популярность на его ранге × контекст драфта), нормированное внутри игрока —
+     * иначе игрок с большой турнирной историей «перекрикивает» остальных. Итог — смесь этих распределений
+     * с весом «вероятность, что игрок ещё свободен». Если остался только мидер — почти всё про героев мидера.
      */
-    private List<Reasoned> predictPicks(SquadModel them, double[][] prob, List<Integer> theirPicks, List<Integer> ourPicks,
-                                        Set<Integer> used, Map<Integer, Double> probOut) {
-        double[] free = freeProbability(prob, them.players.size());
-        record Raw(int hero, double weight, PlayerStats player) {
+    private List<HeroChance> pickDistribution(SquadModel team, double[] free, List<Integer> allies, List<Integer> enemies,
+                                              Set<Integer> used) {
+        int n = team.players.size();
+        double freeTotal = 0;
+        for (double f : free) {
+            freeTotal += f;
         }
-        List<Raw> raws = new ArrayList<>();
+        Map<Integer, double[]> perPlayer = new LinkedHashMap<>();
+        double[] norm = new double[n];
         for (int h : meta.heroes.keySet()) {
             if (used.contains(h)) {
                 continue;
             }
+            double context = Math.exp(8 * (avgSynergy(h, allies) + avgCounter(h, enemies)));
+            double[] scores = new double[n];
+            for (int p = 0; p < n; p++) {
+                PlayerStats player = team.players.get(p);
+                int[] r = team.squad.bracketRange(player);
+                double strength = team.squad.metaStrength(h, team.squad.position(player), r[0], r[1]);
+                // популярность героя на ранге игрока: в бэктесте подняла попадание в топ-10 с 47% до 57%
+                double popularity = 0.3 + 10 * meta.pickRate(h, r[0], r[1]);
+                scores[p] = team.affinity(player, h) * (0.5 + strength) * popularity * context;
+                norm[p] += scores[p];
+            }
+            perPlayer.put(h, scores);
+        }
+        List<HeroChance> result = new ArrayList<>();
+        for (var e : perPlayer.entrySet()) {
+            double total = 0, best = -1;
             PlayerStats bestPlayer = null;
-            double bestScore = 0;
-            for (int p = 0; p < them.players.size(); p++) {
-                double s = free[p] * them.affinity(them.players.get(p), h);
-                if (s > bestScore) {
-                    bestScore = s;
-                    bestPlayer = them.players.get(p);
+            for (int p = 0; p < n; p++) {
+                double w = freeTotal == 0 || norm[p] == 0 ? 0 : free[p] / freeTotal * e.getValue()[p] / norm[p];
+                total += w;
+                if (w > best) {
+                    best = w;
+                    bestPlayer = team.players.get(p);
                 }
             }
-            if (bestPlayer == null) {
-                continue;
-            }
-            int[] r = them.squad.bracketRange(bestPlayer);
-            double strength = them.squad.metaStrength(h, them.squad.position(bestPlayer), r[0], r[1]);
-            double context = avgSynergy(h, theirPicks) + avgCounter(h, ourPicks);
-            // популярность героя на ранге игрока: в бэктесте подняла попадание в топ-10 с 47% до 57%
-            double popularity = 0.3 + 10 * meta.pickRate(h, r[0], r[1]);
-            raws.add(new Raw(h, bestScore * (0.5 + strength) * popularity * Math.exp(8 * context), bestPlayer));
+            result.add(new HeroChance(e.getKey(), total, bestPlayer));
         }
-        double total = raws.stream().mapToDouble(Raw::weight).sum();
-        raws.sort(Comparator.comparingDouble(Raw::weight).reversed());
+        result.sort(Comparator.comparingDouble(HeroChance::probability).reversed());
+        return result;
+    }
+
+    /** Их следующий пик. probOut — вероятности всех героев (для банов и «пик-отказа»). */
+    private List<Reasoned> predictPicks(SquadModel them, double[][] prob, List<Integer> theirPicks, List<Integer> ourPicks,
+                                        Set<Integer> used, Map<Integer, Double> probOut) {
+        double[] free = freeProbability(prob, them.players.size());
         List<Reasoned> result = new ArrayList<>();
-        for (Raw raw : raws) {
-            double p = total == 0 ? 0 : raw.weight() / total;
-            probOut.put(raw.hero(), p);
+        for (HeroChance c : pickDistribution(them, free, theirPicks, ourPicks, used)) {
+            probOut.put(c.hero(), c.probability());
             if (result.size() < 15) {
-                result.add(new Reasoned(raw.hero(), meta.name(raw.hero()), p, raw.player().nick(),
-                        pickReasons(them, raw.player(), raw.hero(), theirPicks, ourPicks, "наш")));
+                result.add(new Reasoned(c.hero(), meta.name(c.hero()), c.probability(), c.player().nick(),
+                        pickReasons(them, c.player(), c.hero(), theirPicks, ourPicks, "наш")));
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Что они забанят: наших героев. Берём распределение «что взяли бы наши игроки, ещё не выбравшие героя»
+     * (турнир, недавние игры, умение, позиция) — если наш мид уже взял героя, его пул отсюда уходит.
+     * Их история банов в турнире — лишь небольшая поправка (×1.3 за каждый бан этого героя).
+     */
+    private List<Reasoned> predictTheirBans(SquadModel us, SquadModel them, double[][] ourProb, List<Integer> ourPicks,
+                                            List<Integer> theirPicks, Set<Integer> used) {
+        double[] free = freeProbability(ourProb, us.players.size());
+        List<HeroChance> ours = pickDistribution(us, free, ourPicks, theirPicks, used);
+        double total = 0;
+        Map<HeroChance, Double> weighted = new LinkedHashMap<>();
+        for (HeroChance c : ours) {
+            double w = c.probability() * Math.pow(1.3, them.bans.getOrDefault(c.hero(), 0));
+            weighted.put(c, w);
+            total += w;
+        }
+        final double sum = total;
+        return weighted.entrySet().stream()
+                .sorted(Map.Entry.<HeroChance, Double>comparingByValue().reversed())
+                .limit(8)
+                .map(e -> {
+                    HeroChance c = e.getKey();
+                    List<String> reasons = new ArrayList<>();
+                    reasons.add("наш " + c.player().nick());
+                    int t = us.tourneyPicks(c.player(), c.hero());
+                    if (t > 0) {
+                        reasons.add("×" + t + " у нас в турнире");
+                    }
+                    int banned = them.bans.getOrDefault(c.hero(), 0);
+                    if (banned > 0) {
+                        reasons.add("банили ×" + banned);
+                    }
+                    return new Reasoned(c.hero(), meta.name(c.hero()), sum == 0 ? 0 : e.getValue() / sum,
+                            c.player().nick(), reasons);
+                })
+                .toList();
+    }
+
+    /** Кто ещё без героя: игрок, его позиция и вероятность, что он ещё не выбрал. */
+    public record Remaining(String player, int position, double probability) {
+    }
+
+    private List<Remaining> remaining(SquadModel team, double[][] prob) {
+        double[] free = freeProbability(prob, team.players.size());
+        List<Remaining> result = new ArrayList<>();
+        for (int p = 0; p < team.players.size(); p++) {
+            if (free[p] >= 0.15) {
+                PlayerStats player = team.players.get(p);
+                result.add(new Remaining(player.nick(), team.squad.position(player), free[p]));
             }
         }
         return result;

@@ -32,6 +32,7 @@
                 <div id="our-bans" class="chips"></div>
                 <div class="small muted">Пики</div>
                 <div id="our-picks"></div>
+                <div id="our-remaining"></div>
             </div>
             <div class="panel side their-side">
                 <h3 class="theirs">Они</h3>
@@ -39,6 +40,7 @@
                 <div id="their-bans" class="chips"></div>
                 <div class="small muted">Пики — кто на каком герое</div>
                 <div id="their-picks"></div>
+                <div id="their-remaining"></div>
             </div>
         </div>
 
@@ -50,7 +52,7 @@
             <div class="panel" id="panel-bans">
                 <h3>Нам банить</h3>
                 <ol id="bans" class="advice"></ol>
-                <h3 class="small">Скорее всего забанят они</h3>
+                <h3 class="small" title="Наши герои, которых возьмут наши игроки, ещё не выбравшие героя (турнир, последние игры, умение)">Что они, скорее всего, забанят у нас</h3>
                 <div id="their-likely-bans" class="chips"></div>
             </div>
             <div class="panel" id="panel-picks">
@@ -64,6 +66,6 @@
             <div id="grid" class="hero-grid"></div>
         </div>
         <p class="muted small">Порядок ходов Captains Mode — как в 39 матчах нашей лиги. Прогноз — статистика по data/
-            (без сети): бэктест на матчах группы — реальный пик в топ-10 прогноза ≈ 6 раз из 10. <a href="/method">Методика</a></p>
+            (без сети): бэктест на матчах группы — реальный пик в топ-10 прогноза в половине случаев. <a href="/method">Методика</a></p>
     </div>
 `, scripts = "<script src=\"/static/draft.js\"></script>")

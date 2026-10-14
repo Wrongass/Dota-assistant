@@ -71,6 +71,40 @@ class DraftEngineTest {
     }
 
     @Test
+    void predictionsFollowRemainingPositions() throws Exception {
+        assumeTrue(Files.isDirectory(Path.of("data/raw")), "нет data/");
+        AnalysisContext ctx = AnalysisContext.load(Path.of("config/players.yaml"), Path.of("data"));
+        // мы первые. Их пики: Slark (Togo, 1), Kunkka (Odar.sp, 3), Dark Willow (Kaiju, 4), Lion (Nate, 5) — свободен
+        // только мидер Sacred. Наши: Wraith King, Outworld Devourer (мид), Lich, Vengeful Spirit — свободен Артист.
+        List<Integer> heroes = List.of(
+                8, 9, 10, 11, 12, 13, 14,        // баны 1–7
+                42, 93,                          // P1 WK, P2 Slark
+                15, 16, 17,                      // баны
+                23, 76, 31, 119, 26, 20,         // P2 Kunkka, P1 OD, P1 Lich, P2 DW, P2 Lion, P1 VS
+                18, 19, 21, 22);                 // баны
+        DraftEngine.Advice a = new DraftEngine(ctx).advise(new DraftEngine.State("UPPO_TEAM", true, heroes));
+
+        assertEquals(List.of("Sacred"), a.theirRemaining().stream().map(DraftEngine.Remaining::player).toList());
+        a.theirNextPicks().stream().limit(5)
+                .forEach(r -> assertEquals("Sacred", r.player(), r.name() + " — прогноз не про оставшегося мидера"));
+        a.theirLikelyBans().forEach(r -> assertNotEquals("Wrongass", r.player(),
+                r.name() + " — мид уже взял OD, его героев банить незачем"));
+        assertTrue(a.theirLikelyBans().stream().allMatch(r -> r.player().equals("Артист")),
+                "свободен только Артист: " + a.theirLikelyBans());
+    }
+
+    @Test
+    void theyBanOurHeroesNotTheirOwnHistory() throws Exception {
+        assumeTrue(Files.isDirectory(Path.of("data/raw")), "нет data/");
+        AnalysisContext ctx = AnalysisContext.load(Path.of("config/players.yaml"), Path.of("data"));
+        DraftEngine.Advice a = new DraftEngine(ctx).advise(new DraftEngine.State("UPPO_TEAM", true, List.of()));
+        // Bounty Hunter они банили дважды, но у нас на нём никто не играет — в прогнозе их банов его быть не должно
+        assertTrue(a.theirLikelyBans().stream().noneMatch(r -> r.name().equals("Bounty Hunter")), a.theirLikelyBans().toString());
+        assertTrue(a.theirLikelyBans().stream().anyMatch(r -> r.name().equals("Wraith King") || r.name().equals("Lich")),
+                "наши турнирные герои должны быть среди их вероятных банов: " + a.theirLikelyBans());
+    }
+
+    @Test
     void backtestAssignsMostHeroesToTheRightPlayers() throws Exception {
         assumeTrue(Files.isDirectory(Path.of("data/raw/league")), "нет матчей лиги");
         AnalysisContext ctx = AnalysisContext.load(Path.of("config/players.yaml"), Path.of("data"));

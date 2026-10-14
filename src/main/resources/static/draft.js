@@ -162,6 +162,13 @@
     $("their-picks").innerHTML = parts.theirPicks.length
       ? parts.theirPicks.map((h) => { const a = their.find((x) => x.heroId === h); return a ? assignLine(a) : `<div class="assign"><b>${byId.get(h).name}</b></div>`; }).join("")
       : "—";
+    // кто ещё без героя — от этого зависят прогноз их пиков и баны
+    const remainingLine = (list) => list && list.length
+      ? `<div class="remaining small">Ещё без героя: ${list.map((r) =>
+          `<span class="chip">${r.player} <span class="muted">поз. ${r.position} · ${pct(r.probability)}</span></span>`).join("")}</div>`
+      : "";
+    $("our-remaining").innerHTML = remainingLine(advice?.ourRemaining);
+    $("their-remaining").innerHTML = remainingLine(advice?.theirRemaining);
     const taken = used();
     document.querySelectorAll("#grid .hero").forEach((b) => {
       b.disabled = taken.has(Number(b.dataset.id)) || state.heroes.length >= ORDER.length;
@@ -179,8 +186,8 @@
     $("picks").innerHTML = a.pickSuggestions.map((r) =>
       pickable(r, `<b>${r.score.toFixed(0)}</b> <span class="muted">${r.player}</span>`)).join("");
     $("their-likely-bans").innerHTML = a.theirLikelyBans.length
-      ? a.theirLikelyBans.map((r) => `<span class="chip" title="${r.reasons.join(", ")}">${r.name} ×${r.score}</span>`).join("")
-      : '<span class="muted">нет истории банов</span>';
+      ? a.theirLikelyBans.map((r) => `<span class="chip" title="${r.reasons.join(", ")}">${r.name} <b>${pct(r.score)}</b> <span class="muted">${r.player}</span></span>`).join("")
+      : '<span class="muted">—</span>';
     renderBoard(a);
   }
   root.addEventListener("click", (e) => {
