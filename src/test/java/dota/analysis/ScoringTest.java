@@ -37,8 +37,8 @@ class ScoringTest {
 
     @Test
     void topPercentFormatting() {
-        assertEquals("топ <1%", Analyze.topPercent(0.999));
-        assertEquals("топ 5%", Analyze.topPercent(0.95));
-        assertEquals("—", Analyze.topPercent(null));
+        assertEquals("топ <1%", MarkdownRenderer.topPercent(0.999));
+        assertEquals("топ 5%", MarkdownRenderer.topPercent(0.95));
+        assertEquals("—", MarkdownRenderer.topPercent(null));
     }
 }

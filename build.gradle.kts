@@ -40,4 +40,7 @@ tasks.register<JavaExec>("analyze") {
 
 tasks.test {
     useJUnitPlatform()
+    // GoldenReportTest сверяет генератор с закоммиченным analysis/ — изменения в нём должны перезапускать тесты
+    inputs.dir("analysis").optional()
+    inputs.dir("config")
 }
