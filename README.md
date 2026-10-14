@@ -14,6 +14,7 @@
 ./gradlew run --args="--refresh"                # перекачать всё
 ./gradlew run --args="--only 138244651"         # один игрок
 ./gradlew run --args="--no-meta"                # без данных по патчу
+./gradlew run --args="--no-league"              # без матчей лиги
 ./gradlew analyze                               # отчёты в analysis/ из data/
 ./gradlew test                                  # тесты
 ```
@@ -29,14 +30,25 @@
 
 ## Игроки
 
-`config/players.yaml`:
+`config/players.yaml` (полный пример — в самом файле):
 
 ```yaml
+our_team: {name: Team Visual, organization: Долг, team_id: 10255027}
+league:
+  id: 18845                 # лига OpenDota
+  since: 2026-10-01         # начало текущего сезона
+  group:                    # соперники по группе
+    - {name: UPPO TEAM, organization: УППО, team_id: 9564376}
 players:
   - account_id: 138244651
     nick: Wrongass
     team: our        # our | opp
     position:        # 1..5 или пусто
+  - account_id: 361977946
+    nick: Togo
+    team: opp
+    team_name: UPPO TEAM   # обязательно для соперников
+    position: 1
 ```
 
 ## Что скачивается
@@ -53,6 +65,9 @@ data/raw/{our|opp}/{account_id}/
     totals.json    /players/{id}/totals                   суммы по метрикам
     ratings.json   /players/{id}/ratings                  история rank_tier
     rankings.json  /players/{id}/rankings                 перцентиль игрока на героях
+data/raw/league/{league_id}/
+    match_ids.json      /leagues/{id}/matchIds — перекачивается каждый запуск (растёт по ходу турнира)
+    matches/{id}.json   /matches/{id} — матчи текущего сезона (с league.since), с драфтом
 data/meta/{patch}/
     hero_stats.json     /heroStats            пики/победы по рангам, pro pick/ban, тренд за неделю
     lane_roles.json     /scenarios/laneRoles  винрейт героя по линии и длительности
@@ -76,6 +91,9 @@ analysis/
   team/draft_plan.md        план драфта (пишется вручную, генератор не трогает)
   team/roster.md            состав, позиции, ранги, сыгранность
   team/draft_data.md        пулы, связки внутри команды, неудобные герои, баны
+  team/tournament.md        наши турнирные матчи: драфты, пики, что банят против нас
+  league/group.md           результаты и драфты матчей нашей группы
+  opponents/{team}/         соперник: README, game_plan.md (вручную), team/{roster,threats,tournament}.md, players/
   meta/patch_{patch}.md     мета патча по позициям, про-сцена, связки, контрпики
   players/pos{N}_{nick}.md  топ героев игрока и топ под патч на его позиции
 ```

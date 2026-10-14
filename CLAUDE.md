@@ -16,7 +16,9 @@
 
 При вопросах про игроков, драфт, героев и мету — сначала `analysis/` (готовые выводы; план драфта —
 `analysis/team/draft_plan.md`, написан вручную и после `analyze` не обновляется), детали — в `data/`
-(раскладка в README.md). Состав и роли — `config/players.yaml`.
+(раскладка в README.md). Состав, роли, лига и группа — `config/players.yaml`.
+Соперники — `analysis/opponents/{team}/` (план на игру — `game_plan.md`, вручную). Матчи лиги —
+`data/raw/league/{id}/matches/`; на OpenDota лига `excluded`: команд и составов API не отдаёт, только match_id.
 Мета патча: `data/meta/{patch}/`, параметры выборки — в `_sample.json` рядом.
 
 Особенности формата (проверено на реальных ответах):
