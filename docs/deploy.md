@@ -3,6 +3,17 @@
 Решения и причины — [ADR 0004](decisions/0004-server-deploy.md). Итог: сайт по адресу `https://<домен>`,
 вход по общему паролю команды, данные обновляются на сервере раз в сутки.
 
+## Коротко для администратора сервера
+
+- **Что это:** один Java-сайт в Docker (Javalin, Java 21) + по желанию Caddy для HTTPS. Базы данных нет — всё
+  в папке `data/` (~150 МБ JSON с OpenDota).
+- **Ресурсы:** ~300–500 МБ RAM, ~1 ГБ диска (образ + данные + кэш сборки).
+- **Сеть наружу:** при сборке — Docker Hub, Maven Central, plugins.gradle.org; при работе — только
+  `api.opendota.com` (раз в сутки, ≈140 запросов).
+- **Порты:** сайт слушает только `127.0.0.1:8070`. Наружу — 80/443 через Caddy (шаг 4а) или через ваш прокси (шаг 4б).
+- **Проверено** (Docker 29, Windows/WSL2 x86_64): сборка образа, вход по паролю, страницы и API, выгрузка
+  данных контейнером `fetch`, конфиг Caddy. Реальный HTTPS-сертификат не проверялся — нужен домен.
+
 ## 0. Что нужно заранее
 
 - Доступ на сервер по SSH и право запускать Docker (`docker compose version` работает).
@@ -11,11 +22,23 @@
 
 ## 1. Код на сервер
 
+Вариант А — из GitHub (репозиторий приватный: нужен доступ на чтение или deploy key):
+
 ```bash
 sudo mkdir -p /opt/dota-assistant && sudo chown $USER /opt/dota-assistant
-git clone https://github.com/Wrongass/test2.git /opt/dota-assistant   # приватный репозиторий — через deploy key
+git clone https://github.com/Wrongass/test2.git /opt/dota-assistant
 cd /opt/dota-assistant
 ```
+
+Вариант Б — из архива `dota-assistant-<версия>.zip` (собирается `deploy/make-bundle.sh`):
+
+```bash
+sudo mkdir -p /opt && cd /opt
+unzip dota-assistant-*.zip           # распакуется в /opt/dota-assistant
+cd /opt/dota-assistant
+```
+
+Обновление в варианте Б — новый архив распаковать поверх (`.env` и `data/` в архиве нет, они не затрутся).
 
 ## 2. Настройки
 
@@ -33,6 +56,8 @@ docker compose run --rm fetch        # первая выгрузка с OpenDota
 ```
 
 ## 4а. Запуск с Caddy (порты 80/443 свободны)
+
+Без `DOMAIN` в `.env` Caddy не стартует (в логах `docker compose logs caddy` — ошибка разбора Caddyfile).
 
 ```bash
 docker compose --profile https up -d

@@ -25,7 +25,9 @@ services:
     image: caddy:2.8.4
     profiles: ["https"]
     environment:
-      DOMAIN: ${DOMAIN:?задайте DOMAIN в .env}
+      # не «:?» — иначе Compose требует DOMAIN даже для запуска одного сайта без Caddy;
+      # пустой DOMAIN Caddy не примет и не стартует (см. docker compose logs caddy)
+      DOMAIN: ${DOMAIN:-}
     ports:
       - "80:80"
       - "443:443"

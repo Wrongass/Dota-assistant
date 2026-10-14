@@ -3,3 +3,4 @@ gradlew text eol=lf
 *.jar binary
 deploy/update-data.sh text eol=lf
 deploy/Caddyfile text eol=lf
+deploy/make-bundle.sh text eol=lf
