@@ -3,6 +3,7 @@ package dota.fetch;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.time.LocalDate;
 
 /**
  * Выгрузка сырых данных OpenDota.
@@ -12,6 +13,7 @@ import java.time.Duration;
  *   --data &lt;dir&gt;           по умолчанию data
  *   --only &lt;account_id&gt;    только один игрок (справочники и мета качаются всегда)
  *   --no-meta              не качать данные по текущему патчу (data/meta)
+ *   --no-league            не качать матчи лиги из config (data/raw/league)
  *   --meta-window &lt;n&gt;     сколько последних match_id брать для синергий/контрпиков, по умолчанию 1000000
  *   --meta-min-rank &lt;n&gt;   минимальный средний rank_tier матча, по умолчанию 50 (Legend 0)
  * </pre>
@@ -22,6 +24,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         boolean refresh = false;
         boolean meta = true;
+        boolean league = true;
         long metaWindow = 1_000_000;
         int metaMinRank = 50;
         Path configPath = Path.of("config/players.yaml");
@@ -35,6 +38,7 @@ public class Main {
                 case "--data" -> dataDir = Path.of(value(args, ++i));
                 case "--only" -> only = Long.parseLong(value(args, ++i));
                 case "--no-meta" -> meta = false;
+                case "--no-league" -> league = false;
                 case "--meta-window" -> metaWindow = Long.parseLong(value(args, ++i));
                 case "--meta-min-rank" -> metaMinRank = Integer.parseInt(value(args, ++i));
                 default -> {
@@ -64,6 +68,12 @@ public class Main {
             for (Endpoints.Target t : Endpoints.player(p.accountId(), dir)) {
                 fetcher.fetch(t);
             }
+        }
+
+        PlayerConfig.League l = config.league();
+        if (league && l != null && l.id() != null) {
+            LocalDate since = l.since() == null ? LocalDate.of(1970, 1, 1) : LocalDate.parse(l.since());
+            new LeagueFetcher(client, fetcher, refresh).fetch(l.id(), since, raw.resolve("league").resolve(String.valueOf(l.id())));
         }
 
         if (meta) {

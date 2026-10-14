@@ -30,6 +30,7 @@ class PlayerConfigTest {
                   - account_id: 42
                     nick: Enemy
                     team: opp
+                    team_name: UPPO TEAM
                     position: 3
                 """));
 
@@ -58,7 +59,16 @@ class PlayerConfigTest {
         Path file = write("""
                 players:
                   - {account_id: 1, nick: a, team: our}
-                  - {account_id: 1, nick: b, team: opp}
+                  - {account_id: 1, nick: b, team: opp, team_name: X}
+                """);
+        assertThrows(IllegalArgumentException.class, () -> PlayerConfig.load(file));
+    }
+
+    @Test
+    void oppPlayerNeedsTeamName() throws Exception {
+        Path file = write("""
+                players:
+                  - {account_id: 7, nick: e, team: opp}
                 """);
         assertThrows(IllegalArgumentException.class, () -> PlayerConfig.load(file));
     }

@@ -1,9 +1,29 @@
-# team: our | opp; position: 1..5 или пусто; note — свободный комментарий о роли и стиле
+# team: our | opp; position: 1..5 или пусто; note — свободный комментарий о роли и стиле.
+# Для соперников обязателен team_name — имя команды из league.group.
 our_team:
   name: Team Visual
   organization: Долг
+  team_id: 10255027
+
+# Киберлига «Трудовые резервы», 6 сезон (осень). На OpenDota/Dotabuff это один общий турнир на все
+# дивизионы, поэтому соперников по группе перечисляем явно. team_id — из матчей лиги на OpenDota.
+league:
+  id: 18845
+  name: Киберлига «Трудовые резервы», 6 сезон (осень) — дивизион Ancient, группа B
+  since: 2026-10-01
+  group:
+    - name: SD Team
+      organization: GGsel
+      team_id: 9782601
+    - name: UPPO TEAM
+      organization: УППО
+      team_id: 9564376
+    - name: Team Polyus
+      organization: НИИ Полюс им. М.Ф. Стельмаха
+      team_id: 9419839
 
 players:
+  # --- Team Visual ---
   - account_id: 168928320
     nick: kren
     team: our
@@ -29,3 +49,35 @@ players:
     team: our
     position: 5
     note: Саппорт, позиция 5. Самый слабый игрок, небольшой пул героев (Lich, Crystal Maiden, Lion, Witch Doctor).
+
+  # --- UPPO TEAM (УППО): 5 активных игроков; позиции — по турнирным матчам против SD Team ---
+  - account_id: 361977946
+    nick: Togo
+    team: opp
+    team_name: UPPO TEAM
+    position: 1
+    note: В турнире Slark, Sven (safe lane, самый высокий GPM).
+  - account_id: 96652227
+    nick: Sacred
+    team: opp
+    team_name: UPPO TEAM
+    position: 2
+    note: В турнире Lina, Viper на миде.
+  - account_id: 116940777
+    nick: Odar.sp
+    team: opp
+    team_name: UPPO TEAM
+    position: 3
+    note: В турнире Kunkka, Underlord на офлейне.
+  - account_id: 374031341
+    nick: Kaiju
+    team: opp
+    team_name: UPPO TEAM
+    position: 4
+    note: В турнире Dark Willow, Rubick.
+  - account_id: 165960331
+    nick: Nate
+    team: opp
+    team_name: UPPO TEAM
+    position: 5
+    note: В турнире Lion в обеих играх.
