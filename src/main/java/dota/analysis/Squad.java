@@ -101,11 +101,11 @@ public final class Squad {
         }
     }
 
-    public List<PlayerStats> byPosition() {
+    List<PlayerStats> byPosition() {
         return players.stream().sorted(Comparator.comparingInt(pos::get)).toList();
     }
 
-    public int position(PlayerStats p) {
+    int position(PlayerStats p) {
         return pos.get(p);
     }
 
@@ -138,12 +138,26 @@ public final class Squad {
                 .toList();
     }
 
-    public PlayerStats player(long accountId) {
+    PlayerStats player(long accountId) {
         return players.stream().filter(p -> p.config.accountId() == accountId).findFirst().orElse(null);
     }
 
     boolean hasTournament() {
         return league != null && team != null && team.teamId() != null;
+    }
+
+    /** Есть ли лига и team_id — тогда доступен {@link #tournament()}. */
+    public boolean hasTournamentData() {
+        return hasTournament();
+    }
+
+    /** Карточка игрока по account_id (игрок должен быть в этой команде). */
+    public Views.PlayerCard playerCard(long accountId) {
+        PlayerStats p = player(accountId);
+        if (p == null) {
+            throw new IllegalArgumentException("нет игрока " + accountId + " в " + teamName());
+        }
+        return playerCard(p);
     }
 
     // ---------------------------------------------------------------- оценки
@@ -276,7 +290,7 @@ public final class Squad {
                 ordered.stream().map(PlayerStats::nick).toList(), games, wins);
     }
 
-    public Views.PlayerCard playerCard(PlayerStats p) {
+    Views.PlayerCard playerCard(PlayerStats p) {
         int position = pos.get(p);
         int[] r = bracketRange(p);
         List<Views.BestHero> best = new ArrayList<>();

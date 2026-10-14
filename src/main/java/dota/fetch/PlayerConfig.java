@@ -19,10 +19,11 @@ public record PlayerConfig(@JsonProperty("our_team") TeamInfo ourTeam, League le
     }
 
     /**
-     * Турнир: id лиги OpenDota, с какой даты считать матчи текущего сезона (yyyy-MM-dd)
-     * и команды нашей группы (соперники).
+     * Турнир: id лиги OpenDota, с какой даты считать матчи текущего сезона (yyyy-MM-dd),
+     * команды нашей группы (соперники) и имя следующего соперника (для главной страницы сайта).
      */
-    public record League(Long id, String name, String since, List<TeamInfo> group) {
+    public record League(Long id, String name, String since, List<TeamInfo> group,
+                         @JsonProperty("next_opponent") String nextOpponent) {
 
         public List<TeamInfo> groupOrEmpty() {
             return group == null ? List.of() : group;

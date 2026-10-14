@@ -11,6 +11,7 @@ league:
   id: 18845
   name: Киберлига «Трудовые резервы», 6 сезон (осень) — дивизион Ancient, группа B
   since: 2026-10-01
+  next_opponent: UPPO TEAM   # следующая игра — показывается на главной странице сайта
   group:
     - name: SD Team
       organization: GGsel
