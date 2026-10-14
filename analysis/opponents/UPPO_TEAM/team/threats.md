@@ -6,7 +6,7 @@
 
 | Поз. | Игрок | Ранг | Кандидаты (пригодность; ▲ — сильный в патче) | В турнире |
 |---|---|---|---|---|
-| 1 | [Togo](../players/pos1_Togo.md) | Божество 3 (Divine) | Slark 76, Anti-Mage 75, Sven 74 ▲, Phantom Lancer 72 ▲, Dragon Knight 68 ▲, Necrophos 66 | Slark, Sven |
+| 1 | [Togo](../players/pos1_Togo.md) | Божество 3 (Divine) | Slark 76, Anti-Mage 75, Sven 74 ▲, Phantom Lancer 72 ▲, Dragon Knight 68 ▲, Necrophos 67 | Slark, Sven |
 | 2 | [Sacred](../players/pos2_Sacred.md) | Легенда 1 (Legend) | Outworld Devourer 72 ▲, Necrophos 70, Dragon Knight 69 ▲, Slark 67, Viper 56, Pudge 55 | Lina, Viper |
 | 3 | [Odar.sp](../players/pos3_Odar.sp.md) | Божество 4 (Divine) | Enigma 78 ▲, Dawnbreaker 75 ▲, Legion Commander 72, Kunkka 70, Visage 64 ▲, Beastmaster 63 | Kunkka, Underlord |
 | 4 | [Kaiju](../players/pos4_Kaiju.md) | Легенда 4 (Legend) | Bounty Hunter 85 ▲, Keeper of the Light 81, Dazzle 73, Techies 72, Nyx Assassin 70 ▲, Hoodwink 70 | Dark Willow, Rubick |

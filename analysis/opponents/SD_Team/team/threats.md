@@ -9,7 +9,7 @@
 | 1 | [Nynge](../players/pos1_Nynge.md) | Властелин 2 (Ancient) | Dragon Knight 79 ▲, Windranger 72, Juggernaut 71 ▲, Vengeful Spirit 69 ▲, Necrophos 67, Sven 65 ▲ | Clinkz, Windranger |
 | 2 | [Caraxes](../players/pos2_Caraxes.md) | Властелин 1 (Ancient) | Dragon Knight 73 ▲, Ember Spirit 68, Kez 57, Monkey King 55, Slark 54, Pangolier 54 | Ember Spirit, Sand King |
 | 3 | [XANDR](../players/pos3_XANDR.md) | Титан (Immortal) | Enigma 78 ▲, Dark Seer 74, Dawnbreaker 70 ▲, Visage 66 ▲, Legion Commander 65, Wraith King 64 ▲ | Dawnbreaker, Tidehunter |
-| 4 | [IRD](../players/pos4_IRD.md) | Титан (Immortal) | Bounty Hunter 93 ▲, Mirana 79, Spirit Breaker 72 ▲, Witch Doctor 72, Windranger 71, Keeper of the Light 68 | Mirana, Rubick |
+| 4 | [IRD](../players/pos4_IRD.md) | Титан (Immortal) | Bounty Hunter 93 ▲, Mirana 79, Spirit Breaker 72 ▲, Witch Doctor 72, Windranger 72, Keeper of the Light 68 | Mirana, Rubick |
 | 5 | [montekri](../players/pos5_montekri.md) | Герой 4 (Archon) | Crystal Maiden 70, Winter Wyvern 68, Phoenix 67, Techies 66, Lich 63 ▲, Snapfire 63 | Crystal Maiden, Undying |
 
 ## Самые опасные герои (кандидаты в баны)
@@ -57,19 +57,19 @@ Lifestealer ×2, Necrophos ×2, Winter Wyvern ×2, Axe, Centaur Warrunner, Kunkk
 
 ## Против кого они проигрывают
 
-Их матчи за 2 года (без турбо), сглажено к их среднему (50.4%) весом 30 игр; минимум 40 игр. ✔ — герой есть в наших пулах.
+Их матчи за 2 года (без турбо), сглажено к их среднему (50.3%) весом 30 игр; минимум 40 игр. ✔ — герой есть в наших пулах.
 
 | # | Герой | Их WR против | Игр | В наших пулах |
 |---|---|---|---|---|
 | 1 | Medusa | 42.4% | 147 |  |
 | 2 | Wraith King | 43.2% | 276 | ✔ |
-| 3 | Leshrac | 43.5% | 83 | ✔ |
-| 4 | Warlock | 43.6% | 163 |  |
-| 5 | Lone Druid | 43.9% | 50 |  |
+| 3 | Lone Druid | 43.3% | 51 |  |
+| 4 | Warlock | 43.3% | 164 |  |
+| 5 | Leshrac | 43.4% | 83 | ✔ |
 | 6 | Legion Commander | 44.6% | 309 | ✔ |
 | 7 | Spectre | 44.6% | 199 | ✔ |
-| 8 | Silencer | 44.9% | 240 | ✔ |
-| 9 | Skywrath Mage | 45.1% | 223 |  |
+| 8 | Silencer | 44.7% | 241 | ✔ |
+| 9 | Skywrath Mage | 44.9% | 224 |  |
 | 10 | Clockwerk | 45.1% | 101 |  |
 | 11 | Io | 45.4% | 109 |  |
 | 12 | Broodmother | 45.5% | 78 |  |

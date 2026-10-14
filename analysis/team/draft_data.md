@@ -7,7 +7,7 @@
 | Поз. | Игрок | Кандидаты (пригодность; ▲ — сильный в патче) |
 |---|---|---|
 | 1 | kren | Wraith King 75 ▲, Dragon Knight 67 ▲, Vengeful Spirit 67 ▲, Phantom Lancer 66 ▲, Windranger 65, Spectre 63 ▲ |
-| 2 | Wrongass | Outworld Devourer 85 ▲, Dragon Knight 73 ▲, Necrophos 72, Leshrac 71 ▲, Viper 67, Slark 65 |
+| 2 | Wrongass | Outworld Devourer 85 ▲, Dragon Knight 73 ▲, Necrophos 72, Leshrac 71 ▲, Viper 67, Slark 66 |
 | 3 | Артист | Dawnbreaker 79 ▲, Enigma 78 ▲, Spirit Breaker 71 ▲, Wraith King 70 ▲, Omniknight 67 ▲, Earthshaker 62 |
 | 4 | Babayka | Grimstroke 74 ▲, Vengeful Spirit 70 ▲, Disruptor 65, Earthshaker 59, Crystal Maiden 58, Nyx Assassin 58 ▲ |
 | 5 | Enaria | Lich 77 ▲, Lion 67, Witch Doctor 65 ▲, Crystal Maiden 63 ▲, Vengeful Spirit 55 ▲, Zeus 55 |

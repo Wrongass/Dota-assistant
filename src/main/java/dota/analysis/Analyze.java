@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
  *   --config &lt;path&gt;   по умолчанию config/players.yaml
  *   --data &lt;dir&gt;      по умолчанию data
  *   --out &lt;dir&gt;       по умолчанию analysis
+ *   --date yyyy-MM-dd  дата отчёта (по умолчанию сегодня, UTC); от неё считается давность матчей
  * </pre>
  */
 public class Analyze {
@@ -44,7 +45,7 @@ public class Analyze {
     private final int teamFrom, teamTo;
     private final String today;
 
-    Analyze(Meta meta, List<PlayerStats> players, PlayerConfig.TeamInfo team, boolean ours, League league) {
+    Analyze(Meta meta, List<PlayerStats> players, PlayerConfig.TeamInfo team, boolean ours, League league, LocalDate today) {
         this.meta = meta;
         this.players = players;
         this.team = team;
@@ -55,18 +56,20 @@ public class Analyze {
         int median = brackets[brackets.length / 2];
         this.teamFrom = Math.max(1, median - 1);
         this.teamTo = Math.min(8, median + 1);
-        this.today = LocalDate.now(ZoneOffset.UTC).toString();
+        this.today = today.toString();
     }
 
     public static void main(String[] args) throws IOException {
         Path configPath = Path.of("config/players.yaml");
         Path dataDir = Path.of("data");
         Path out = Path.of("analysis");
+        LocalDate date = LocalDate.now(ZoneOffset.UTC);
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case "--config" -> configPath = Path.of(args[++i]);
                 case "--data" -> dataDir = Path.of(args[++i]);
                 case "--out" -> out = Path.of(args[++i]);
+                case "--date" -> date = LocalDate.parse(args[++i]);
                 default -> throw new IllegalArgumentException("Unknown argument: " + args[i]);
             }
         }
@@ -75,15 +78,16 @@ public class Analyze {
         Meta meta = Meta.load(dataDir);
         League league = config.league() == null || config.league().id() == null ? null
                 : League.load(dataDir, config.league());
-        Instant now = Instant.now();
+        // опорный момент — полночь UTC даты отчёта: вывод воспроизводим (веса по давности не «плывут»)
+        Instant now = date.atStartOfDay(ZoneOffset.UTC).toInstant();
 
-        Analyze ourSquad = new Analyze(meta, loadPlayers(dataDir, config, null, meta, now), config.ourTeam(), true, league);
+        Analyze ourSquad = new Analyze(meta, loadPlayers(dataDir, config, null, meta, now), config.ourTeam(), true, league, date);
         List<Analyze> opponents = new ArrayList<>();
         if (config.league() != null) {
             for (PlayerConfig.TeamInfo t : config.league().groupOrEmpty()) {
                 List<PlayerStats> squad = loadPlayers(dataDir, config, t.name(), meta, now);
                 if (!squad.isEmpty()) {
-                    opponents.add(new Analyze(meta, squad, t, false, league));
+                    opponents.add(new Analyze(meta, squad, t, false, league, date));
                 }
             }
         }
