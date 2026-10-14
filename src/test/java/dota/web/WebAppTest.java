@@ -84,6 +84,15 @@ class WebAppTest {
     }
 
     @Test
+    void planLinksPointToSitePagesNotMarkdownFiles() throws Exception {
+        for (String path : new String[]{"/draft-data", "/opponent/UPPO_TEAM"}) {
+            String body = get(path).body();
+            assertFalse(body.matches("(?s).*href=\"[^\"]*\\.md[\"#].*"), path + " содержит ссылку на .md");
+        }
+        assertTrue(get("/draft-data").body().contains("href=\"/group\""), "ссылка ../league/group.md → /group");
+    }
+
+    @Test
     void unknownPlayerIs404() throws Exception {
         assertEquals(404, get("/player/1").statusCode());
     }

@@ -13,9 +13,9 @@
         <a href="#pro">Про-сцена</a><a href="#synergy">Связки</a><a href="#counters">Контрпики</a>
     </div>
 
-    <div class="grid2">
+    <div class="grid-wide">
     @for(var p : m.positions())
-        <div class="panel" id="pos${p.pos()}">
+        <div class="panel table-wrap" id="pos${p.pos()}">
             <h2>Позиция ${p.pos()}</h2>
             <table class="sortable filterable">
                 <thead><tr><th>#</th><th>Герой</th><th class="num">Сила в мете</th><th class="num">WR в пабах</th><th class="num">Пикрейт</th>

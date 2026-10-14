@@ -215,10 +215,75 @@ public class WebApp {
 
     private String markdown(Path file) {
         try {
-            return Markdown.fileToHtml(file);
+            return Markdown.fileToHtml(file, href -> siteLink(file, href));
         } catch (IOException e) {
             return "<p>Не удалось прочитать " + file + ": " + e.getMessage() + "</p>";
         }
+    }
+
+    /**
+     * Ссылка из ручного плана → страница сайта. Относительный путь считается от папки файла плана, затем
+     * путь внутри analysis/ сопоставляется со страницей. null — на сайте такой страницы нет.
+     */
+    String siteLink(Path planFile, String href) {
+        if (href == null || href.startsWith("http://") || href.startsWith("https://") || href.startsWith("#")) {
+            return href;
+        }
+        String anchor = "";
+        int hash = href.indexOf('#');
+        if (hash >= 0) {
+            anchor = href.substring(hash);
+            href = href.substring(0, hash);
+        }
+        Path target = planFile.toAbsolutePath().getParent().resolve(href).normalize();
+        Path root = site.analysisDir.toAbsolutePath().normalize();
+        if (!target.startsWith(root)) {
+            return null;
+        }
+        String rel = root.relativize(target).toString().replace('\\', '/');
+        String page = sitePage(rel);
+        return page == null ? null : page + anchor;
+    }
+
+    private String sitePage(String rel) {
+        AnalysisContext c = site.ctx();
+        String[] parts = rel.split("/");
+        switch (rel) {
+            case "README.md":
+                return "/method";
+            case "team/draft_plan.md", "team/draft_data.md":
+                return "/draft-data";
+            case "team/roster.md":
+                return "/team";
+            case "team/tournament.md":
+                return "/tournament";
+            case "league/group.md":
+                return "/group";
+            default:
+                break;
+        }
+        if (parts[0].equals("meta")) {
+            return "/meta";
+        }
+        if (parts[0].equals("players") && parts.length == 2) {
+            return playerLink(c.ours, parts[1]);
+        }
+        if (parts[0].equals("opponents") && parts.length >= 3) {
+            Squad opp = c.opponent(parts[1]);
+            if (opp == null) {
+                return null;
+            }
+            if (parts[2].equals("players") && parts.length == 4) {
+                return playerLink(opp, parts[3]);
+            }
+            return "/opponent/" + opp.slug();
+        }
+        return null;
+    }
+
+    private static String playerLink(Squad squad, String file) {
+        return squad.playerRefs().stream().filter(r -> r.file().equals(file)).findFirst()
+                .map(r -> "/player/" + r.accountId()).orElse(null);
     }
 
     void render(Context http, String template, Object model) {
