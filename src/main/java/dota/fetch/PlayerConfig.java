@@ -12,10 +12,22 @@ import java.util.List;
 import java.util.Set;
 
 /** Игроки из config/players.yaml. */
-public record PlayerConfig(@JsonProperty("our_team") TeamInfo ourTeam, List<Player> players) {
+public record PlayerConfig(@JsonProperty("our_team") TeamInfo ourTeam, League league, List<Player> players) {
 
-    /** Название нашей команды и организации — для отчётов. */
-    public record TeamInfo(String name, String organization) {
+    /** Команда: название, организация и id команды в OpenDota (team_id из матчей лиги). */
+    public record TeamInfo(String name, String organization, @JsonProperty("team_id") Long teamId) {
+    }
+
+    /**
+     * Турнир: id лиги OpenDota, с какой даты считать матчи текущего сезона (yyyy-MM-dd),
+     * команды нашей группы (соперники) и имя следующего соперника (для главной страницы сайта).
+     */
+    public record League(Long id, String name, String since, List<TeamInfo> group,
+                         @JsonProperty("next_opponent") String nextOpponent) {
+
+        public List<TeamInfo> groupOrEmpty() {
+            return group == null ? List.of() : group;
+        }
     }
 
     public enum Team {
@@ -32,7 +44,8 @@ public record PlayerConfig(@JsonProperty("our_team") TeamInfo ourTeam, List<Play
             String nick,
             Team team,
             Integer position,
-            String note) {
+            String note,
+            @JsonProperty("team_name") String teamName) {
     }
 
     public static PlayerConfig load(Path path) throws IOException {
@@ -57,6 +70,9 @@ public record PlayerConfig(@JsonProperty("our_team") TeamInfo ourTeam, List<Play
             }
             if (p.position() != null && (p.position() < 1 || p.position() > 5)) {
                 throw new IllegalArgumentException("position must be 1..5 or empty: " + p);
+            }
+            if (p.team() == Team.OPP && (p.teamName() == null || p.teamName().isBlank())) {
+                throw new IllegalArgumentException("team_name is required for opp players: " + p);
             }
             if (!seen.add(p.accountId())) {
                 throw new IllegalArgumentException("duplicate account_id: " + p.accountId());

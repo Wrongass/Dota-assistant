@@ -1,5 +1,7 @@
 plugins {
     application
+    // JTE: шаблоны из src/main/jte превращаются в Java-классы при сборке — ошибка в шаблоне ломает build
+    id("gg.jte.gradle") version "3.2.4"
 }
 
 repositories {
@@ -16,9 +18,21 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.18.2")
 
+    // сайт
+    implementation("io.javalin:javalin:6.7.0")
+    implementation("gg.jte:jte:3.2.4")
+    implementation("org.commonmark:commonmark:0.24.0")
+    implementation("org.commonmark:commonmark-ext-gfm-tables:0.24.0")
+    runtimeOnly("org.slf4j:slf4j-simple:2.0.16")
+
     testImplementation(platform("org.junit:junit-bom:5.11.4"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+jte {
+    generate()
+    contentType = gg.jte.ContentType.Html
 }
 
 application {
@@ -38,6 +52,30 @@ tasks.register<JavaExec>("analyze") {
     workingDir = rootDir
 }
 
+tasks.register<JavaExec>("web") {
+    group = "application"
+    description = "Starts the local web app on http://127.0.0.1:8070"
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass = "dota.web.WebApp"
+    workingDir = rootDir
+}
+
+tasks.register<JavaExec>("draftBacktest") {
+    group = "verification"
+    description = "Replays league drafts and measures DraftEngine predictions"
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass = "dota.analysis.DraftBacktest"
+    workingDir = rootDir
+}
+
+// Русский текст в логах: консоль Windows иначе получает cp1251
+tasks.withType<JavaExec>().configureEach {
+    jvmArgs("-Dstdout.encoding=UTF-8", "-Dstderr.encoding=UTF-8")
+}
+
 tasks.test {
     useJUnitPlatform()
+    // GoldenReportTest сверяет генератор с закоммиченным analysis/ — изменения в нём должны перезапускать тесты
+    inputs.dir("analysis").optional()
+    inputs.dir("config")
 }

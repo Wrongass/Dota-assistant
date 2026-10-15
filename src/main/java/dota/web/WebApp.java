@@ -1,0 +1,367 @@
+package dota.web;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dota.analysis.AnalysisContext;
+import dota.analysis.DraftEngine;
+import dota.analysis.Squad;
+import dota.analysis.Views;
+import gg.jte.ContentType;
+import gg.jte.TemplateEngine;
+import gg.jte.output.StringOutput;
+import io.javalin.Javalin;
+import io.javalin.http.Context;
+import io.javalin.http.NotFoundResponse;
+import io.javalin.http.staticfiles.Location;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Локальный сайт. Запуск: {@code ./gradlew web} → http://127.0.0.1:8070
+ * <pre>
+ *   --port &lt;n&gt;         по умолчанию 8070
+ *   --host &lt;addr&gt;      по умолчанию 127.0.0.1 (только этот компьютер); в Docker — 0.0.0.0
+ *   --config &lt;path&gt;    по умолчанию config/players.yaml
+ *   --data &lt;dir&gt;       по умолчанию data
+ *   --analysis &lt;dir&gt;   по умолчанию analysis (ручные планы *_plan.md)
+ * </pre>
+ */
+public class WebApp {
+
+    private static final ObjectMapper JSON = new ObjectMapper();
+
+    private final Site site;
+    private final TemplateEngine templates = TemplateEngine.createPrecompiled(ContentType.Html);
+
+    private final Auth auth;
+
+    WebApp(Site site) {
+        this(site, new Auth(null, java.time.Clock.systemUTC()));
+    }
+
+    WebApp(Site site, Auth auth) {
+        this.site = site;
+        this.auth = auth;
+    }
+
+    public static void main(String[] args) throws IOException {
+        int port = 8070;
+        String host = "127.0.0.1";
+        Path config = Path.of("config/players.yaml");
+        Path data = Path.of("data");
+        Path analysis = Path.of("analysis");
+        for (int i = 0; i < args.length; i++) {
+            switch (args[i]) {
+                case "--port" -> port = Integer.parseInt(args[++i]);
+                case "--host" -> host = args[++i];
+                case "--config" -> config = Path.of(args[++i]);
+                case "--data" -> data = Path.of(args[++i]);
+                case "--analysis" -> analysis = Path.of(args[++i]);
+                default -> throw new IllegalArgumentException("Unknown argument: " + args[i]);
+            }
+        }
+        Site site = new Site(config, data, analysis);
+        long started = System.nanoTime();
+        site.reload();
+        System.out.printf("Data loaded in %d ms%n", (System.nanoTime() - started) / 1_000_000);
+        Auth auth = Auth.fromEnvironment();
+        System.out.println(auth.enabled() ? "Вход по паролю включён (SITE_PASSWORD)"
+                : "SITE_PASSWORD не задан — сайт открыт без пароля (только для локального запуска)");
+        new WebApp(site, auth).create().start(host, port);
+        System.out.printf("Open http://%s:%d%n", host.equals("0.0.0.0") ? "localhost" : host, port);
+    }
+
+    Javalin create() {
+        Javalin app = Javalin.create(cfg -> {
+            cfg.showJavalinBanner = false;
+            cfg.staticFiles.add(sf -> {
+                sf.hostedPath = "/static";
+                sf.directory = "/static";
+                sf.location = Location.CLASSPATH;
+            });
+        });
+        app.before(this::requireLogin);
+        app.get("/health", ctx -> ctx.result("ok"));
+        app.get("/login", this::loginPage);
+        app.post("/login", this::login);
+        app.get("/logout", ctx -> {
+            auth.endSession(ctx);
+            ctx.redirect("/login");
+        });
+        app.get("/", this::home);
+        app.get("/team", this::team);
+        app.get("/player/{id}", this::player);
+        app.get("/meta", this::meta);
+        app.get("/draft-data", this::draftData);
+        app.get("/tournament", this::tournament);
+        app.get("/group", this::group);
+        app.get("/opponent/{slug}", this::opponent);
+        app.get("/draft", this::draftPage);
+        app.post("/api/draft", this::draftApi);
+        app.get("/method", ctx -> render(ctx, "method.jte", new Models.Method(page("Методика", "method"))));
+        app.post("/reload", ctx -> {
+            site.reload();
+            String back = ctx.header("Referer");
+            ctx.redirect(back == null ? "/" : back);
+        });
+        app.exception(NotFoundResponse.class, (e, ctx) -> ctx.status(404).result("Не найдено: " + e.getMessage()));
+        return app;
+    }
+
+    // ---------------------------------------------------------------- вход
+
+    /** Всё, кроме входа, проверки здоровья и статики, — только после входа (если SITE_PASSWORD задан). */
+    private void requireLogin(Context ctx) {
+        String path = ctx.path();
+        if (!auth.enabled() || path.equals("/login") || path.equals("/health") || path.startsWith("/static/")
+                || auth.loggedIn(ctx)) {
+            return;
+        }
+        if (path.startsWith("/api/")) {
+            ctx.status(401).json(Map.of("error", "нужен вход: откройте сайт и введите пароль"));
+        } else {
+            String next = path + (ctx.queryString() == null ? "" : "?" + ctx.queryString());
+            ctx.redirect("/login?next=" + java.net.URLEncoder.encode(next, java.nio.charset.StandardCharsets.UTF_8));
+        }
+        ctx.skipRemainingHandlers();
+    }
+
+    private void loginPage(Context ctx) {
+        if (!auth.enabled() || auth.loggedIn(ctx)) {
+            ctx.redirect(Auth.safeNext(ctx.queryParam("next")));
+            return;
+        }
+        render(ctx, "login.jte", new Models.Login(Auth.safeNext(ctx.queryParam("next")), null));
+    }
+
+    private void login(Context ctx) throws InterruptedException {
+        String next = Auth.safeNext(ctx.formParam("next"));
+        if (!auth.enabled()) {
+            ctx.redirect(next);
+            return;
+        }
+        String ip = clientIp(ctx);
+        if (auth.tooManyFailures(ip)) {
+            ctx.status(429);
+            render(ctx, "login.jte", new Models.Login(next, "Слишком много попыток. Подождите минуту."));
+            return;
+        }
+        if (auth.checkPassword(ctx.formParam("password"))) {
+            auth.startSession(ctx);
+            ctx.redirect(next);
+            return;
+        }
+        auth.recordFailure(ip);
+        Thread.sleep(500); // замедляем подбор
+        ctx.status(401);
+        render(ctx, "login.jte", new Models.Login(next, "Неверный пароль."));
+    }
+
+    /** За Caddy реальный адрес — первый в X-Forwarded-For (Caddy подставляет его сам, клиентский не доверяет). */
+    private static String clientIp(Context ctx) {
+        String forwarded = ctx.header("X-Forwarded-For");
+        return forwarded == null || forwarded.isBlank() ? ctx.ip() : forwarded.split(",")[0].trim();
+    }
+
+    // ---------------------------------------------------------------- страницы
+
+    private void home(Context http) {
+        AnalysisContext c = site.ctx();
+        List<Models.OurLine> ours = new ArrayList<>();
+        Views.DraftData draft = c.ours.draftData();
+        for (Views.RosterRow r : c.ours.roster().rows()) {
+            List<Views.PoolEntry> pool = draft.pools().stream().filter(p -> p.nick().equals(r.nick()))
+                    .findFirst().map(Views.Pool::heroes).orElse(List.of());
+            ours.add(new Models.OurLine(r.pos(), r.nick(), r.accountId(), r.rankTier(), pool.stream().limit(3).toList()));
+        }
+        Views.Group group = c.group();
+        Models.NextOpponent next = null;
+        Squad opp = site.nextOpponent();
+        if (opp != null) {
+            Views.Threats threats = opp.threats(c.ours);
+            String record = group == null ? "" : group.standings().stream()
+                    .filter(s -> s.team().equals(opp.team().name())).findFirst()
+                    .map(s -> s.wins() + "–" + (s.games() - s.wins())).orElse("");
+            next = new Models.NextOpponent(opp.slug(), opp.teamName(), record, opp.roster().rows(),
+                    threats.threats().stream().limit(5).toList(), threats.bans());
+        }
+        render(http, "home.jte", new Models.Home(page("Главная", "home"), ours, group, next));
+    }
+
+    private void team(Context http) {
+        render(http, "team.jte", new Models.TeamPage(page("Команда", "team"), site.ctx().ours.roster(), "/player/"));
+    }
+
+    private void player(Context http) {
+        long id = Long.parseLong(http.pathParam("id"));
+        AnalysisContext c = site.ctx();
+        Squad squad = c.squadOf(id);
+        if (squad == null) {
+            throw new NotFoundResponse("игрок " + id);
+        }
+        Views.PlayerCard card = squad.playerCard(id);
+        String teamHref = squad.ours() ? "/team" : "/opponent/" + squad.slug();
+        render(http, "player.jte", new Models.PlayerPage(page(card.nick(), squad.ours() ? "team" : "opponents"),
+                card, squad.teamName(), teamHref));
+    }
+
+    private void meta(Context http) {
+        render(http, "meta.jte", new Models.MetaPage(page("Мета " + site.ctx().patch(), "meta"), site.ctx().ours.metaView()));
+    }
+
+    private void draftData(Context http) throws IOException {
+        Squad ours = site.ctx().ours;
+        String plan = site.planFile(ours).map(this::markdown).orElse(null);
+        render(http, "draft_data.jte", new Models.DraftDataPage(page("Наш драфт", "draft-data"), ours.draftData(), plan));
+    }
+
+    private void tournament(Context http) {
+        Squad ours = site.ctx().ours;
+        if (!ours.hasTournamentData()) {
+            throw new NotFoundResponse("в config/players.yaml нет лиги или team_id нашей команды");
+        }
+        render(http, "tournament.jte", new Models.TournamentPage(page("Турнир", "tournament"), ours.tournament(), "/group"));
+    }
+
+    private void group(Context http) {
+        Views.Group group = site.ctx().group();
+        if (group == null) {
+            throw new NotFoundResponse("в config/players.yaml нет лиги");
+        }
+        List<Models.Link> teams = site.ctx().opponents.stream()
+                .map(s -> new Models.Link("/opponent/" + s.slug(), s.team().name())).toList();
+        render(http, "group.jte", new Models.GroupPage(page("Группа", "group"), group, teams));
+    }
+
+    private void opponent(Context http) {
+        Squad opp = site.ctx().opponent(http.pathParam("slug"));
+        if (opp == null) {
+            throw new NotFoundResponse("соперник " + http.pathParam("slug"));
+        }
+        String plan = site.planFile(opp).map(this::markdown).orElse(null);
+        render(http, "opponent.jte", new Models.OpponentPage(page(opp.team().name(), "opponents"), opp.slug(),
+                opp.teamName(), plan, opp.roster(), opp.threats(site.ctx().ours),
+                opp.hasTournamentData() ? opp.tournament() : null));
+    }
+
+    // ---------------------------------------------------------------- драфт
+
+    /** Тело POST /api/draft: соперник, кто ходит первым, герои по ходам (0 — ход пропущен). */
+    record DraftRequest(String opponent, boolean weFirst, List<Integer> heroes) {
+    }
+
+    private void draftPage(Context http) throws Exception {
+        AnalysisContext c = site.ctx();
+        Squad next = site.nextOpponent();
+        String requested = http.queryParam("opponent");
+        String opponent = requested != null && c.opponent(requested) != null ? requested
+                : next != null ? next.slug() : c.opponents.isEmpty() ? "" : c.opponents.get(0).slug();
+        List<Models.Link> opponents = c.opponents.stream()
+                .map(o -> new Models.Link(o.slug(), o.teamName())).toList();
+        render(http, "draft.jte", new Models.DraftPage(page("Драфт", "draft"), JSON.writeValueAsString(c.heroList()),
+                JSON.writeValueAsString(opponents), opponent, JSON.writeValueAsString(DraftEngine.SLOTS)));
+    }
+
+    private void draftApi(Context http) {
+        DraftRequest req = http.bodyAsClass(DraftRequest.class);
+        if (req.opponent() == null || site.ctx().opponent(req.opponent()) == null) {
+            http.status(400).json(Map.of("error", "неизвестный соперник: " + req.opponent()));
+            return;
+        }
+        List<Integer> heroes = req.heroes() == null ? List.of() : req.heroes();
+        http.json(new DraftEngine(site.ctx()).advise(new DraftEngine.State(req.opponent(), req.weFirst(), heroes)));
+    }
+
+    // ---------------------------------------------------------------- общее
+
+    Models.Page page(String title, String active) {
+        AnalysisContext c = site.ctx();
+        Site.Status s = site.status();
+        List<Models.Link> opponents = c.opponents.stream()
+                .map(o -> new Models.Link("/opponent/" + o.slug(), o.team().name())).toList();
+        return new Models.Page(title, active, auth.enabled(), c.ours.teamName(), s.patch(), s.playersFetched(), s.metaFetched(),
+                s.warnings(), opponents);
+    }
+
+    private String markdown(Path file) {
+        try {
+            return Markdown.fileToHtml(file, href -> siteLink(file, href));
+        } catch (IOException e) {
+            return "<p>Не удалось прочитать " + file + ": " + e.getMessage() + "</p>";
+        }
+    }
+
+    /**
+     * Ссылка из ручного плана → страница сайта. Относительный путь считается от папки файла плана, затем
+     * путь внутри analysis/ сопоставляется со страницей. null — на сайте такой страницы нет.
+     */
+    String siteLink(Path planFile, String href) {
+        if (href == null || href.startsWith("http://") || href.startsWith("https://") || href.startsWith("#")) {
+            return href;
+        }
+        String anchor = "";
+        int hash = href.indexOf('#');
+        if (hash >= 0) {
+            anchor = href.substring(hash);
+            href = href.substring(0, hash);
+        }
+        Path target = planFile.toAbsolutePath().getParent().resolve(href).normalize();
+        Path root = site.analysisDir.toAbsolutePath().normalize();
+        if (!target.startsWith(root)) {
+            return null;
+        }
+        String rel = root.relativize(target).toString().replace('\\', '/');
+        String page = sitePage(rel);
+        return page == null ? null : page + anchor;
+    }
+
+    private String sitePage(String rel) {
+        AnalysisContext c = site.ctx();
+        String[] parts = rel.split("/");
+        switch (rel) {
+            case "README.md":
+                return "/method";
+            case "team/draft_plan.md", "team/draft_data.md":
+                return "/draft-data";
+            case "team/roster.md":
+                return "/team";
+            case "team/tournament.md":
+                return "/tournament";
+            case "league/group.md":
+                return "/group";
+            default:
+                break;
+        }
+        if (parts[0].equals("meta")) {
+            return "/meta";
+        }
+        if (parts[0].equals("players") && parts.length == 2) {
+            return playerLink(c.ours, parts[1]);
+        }
+        if (parts[0].equals("opponents") && parts.length >= 3) {
+            Squad opp = c.opponent(parts[1]);
+            if (opp == null) {
+                return null;
+            }
+            if (parts[2].equals("players") && parts.length == 4) {
+                return playerLink(opp, parts[3]);
+            }
+            return "/opponent/" + opp.slug();
+        }
+        return null;
+    }
+
+    private static String playerLink(Squad squad, String file) {
+        return squad.playerRefs().stream().filter(r -> r.file().equals(file)).findFirst()
+                .map(r -> "/player/" + r.accountId()).orElse(null);
+    }
+
+    void render(Context http, String template, Object model) {
+        StringOutput out = new StringOutput();
+        templates.render(template, model, out);
+        http.html(out.toString());
+    }
+}

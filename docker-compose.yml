@@ -1,0 +1,55 @@
+# Локально:  docker compose up -d                      → http://localhost:8070
+# На сервере: docker compose --profile https up -d      → https://$DOMAIN (Caddy сам получает сертификат)
+# Обновить данные OpenDota: docker compose run --rm fetch && docker compose restart web
+# Переменные — в файле .env рядом (образец: .env.example).
+
+services:
+  web:
+    build: .
+    image: dota-assistant:latest
+    environment:
+      # общий пароль команды; без него сайт не стартует (в Docker он всегда может оказаться в сети)
+      SITE_PASSWORD: ${SITE_PASSWORD:?задайте SITE_PASSWORD в .env}
+    ports:
+      # только этот компьютер; наружу сайт отдаёт Caddy (профиль https) или уже имеющийся на сервере прокси
+      - "127.0.0.1:${WEB_PORT:-8070}:8070"
+    volumes:
+      - ./data:/app/data:ro
+      - ./config:/app/config:ro
+      - ./analysis:/app/analysis:ro
+    restart: unless-stopped
+
+  # HTTPS-прокси с автоматическим сертификатом Let's Encrypt. Нужны домен ($DOMAIN) и свободные порты 80/443.
+  # Если на сервере уже есть nginx/Traefik/Caddy — этот сервис не запускать, а проксировать на 127.0.0.1:8070.
+  caddy:
+    image: caddy:2.8.4
+    profiles: ["https"]
+    environment:
+      # не «:?» — иначе Compose требует DOMAIN даже для запуска одного сайта без Caddy;
+      # пустой DOMAIN Caddy не примет и не стартует (см. docker compose logs caddy)
+      DOMAIN: ${DOMAIN:-}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - web
+    restart: unless-stopped
+
+  # Обновление data/ из OpenDota (≈140 запросов, пара минут). Запускается вручную или по cron.
+  fetch:
+    image: dota-assistant:latest
+    profiles: ["tools"]
+    entrypoint: ["java", "-Dstdout.encoding=UTF-8", "-cp", "/app/lib/*", "dota.fetch.Main"]
+    environment:
+      - OPENDOTA_API_KEY
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config:ro
+
+volumes:
+  caddy_data:
+  caddy_config:
