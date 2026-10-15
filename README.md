@@ -144,6 +144,19 @@ docker compose --profile https up -d   # на сервере: HTTPS через C
 
 Пошагово для сервера — [docs/deploy.md](docs/deploy.md), решения — [ADR 0004](docs/decisions/0004-server-deploy.md).
 
+## История работы с ИИ
+
+Проект я веду в нескольких чатах с разными ролями: напарник, обсуждение идеи и критика, исполнитель Claude Code и
+тестировщик в роли капитана команды. Текст в основном надиктовываю голосом, поэтому в репозитории лежат выжимки
+обсуждений, полных экспортов здесь нет.
+
+- [Чат-напарник](docs/history/architect-chat-summary.md): ход обсуждения и решения
+- [Обсуждение идеи и аналогов](docs/history/2026-10-08-idea-and-analogs-chat.md)
+- [Сессии Claude Code](docs/history/claude-code-sessions.md): что делал агент, где ошибался, чем проверяли
+- [Отчёт тестировщика в роли капитана](docs/reviews/2026-10-15-captain-review.md)
+- [План работ](docs/plans.md)
+- Решения: [docs/decisions/](docs/decisions/)
+
 ## Анализ
 
 `./gradlew analyze` строит Markdown-отчёты в `analysis/` (начните с [analysis/README.md](analysis/README.md)):
