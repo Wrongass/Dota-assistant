@@ -437,6 +437,10 @@ final class MarkdownRenderer {
         md.h2("Матчи");
         Md.Table mt = md.table("Дата", "Radiant", "Dire", "Победитель", "Мин", "Пики Radiant", "Пики Dire", "Матч");
         for (Views.GroupMatch m : v.matches()) {
+            if (m.matchId() == 0) {
+                mt.row(m.date(), m.radiant(), m.dire(), m.winner(), "—", "—", "—", m.note());
+                continue;
+            }
             mt.row(m.date(), m.radiant(), m.dire(), m.winner(), m.minutes(), String.join(", ", m.radiantHeroes()),
                     String.join(", ", m.direHeroes()), "[" + m.matchId() + "](https://www.opendota.com/matches/" + m.matchId() + ")");
         }

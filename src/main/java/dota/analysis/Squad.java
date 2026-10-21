@@ -632,13 +632,23 @@ public final class Squad {
         config.league().groupOrEmpty().forEach(t -> names.put(t.teamId(), t.name()));
         List<League.Match> matches = league.matches.stream()
                 .filter(m -> names.containsKey(m.radiantTeamId()) && names.containsKey(m.direTeamId())).toList();
+        List<PlayerConfig.ManualMap> manual = config.league().manualMapsOrEmpty();
         List<Views.Standing> standings = names.entrySet().stream().map(e -> new Views.Standing(e.getValue(),
-                matches.stream().filter(m -> m.involves(e.getKey())).count(),
-                matches.stream().filter(m -> m.involves(e.getKey()) && m.won(e.getKey())).count())).toList();
-        List<Views.GroupMatch> list = matches.stream().map(m -> new Views.GroupMatch(m.matchId(), m.date(),
-                m.radiantName(), m.direName(), m.radiantWin() ? m.radiantName() : m.direName(), m.durationSec() / 60,
-                m.side(true).stream().map(p -> meta.name(p.heroId())).toList(),
-                m.side(false).stream().map(p -> meta.name(p.heroId())).toList())).toList();
+                matches.stream().filter(m -> m.involves(e.getKey())).count()
+                        + manual.stream().filter(m -> m.winner().equals(e.getValue()) || m.loser().equals(e.getValue())).count(),
+                matches.stream().filter(m -> m.involves(e.getKey()) && m.won(e.getKey())).count()
+                        + manual.stream().filter(m -> m.winner().equals(e.getValue())).count())).toList();
+        // имена команд — из конфига: в матчах OpenDota одна команда бывает то SD Team, то GGsel
+        List<Views.GroupMatch> list = new ArrayList<>(matches.stream().map(m -> {
+            String radiant = names.get(m.radiantTeamId()), dire = names.get(m.direTeamId());
+            return new Views.GroupMatch(m.matchId(), m.date(), radiant, dire, m.radiantWin() ? radiant : dire,
+                    m.durationSec() / 60,
+                    m.side(true).stream().map(p -> meta.name(p.heroId())).toList(),
+                    m.side(false).stream().map(p -> meta.name(p.heroId())).toList(), null);
+        }).toList());
+        manual.forEach(m -> list.add(new Views.GroupMatch(0, m.date(), m.winner(), m.loser(), m.winner(), 0,
+                List.of(), List.of(), m.note() == null ? "нет в OpenDota" : m.note())));
+        list.sort(Comparator.comparing(Views.GroupMatch::date));
         return new Views.Group(config.league().name(), league.id, league.remakes, standings, list);
     }
 }
