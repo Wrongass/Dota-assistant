@@ -63,7 +63,8 @@ public final class Models {
 
     // ---------------------------------------------------------------- драфт
 
+    /** poolJson — наши герои: id героя → кто из наших на нём играет (для предупреждения «баните своего»). */
     public record DraftPage(Page page, String heroesJson, String opponentsJson, String defaultOpponent,
-                            String orderJson) {
+                            String orderJson, String poolJson) {
     }
 }

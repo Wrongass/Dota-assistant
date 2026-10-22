@@ -162,6 +162,8 @@ button.primary { background: var(--accent); color: #fff; border-color: var(--acc
   main { padding: 10px; }
 }
 
+[hidden] { display: none !important; }
+
 /* ---------------------------------------------------------------- драфт */
 .draft-setup { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 .draft-setup .spacer { flex: 1; }
@@ -189,8 +191,41 @@ ol.advice li { margin: 3px 0; }
 .hero-grid .hero:disabled { opacity: 0.3; text-decoration: line-through; cursor: default; }
 .hero-grid .hero.match { border-color: var(--accent); background: var(--accent-soft); }
 
+/* лента 24 ходов: клик по сделанному ходу — исправить */
+.ribbon { display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px; }
+.ribbon .slot { display: flex; flex-direction: column; align-items: flex-start; padding: 2px 5px; min-width: 0;
+  font-size: 12px; text-align: left; border-width: 1px 1px 1px 4px; }
+.ribbon .slot.ours { border-left-color: var(--ours); }
+.ribbon .slot.theirs { border-left-color: var(--theirs); }
+.ribbon .slot .kind { font-size: 10px; color: var(--muted); white-space: nowrap; }
+.ribbon .slot .who { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; min-height: 1.2em; }
+.ribbon .slot.ban .who { text-decoration: line-through; color: var(--muted); }
+.ribbon .slot.pick .who { font-weight: 600; }
+.ribbon .slot.current { outline: 2px solid var(--accent); }
+.ribbon .slot.editing { outline: 2px dashed var(--accent); background: var(--accent-soft); }
+.ribbon .slot:disabled { cursor: default; }
+.ribbon .slot.future { opacity: 0.55; }
+.ribbon-hint { margin-top: 4px; }
+
+.search-panel { position: relative; }
+.suggest { list-style: none; margin: 4px 0 0; padding: 0; max-width: 520px; }
+.suggest li { padding: 3px 8px; border-radius: 6px; cursor: pointer; }
+.suggest li.sel { background: var(--accent-soft); outline: 1px solid var(--accent); }
+.warn { margin-top: 6px; padding: 6px 10px; border-radius: 6px; background: var(--accent-soft);
+  border: 1px solid var(--accent); font-weight: 600; }
+
+.hint { font-size: 11px; font-weight: 400; color: var(--muted); }
+.assign-select { font-size: 12px; padding: 1px 4px; margin-left: 6px; }
+.assign .fixed { font-weight: 700; }
+.outlook-title { margin-top: 8px; }
+.outlook { padding: 2px 0; font-size: 13px; }
+button.link { background: none; border: none; padding: 0; color: var(--accent); font-weight: 600; }
+.small-btn { font-size: 12px; padding: 2px 8px; margin-left: 8px; }
+#lanes td, #lanes th { padding: 3px 8px; }
+
 @media (max-width: 1000px) {
   .draft-advice { grid-template-columns: 1fr; }
+  .ribbon { grid-template-columns: repeat(6, 1fr); }
   .hero-grid { grid-template-columns: repeat(2, 1fr); }
 }
 

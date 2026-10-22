@@ -249,8 +249,11 @@ public class WebApp {
 
     // ---------------------------------------------------------------- драфт
 
-    /** Тело POST /api/draft: соперник, кто ходит первым, герои по ходам (0 — ход пропущен). */
-    record DraftRequest(String opponent, boolean weFirst, List<Integer> heroes) {
+    /**
+     * Тело POST /api/draft: соперник, кто ходит первым, герои по ходам (0 — ход пропущен) и ручное назначение
+     * «герой → ник игрока» (обе команды).
+     */
+    record DraftRequest(String opponent, boolean weFirst, List<Integer> heroes, Map<Integer, String> assign) {
     }
 
     private void draftPage(Context http) throws Exception {
@@ -262,7 +265,8 @@ public class WebApp {
         List<Models.Link> opponents = c.opponents.stream()
                 .map(o -> new Models.Link(o.slug(), o.teamName())).toList();
         render(http, "draft.jte", new Models.DraftPage(page("Драфт", "draft"), JSON.writeValueAsString(c.heroList()),
-                JSON.writeValueAsString(opponents), opponent, JSON.writeValueAsString(DraftEngine.SLOTS)));
+                JSON.writeValueAsString(opponents), opponent, JSON.writeValueAsString(DraftEngine.SLOTS),
+                JSON.writeValueAsString(c.ours.poolOwners())));
     }
 
     private void draftApi(Context http) {
@@ -272,7 +276,8 @@ public class WebApp {
             return;
         }
         List<Integer> heroes = req.heroes() == null ? List.of() : req.heroes();
-        http.json(new DraftEngine(site.ctx()).advise(new DraftEngine.State(req.opponent(), req.weFirst(), heroes)));
+        Map<Integer, String> assign = req.assign() == null ? Map.of() : req.assign();
+        http.json(new DraftEngine(site.ctx()).advise(new DraftEngine.State(req.opponent(), req.weFirst(), heroes, assign)));
     }
 
     // ---------------------------------------------------------------- общее
