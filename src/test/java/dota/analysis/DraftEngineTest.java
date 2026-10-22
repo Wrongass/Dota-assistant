@@ -108,8 +108,76 @@ class DraftEngineTest {
     void backtestAssignsMostHeroesToTheRightPlayers() throws Exception {
         assumeTrue(Files.isDirectory(Path.of("data/raw/league")), "нет матчей лиги");
         AnalysisContext ctx = AnalysisContext.load(Path.of("config/players.yaml"), Path.of("data"));
-        DraftBacktest.Result r = DraftBacktest.run(ctx, false);
+        DraftBacktest.Result r = DraftBacktest.run(ctx, DraftEngine.Params.DEFAULT, false);
         assumeTrue(r.assigned() > 0, "нет матчей между известными командами");
         assertTrue(r.assignedRight() >= 0.8 * r.assigned(), r.toString());
+        assertTrue(r.top10() >= r.baseTop10(), "модель не хуже бейзлайна «частые герои»: " + r);
+    }
+
+    @Test
+    void bestAssignmentGivesEveryHeroItsOwnPlayer() {
+        // по отдельности оба героя «лучше» у игрока 0, но вместе — один у 0, другой у 1
+        double[][] w = {{10, 9}, {10, 1}};
+        int[] best = DraftEngine.bestAssignment(w);
+        assertArrayEquals(new int[]{0, 1}, new int[]{best[1], best[0]}, "герой 1 без вариантов у 0, герой 0 уходит к 1");
+    }
+
+    @Test
+    void stepsLeftFollowCaptainsModeOrder() {
+        assertEquals(7, DraftEngine.left(0, true, false));
+        assertEquals(5, DraftEngine.left(0, false, true));
+        // после 18 ходов у каждой команды осталось по 2 бана и по 1 пику
+        assertEquals(2, DraftEngine.left(18, true, false));
+        assertEquals(1, DraftEngine.left(18, false, true));
+        assertEquals(0, DraftEngine.left(24, true, true));
+    }
+
+    @Test
+    void manualAssignmentWinsOverStatistics() throws Exception {
+        assumeTrue(Files.isDirectory(Path.of("data/raw")), "нет data/");
+        AnalysisContext ctx = AnalysisContext.load(Path.of("config/players.yaml"), Path.of("data"));
+        // 7 банов, наш Lich (31), их Mirana (?). Ставим Lich вручную Babayka, хотя статистика за Enaria
+        List<Integer> heroes = List.of(8, 9, 10, 11, 12, 13, 14, 31);
+        DraftEngine.Advice auto = new DraftEngine(ctx).advise(new DraftEngine.State("SD_Team", true, heroes));
+        assertEquals("Enaria", auto.ourAssignment().get(0).player());
+        DraftEngine.Advice manual = new DraftEngine(ctx).advise(
+                new DraftEngine.State("SD_Team", true, heroes, java.util.Map.of(31, "Babayka")));
+        DraftEngine.Assignment a = manual.ourAssignment().get(0);
+        assertEquals("Babayka", a.player());
+        assertTrue(a.fixed());
+        assertEquals(1.0, a.probability(), 1e-9);
+        assertTrue(manual.ourRemaining().stream().anyMatch(r -> r.player().equals("Enaria")), "Enaria снова свободна");
+    }
+
+    @Test
+    void theirBanHabitRaisesOurHeroesTheyAlwaysBan() throws Exception {
+        assumeTrue(Files.isDirectory(Path.of("data/raw/league")), "нет матчей лиги");
+        AnalysisContext ctx = AnalysisContext.load(Path.of("config/players.yaml"), Path.of("data"));
+        DraftEngine.Advice a = new DraftEngine(ctx).advise(new DraftEngine.State("UPPO_TEAM", true, List.of()));
+        // UPPO банили Dragon Knight во всех картах турнира, а DK — герой нашего мида
+        DraftEngine.Reasoned dk = a.theirLikelyBans().stream().filter(r -> r.name().equals("Dragon Knight")).findFirst()
+                .orElseThrow(() -> new AssertionError("нет DK: " + a.theirLikelyBans()));
+        assertTrue(dk.score() >= 0.4, "DK забанят с большой вероятностью: " + dk);
+        assertTrue(a.theirLikelyBans().indexOf(dk) < 3, "DK в топ-3 их банов: " + a.theirLikelyBans());
+        assertEquals(7, a.theirBansLeft());
+    }
+
+    @Test
+    void finishedDraftHasLanesAndNoBanForecast() throws Exception {
+        assumeTrue(Files.isDirectory(Path.of("data/raw")), "нет data/");
+        AnalysisContext ctx = AnalysisContext.load(Path.of("config/players.yaml"), Path.of("data"));
+        List<Integer> heroes = new ArrayList<>();
+        for (int h = 1; heroes.size() < 24; h++) {
+            if (ctx.meta.heroes.containsKey(h)) {
+                heroes.add(h);
+            }
+        }
+        DraftEngine.Advice a = new DraftEngine(ctx).advise(new DraftEngine.State("SD_Team", true, heroes));
+        assertTrue(a.finished());
+        assertEquals(3, a.lanes().size());
+        assertTrue(a.theirLikelyBans().isEmpty(), "банов у них больше нет");
+        assertEquals(5, a.theirThreats().size());
+        assertEquals(5, a.ourAssignment().stream().map(DraftEngine.Assignment::player).distinct().count(),
+                "в итоговой расстановке у каждого нашего игрока свой герой");
     }
 }

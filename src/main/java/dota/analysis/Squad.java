@@ -187,6 +187,22 @@ public final class Squad {
     record Fit(int hero, double fit, double meta, double skill) {
     }
 
+    /**
+     * Чьи это герои: id героя → «ник (поз. N)» игроков, у которых герой в топ-12 под патч на их позиции с умением
+     * от 40, или который занимает от 3% их игр. Для предупреждения «вы баните героя своего игрока».
+     */
+    public Map<Integer, List<String>> poolOwners() {
+        Map<Integer, List<String>> owners = new java.util.TreeMap<>();
+        for (PlayerStats p : byPosition()) {
+            Set<Integer> heroes = new HashSet<>();
+            patchFit(p, position(p), 12).stream().filter(f -> f.skill() >= 40).forEach(f -> heroes.add(f.hero()));
+            p.heroes.keySet().stream().filter(h -> DraftEngine.share(p, h) >= 0.03).forEach(heroes::add);
+            String label = p.nick() + " (поз. " + position(p) + ")";
+            heroes.forEach(h -> owners.computeIfAbsent(h, k -> new ArrayList<>()).add(label));
+        }
+        return owners;
+    }
+
     /** Герои, которых в патче играют на позиции (≥15% разобранных игр), по пригодности для игрока. */
     List<Fit> patchFit(PlayerStats p, int position, int limit) {
         int[] r = bracketRange(p);
