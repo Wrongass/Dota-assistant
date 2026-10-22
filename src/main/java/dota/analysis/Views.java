@@ -153,8 +153,9 @@ public final class Views {
     public record Standing(String team, long games, long wins) {
     }
 
+    /** matchId 0 — карта из manual_maps: её нет в OpenDota, известен только результат (note — откуда). */
     public record GroupMatch(long matchId, String date, String radiant, String dire, String winner, int minutes,
-                             List<String> radiantHeroes, List<String> direHeroes) {
+                             List<String> radiantHeroes, List<String> direHeroes, String note) {
     }
 
     public record Group(String name, long leagueId, int remakes, List<Standing> standings, List<GroupMatch> matches) {

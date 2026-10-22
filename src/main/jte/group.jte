@@ -23,11 +23,16 @@
             <thead><tr><th>Дата</th><th>Radiant</th><th>Dire</th><th>Победитель</th><th class="num">Мин</th><th>Пики Radiant</th><th>Пики Dire</th><th>Матч</th></tr></thead>
             <tbody>
             @for(var m : g.matches())
+                @if(m.matchId() == 0)
+                <tr><td class="small">${m.date()}</td><td>${m.radiant()}</td><td>${m.dire()}</td><td><b>${m.winner()}</b></td>
+                    <td class="num">—</td><td class="small">—</td><td class="small">—</td><td class="small">${m.note()}</td></tr>
+                @else
                 <tr><td class="small">${m.date()}</td><td>${m.radiant()}</td><td>${m.dire()}</td><td><b>${m.winner()}</b></td>
                     <td class="num">${m.minutes()}</td><td class="small">${String.join(", ", m.radiantHeroes())}</td>
                     <td class="small">${String.join(", ", m.direHeroes())}</td>
                     <td class="small"><a href="https://www.opendota.com/matches/${m.matchId()}" target="_blank">OpenDota</a> ·
                         <a href="https://ru.dotabuff.com/matches/${m.matchId()}" target="_blank">Dotabuff</a></td></tr>
+                @endif
             @endfor
             </tbody>
         </table>

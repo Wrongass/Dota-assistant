@@ -11,7 +11,13 @@ league:
   id: 18845
   name: Киберлига «Трудовые резервы», 6 сезон (осень) — дивизион Ancient, группа B
   since: 2026-10-01
-  next_opponent: UPPO TEAM   # следующая игра — показывается на главной странице сайта
+  next_opponent: SD Team     # следующая игра — показывается на главной странице сайта
+  # Карты, которых нет в OpenDota, но результат известен с сайта турнира: идут только в счёт группы.
+  manual_maps:
+    - date: 2026-10-17
+      winner: SD Team
+      loser: Team Polyus
+      note: "BO2 закончился 1:1, вторая карта не попала в OpenDota (счёт с сайта турнира)"
   group:
     - name: SD Team
       organization: GGsel

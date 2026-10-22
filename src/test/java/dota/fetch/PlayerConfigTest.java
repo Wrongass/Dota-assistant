@@ -44,6 +44,29 @@ class PlayerConfigTest {
     }
 
     @Test
+    void manualMapsMustNameGroupTeams() throws Exception {
+        String head = """
+                our_team: {name: Team Visual}
+                league:
+                  id: 1
+                  group:
+                    - {name: SD Team, team_id: 2}
+                  manual_maps:
+                """;
+        String players = """
+                players:
+                  - account_id: 1
+                    nick: x
+                    team: our
+                """;
+        PlayerConfig ok = PlayerConfig.load(write(head + "    - {date: 2026-10-17, winner: SD Team, loser: Team Visual}\n" + players));
+        assertEquals("SD Team", ok.league().manualMapsOrEmpty().get(0).winner());
+
+        Path typo = write(head + "    - {date: 2026-10-17, winner: GGsel, loser: Team Visual}\n" + players);
+        assertThrows(IllegalArgumentException.class, () -> PlayerConfig.load(typo));
+    }
+
+    @Test
     void rejectsUnknownTeam() throws Exception {
         Path file = write("""
                 players:

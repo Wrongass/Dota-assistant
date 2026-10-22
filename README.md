@@ -1,5 +1,7 @@
 # Dota 2 assistant
 
+**Автор:** Морозов Кирилл Сергеевич
+
 Учебный ИИ-помощник для нашей команды в любительском турнире по Dota 2 (Captains Mode).
 
 Выгружает из [OpenDota API](https://docs.opendota.com/) данные по нашим игрокам, соперникам по группе и
@@ -144,6 +146,9 @@ docker compose --profile https up -d   # на сервере: HTTPS через C
 
 Пошагово для сервера — [docs/deploy.md](docs/deploy.md), решения — [ADR 0004](docs/decisions/0004-server-deploy.md).
 
+Сайт уже развёрнут на сервере команды, вход по общему паролю. Пока он работает по HTTP, без HTTPS. Что
+осталось доработать после развёртывания — [замечания](docs/reviews/2026-10-16-deploy-review.md) и [план](docs/plans.md).
+
 ## История работы с ИИ
 
 Проект я веду в нескольких чатах с разными ролями: напарник, обсуждение идеи и критика, исполнитель Claude Code и
@@ -154,6 +159,7 @@ docker compose --profile https up -d   # на сервере: HTTPS через C
 - [Обсуждение идеи и аналогов](docs/history/2026-10-08-idea-and-analogs-chat.md)
 - [Сессии Claude Code](docs/history/claude-code-sessions.md): что делал агент, где ошибался, чем проверяли
 - [Отчёт тестировщика в роли капитана](docs/reviews/2026-10-15-captain-review.md)
+- [Замечания после развёртывания на сервере](docs/reviews/2026-10-16-deploy-review.md)
 - [План работ](docs/plans.md)
 - Решения: [docs/decisions/](docs/decisions/)
 

@@ -1,101 +1,101 @@
 # Мета патча 7.41
 
-Данные на 2026-10-14. Винрейты в пабах — на рангах **Герой–Властелин** (медиана нашей команды ±1). Про-сцена — 271 матчей в выборке OpenDota.
+Данные на 2026-10-21. Винрейты в пабах — на рангах **Герой–Властелин** (медиана нашей команды ±1). Про-сцена — 229 матчей в выборке OpenDota.
 
 ## Позиция 1
 
 | # | Герой | Сила в мете | WR в пабах | Пикрейт | WR на поз. (про/high) | Про пик+бан | Отметка |
 |---|---|---|---|---|---|---|---|
-| 1 | Dragon Knight | 0.78 | 53.1% | 13.1% | 51.4% | 59.0% | ▲ сильный |
-| 2 | Juggernaut | 0.69 | 53.3% | 18.2% | 55.3% | 6.6% | ▲ сильный |
-| 3 | Sven | 0.67 | 52.0% | 10.1% | 51.6% | 29.2% | ▲ сильный |
-| 4 | Anti-Mage | 0.67 | 51.1% | 14.9% | 54.3% | 29.2% |  |
-| 5 | Lifestealer | 0.66 | 52.3% | 14.6% | 47.0% | 42.4% | ▲ сильный |
-| 6 | Lone Druid | 0.65 | 49.0% | 2.6% | 60.8% | 63.8% |  |
-| 7 | Necrophos | 0.64 | 50.8% | 15.3% | 49.8% | 59.4% |  |
-| 8 | Phantom Lancer | 0.63 | 53.2% | 11.5% | 48.9% | 18.1% | ▲ сильный |
-| 9 | Slark | 0.60 | 49.5% | 13.8% | 51.7% | 56.5% |  |
-| 10 | Meepo | 0.59 | 53.5% | 1.5% | 50.0% | 3.0% | ▲ сильный |
-| 11 | Windranger | 0.56 | 48.3% | 17.1% | 53.0% | 51.3% |  |
-| 12 | Wraith King | 0.56 | 55.0% | 12.8% | 44.4% | 1.1% | ▲ сильный |
+| 1 | Dragon Knight | 0.81 | 52.8% | 14.4% | 54.4% | 69.9% | ▲ сильный |
+| 2 | Sven | 0.68 | 52.1% | 10.3% | 51.6% | 29.7% | ▲ сильный |
+| 3 | Anti-Mage | 0.67 | 51.3% | 16.3% | 53.3% | 30.1% |  |
+| 4 | Lone Druid | 0.66 | 49.3% | 2.6% | 60.4% | 61.6% |  |
+| 5 | Juggernaut | 0.66 | 53.0% | 18.5% | 55.2% | 3.9% | ▲ сильный |
+| 6 | Necrophos | 0.63 | 50.6% | 15.5% | 50.1% | 56.8% |  |
+| 7 | Phantom Lancer | 0.58 | 52.9% | 11.6% | 49.6% | 9.6% | ▲ сильный |
+| 8 | Lifestealer | 0.58 | 51.8% | 14.6% | 47.5% | 26.2% |  |
+| 9 | Slark | 0.58 | 49.4% | 14.5% | 50.6% | 53.3% |  |
+| 10 | Windranger | 0.57 | 48.3% | 17.4% | 53.2% | 61.6% |  |
+| 11 | Meepo | 0.56 | 53.1% | 1.6% | 50.0% | 2.2% | ▲ сильный |
+| 12 | Wraith King | 0.55 | 54.7% | 13.2% | 44.5% | 2.2% | ▲ сильный |
 
-**▼ Слабые на позиции:** Nature's Prophet 42.7%, Shadow Fiend 42.8%, Tiny 43.4%, Terrorblade 44.0%, Kez 44.6%, Drow Ranger 45.9%, Monkey King 45.9%, Templar Assassin 46.0%
+**▼ Слабые на позиции:** Nature's Prophet 42.6%, Shadow Fiend 42.7%, Tiny 44.2%, Terrorblade 44.5%, Kez 44.6%, Templar Assassin 45.7%, Monkey King 45.8%, Drow Ranger 45.9%
 
 ## Позиция 2
 
 | # | Герой | Сила в мете | WR в пабах | Пикрейт | WR на поз. (про/high) | Про пик+бан | Отметка |
 |---|---|---|---|---|---|---|---|
-| 1 | Dragon Knight | 0.79 | 53.1% | 13.1% | 52.0% | 59.0% | ▲ сильный |
-| 2 | Outworld Devourer | 0.76 | 54.1% | 12.3% | 47.2% | 54.6% | ▲ сильный |
-| 3 | Earth Spirit | 0.65 | 49.6% | 4.1% | 53.9% | 63.8% |  |
-| 4 | Keeper of the Light | 0.63 | 49.3% | 4.3% | 57.4% | 32.5% |  |
-| 5 | Invoker | 0.62 | 50.8% | 19.0% | 51.7% | 29.5% |  |
-| 6 | Arc Warden | 0.62 | 52.5% | 4.3% | 55.1% | 1.1% | ▲ сильный |
-| 7 | Necrophos | 0.61 | 50.8% | 15.3% | 48.5% | 59.4% |  |
-| 8 | Ember Spirit | 0.60 | 49.1% | 6.6% | 52.7% | 63.8% |  |
-| 9 | Snapfire | 0.52 | 49.8% | 10.1% | 54.8% | 10.7% |  |
-| 10 | Meepo | 0.52 | 53.5% | 1.5% | 45.9% | 3.0% | ▲ сильный |
-| 11 | Leshrac | 0.52 | 52.0% | 2.1% | 50.9% | 0.4% |  |
-| 12 | Viper | 0.51 | 48.9% | 7.1% | 49.5% | 35.4% |  |
+| 1 | Dragon Knight | 0.78 | 52.8% | 14.4% | 52.5% | 69.9% | ▲ сильный |
+| 2 | Outworld Devourer | 0.76 | 54.1% | 12.7% | 47.3% | 44.5% | ▲ сильный |
+| 3 | Earth Spirit | 0.65 | 49.6% | 4.2% | 53.8% | 55.5% |  |
+| 4 | Keeper of the Light | 0.63 | 49.4% | 4.1% | 56.6% | 32.3% |  |
+| 5 | Invoker | 0.61 | 50.7% | 18.9% | 52.0% | 28.8% |  |
+| 6 | Arc Warden | 0.61 | 52.5% | 4.4% | 54.4% | 2.2% | ▲ сильный |
+| 7 | Ember Spirit | 0.60 | 49.2% | 6.9% | 52.8% | 51.5% |  |
+| 8 | Necrophos | 0.59 | 50.6% | 15.5% | 47.5% | 56.8% |  |
+| 9 | Leshrac | 0.52 | 51.9% | 2.1% | 51.2% | 0.4% |  |
+| 10 | Viper | 0.51 | 48.5% | 7.2% | 49.1% | 44.5% |  |
+| 11 | Meepo | 0.50 | 53.1% | 1.6% | 45.9% | 2.2% | ▲ сильный |
+| 12 | Earthshaker | 0.47 | 50.6% | 15.6% | 46.6% | 19.2% |  |
 
-**▼ Слабые на позиции:** Shadow Fiend 42.8%, Huskar 45.3%, Beastmaster 45.4%, Monkey King 45.9%, Pangolier 46.3%, Puck 46.6%, Storm Spirit 46.9%, Lina 47.1%
+**▼ Слабые на позиции:** Shadow Fiend 42.7%, Beastmaster 45.3%, Huskar 45.6%, Monkey King 45.8%, Pangolier 45.9%, Puck 47.0%, Storm Spirit 47.1%, Lina 47.3%
 
 ## Позиция 3
 
 | # | Герой | Сила в мете | WR в пабах | Пикрейт | WR на поз. (про/high) | Про пик+бан | Отметка |
 |---|---|---|---|---|---|---|---|
-| 1 | Enigma | 0.76 | 51.2% | 3.6% | 60.5% | 61.6% |  |
-| 2 | Dragon Knight | 0.76 | 53.1% | 13.1% | 50.3% | 59.0% | ▲ сильный |
-| 3 | Wraith King | 0.70 | 55.0% | 12.8% | 52.4% | 1.1% | ▲ сильный |
-| 4 | Dawnbreaker | 0.69 | 52.7% | 9.3% | 48.7% | 36.2% | ▲ сильный |
-| 5 | Visage | 0.69 | 53.7% | 1.4% | 55.7% | 2.2% | ▲ сильный |
-| 6 | Lycan | 0.60 | 48.9% | 1.3% | 54.5% | 36.5% |  |
-| 7 | Largo | 0.60 | 48.9% | 1.5% | 53.3% | 39.9% |  |
-| 8 | Brewmaster | 0.59 | 50.2% | 2.1% | 48.9% | 72.0% |  |
-| 9 | Doom | 0.56 | 47.5% | 5.3% | 55.2% | 59.0% | ▼ слабый |
-| 10 | Legion Commander | 0.56 | 52.6% | 17.3% | 51.6% | 0.7% | ▲ сильный |
-| 11 | Abaddon | 0.53 | 51.0% | 2.9% | 54.9% | 0.4% |  |
-| 12 | Dark Seer | 0.53 | 49.3% | 4.3% | 48.1% | 42.1% |  |
+| 1 | Enigma | 0.75 | 51.1% | 3.8% | 61.4% | 76.9% |  |
+| 2 | Dragon Knight | 0.71 | 52.8% | 14.4% | 48.3% | 69.9% | ▲ сильный |
+| 3 | Dawnbreaker | 0.70 | 52.5% | 9.4% | 48.7% | 43.2% | ▲ сильный |
+| 4 | Wraith King | 0.69 | 54.7% | 13.2% | 52.4% | 2.2% | ▲ сильный |
+| 5 | Visage | 0.66 | 53.2% | 1.4% | 55.7% | 0.0% | ▲ сильный |
+| 6 | Necrophos | 0.65 | 50.6% | 15.5% | 51.3% | 56.8% |  |
+| 7 | Lycan | 0.63 | 48.9% | 1.3% | 55.4% | 54.1% |  |
+| 8 | Brewmaster | 0.63 | 50.6% | 2.2% | 49.9% | 73.4% |  |
+| 9 | Doom | 0.59 | 48.0% | 5.8% | 55.1% | 53.7% |  |
+| 10 | Legion Commander | 0.56 | 52.7% | 16.7% | 51.6% | 0.4% | ▲ сильный |
+| 11 | Largo | 0.56 | 48.0% | 1.5% | 53.4% | 42.4% |  |
+| 12 | Abaddon | 0.54 | 51.1% | 3.0% | 54.9% | 0.0% |  |
 
-**▼ Слабые на позиции:** Beastmaster 45.4%, Timbersaw 45.5%, Pangolier 46.3%, Bristleback 47.4%, Doom 47.5%, Primal Beast 47.9%
+**▼ Слабые на позиции:** Beastmaster 45.3%, Timbersaw 45.7%, Pangolier 45.9%, Bristleback 47.4%, Mars 47.7%, Underlord 48.0%
 
 ## Позиция 4
 
 | # | Герой | Сила в мете | WR в пабах | Пикрейт | WR на поз. (про/high) | Про пик+бан | Отметка |
 |---|---|---|---|---|---|---|---|
-| 1 | Bounty Hunter | 0.81 | 52.2% | 6.4% | 64.5% | 83.8% | ▲ сильный |
-| 2 | Dazzle | 0.72 | 51.5% | 5.0% | 53.8% | 36.2% |  |
-| 3 | Mirana | 0.69 | 51.7% | 11.7% | 52.9% | 31.0% |  |
-| 4 | Nyx Assassin | 0.67 | 52.4% | 11.5% | 54.4% | 15.1% | ▲ сильный |
-| 5 | Witch Doctor | 0.66 | 52.3% | 16.8% | 50.0% | 29.5% | ▲ сильный |
-| 6 | Grimstroke | 0.63 | 52.3% | 6.9% | 54.1% | 9.2% | ▲ сильный |
-| 7 | Keeper of the Light | 0.62 | 49.3% | 4.3% | 55.7% | 32.5% |  |
-| 8 | Techies | 0.62 | 51.0% | 12.8% | 48.0% | 83.8% |  |
-| 9 | Spirit Breaker | 0.61 | 52.4% | 16.5% | 51.2% | 13.7% | ▲ сильный |
-| 10 | Phoenix | 0.59 | 52.0% | 5.1% | 53.0% | 7.0% | ▲ сильный |
-| 11 | Rubick | 0.57 | 49.6% | 21.5% | 50.5% | 36.2% |  |
-| 12 | Io | 0.57 | 50.2% | 3.8% | 57.0% | 11.4% |  |
+| 1 | Bounty Hunter | 0.81 | 52.2% | 6.4% | 64.1% | 67.7% | ▲ сильный |
+| 2 | Dazzle | 0.71 | 51.3% | 5.2% | 53.8% | 36.7% |  |
+| 3 | Mirana | 0.68 | 51.7% | 11.6% | 52.7% | 31.0% |  |
+| 4 | Nyx Assassin | 0.68 | 52.5% | 11.1% | 54.0% | 17.0% | ▲ сильный |
+| 5 | Grimstroke | 0.67 | 52.3% | 7.2% | 54.1% | 17.5% | ▲ сильный |
+| 6 | Witch Doctor | 0.66 | 52.2% | 17.1% | 50.2% | 29.7% | ▲ сильный |
+| 7 | Keeper of the Light | 0.62 | 49.4% | 4.1% | 55.6% | 32.3% |  |
+| 8 | Io | 0.62 | 49.8% | 4.1% | 57.0% | 26.2% |  |
+| 9 | Techies | 0.62 | 51.0% | 13.8% | 48.2% | 87.8% |  |
+| 10 | Spirit Breaker | 0.59 | 52.1% | 17.0% | 51.2% | 13.5% | ▲ сильный |
+| 11 | Lich | 0.56 | 52.7% | 11.2% | 49.2% | 7.4% | ▲ сильный |
+| 12 | Phoenix | 0.56 | 51.8% | 5.2% | 52.9% | 4.8% |  |
 
-**▼ Слабые на позиции:** Shadow Demon 45.1%, Hoodwink 47.0%, Clockwerk 47.4%, Enchantress 47.5%, Tusk 47.9%
+**▼ Слабые на позиции:** Shadow Demon 45.1%, Clockwerk 47.1%, Hoodwink 47.2%, Enchantress 47.5%, Tusk 47.9%
 
 ## Позиция 5
 
 | # | Герой | Сила в мете | WR в пабах | Пикрейт | WR на поз. (про/high) | Про пик+бан | Отметка |
 |---|---|---|---|---|---|---|---|
-| 1 | Techies | 0.73 | 51.0% | 12.8% | 54.7% | 83.8% |  |
-| 2 | Witch Doctor | 0.72 | 52.3% | 16.8% | 53.6% | 29.5% | ▲ сильный |
-| 3 | Bounty Hunter | 0.72 | 52.2% | 6.4% | 50.4% | 83.8% | ▲ сильный |
-| 4 | Nyx Assassin | 0.70 | 52.4% | 11.5% | 56.8% | 15.1% | ▲ сильный |
-| 5 | Dazzle | 0.67 | 51.5% | 5.0% | 50.4% | 36.2% |  |
-| 6 | Winter Wyvern | 0.65 | 49.8% | 5.9% | 53.7% | 64.6% |  |
-| 7 | Pugna | 0.58 | 51.5% | 4.0% | 58.5% | 0.7% |  |
-| 8 | Lich | 0.56 | 52.8% | 11.1% | 49.9% | 5.2% | ▲ сильный |
-| 9 | Spirit Breaker | 0.55 | 52.4% | 16.5% | 48.0% | 13.7% | ▲ сильный |
-| 10 | Vengeful Spirit | 0.55 | 52.5% | 9.7% | 51.3% | 0.7% | ▲ сильный |
-| 11 | Io | 0.55 | 50.2% | 3.8% | 54.9% | 11.4% |  |
-| 12 | Rubick | 0.55 | 49.6% | 21.5% | 49.1% | 36.2% |  |
+| 1 | Techies | 0.75 | 51.0% | 13.8% | 55.8% | 87.8% |  |
+| 2 | Bounty Hunter | 0.74 | 52.2% | 6.4% | 51.5% | 67.7% | ▲ сильный |
+| 3 | Nyx Assassin | 0.71 | 52.5% | 11.1% | 56.7% | 17.0% | ▲ сильный |
+| 4 | Witch Doctor | 0.70 | 52.2% | 17.1% | 52.6% | 29.7% | ▲ сильный |
+| 5 | Dazzle | 0.65 | 51.3% | 5.2% | 50.2% | 36.7% |  |
+| 6 | Winter Wyvern | 0.63 | 49.7% | 6.0% | 52.6% | 50.7% |  |
+| 7 | Io | 0.60 | 49.8% | 4.1% | 54.9% | 26.2% |  |
+| 8 | Lich | 0.58 | 52.7% | 11.2% | 50.1% | 7.4% | ▲ сильный |
+| 9 | Pugna | 0.56 | 51.1% | 4.1% | 58.2% | 1.7% |  |
+| 10 | Vengeful Spirit | 0.55 | 52.6% | 9.7% | 51.3% | 0.0% | ▲ сильный |
+| 11 | Grimstroke | 0.54 | 52.3% | 7.2% | 46.2% | 17.5% | ▲ сильный |
+| 12 | Spirit Breaker | 0.54 | 52.1% | 17.0% | 47.9% | 13.5% | ▲ сильный |
 
-**▼ Слабые на позиции:** Treant Protector 45.1%, Shadow Demon 45.1%, Hoodwink 47.0%, Clockwerk 47.4%, Enchantress 47.5%, Tusk 47.9%
+**▼ Слабые на позиции:** Shadow Demon 45.1%, Treant Protector 45.6%, Clockwerk 47.1%, Hoodwink 47.2%, Enchantress 47.5%, Tusk 47.9%
 
 ## Про-сцена: самые оспариваемые герои (пик + бан)
 
@@ -103,26 +103,26 @@
 
 | # | Герой | Пик+бан | Пики | Баны | WR в про | Позиции |
 |---|---|---|---|---|---|---|
-| 1 | Bounty Hunter | 83.8% | 16 | 211 | 50.0% | 4/5 |
-| 2 | Techies | 83.8% | 86 | 141 | 60.5% | 4/5 |
-| 3 | Dark Willow | 79.0% | 112 | 102 | 48.2% | 4/5 |
-| 4 | Hoodwink | 77.1% | 102 | 107 | 54.9% | 4/5 |
-| 5 | Brewmaster | 72.0% | 64 | 131 | 56.3% | 3 |
-| 6 | Nature's Prophet | 66.1% | 65 | 114 | 61.5% | 1/2 |
-| 7 | Winter Wyvern | 64.6% | 92 | 83 | 51.1% | 4/5 |
-| 8 | Lone Druid | 63.8% | 30 | 143 | 50.0% | 1 |
-| 9 | Ember Spirit | 63.8% | 70 | 103 | 50.0% | 2 |
-| 10 | Earth Spirit | 63.8% | 73 | 100 | 52.1% | 2 |
-| 11 | Enigma | 61.6% | 22 | 145 | 50.0% | 3 |
-| 12 | Necrophos | 59.4% | 42 | 119 | 45.2% | 1/2/3 |
-| 13 | Dragon Knight | 59.0% | 85 | 75 | 54.1% | 1/2/3 |
-| 14 | Doom | 59.0% | 55 | 105 | 52.7% | 3 |
-| 15 | Slark | 56.5% | 47 | 106 | 63.8% | 1 |
-| 16 | Outworld Devourer | 54.6% | 37 | 111 | 35.1% | 2 |
-| 17 | Windranger | 51.3% | 102 | 37 | 52.9% | 1/4 |
-| 18 | Pangolier | 50.9% | 75 | 63 | 50.7% | 2/3 |
-| 19 | Lifestealer | 42.4% | 29 | 86 | 31.0% | 1 |
-| 20 | Dark Seer | 42.1% | 46 | 68 | 43.5% | 3 |
+| 1 | Techies | 87.8% | 61 | 140 | 54.1% | 4/5 |
+| 2 | Enigma | 76.9% | 37 | 139 | 62.2% | 3 |
+| 3 | Dark Willow | 76.9% | 92 | 84 | 51.1% | 4/5 |
+| 4 | Brewmaster | 73.4% | 50 | 118 | 58.0% | 3 |
+| 5 | Dragon Knight | 69.9% | 78 | 82 | 57.7% | 1/2/3 |
+| 6 | Bounty Hunter | 67.7% | 17 | 138 | 64.7% | 4/5 |
+| 7 | Hoodwink | 67.2% | 98 | 56 | 40.8% | 4/5 |
+| 8 | Windranger | 61.6% | 88 | 53 | 55.7% | 1/4 |
+| 9 | Lone Druid | 61.6% | 29 | 112 | 51.7% | 1 |
+| 10 | Necrophos | 56.8% | 45 | 85 | 48.9% | 1/2/3 |
+| 11 | Earth Spirit | 55.5% | 45 | 82 | 44.4% | 2 |
+| 12 | Nature's Prophet | 54.6% | 40 | 85 | 55.0% | 1/2 |
+| 13 | Lycan | 54.1% | 29 | 95 | 65.5% | 3 |
+| 14 | Doom | 53.7% | 32 | 91 | 43.8% | 3 |
+| 15 | Slark | 53.3% | 35 | 87 | 34.3% | 1 |
+| 16 | Ember Spirit | 51.5% | 42 | 76 | 59.5% | 2 |
+| 17 | Winter Wyvern | 50.7% | 68 | 48 | 45.6% | 4/5 |
+| 18 | Timbersaw | 49.3% | 33 | 80 | 54.5% | 3 |
+| 19 | Pangolier | 46.7% | 57 | 50 | 45.6% | 2/3 |
+| 20 | Viper | 44.5% | 22 | 80 | 40.9% | 2/3 |
 
 ## Лучшие связки (в одной команде)
 
@@ -130,36 +130,36 @@
 
 | # | Связка | Синергия | WR пары | Игр |
 |---|---|---|---|---|
-| 1 | Leshrac + Io | +9.6% | 62.3% | 748 |
-| 2 | Drow Ranger + Faceless Void | +8.6% | 57.1% | 413 |
-| 3 | Wraith King + Phoenix | +8.3% | 61.5% | 600 |
-| 4 | Lich + Doom | +7.4% | 58.1% | 771 |
-| 5 | Ogre Magi + Abaddon | +7.4% | 58.2% | 426 |
-| 6 | Faceless Void + Wraith King | +7.0% | 59.6% | 676 |
-| 7 | Spirit Breaker + Keeper of the Light | +7.0% | 57.7% | 586 |
-| 8 | Pugna + Lifestealer | +7.0% | 58.7% | 608 |
-| 9 | Dragon Knight + Night Stalker | +6.6% | 59.1% | 589 |
-| 10 | Spectre + Nyx Assassin | +6.6% | 59.9% | 1176 |
-| 11 | Io + Techies | +6.5% | 57.0% | 523 |
-| 12 | Dragon Knight + Grimstroke | +6.4% | 58.7% | 1215 |
-| 13 | Spectre + Phoenix | +6.3% | 58.9% | 508 |
-| 14 | Nyx Assassin + Dawnbreaker | +6.3% | 59.3% | 1169 |
-| 15 | Vengeful Spirit + Sniper | +6.2% | 57.8% | 1804 |
-| 16 | Wraith King + Gyrocopter | +6.2% | 57.7% | 473 |
-| 17 | Bounty Hunter + Outworld Devourer | +6.2% | 58.8% | 1067 |
-| 18 | Spectre + Ring Master | +6.0% | 57.3% | 506 |
-| 19 | Phantom Lancer + Skywrath Mage | +6.0% | 57.1% | 1159 |
-| 20 | Juggernaut + Clockwerk | +6.0% | 56.7% | 563 |
-| 21 | Spectre + Outworld Devourer | +6.0% | 59.9% | 1107 |
-| 22 | Clinkz + Techies | +5.9% | 56.5% | 510 |
-| 23 | Vengeful Spirit + Dawnbreaker | +5.9% | 59.0% | 897 |
-| 24 | Dragon Knight + Spectre | +5.8% | 58.8% | 1297 |
-| 25 | Phantom Lancer + Ancient Apparition | +5.8% | 57.9% | 955 |
-| 26 | Bloodseeker + Spirit Breaker | +5.8% | 56.8% | 442 |
-| 27 | Sven + Riki | +5.8% | 57.4% | 411 |
-| 28 | Phantom Lancer + Enigma | +5.8% | 58.6% | 490 |
-| 29 | Wraith King + Grimstroke | +5.7% | 59.4% | 823 |
-| 30 | Wraith King + Ancient Apparition | +5.7% | 58.8% | 1222 |
+| 1 | Leshrac + Io | +11.4% | 63.8% | 738 |
+| 2 | Earthshaker + Abaddon | +8.5% | 59.4% | 434 |
+| 3 | Leshrac + Ogre Magi | +8.4% | 60.8% | 401 |
+| 4 | Bloodseeker + Legion Commander | +7.7% | 59.0% | 442 |
+| 5 | Venomancer + Spectre | +7.6% | 59.0% | 753 |
+| 6 | Lich + Arc Warden | +7.5% | 59.6% | 502 |
+| 7 | Bloodseeker + Shadow Shaman | +7.0% | 58.3% | 492 |
+| 8 | Enigma + Outworld Devourer | +6.8% | 60.5% | 577 |
+| 9 | Riki + Dragon Knight | +6.5% | 58.7% | 685 |
+| 10 | Phantom Lancer + Zeus | +6.4% | 58.2% | 1614 |
+| 11 | Lina + Outworld Devourer | +6.4% | 57.0% | 498 |
+| 12 | Riki + Skywrath Mage | +6.4% | 57.0% | 683 |
+| 13 | Crystal Maiden + Winter Wyvern | +6.4% | 56.9% | 422 |
+| 14 | Legion Commander + Marci | +6.2% | 57.1% | 690 |
+| 15 | Wraith King + Clinkz | +6.1% | 58.5% | 545 |
+| 16 | Slardar + Dragon Knight | +6.0% | 56.9% | 496 |
+| 17 | Spectre + Ancient Apparition | +6.0% | 58.5% | 839 |
+| 18 | Riki + Wraith King | +6.0% | 59.4% | 799 |
+| 19 | Wraith King + Dragon Knight | +6.0% | 59.5% | 1077 |
+| 20 | Crystal Maiden + Pugna | +5.9% | 57.2% | 428 |
+| 21 | Puck + Wraith King | +5.9% | 56.8% | 461 |
+| 22 | Spectre + Outworld Devourer | +5.7% | 59.6% | 1276 |
+| 23 | Dragon Knight + Doom | +5.7% | 56.3% | 526 |
+| 24 | Ogre Magi + Muerta | +5.7% | 55.3% | 591 |
+| 25 | Enigma + Nyx Assassin | +5.6% | 58.7% | 566 |
+| 26 | Vengeful Spirit + Bounty Hunter | +5.6% | 58.4% | 574 |
+| 27 | Anti-Mage + Oracle | +5.6% | 56.3% | 909 |
+| 28 | Enigma + Spectre | +5.5% | 59.0% | 405 |
+| 29 | Sven + Outworld Devourer | +5.5% | 58.4% | 1628 |
+| 30 | Anti-Mage + Wraith King | +5.5% | 58.4% | 1635 |
 
 ## Самые жёсткие контрпики
 
@@ -167,33 +167,33 @@
 
 | # | Герой | контрит | Преимущество | WR | Игр |
 |---|---|---|---|---|---|
-| 1 | Vengeful Spirit | Tiny | +12.5% | 67.3% | 684 |
-| 2 | Anti-Mage | Medusa | +11.1% | 61.0% | 413 |
-| 3 | Nyx Assassin | Morphling | +10.7% | 63.2% | 492 |
-| 4 | Wraith King | Templar Assassin | +10.3% | 65.1% | 455 |
-| 5 | Phantom Lancer | Terrorblade | +10.3% | 64.1% | 632 |
-| 6 | Legion Commander | Huskar | +10.0% | 62.3% | 608 |
-| 7 | Phantom Lancer | Clinkz | +9.8% | 60.9% | 407 |
-| 8 | Lifestealer | Underlord | +9.6% | 61.7% | 1007 |
-| 9 | Witch Doctor | Timbersaw | +9.2% | 62.0% | 681 |
-| 10 | Viper | Huskar | +8.9% | 59.6% | 436 |
-| 11 | Slark | Bristleback | +8.9% | 60.3% | 867 |
-| 12 | Rubick | Underlord | +8.8% | 60.2% | 1397 |
-| 13 | Wraith King | Shadow Fiend | +8.6% | 64.9% | 1012 |
-| 14 | Outworld Devourer | Primal Beast | +8.6% | 60.6% | 540 |
-| 15 | Ancient Apparition | Kez | +8.5% | 62.3% | 414 |
-| 16 | Outworld Devourer | Timbersaw | +8.5% | 62.6% | 693 |
-| 17 | Phantom Lancer | Sniper | +8.4% | 60.0% | 2021 |
-| 18 | Huskar | Anti-Mage | +8.4% | 56.2% | 697 |
-| 19 | Wraith King | Doom | +8.3% | 61.3% | 1062 |
-| 20 | Zeus | Kez | +8.2% | 61.8% | 636 |
-| 21 | Mirana | Kez | +8.1% | 62.4% | 627 |
-| 22 | Leshrac | Tidehunter | +8.1% | 60.6% | 457 |
-| 23 | Vengeful Spirit | Shadow Fiend | +8.1% | 63.5% | 961 |
-| 24 | Phantom Lancer | Drow Ranger | +8.1% | 61.1% | 2465 |
-| 25 | Phantom Lancer | Weaver | +8.0% | 60.6% | 505 |
-| 26 | Night Stalker | Shadow Fiend | +8.0% | 63.0% | 608 |
-| 27 | Arc Warden | Shadow Fiend | +8.0% | 62.6% | 431 |
-| 28 | Luna | Pangolier | +7.9% | 59.7% | 541 |
-| 29 | Phantom Assassin | Nature's Prophet | +7.9% | 61.6% | 1349 |
-| 30 | Crystal Maiden | Templar Assassin | +7.8% | 60.4% | 536 |
+| 1 | Anti-Mage | Medusa | +14.7% | 65.9% | 478 |
+| 2 | Wraith King | Templar Assassin | +11.4% | 65.8% | 567 |
+| 3 | Spectre | Templar Assassin | +11.4% | 65.3% | 429 |
+| 4 | Phantom Lancer | Terrorblade | +10.7% | 64.6% | 494 |
+| 5 | Outworld Devourer | Timbersaw | +9.7% | 63.4% | 818 |
+| 6 | Outworld Devourer | Underlord | +9.7% | 62.8% | 845 |
+| 7 | Nyx Assassin | Morphling | +9.6% | 62.2% | 460 |
+| 8 | Enigma | Nature's Prophet | +9.5% | 64.4% | 475 |
+| 9 | Viper | Huskar | +9.3% | 60.5% | 504 |
+| 10 | Ancient Apparition | Dazzle | +9.3% | 59.1% | 460 |
+| 11 | Vengeful Spirit | Weaver | +8.8% | 61.3% | 646 |
+| 12 | Leshrac | Phantom Lancer | +8.8% | 59.3% | 418 |
+| 13 | Grimstroke | Tiny | +8.8% | 62.9% | 439 |
+| 14 | Silencer | Shadow Fiend | +8.7% | 62.6% | 1001 |
+| 15 | Wraith King | Huskar | +8.6% | 62.8% | 549 |
+| 16 | Faceless Void | Timbersaw | +8.6% | 59.8% | 430 |
+| 17 | Legion Commander | Terrorblade | +8.2% | 61.3% | 737 |
+| 18 | Dark Seer | Shadow Fiend | +8.1% | 62.1% | 507 |
+| 19 | Faceless Void | Weaver | +8.1% | 58.7% | 581 |
+| 20 | Bounty Hunter | Timbersaw | +8.1% | 61.1% | 437 |
+| 21 | Grimstroke | Underlord | +8.1% | 60.3% | 489 |
+| 22 | Pugna | Tidehunter | +8.0% | 59.4% | 704 |
+| 23 | Outworld Devourer | Monkey King | +7.9% | 61.9% | 809 |
+| 24 | Dawnbreaker | Nature's Prophet | +7.8% | 61.9% | 996 |
+| 25 | Io | Shadow Fiend | +7.8% | 62.0% | 511 |
+| 26 | Viper | Bristleback | +7.8% | 57.8% | 493 |
+| 27 | Wraith King | Drow Ranger | +7.8% | 61.5% | 2655 |
+| 28 | Necrophos | Alchemist | +7.7% | 59.5% | 524 |
+| 29 | Rubick | Underlord | +7.7% | 58.8% | 1477 |
+| 30 | Wraith King | Tiny | +7.7% | 63.1% | 750 |

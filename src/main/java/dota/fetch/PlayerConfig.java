@@ -20,14 +20,24 @@ public record PlayerConfig(@JsonProperty("our_team") TeamInfo ourTeam, League le
 
     /**
      * Турнир: id лиги OpenDota, с какой даты считать матчи текущего сезона (yyyy-MM-dd),
-     * команды нашей группы (соперники) и имя следующего соперника (для главной страницы сайта).
+     * команды нашей группы (соперники), имя следующего соперника (для главной страницы сайта) и карты,
+     * которых нет в OpenDota, но результат известен с сайта турнира.
      */
     public record League(Long id, String name, String since, List<TeamInfo> group,
-                         @JsonProperty("next_opponent") String nextOpponent) {
+                         @JsonProperty("next_opponent") String nextOpponent,
+                         @JsonProperty("manual_maps") List<ManualMap> manualMaps) {
 
         public List<TeamInfo> groupOrEmpty() {
             return group == null ? List.of() : group;
         }
+
+        public List<ManualMap> manualMapsOrEmpty() {
+            return manualMaps == null ? List.of() : manualMaps;
+        }
+    }
+
+    /** Карта, сыгранная, но не попавшая в лигу OpenDota: учитывается только в счёте группы (драфта нет). */
+    public record ManualMap(String date, String winner, String loser, String note) {
     }
 
     public enum Team {
@@ -76,6 +86,19 @@ public record PlayerConfig(@JsonProperty("our_team") TeamInfo ourTeam, League le
             }
             if (!seen.add(p.accountId())) {
                 throw new IllegalArgumentException("duplicate account_id: " + p.accountId());
+            }
+        }
+        if (league != null) {
+            Set<String> teams = new HashSet<>();
+            if (ourTeam != null) {
+                teams.add(ourTeam.name());
+            }
+            league.groupOrEmpty().forEach(t -> teams.add(t.name()));
+            for (ManualMap m : league.manualMapsOrEmpty()) {
+                if (m.date() == null || !teams.contains(m.winner()) || !teams.contains(m.loser())) {
+                    throw new IllegalArgumentException(
+                            "manual_maps: date, winner and loser (team names from the group) are required: " + m);
+                }
             }
         }
     }
