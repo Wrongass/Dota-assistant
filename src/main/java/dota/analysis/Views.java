@@ -58,7 +58,26 @@ public final class Views {
     public record PlayerCard(int pos, String nick, String personaName, long accountId, int rankTier, double mmr,
                              int totalGames, int yearGames, String patch, int patchGames, int patchWins, int cmGames,
                              String note, String rangeName, List<BestHero> best, List<FitRow> fits,
-                             List<HeroValue> strong, List<HeroValue> weak, List<HeroValue> weakInPool) {
+                             List<HeroValue> strong, List<HeroValue> weak, List<HeroValue> weakInPool,
+                             Form form) {
+    }
+
+    /**
+     * Чем игрок играет в последнее время. Окна — от даты отчёта: 14 и 60 дней. Игры и победы — без Турбо,
+     * Турбо отдельной цифрой. «С командой» — игры, где на его стороне был хотя бы один игрок его команды из конфига.
+     */
+    public record Form(String asOf, int games14, int games60, int turbo60, int team60, List<HeroForm> heroes,
+                       List<RecentMatch> matches) {
+    }
+
+    /** signature — герой из его топа «играет лучше всего»; fresh — много игр за 14 дней, но в топе его нет. */
+    public record HeroForm(int heroId, String name, int games14, int wins14, int games60, int wins60, int turbo60,
+                           int team60, List<String> mates, double kda60, String lastPlayed, boolean signature,
+                           boolean fresh) {
+    }
+
+    public record RecentMatch(long matchId, String date, int heroId, String hero, boolean win, String kda,
+                              int partySize, List<String> mates, boolean turbo, String mode) {
     }
 
     // ---------------------------------------------------------------- мета

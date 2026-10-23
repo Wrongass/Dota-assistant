@@ -338,7 +338,60 @@ public final class Squad {
                 p.computedMmr, p.totalGames, p.yearGames, meta.patch, p.patchGames, p.patchWins, p.cmGames,
                 p.config.note(), rangeName(r[0], r[1]), best, fits,
                 heroValues(standouts(position, r[0], r[1], true, 10), r[0], r[1]),
-                heroValues(standouts(position, r[0], r[1], false, 8), r[0], r[1]), weakInPool);
+                heroValues(standouts(position, r[0], r[1], false, 8), r[0], r[1]), weakInPool, form(p));
+    }
+
+    /** Срезы «14 дней / 2 месяца / с командой» и последние 20 матчей — от даты отчёта today. */
+    Views.Form form(PlayerStats p) {
+        long now = java.time.LocalDate.parse(today).plusDays(1).atStartOfDay(java.time.ZoneOffset.UTC).toEpochSecond();
+        Map<Integer, PlayerStats.Form> d14 = p.form(now - 14 * 86400L, now), d60 = p.form(now - 60 * 86400L, now);
+        Set<Integer> best = new HashSet<>();
+        p.bestHeroes(TOP).forEach(h -> best.add(h.heroId));
+        Map<Long, String> nicks = new HashMap<>();
+        players.forEach(x -> nicks.put(x.config.accountId(), x.nick()));
+        List<Views.HeroForm> heroes = d60.values().stream()
+                .filter(f -> f.games + f.turbo > 0)
+                .sorted(Comparator.comparingInt((PlayerStats.Form f) -> f.games).reversed()
+                        .thenComparing(Comparator.comparingInt((PlayerStats.Form f) -> f.turbo).reversed()))
+                .limit(15)
+                .map(f -> {
+                    PlayerStats.Form f14 = d14.get(f.heroId);
+                    int g14 = f14 == null ? 0 : f14.games, w14 = f14 == null ? 0 : f14.wins;
+                    double kda = f.games == 0 ? 0 : (f.kills + f.assists) / (double) Math.max(1, f.deaths);
+                    return new Views.HeroForm(f.heroId, meta.name(f.heroId), g14, w14, f.games, f.wins, f.turbo,
+                            f.withTeam, f.mates.stream().map(nicks::get).filter(java.util.Objects::nonNull).toList(), kda,
+                            DAY.format(java.time.Instant.ofEpochSecond(f.last)), best.contains(f.heroId),
+                            g14 >= 3 && !best.contains(f.heroId));
+                })
+                .toList();
+        int games14 = d14.values().stream().mapToInt(f -> f.games).sum();
+        int games60 = d60.values().stream().mapToInt(f -> f.games).sum();
+        int turbo60 = d60.values().stream().mapToInt(f -> f.turbo).sum();
+        int team60 = d60.values().stream().mapToInt(f -> f.withTeam).sum();
+        List<Views.RecentMatch> matches = p.recent.stream().filter(g -> g.start() < now).limit(20)
+                .map(g -> new Views.RecentMatch(g.matchId(), DAY.format(java.time.Instant.ofEpochSecond(g.start())),
+                        g.heroId(), meta.name(g.heroId()), g.win(), g.kills() + "/" + g.deaths() + "/" + g.assists(),
+                        g.partySize(), g.mates().stream().map(nicks::get).filter(java.util.Objects::nonNull).toList(),
+                        g.turbo(), modeName(g.gameMode())))
+                .toList();
+        return new Views.Form(today, games14, games60, turbo60, team60, heroes, matches);
+    }
+
+    private static final java.time.format.DateTimeFormatter DAY =
+            java.time.format.DateTimeFormatter.ofPattern("dd.MM").withZone(java.time.ZoneOffset.UTC);
+
+    static String modeName(int gameMode) {
+        return switch (gameMode) {
+            case 1 -> "All Pick";
+            case 2 -> "Captains Mode";
+            case 3 -> "Random Draft";
+            case 4 -> "Single Draft";
+            case 16 -> "Captains Draft";
+            case 18 -> "Ability Draft";
+            case 22 -> "All Pick";
+            case 23 -> "Turbo";
+            default -> "режим " + gameMode;
+        };
     }
 
     /** Мета на рангах этой команды (медиана ±1). */

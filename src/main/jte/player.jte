@@ -13,7 +13,10 @@
         <p class="muted small">Мета для этого игрока считается на рангах <b>${c.rangeName()}</b>. <a href="/method">Как считаются оценки</a></p>
     </div>
 
-    <h2>Топ-${c.best().size()} героев, на которых играет лучше всего</h2>
+    <h2>Чем играет сейчас: 14 дней и 2 месяца</h2>
+    @template.tag.form(form = c.form())
+
+    <h2>Топ-${c.best().size()} героев, на которых играет лучше всего <span class="muted small">— «всегда может достать»</span></h2>
     <div class="panel table-wrap">
         <table class="sortable">
             <thead><tr><th>#</th><th>Герой</th><th class="num">Умение</th><th>Игр всего / год / патч</th><th class="num">WR всего</th>

@@ -41,9 +41,11 @@ public final class DraftEngine {
      *                  острее, сигнатурные герои получают заметную долю вместо «4% у лучшего»
      * @param shareWeight вес доли героя в играх игрока за год и патч («чем играет в последнее время»)
      * @param shareCap    с какой доли игр вес перестаёт расти
+     * @param recentWeight вес доли героя в играх за последние 60 дней (без Турбо) — «что тренирует сейчас»
+     * @param teamWeight   вес доли героя в играх за 60 дней в пати с игроками своей команды
      */
-    public record Params(double sharpness, double shareWeight, double shareCap) {
-        public static final Params DEFAULT = new Params(1.25, 32, 0.25);
+    public record Params(double sharpness, double shareWeight, double shareCap, double recentWeight, double teamWeight) {
+        public static final Params DEFAULT = new Params(1.25, 32, 0.25, 8, 4);
     }
 
     /**
@@ -118,6 +120,8 @@ public final class DraftEngine {
         /** Сколько карт команда сыграла в турнире (без проверяемой в бэктесте). */
         final int maps;
         final Map<Integer, Double> threat = new HashMap<>();
+        /** Доли героев за 60 дней до asOf: игрок → герой → {все игры, игры с командой}. */
+        final Map<PlayerStats, Map<Integer, double[]>> recent = new HashMap<>();
 
         SquadModel(Squad squad, long excludeMatchId) {
             this.squad = squad;
@@ -128,6 +132,12 @@ public final class DraftEngine {
             for (Squad.Threat t : squad.threatList(tourney)) {
                 threat.put(t.hero(), t.score());
             }
+            long asOf = ctx.league.matches.stream().filter(m -> m.matchId() == excludeMatchId)
+                    .mapToLong(League.Match::startTime).findFirst()
+                    .orElse(java.time.LocalDate.parse(squad.today).plusDays(1).atStartOfDay(java.time.ZoneOffset.UTC).toEpochSecond());
+            for (PlayerStats p : players) {
+                recent.put(p, p.recentShares(asOf, 60));
+            }
         }
 
         /** Насколько вероятно, что игрок p возьмёт героя h (относительный вес, > 0). */
@@ -136,8 +146,11 @@ public final class DraftEngine {
             double posFit = meta.posTotal(h) >= 20 ? meta.posShare(h, pos) : 0.1;
             double skill = p.skillOn(h) / 100;
             int t = tourney.getOrDefault(p.config.accountId(), Map.of()).getOrDefault(h, 0);
+            double[] r = recent.get(p).getOrDefault(h, NO_RECENT);
             return (0.05 + posFit) * (0.15 + skill) * (1 + 1.5 * t)
-                    * (1 + params.shareWeight() * Math.min(share(p, h), params.shareCap()));
+                    * (1 + params.shareWeight() * Math.min(share(p, h), params.shareCap()))
+                    * (1 + params.recentWeight() * Math.min(r[0], params.shareCap()))
+                    * (1 + params.teamWeight() * Math.min(r[1], params.shareCap()));
         }
 
         int tourneyPicks(PlayerStats p, int h) {
@@ -153,6 +166,8 @@ public final class DraftEngine {
             return players.stream().map(p -> new RosterLine(p.nick(), squad.position(p))).toList();
         }
     }
+
+    private static final double[] NO_RECENT = {0, 0};
 
     /** Доля героя в играх игрока: поровну за год и за текущий патч — «чем играет в последнее время». */
     static double share(PlayerStats p, int h) {
@@ -521,7 +536,11 @@ public final class DraftEngine {
             if (result.size() >= 15) {
                 break;
             }
-            PlayerStats p = them.players.get(d.bestPlayer().get(h));
+            int best = d.bestPlayer().get(h);
+            if (d.free()[best] < 0.15) {
+                continue; // герой игрока, который почти наверняка уже выбрал: острый прогноз не должен его вытаскивать
+            }
+            PlayerStats p = them.players.get(best);
             result.add(new Reasoned(h, meta.name(h), d.chance().get(h), p.nick(),
                     pickReasons(them, p, h, theirPicks, ourPicks, "наш")));
         }

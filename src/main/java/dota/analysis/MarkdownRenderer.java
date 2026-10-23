@@ -173,6 +173,20 @@ final class MarkdownRenderer {
         }
         md.line("- Мета для этого игрока считается на рангах **%s**.", p.rangeName());
 
+        Views.Form recent = p.form();
+        md.h2("Чем играет сейчас: 14 дней и 2 месяца");
+        md.line("На %s: за 14 дней %d игр, за 2 месяца %d (из них с игроками своей команды — %d), Турбо за 2 месяца — %d (в игры не входит). "
+                + "🔥 — много игр за 14 дней, но не из топа; ★ — из топа «играет лучше всего»; 👥 — играл в пати со своими.",
+                recent.asOf(), recent.games14(), recent.games60(), recent.team60(), recent.turbo60()).blank();
+        Md.Table form = md.table("Герой", "14 дней", "WR", "2 месяца", "WR", "Турбо", "С командой", "С кем", "Последняя");
+        for (Views.HeroForm h : recent.heroes()) {
+            form.row(h.name() + (h.fresh() ? " 🔥" : "") + (h.signature() ? " ★" : "") + (h.team60() > 0 ? " 👥" : ""),
+                    h.games14(), h.games14() == 0 ? "—" : Md.pct((double) h.wins14() / h.games14()), h.games60(),
+                    h.games60() == 0 ? "—" : Md.pct((double) h.wins60() / h.games60()), h.turbo60() == 0 ? "" : h.turbo60(),
+                    h.team60() == 0 ? "" : h.team60(), String.join(", ", h.mates()), h.lastPlayed());
+        }
+        form.end();
+
         md.h2("Топ-" + TOP + " героев, на которых играет лучше всего");
         md.line("Не просто винрейт или число игр — см. «Как считаются оценки» в [README](../README.md). Позиции героя — как его играют в патче.").blank();
         Md.Table best = md.table("#", "Герой", "Умение", "Игр всего / год / патч", "WR всего", "WR за год",

@@ -61,14 +61,13 @@ public final class DraftBacktest {
 
     /** Перебор настроек модели: печатает топ-5/10 и log-loss для каждой комбинации. */
     static void tune(AnalysisContext ctx) {
-        for (double sharp : new double[]{1.0, 1.25, 1.5}) {
-            for (double weight : new double[]{4, 16, 32, 64}) {
-                for (double cap : new double[]{0.25}) {
-                    DraftEngine.Params p = new DraftEngine.Params(sharp, weight, cap);
-                    Result r = run(ctx, p, false);
-                    System.out.printf("sharp %.2f weight %4.1f cap %.2f: топ-5 %d топ-10 %d log-loss %.3f%n",
-                            sharp, weight, cap, r.top5(), r.top10(), r.logLoss());
-                }
+        DraftEngine.Params d = DraftEngine.Params.DEFAULT;
+        for (double recent : new double[]{0, 4, 8, 16, 32}) {
+            for (double team : new double[]{0, 4, 8, 16}) {
+                DraftEngine.Params p = new DraftEngine.Params(d.sharpness(), d.shareWeight(), d.shareCap(), recent, team);
+                Result r = run(ctx, p, false);
+                System.out.printf("recent %4.1f team %4.1f: топ-5 %d топ-10 %d log-loss %.3f, «кто на герое» %d/%d%n",
+                        recent, team, r.top5(), r.top10(), r.logLoss(), r.assignedRight(), r.assigned());
             }
         }
     }
