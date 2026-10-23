@@ -54,6 +54,7 @@
     const id = NAME_TO_ID.get(name.toLowerCase());
     if (id) ALIASES.set(alias, id);
   }
+  const ROSTERS = JSON.parse(root.dataset.rosters); // {"ours": [...], "<slug>": [...]}
 
   // ------------------------------------------------------------ состояние
   let state = { opponent: root.dataset.defaultOpponent, weFirst: true, heroes: [], assign: {} };
@@ -77,6 +78,8 @@
   const slot = (i) => ORDER[i];
   const isOurs = (i) => slot(i).firstTeam === state.weFirst;
   const name = (id) => byId.get(id)?.name ?? "—";
+  const icon = (id) => heroIcon(id, name(id));
+  const pct = (x) => (100 * x).toFixed(x < 0.1 ? 1 : 0) + "%";
 
   // ------------------------------------------------------------ ввод ходов
   /** Предупреждение перед подозрительным ходом: наш бан нашего героя или наш пик не из наших пулов. */
@@ -95,8 +98,7 @@
   function apply(heroId) {
     const target = editIndex ?? state.heroes.length;
     if (target >= ORDER.length) return;
-    const taken = used();
-    if (taken.has(heroId) && state.heroes[target] !== heroId) return;
+    if (used().has(heroId) && state.heroes[target] !== heroId) return;
     const w = warning(target, heroId);
     if (w && pendingWarn !== heroId) {
       pendingWarn = heroId;
@@ -158,6 +160,7 @@
   }
   document.addEventListener("keydown", (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") { e.preventDefault(); $("undo").click(); }
+    if (e.key === "Escape" && !$("drawer").hidden) closeDrawer();
   });
 
   // ------------------------------------------------------------ поиск
@@ -189,9 +192,10 @@
     const found = search($("search").value).slice(0, 6);
     if (selected >= found.length) selected = 0;
     $("suggest").innerHTML = found.map((h, i) =>
-      `<li class="${i === selected ? "sel" : ""}" data-id="${h.id}">${esc(h.name)}${POOL[h.id] ? ` <span class="muted small">наш: ${esc(POOL[h.id].join(", "))}</span>` : ""}</li>`).join("");
+      `<li class="${i === selected ? "sel" : ""}" data-id="${h.id}">${icon(h.id)} ${esc(h.name)}${POOL[h.id]
+        ? ` <span class="muted small">наш: ${esc(POOL[h.id].join(", "))}</span>` : ""}</li>`).join("");
     const q = $("search").value.trim();
-    document.querySelectorAll("#grid .hero").forEach((b) => {
+    document.querySelectorAll("#grid .hero-tile").forEach((b) => {
       b.classList.toggle("match", q !== "" && found.some((h) => h.id === Number(b.dataset.id)));
     });
   }
@@ -220,10 +224,7 @@
     if (li) apply(Number(li.dataset.id));
   });
 
-  // ------------------------------------------------------------ отрисовка
-  const pct = (x) => (100 * x).toFixed(x < 0.1 ? 1 : 0) + "%";
-  const heroChip = (id, cls = "") => `<span class="chip ${cls}">${esc(name(id))}</span>`;
-
+  // ------------------------------------------------------------ лента ходов
   function renderRibbon() {
     const step = state.heroes.length;
     $("ribbon").innerHTML = ORDER.map((s, i) => {
@@ -232,10 +233,10 @@
       if (i === step && editIndex === null) cls.push("current");
       if (i === editIndex) cls.push("editing");
       if (i > step) cls.push("future");
-      const label = h > 0 ? esc(name(h)) : h === 0 ? "пропуск" : "";
+      const label = h > 0 ? `${icon(h)}<span class="who">${esc(name(h))}</span>` : h === 0 ? '<span class="who muted">пропуск</span>' : "";
       return `<button class="${cls.join(" ")}" data-i="${i}" ${i >= step ? "disabled" : ""}
         title="Ход ${i + 1}: ${s.pick ? "пик" : "бан"} ${isOurs(i) ? "наш" : "их"}">
-        <span class="kind">${i + 1} ${s.pick ? "P" : "b"} ${isOurs(i) ? "мы" : "они"}</span><span class="who">${label}</span></button>`;
+        <span class="kind">${i + 1} ${s.pick ? "ПИК" : "бан"} · ${isOurs(i) ? "мы" : "они"}</span>${label}</button>`;
     }).join("");
     $("ribbon-hint").textContent = editIndex !== null
       ? `Исправляете ход ${editIndex + 1} (${slot(editIndex).pick ? "пик" : "бан"} ${isOurs(editIndex) ? "наш" : "их"}): выберите героя. «Пропустить ход» — сделать пропуском, Esc — отмена.`
@@ -265,24 +266,57 @@
     turn.className = "turn " + (ours ? "ours-turn" : "their-turn");
   }
 
-  /** Строка «герой → игрок»: клик открывает выбор игрока (капитан знает лучше статистики). */
-  function assignLine(heroId, a, roster) {
-    const fixed = a && a.fixed;
-    const prob = a && !fixed ? ` <span class="muted">${pct(a.probability)}${a.alternative ? ` (${esc(a.alternative)} ${pct(a.alternativeProbability)})` : ""}</span>` : "";
-    const options = roster.map((r) =>
-      `<option value="${esc(r.player)}" ${fixed && a.player === r.player ? "selected" : ""}>${esc(r.player)} (поз. ${r.position})</option>`).join("");
-    return `<div class="assign"><b>${esc(name(heroId))}</b> → ${a ? `<span class="${fixed ? "fixed" : ""}">${esc(a.player)}</span>` : "…"}${
-      fixed ? ' <span class="muted small">вручную</span>' : prob}
-      <select class="assign-select" data-hero="${heroId}" title="Кто на этом герое">
-        <option value="">авто</option>${options}</select></div>`;
+  // ------------------------------------------------------------ слоты игроков
+  /** Чем играет последние 14 дней: иконки с числом игр и пометками 🔥 (новый) и 👥 (с командой). */
+  const recentLine = (p) => p.recent.length
+    ? p.recent.map((h) => `<span class="mini" title="${esc(h.name)}: ${h.g14} игр за 14 дней, ${h.g60} за 2 месяца${h.team ? `, ${h.team} с командой` : ""}">${icon(h.id)}${h.g14 || h.g60}${h.fresh ? "🔥" : ""}${h.team ? "👥" : ""}</span>`).join("")
+    : '<span class="muted">нет игр</span>';
+
+  function playerSlot(p, side, picks) {
+    const a = side.assignment.find((x) => x.player === p.nick);
+    const free = side.remaining.find((r) => r.player === p.nick);
+    const outlook = side.outlook.find((o) => o.player === p.nick);
+    const hero = a ? a.heroId : null;
+    const options = picks.map((h) =>
+      `<option value="${h}" ${hero === h && a.fixed ? "selected" : ""}>${esc(name(h))}</option>`).join("");
+    const heroLine = hero
+      ? `<div class="slot-hero">${heroPortrait(hero, name(hero))}<div><b>${esc(name(hero))}</b>
+           <div class="small muted">${a.fixed ? "вручную" : pct(a.probability) + (a.alternative ? ` · или ${esc(a.alternative)} ${pct(a.alternativeProbability)}` : "")}</div></div></div>`
+      : `<div class="slot-hero empty"><span class="hero-portrait empty"></span><span class="muted small">${free && free.probability < 0.95 ? `свободен ${pct(free.probability)}` : "без героя"}</span></div>`;
+    const odds = !hero && outlook && outlook.heroes.length
+      ? `<div class="odds small">вероятно: ${outlook.heroes.slice(0, 3).map((h) =>
+          `<button class="hero-pick link" data-id="${h.heroId}">${icon(h.heroId)}${esc(h.name)}</button> ${pct(h.probability)}`).join(" ")}</div>`
+      : "";
+    return `<div class="pslot ${hero ? "picked" : ""}">
+      ${heroLine}
+      <div class="slot-player"><span class="pos">${p.pos}</span>
+        <button class="nick link" data-account="${p.accountId}" title="Карточка игрока">${esc(p.nick)}</button>
+        ${rankIcon(p.rankTier, p.rank)}
+        ${profiles(p.accountId)}
+        ${picks.length ? `<select class="slot-assign" data-player="${esc(p.nick)}" title="Кто на каком герое: выбрать вручную"><option value="">авто</option>${options}</select>` : ""}
+      </div>
+      <div class="recent small" title="Последние 14 дней (без Турбо)">14д: ${recentLine(p)}</div>
+      ${odds}
+    </div>`;
   }
+  const rankIcon = (tier, title) => {
+    const medal = Math.floor(tier / 10), star = tier % 10;
+    if (medal < 1 || medal > 8) return "";
+    return `<span class="rank" title="${esc(title)}"><img class="rank-ico" src="/img/ranks/rank_icon_${medal}.png" alt="">${
+      medal < 8 && star >= 1 && star <= 5 ? `<img class="rank-star" src="/img/ranks/rank_star_${star}.png" alt="">` : ""}</span>`;
+  };
+  const profiles = (id) => `<span class="profiles"><a href="https://ru.dotabuff.com/players/${id}" target="_blank" title="Dotabuff">DB</a><a href="https://www.opendota.com/players/${id}" target="_blank" title="OpenDota">OD</a><a href="https://stratz.com/players/${id}" target="_blank" title="STRATZ">ST</a></span>`;
+
   root.addEventListener("change", (e) => {
-    const sel = e.target.closest(".assign-select");
+    const sel = e.target.closest(".slot-assign");
     if (!sel) return;
-    const h = Number(sel.dataset.hero);
-    // один игрок — один герой: снимаем его с другого героя
-    Object.entries(state.assign).forEach(([k, v]) => { if (v === sel.value && Number(k) !== h) delete state.assign[k]; });
-    if (sel.value) state.assign[h] = sel.value; else delete state.assign[h];
+    const player = sel.dataset.player;
+    // один игрок — один герой: снимаем ручные назначения этого игрока и героя
+    Object.entries(state.assign).forEach(([h, p]) => { if (p === player) delete state.assign[h]; });
+    if (sel.value) {
+      delete state.assign[sel.value];
+      state.assign[sel.value] = player;
+    }
     afterChange();
   });
 
@@ -294,27 +328,16 @@
       if (h <= 0) return;
       parts[(isOurs(i) ? "our" : "their") + (slot(i).pick ? "Picks" : "Bans")].push(h);
     });
-    $("our-bans").innerHTML = parts.ourBans.map((h) => heroChip(h, "ban")).join("") || "—";
-    $("their-bans").innerHTML = parts.theirBans.map((h) => heroChip(h, "ban")).join("") || "—";
-    const ourA = advice?.ourAssignment ?? [], theirA = advice?.theirAssignment ?? [];
-    $("our-picks").innerHTML = parts.ourPicks.map((h) =>
-      assignLine(h, ourA.find((x) => x.heroId === h), advice?.ourRoster ?? [])).join("") || "—";
-    $("their-picks").innerHTML = parts.theirPicks.map((h) =>
-      assignLine(h, theirA.find((x) => x.heroId === h), advice?.theirRoster ?? [])).join("") || "—";
-    // кто ещё без героя — от этого зависят прогноз их пиков и баны
-    const ourRemaining = advice?.ourRemaining ?? [];
-    $("our-remaining").innerHTML = ourRemaining.length && !advice.finished
-      ? `<div class="remaining small">Ещё без героя: ${ourRemaining.map((r) =>
-          `<span class="chip">${esc(r.player)} <span class="muted">поз. ${r.position} · ${pct(r.probability)}</span></span>`).join("")}</div>`
-      : "";
-    const outlook = advice?.theirPlayers ?? [];
-    $("their-outlook").innerHTML = outlook.length && !advice.finished
-      ? `<div class="small muted outlook-title">Ещё без героя — их вероятные герои:</div>` + outlook.map((p) =>
-          `<div class="outlook"><b>${esc(p.player)}</b> <span class="muted">поз. ${p.position}${p.free < 0.95 ? ` · свободен ${pct(p.free)}` : ""}</span>: ${
-            p.heroes.map((h) => `<button class="hero-pick link" data-id="${h.heroId}">${esc(h.name)}</button> ${pct(h.probability)}`).join(", ")}</div>`).join("")
-      : "";
+    const banRow = (list) => list.map((h) => `<span class="ban-chip" title="${esc(name(h))}">${icon(h)}</span>`).join("") || '<span class="muted">—</span>';
+    $("our-bans").innerHTML = banRow(parts.ourBans);
+    $("their-bans").innerHTML = banRow(parts.theirBans);
+    const ours = { assignment: advice?.ourAssignment ?? [], remaining: advice?.ourRemaining ?? [], outlook: [] };
+    const theirs = { assignment: advice?.theirAssignment ?? [], remaining: advice?.theirRemaining ?? [], outlook: advice?.theirPlayers ?? [] };
+    $("our-slots").innerHTML = (ROSTERS.ours || []).map((p) => playerSlot(p, ours, parts.ourPicks)).join("");
+    $("their-slots").innerHTML = (ROSTERS[state.opponent] || []).map((p) => playerSlot(p, theirs, parts.theirPicks)).join("");
+    $("their-title").textContent = $("opponent").selectedOptions[0]?.textContent || "Они";
     const taken = used();
-    document.querySelectorAll("#grid .hero").forEach((b) => {
+    document.querySelectorAll("#grid .hero-tile").forEach((b) => {
       const id = Number(b.dataset.id);
       b.disabled = (taken.has(id) && !(editIndex !== null && state.heroes[editIndex] === id))
         || (state.heroes.length >= ORDER.length && editIndex === null);
@@ -327,7 +350,7 @@
     const step = state.heroes.length;
     const finished = step >= ORDER.length;
     const a = advice;
-    $("advice").hidden = finished;
+    ["panel-their", "panel-bans", "panel-picks"].forEach((p) => { $(p).hidden = finished; });
     $("summary").hidden = !finished || !a || !a.finished;
     if (finished || !a) return;
     const s = slot(step), ours = isOurs(step);
@@ -339,7 +362,7 @@
     const focus = ours ? (s.pick ? "panel-picks" : "panel-bans") : "panel-their";
     ["panel-their", "panel-bans", "panel-picks"].forEach((p) => {
       $(p).classList.toggle("focus", p === focus);
-      $(p).style.order = p === focus ? -1 : 0;
+      $(p).style.order = p === focus ? 0 : 1;
     });
     // на их ходу наверху то, что они сделают сейчас: пик или бан
     if (!ours) {
@@ -347,8 +370,11 @@
     }
   }
 
-  const reasons = (r) => (r.reasons || []).map((x) => `<span class="reason">${esc(x)}</span>`).join(" ");
-  const pickable = (r, extra) => `<li><button class="hero-pick" data-id="${r.heroId}">${esc(r.name)}</button> ${extra} ${reasons(r)}</li>`;
+  // ------------------------------------------------------------ подсказки
+  const reasons = (r, n) => (r.reasons || []).slice(0, n).map((x) => `<span class="reason">${esc(x)}</span>`).join(" ");
+  const more = (r, n) => (r.reasons || []).length > n ? `<span class="reason more" title="${esc(r.reasons.slice(n).join(" · "))}">+${r.reasons.length - n}</span>` : "";
+  const pickable = (r, extra) => `<li><button class="hero-pick" data-id="${r.heroId}">${icon(r.heroId)}${esc(r.name)}</button>
+    ${extra} ${reasons(r, 2)} ${more(r, 2)}</li>`;
 
   function renderAdvice(a) {
     advice = a;
@@ -366,12 +392,13 @@
 
   function renderSummary(a) {
     if (!a.finished) return;
+    const heroes = (names) => names.map((n) => { const h = HEROES.find((x) => x.name === n); return h ? icon(h.id) + esc(n) : esc(n); }).join(", ");
     $("lanes").innerHTML = "<tr><th>Линия</th><th>Мы</th><th>Они</th><th>Преим.</th><th></th></tr>" + a.lanes.map((l) =>
-      `<tr><td>${esc(l.name)}</td><td>${esc(l.ours.join(", "))}</td><td>${esc(l.theirs.join(", "))}</td>
+      `<tr><td>${esc(l.name)}</td><td>${heroes(l.ours)}</td><td>${heroes(l.theirs)}</td>
        <td class="num ${l.advantage > 0.005 ? "strong" : l.advantage < -0.005 ? "weak" : ""}">${(l.advantage >= 0 ? "+" : "") + (100 * l.advantage).toFixed(1)}%</td>
        <td class="small muted">${esc(l.note || "")}</td></tr>`).join("");
     $("threats").innerHTML = a.theirThreats.slice(0, 3).map((t) =>
-      `<li><b>${esc(t.name)}</b> <span class="muted">${esc(t.player)}</span> угроза ${t.score.toFixed(2)}</li>`).join("");
+      `<li>${icon(t.heroId)}<b>${esc(t.name)}</b> <span class="muted">${esc(t.player)}</span> угроза ${t.score.toFixed(2)}</li>`).join("");
   }
   $("copy").onclick = async () => {
     const a = advice;
@@ -392,8 +419,49 @@
     }
   };
 
+  // ------------------------------------------------------------ карточка игрока (боковая панель)
+  async function openDrawer(accountId) {
+    $("drawer").hidden = false;
+    $("drawer-body").innerHTML = '<p class="muted">Загрузка…</p>';
+    try {
+      const res = await fetch(`/api/player/${accountId}`);
+      if (!res.ok) throw new Error(res.status);
+      const p = await res.json();
+      const f = p.form;
+      const ratio = (w, g) => g ? Math.round(100 * w / g) + "%" : "—";
+      $("drawer-body").innerHTML = `
+        <h3>${esc(p.nick)} <span class="muted small">поз. ${p.pos} · ${esc(p.team)}</span></h3>
+        <p>${rankIcon(p.rankTier, "")} ${profiles(p.accountId)} <a href="/player/${p.accountId}" target="_blank">страница игрока ↗</a></p>
+        ${p.note ? `<p class="small">${esc(p.note)}</p>` : ""}
+        <h4>Чем играет сейчас <span class="hint">без Турбо; 🔥 новый · ★ сигнатурка · 👥 с командой</span></h4>
+        <p class="small muted">14 дней: ${f.games14} игр · 2 месяца: ${f.games60} (с командой ${f.team60}) · Турбо: ${f.turbo60}</p>
+        <table class="compact"><tr><th>Герой</th><th>14д</th><th>2 мес</th><th>WR</th><th>Турбо</th><th>С командой</th></tr>
+        ${f.heroes.slice(0, 10).map((h) => `<tr><td>${icon(h.heroId)}${esc(h.name)} ${h.fresh ? "🔥" : ""}${h.signature ? "★" : ""}${h.team60 ? "👥" : ""}</td>
+          <td class="num">${h.games14 || ""}</td><td class="num">${h.games60 || ""}</td><td class="num">${ratio(h.wins60, h.games60)}</td>
+          <td class="num">${h.turbo60 || ""}</td><td class="small">${h.team60 ? h.team60 + " · " + esc(h.mates.join(", ")) : ""}</td></tr>`).join("")}
+        </table>
+        <h4>Всегда может достать <span class="hint">умение по всей истории</span></h4>
+        <table class="compact"><tr><th>Герой</th><th>Умение</th><th>Игр</th><th>За год</th><th>Ранг на герое</th></tr>
+        ${p.best.map((h) => `<tr><td>${icon(h.id)}${esc(h.name)}</td><td class="num">${h.skill}</td><td class="num">${h.games}</td>
+          <td class="num">${h.yearGames}</td><td class="small">${esc(h.top)}</td></tr>`).join("")}
+        </table>
+        <h4>Последние матчи</h4>
+        <table class="compact"><tr><th>Дата</th><th>Герой</th><th></th><th>K/D/A</th><th>Пати</th><th>Свои</th></tr>
+        ${f.matches.slice(0, 12).map((m) => `<tr><td class="small">${m.date}</td><td>${icon(m.heroId)}${esc(m.hero)}${m.turbo ? ' <span class="muted small">turbo</span>' : ""}</td>
+          <td class="${m.win ? "strong" : "weak"}">${m.win ? "W" : "L"}</td><td class="small">${m.kda}</td>
+          <td class="num">${m.partySize > 1 ? m.partySize : ""}</td><td class="small">${esc(m.mates.join(", "))}</td></tr>`).join("")}
+        </table>`;
+    } catch (e) {
+      $("drawer-body").innerHTML = `<p class="weak">Не удалось загрузить игрока: ${esc(e.message)}</p>`;
+    }
+  }
+  function closeDrawer() { $("drawer").hidden = true; }
+  $("drawer-close").onclick = closeDrawer;
+
   root.addEventListener("click", (e) => {
-    const b = e.target.closest(".hero-pick, #grid .hero");
+    const nick = e.target.closest(".nick[data-account]");
+    if (nick) { openDrawer(nick.dataset.account); return; }
+    const b = e.target.closest(".hero-pick, #grid .hero-tile");
     if (b && !b.disabled) apply(Number(b.dataset.id));
   });
 
@@ -422,8 +490,8 @@
   // ------------------------------------------------------------ старт
   const ATTR = { str: "Сила", agi: "Ловкость", int: "Интеллект", all: "Универсальные" };
   $("grid").innerHTML = Object.entries(ATTR).map(([attr, title]) =>
-    `<div class="attr"><div class="small muted">${title}</div>${HEROES.filter((h) => h.attr === attr)
-      .map((h) => `<button class="hero" data-id="${h.id}">${esc(h.name)}</button>`).join("")}</div>`).join("");
+    `<div class="attr"><div class="small muted">${title}</div><div class="tiles">${HEROES.filter((h) => h.attr === attr)
+      .map((h) => `<button class="hero-tile" data-id="${h.id}" title="${esc(h.name)}">${heroPortrait(h.id, h.name)}<span>${esc(h.name)}</span></button>`).join("")}</div></div>`).join("");
 
   $("opponent").innerHTML = OPPONENTS.map((o) => `<option value="${esc(o.href)}">${esc(o.label)}</option>`).join("");
   $("opponent").value = state.opponent;
@@ -454,6 +522,7 @@
     save();
   }
   $("first").value = state.weFirst ? "us" : "them";
+  renderSearch();
   renderBoard();
   requestAdvice();
 })();

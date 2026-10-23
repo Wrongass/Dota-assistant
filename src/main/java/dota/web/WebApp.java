@@ -3,6 +3,7 @@ package dota.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dota.analysis.AnalysisContext;
 import dota.analysis.DraftEngine;
+import dota.analysis.Fmt;
 import dota.analysis.Squad;
 import dota.analysis.Views;
 import gg.jte.ContentType;
@@ -103,6 +104,7 @@ public class WebApp {
         app.get("/opponent/{slug}", this::opponent);
         app.get("/draft", this::draftPage);
         app.get("/api/heroes", ctx -> ctx.json(site.ctx().heroList()));
+        app.get("/api/player/{id}", this::playerApi);
         app.get("/img/{kind}/{file}", this::image);
         app.post("/api/draft", this::draftApi);
         app.get("/method", ctx -> render(ctx, "method.jte", new Models.Method(page("Методика", "method"))));
@@ -270,7 +272,36 @@ public class WebApp {
                 .map(o -> new Models.Link(o.slug(), o.teamName())).toList();
         render(http, "draft.jte", new Models.DraftPage(page("Драфт", "draft"), JSON.writeValueAsString(c.heroList()),
                 JSON.writeValueAsString(opponents), opponent, JSON.writeValueAsString(DraftEngine.SLOTS),
-                JSON.writeValueAsString(c.ours.poolOwners())));
+                JSON.writeValueAsString(c.ours.poolOwners()), JSON.writeValueAsString(rosters(c))));
+    }
+
+    private static Map<String, Object> rosters(AnalysisContext c) {
+        Map<String, Object> result = new java.util.LinkedHashMap<>();
+        result.put("ours", c.ours.draftRoster());
+        c.opponents.forEach(o -> result.put(o.slug(), o.draftRoster()));
+        return result;
+    }
+
+    /** Карточка игрока для боковой панели драфта: чем играет сейчас и топ «играет лучше всего». */
+    private void playerApi(Context http) {
+        long id = Long.parseLong(http.pathParam("id"));
+        Squad squad = site.ctx().squadOf(id);
+        if (squad == null) {
+            throw new NotFoundResponse("игрок " + id);
+        }
+        Views.PlayerCard card = squad.playerCard(id);
+        Map<String, Object> result = new java.util.LinkedHashMap<>();
+        result.put("nick", card.nick());
+        result.put("pos", card.pos());
+        result.put("team", squad.teamName());
+        result.put("accountId", card.accountId());
+        result.put("rankTier", card.rankTier());
+        result.put("note", card.note() == null ? "" : card.note());
+        result.put("form", card.form());
+        result.put("best", card.best().stream().limit(10).map(h -> Map.of("id", h.heroId(), "name", h.name(),
+                "skill", Math.round(h.skill()), "games", h.games(), "yearGames", h.yearGames(),
+                "top", Fmt.topPercent(h.percentRank()))).toList());
+        http.json(result);
     }
 
     private void draftApi(Context http) {

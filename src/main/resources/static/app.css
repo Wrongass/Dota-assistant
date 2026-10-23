@@ -197,40 +197,85 @@ ol.advice li { margin: 3px 0; }
 .hero-grid .hero.match { border-color: var(--accent); background: var(--accent-soft); }
 
 /* лента 24 ходов: клик по сделанному ходу — исправить */
-.ribbon { display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px; }
-.ribbon .slot { display: flex; flex-direction: column; align-items: flex-start; padding: 2px 5px; min-width: 0;
-  font-size: 12px; text-align: left; border-width: 1px 1px 1px 4px; }
+.ribbon-panel { padding: 8px; }
+.ribbon { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 3px; }
+.ribbon .slot { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 3px 5px; min-width: 0;
+  font-size: 12px; text-align: left; border-width: 1px 1px 1px 4px; background: var(--panel-2); min-height: 44px; }
 .ribbon .slot.ours { border-left-color: var(--ours); }
 .ribbon .slot.theirs { border-left-color: var(--theirs); }
 .ribbon .slot .kind { font-size: 10px; color: var(--muted); white-space: nowrap; }
-.ribbon .slot .who { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; min-height: 1.2em; }
-.ribbon .slot.ban .who { text-decoration: line-through; color: var(--muted); }
+.ribbon .slot .who { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.ribbon .slot.ban .who, .ribbon .slot.ban img { text-decoration: line-through; opacity: 0.55; filter: grayscale(0.8); }
 .ribbon .slot.pick .who { font-weight: 600; }
+.ribbon .slot .hero-ico { width: 18px; height: 18px; }
 .ribbon .slot.current { outline: 2px solid var(--accent); }
 .ribbon .slot.editing { outline: 2px dashed var(--accent); background: var(--accent-soft); }
 .ribbon .slot:disabled { cursor: default; }
-.ribbon .slot.future { opacity: 0.55; }
+.ribbon .slot.future { opacity: 0.5; }
 .ribbon-hint { margin-top: 4px; }
 
+/* три колонки как в клиенте: мы | сейчас | они */
+.draft-main { display: grid; grid-template-columns: minmax(260px, 300px) minmax(0, 1fr) minmax(280px, 340px); gap: 12px; align-items: start; }
+.draft-main .side h3 { margin: 0 0 8px; }
+.draft-main .center { display: flex; flex-direction: column; gap: 0; min-width: 0; }
+.draft-main .center .panel { margin-bottom: 12px; }
+.slots { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.pslot { border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; background: var(--panel-2); }
+.ours-side .pslot.picked { border-left: 3px solid var(--ours); }
+.their-side .pslot.picked { border-left: 3px solid var(--theirs); }
+.slot-hero { display: flex; align-items: center; gap: 8px; min-height: 36px; }
+.hero-portrait.empty { display: inline-block; border: 1px dashed var(--line); background: transparent; }
+.slot-player { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.slot-player .pos { font-weight: 700; color: var(--muted); width: 12px; }
+.slot-player .nick { font-size: 14px; }
+.slot-assign { font-size: 11px; padding: 1px 3px; margin-left: auto; max-width: 110px; }
+.recent { margin-top: 3px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 2px 6px; align-items: center; }
+.recent .mini { display: inline-flex; align-items: center; gap: 2px; color: var(--text); }
+.recent .hero-ico { width: 18px; height: 18px; }
+.odds { margin-top: 3px; }
+.ban-row { display: flex; flex-wrap: wrap; gap: 3px; }
+.ban-chip .hero-ico { width: 26px; height: 26px; filter: grayscale(1); opacity: 0.6; }
+
 .search-panel { position: relative; }
-.suggest { list-style: none; margin: 4px 0 0; padding: 0; max-width: 520px; }
-.suggest li { padding: 3px 8px; border-radius: 6px; cursor: pointer; }
+#search { width: 100%; font-size: 16px; }
+.suggest { list-style: none; margin: 4px 0 0; padding: 0; }
+.suggest li { padding: 3px 8px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
 .suggest li.sel { background: var(--accent-soft); outline: 1px solid var(--accent); }
 .warn { margin-top: 6px; padding: 6px 10px; border-radius: 6px; background: var(--accent-soft);
   border: 1px solid var(--accent); font-weight: 600; }
+.advice-panel.focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+.advice-panel:not(.focus) { opacity: 0.85; }
+.advice-panel h3 { margin-top: 0; }
+.hero-pick { display: inline-flex; align-items: center; gap: 5px; }
+.reason.more { cursor: help; }
 
 .hint { font-size: 11px; font-weight: 400; color: var(--muted); }
-.assign-select { font-size: 12px; padding: 1px 4px; margin-left: 6px; }
-.assign .fixed { font-weight: 700; }
-.outlook-title { margin-top: 8px; }
-.outlook { padding: 2px 0; font-size: 13px; }
-button.link { background: none; border: none; padding: 0; color: var(--accent); font-weight: 600; }
+button.link { background: none; border: none; padding: 0; color: var(--accent); font-weight: 600; display: inline-flex;
+  align-items: center; gap: 3px; }
+button.nick { color: var(--text); }
+button.nick:hover { color: var(--accent); }
 .small-btn { font-size: 12px; padding: 2px 8px; margin-left: 8px; }
 #lanes td, #lanes th { padding: 3px 8px; }
 
-@media (max-width: 1000px) {
-  .draft-advice { grid-template-columns: 1fr; }
-  .ribbon { grid-template-columns: repeat(6, 1fr); }
+/* сетка героев портретами, как в клиенте */
+.hero-grid .tiles { display: flex; flex-wrap: wrap; gap: 4px; }
+.hero-tile { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 2px; width: 70px;
+  background: var(--panel-2); font-size: 10px; line-height: 1.1; }
+.hero-tile span { max-width: 66px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hero-tile:disabled { opacity: 0.25; filter: grayscale(1); cursor: default; }
+.hero-tile.match { border-color: var(--accent); background: var(--accent-soft); }
+
+/* боковая карточка игрока */
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(520px, 96vw); background: var(--panel);
+  border-left: 1px solid var(--line); box-shadow: -8px 0 24px rgba(0, 0, 0, 0.35); padding: 14px 16px; overflow-y: auto; z-index: 50; }
+.drawer-close { position: absolute; top: 10px; right: 12px; }
+.drawer h3 { margin-top: 0; padding-right: 40px; }
+.drawer h4 { margin: 14px 0 4px; }
+table.compact td, table.compact th { padding: 2px 6px; }
+
+@media (max-width: 1100px) {
+  .draft-main { grid-template-columns: 1fr; }
+  .ribbon { grid-template-columns: repeat(6, minmax(0, 1fr)); }
   .hero-grid { grid-template-columns: repeat(2, 1fr); }
 }
 

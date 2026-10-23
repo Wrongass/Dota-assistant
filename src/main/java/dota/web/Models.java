@@ -64,7 +64,8 @@ public final class Models {
     // ---------------------------------------------------------------- драфт
 
     /** poolJson — наши герои: id героя → кто из наших на нём играет (для предупреждения «баните своего»). */
+    /** rostersJson — составы для слотов игроков: {"ours": [...], "<slug соперника>": [...]}, см. Squad.draftRoster. */
     public record DraftPage(Page page, String heroesJson, String opponentsJson, String defaultOpponent,
-                            String orderJson, String poolJson) {
+                            String orderJson, String poolJson, String rostersJson) {
     }
 }

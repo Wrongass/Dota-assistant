@@ -341,6 +341,37 @@ public final class Squad {
                 heroValues(standouts(position, r[0], r[1], false, 8), r[0], r[1]), weakInPool, form(p));
     }
 
+    /**
+     * Состав для страницы драфта (JSON): ник, позиция, ранг, account_id, что играет последние 14 дней / 2 месяца
+     * (топ-4, с пометками «новый» и «с командой») и топ-5 «играет лучше всего». Без NaN — их не понимает JSON.parse.
+     */
+    public List<Map<String, Object>> draftRoster() {
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (PlayerStats p : byPosition()) {
+            Views.Form f = form(p);
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("nick", p.nick());
+            m.put("pos", position(p));
+            m.put("accountId", p.config.accountId());
+            m.put("rankTier", p.rankTier);
+            m.put("rank", Meta.bracketName(p.rankTier));
+            m.put("games14", f.games14());
+            m.put("games60", f.games60());
+            m.put("recent", f.heroes().stream()
+                    .sorted(Comparator.comparingInt(Views.HeroForm::games14).reversed()
+                            .thenComparing(Comparator.comparingInt(Views.HeroForm::games60).reversed()))
+                    .limit(4)
+                    .map(h -> Map.<String, Object>of("id", h.heroId(), "name", h.name(), "g14", h.games14(),
+                            "g60", h.games60(), "team", h.team60(), "fresh", h.fresh(), "signature", h.signature()))
+                    .toList());
+            m.put("best", p.bestHeroes(5).stream()
+                    .map(h -> Map.<String, Object>of("id", h.heroId, "name", meta.name(h.heroId), "games", h.games))
+                    .toList());
+            result.add(m);
+        }
+        return result;
+    }
+
     /** Срезы «14 дней / 2 месяца / с командой» и последние 20 матчей — от даты отчёта today. */
     Views.Form form(PlayerStats p) {
         long now = java.time.LocalDate.parse(today).plusDays(1).atStartOfDay(java.time.ZoneOffset.UTC).toEpochSecond();
