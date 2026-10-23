@@ -12,7 +12,7 @@
                 <h2>Следующая игра: <a href="/opponent/${n.slug()}">${n.name()}</a> <span class="muted">${n.record()}</span></h2>
                 <p>
                     @for(var r : n.roster())
-                        <span class="chip"><a href="/player/${r.accountId()}">${r.pos()} ${r.nick()}</a> <span class="muted">${Fmt.rankShort(r.rankTier())}</span></span>
+                        <span class="chip"><a href="/player/${r.accountId()}">${r.pos()} ${r.nick()}</a> @template.tag.rank(rankTier = r.rankTier()) @template.tag.profiles(accountId = r.accountId())</span>
                     @endfor
                 </p>
                 <p><b>Банят в турнире:</b> ${Fmt.countList(n.bans(), false)}</p>
@@ -53,7 +53,7 @@
             <tbody>
             @for(var o : model.ours())
                 <tr><td>${o.pos()}</td><td><a href="/player/${o.accountId()}"><b>${o.nick()}</b></a></td>
-                    <td class="muted">${Fmt.rankShort(o.rankTier())}</td>
+                    <td>@template.tag.rank(rankTier = o.rankTier())</td>
                     <td>@template.tag.pool(heroes = o.pool(), showFit = false)</td></tr>
             @endfor
             </tbody>

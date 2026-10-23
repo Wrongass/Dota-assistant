@@ -1,6 +1,27 @@
 :root {
+  /* тёмная тема по умолчанию (как у Dotabuff/STRATZ); светлая — кнопкой в шапке (data-theme="light") */
+  color-scheme: dark;
+  --bg: #0f1217;
+  --panel: #171b22;
+  --panel-2: #1e232c;
+  --text: #e6e8ec;
+  --muted: #9aa3b5;
+  --line: #2a303b;
+  --accent: #e0745f;
+  --accent-soft: #3a2420;
+  --strong: #4ade80;
+  --weak: #f87171;
+  --ours: #7aa2ff;
+  --theirs: #fb923c;
+  --chip: #252a34;
+  --gold: #e5b85c;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
   --bg: #f6f7f9;
   --panel: #ffffff;
+  --panel-2: #f3f4f7;
   --text: #1d2128;
   --muted: #677084;
   --line: #e1e4ea;
@@ -11,23 +32,7 @@
   --ours: #1d4ed8;
   --theirs: #9a3412;
   --chip: #eef0f4;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #14161b;
-    --panel: #1c1f26;
-    --text: #e6e8ec;
-    --muted: #99a1b3;
-    --line: #2c313b;
-    --accent: #e0745f;
-    --accent-soft: #3a2420;
-    --strong: #4ade80;
-    --weak: #f87171;
-    --ours: #7aa2ff;
-    --theirs: #fb923c;
-    --chip: #262a33;
-  }
+  --gold: #a16207;
 }
 
 * { box-sizing: border-box; }
@@ -234,3 +239,18 @@ main.login { max-width: 360px; margin: 12vh auto; }
 main.login form { display: flex; flex-direction: column; gap: 10px; }
 main.login h1 { margin: 0; }
 main.login input[type=password] { font-size: 16px; padding: 8px 10px; }
+
+/* ---------------------------------------------------------------- герои и игроки */
+.hero-tag { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.hero-ico { width: 20px; height: 20px; border-radius: 3px; object-fit: cover; vertical-align: middle; flex: none; }
+.hero-ico.fallback { display: inline-grid; place-items: center; background: var(--chip); color: var(--muted);
+  font-size: 9px; font-weight: 700; }
+.hero-portrait { width: 64px; height: 36px; border-radius: 4px; object-fit: cover; flex: none; background: var(--chip); }
+.profiles { display: inline-flex; gap: 3px; vertical-align: middle; }
+.profiles a { font-size: 10px; font-weight: 700; padding: 0 4px; border-radius: 4px; background: var(--chip);
+  color: var(--muted); line-height: 16px; }
+.profiles a:hover { color: var(--text); text-decoration: none; }
+.rank { position: relative; display: inline-block; width: 24px; height: 24px; vertical-align: middle; }
+.rank-ico { width: 24px; height: 24px; }
+.rank-star { position: absolute; left: 0; top: 0; width: 24px; height: 24px; }
+.theme-toggle { font-size: 12px; }

@@ -14,6 +14,7 @@ import java.time.LocalDate;
  *   --only &lt;account_id&gt;    только один игрок (справочники и мета качаются всегда)
  *   --no-meta              не качать данные по текущему патчу (data/meta)
  *   --no-league            не качать матчи лиги из config (data/raw/league)
+ *   --no-images            не качать картинки героев и рангов для сайта (data/img)
  *   --meta-window &lt;n&gt;     сколько последних match_id брать для синергий/контрпиков, по умолчанию 1000000
  *   --meta-min-rank &lt;n&gt;   минимальный средний rank_tier матча, по умолчанию 50 (Legend 0)
  * </pre>
@@ -25,6 +26,7 @@ public class Main {
         boolean refresh = false;
         boolean meta = true;
         boolean league = true;
+        boolean images = true;
         long metaWindow = 1_000_000;
         int metaMinRank = 50;
         Path configPath = Path.of("config/players.yaml");
@@ -39,6 +41,7 @@ public class Main {
                 case "--only" -> only = Long.parseLong(value(args, ++i));
                 case "--no-meta" -> meta = false;
                 case "--no-league" -> league = false;
+                case "--no-images" -> images = false;
                 case "--meta-window" -> metaWindow = Long.parseLong(value(args, ++i));
                 case "--meta-min-rank" -> metaMinRank = Integer.parseInt(value(args, ++i));
                 default -> {
@@ -57,6 +60,9 @@ public class Main {
 
         for (Endpoints.Target t : Endpoints.constants(constants)) {
             fetcher.fetch(t);
+        }
+        if (images) {
+            new ImageFetcher().fetch(constants.resolve("heroes.json"), dataDir.resolve("img"));
         }
 
         for (PlayerConfig.Player p : config.players()) {

@@ -14,10 +14,12 @@ import io.javalin.http.NotFoundResponse;
 import io.javalin.http.staticfiles.Location;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Локальный сайт. Запуск: {@code ./gradlew web} → http://127.0.0.1:8070
@@ -100,6 +102,8 @@ public class WebApp {
         app.get("/group", this::group);
         app.get("/opponent/{slug}", this::opponent);
         app.get("/draft", this::draftPage);
+        app.get("/api/heroes", ctx -> ctx.json(site.ctx().heroList()));
+        app.get("/img/{kind}/{file}", this::image);
         app.post("/api/draft", this::draftApi);
         app.get("/method", ctx -> render(ctx, "method.jte", new Models.Method(page("Методика", "method"))));
         app.post("/reload", ctx -> {
@@ -278,6 +282,20 @@ public class WebApp {
         List<Integer> heroes = req.heroes() == null ? List.of() : req.heroes();
         Map<Integer, String> assign = req.assign() == null ? Map.of() : req.assign();
         http.json(new DraftEngine(site.ctx()).advise(new DraftEngine.State(req.opponent(), req.weFirst(), heroes, assign)));
+    }
+
+    // ---------------------------------------------------------------- картинки
+
+    private static final Set<String> IMAGE_KINDS = Set.of("heroes", "icons", "ranks");
+
+    /** Картинки Valve из data/img (портреты, иконки героев, значки рангов) — их качает выгрузка, см. ImageFetcher. */
+    private void image(Context http) throws IOException {
+        String kind = http.pathParam("kind"), file = http.pathParam("file");
+        Path path = site.dataDir.resolve("img").resolve(kind).resolve(file);
+        if (!IMAGE_KINDS.contains(kind) || !file.matches("[a-z0-9_]{1,40}\\.png") || !Files.isRegularFile(path)) {
+            throw new NotFoundResponse(kind + "/" + file);
+        }
+        http.header("Cache-Control", "public, max-age=604800").contentType("image/png").result(Files.readAllBytes(path));
     }
 
     // ---------------------------------------------------------------- общее

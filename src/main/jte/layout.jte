@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>${page.title()} · Dota-помощник</title>
     <link rel="stylesheet" href="/static/app.css">
+    <script>try { if (localStorage.getItem("theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}</script>
 </head>
 <body>
 <header class="top">
@@ -25,6 +26,7 @@
             @if(page.authEnabled())
                 <a href="/logout" title="Выйти на этом устройстве">Выйти</a>
             @endif
+            <button type="button" class="theme-toggle" id="theme-toggle" title="Светлая или тёмная тема">◐</button>
             <form method="post" action="/reload">
                 <button title="Перечитать data/ и config/ с диска без перезапуска (к OpenDota не обращается)">Перечитать данные</button>
             </form>
@@ -53,6 +55,7 @@
     ${content}
 </main>
 <script src="/static/sort.js"></script>
+<script src="/static/heroes.js"></script>
 $unsafe{scripts}
 </body>
 </html>
