@@ -84,6 +84,13 @@ public final class DraftEngine {
     public record Lane(String name, List<String> ours, List<String> theirs, double advantage, String note) {
     }
 
+    /**
+     * «Кого взять на линию»: наш игрок ещё без героя, а герои соперника на его линии уже известны. heroes — его герои
+     * (на которых он реально играет), лучшие против них на линии и по игре.
+     */
+    public record LaneOption(String player, int position, List<String> enemies, List<Reasoned> heroes) {
+    }
+
     public record Advice(int step, boolean finished, boolean oursNext, boolean pickNext, List<Integer> ourPicks,
                          List<Integer> theirPicks, List<Integer> ourBans, List<Integer> theirBans,
                          List<Assignment> theirAssignment, List<Assignment> ourAssignment,
@@ -92,7 +99,7 @@ public final class DraftEngine {
                          List<Reasoned> pickSuggestions, List<Reasoned> theirLikelyBans,
                          List<PlayerOutlook> theirPlayers, List<RosterLine> ourRoster, List<RosterLine> theirRoster,
                          int theirBansLeft, int theirPicksLeft, int ourBansLeft, int ourPicksLeft,
-                         List<Lane> lanes, List<Reasoned> theirThreats, long micros) {
+                         List<Lane> lanes, List<Reasoned> theirThreats, List<LaneOption> laneOptions, long micros) {
     }
 
     private final AnalysisContext ctx;
@@ -376,7 +383,8 @@ public final class DraftEngine {
         double[] theirFree = freeProbability(theirProb, them.players.size());
         Distribution theirDist = pickDistribution(them, theirFree, theirPicks, ourPicks, used);
         List<Reasoned> theirNext = predictPicks(them, theirDist, theirPicks, ourPicks);
-        List<Reasoned> ourPickList = suggestPicks(us, ourProb, ourPicks, theirPicks, used, theirDist);
+        Map<Integer, Integer> theirLaners = knownPositions(them, theirAssignment);
+        List<Reasoned> ourPickList = suggestPicks(us, ourProb, ourPicks, theirPicks, used, theirDist, theirLaners);
         List<Reasoned> bans = suggestBans(them, us, ourPicks, used, theirDist,
                 ourPickList.stream().limit(3).map(Reasoned::heroId).toList());
         List<Reasoned> likelyBans = predictTheirBans(us, them, ourProb, ourPicks, theirPicks, used, theirBansLeft);
@@ -388,6 +396,7 @@ public final class DraftEngine {
                 theirNext.stream().limit(10).toList(), bans, ourPickList, likelyBans,
                 outlook(them, theirDist), us.roster(), them.roster(),
                 theirBansLeft, theirPicksLeft, ourBansLeft, ourPicksLeft, lanes, threats,
+                finished ? List.of() : laneOptions(us, ourProb, used, theirLaners),
                 (System.nanoTime() - started) / 1000);
     }
 
@@ -666,7 +675,7 @@ public final class DraftEngine {
      * следующие пики контрят героя + «пик-отказ» (герой из их топа).
      */
     private List<Reasoned> suggestPicks(SquadModel us, double[][] prob, List<Integer> ourPicks, List<Integer> theirPicks,
-                                        Set<Integer> used, Distribution theirs) {
+                                        Set<Integer> used, Distribution theirs, Map<Integer, Integer> theirLaners) {
         double[] free = freeProbability(prob, us.players.size());
         List<Map.Entry<Integer, Double>> theirTop = theirs.next().entrySet().stream().limit(8).toList();
         List<Reasoned> result = new ArrayList<>();
@@ -679,12 +688,14 @@ public final class DraftEngine {
             for (int p = 0; p < us.players.size(); p++) {
                 PlayerStats player = us.players.get(p);
                 int pos = us.squad.position(player);
-                if (free[p] < 0.3 || meta.posTotal(h) < 20 || meta.posShare(h, pos) < 0.15) {
+                if (free[p] < 0.3 || meta.posTotal(h) < 20 || meta.posShare(h, pos) < 0.15 || !plays(us, player, h)) {
                     continue;
                 }
                 int[] r = us.squad.bracketRange(player);
+                LaneStats.Outcome lane = laneVs(h, pos, theirLaners);
                 double fit = Scoring.patchFit(us.squad.metaStrength(h, pos, r[0], r[1]), player.skillOn(h)) / 100
-                        + 0.05 * Math.min(2, us.tourneyPicks(player, h));
+                        + 0.05 * Math.min(2, us.tourneyPicks(player, h))
+                        + LANE_WEIGHT * (lane == null ? 0 : lane.advantage());
                 if (fit > bestFit) {
                     bestFit = fit;
                     bestPlayer = player;
@@ -702,6 +713,10 @@ public final class DraftEngine {
             double score = bestFit + 4 * avgSynergy(h, ourPicks) + 4 * avgCounter(h, theirPicks) - 4 * vulnerability
                     + 0.5 * deny;
             List<String> reasons = pickReasons(us, bestPlayer, h, ourPicks, theirPicks, "их");
+            String laneNote = laneNote(h, us.squad.position(bestPlayer), theirLaners);
+            if (laneNote != null) {
+                reasons.add(0, laneNote);
+            }
             double denyChance = theirs.chance().getOrDefault(h, 0.0);
             if (denyChance >= 0.15) {
                 reasons.add("пик-отказ: у них " + Md.pct(denyChance));
@@ -710,6 +725,85 @@ public final class DraftEngine {
         }
         result.sort(Comparator.comparingDouble(Reasoned::score).reversed());
         return result.stream().limit(10).toList();
+    }
+
+    /** Вес преимущества на линии в оценке нашего пика: линия +0,3 (выиграно на 30% линий больше) даёт +0,15. */
+    static final double LANE_WEIGHT = 0.5;
+
+    /** Наш игрок реально играет героя: есть 3+ игры, или брал его в турнире, или играл за 60 дней. */
+    private boolean plays(SquadModel model, PlayerStats p, int h) {
+        PlayerStats.HeroLine line = p.heroes.get(h);
+        return (line != null && line.games >= 3) || model.tourneyPicks(p, h) > 0
+                || model.recent.get(p).getOrDefault(h, NO_RECENT)[0] > 0;
+    }
+
+    /** Позиция → их герой, если его игрок известен (назначен вручную или вероятность ≥ 35%). */
+    private Map<Integer, Integer> knownPositions(SquadModel them, List<Assignment> theirs) {
+        Map<Integer, Integer> result = new HashMap<>();
+        for (Assignment a : theirs) {
+            if (!a.fixed() && a.probability() < 0.35) {
+                continue;
+            }
+            them.players.stream().filter(p -> p.nick().equals(a.player())).findFirst()
+                    .ifPresent(p -> result.put(them.squad.position(p), a.heroId()));
+        }
+        return result;
+    }
+
+    private static List<Integer> laneEnemies(int ourPos, Map<Integer, Integer> theirLaners) {
+        return LaneStats.opposingPositions(ourPos).stream().filter(theirLaners::containsKey).map(theirLaners::get).toList();
+    }
+
+    private LaneStats.Outcome laneVs(int h, int pos, Map<Integer, Integer> theirLaners) {
+        List<Integer> enemies = laneEnemies(pos, theirLaners);
+        return enemies.isEmpty() ? null : ctx.lanes.lane(h, pos, enemies);
+    }
+
+    /** «линия ▲ vs Lina: 62% / 14%» — доля выигранных и проигранных линий, если результат заметно отличается от ровного. */
+    private String laneNote(int h, int pos, Map<Integer, Integer> theirLaners) {
+        LaneStats.Outcome o = laneVs(h, pos, theirLaners);
+        if (o == null || Math.abs(o.advantage()) < 0.1) {
+            return null;
+        }
+        String enemies = String.join(" + ", laneEnemies(pos, theirLaners).stream().map(meta::name).toList());
+        return (o.advantage() > 0 ? "линия ▲ vs " : "линия ▼ vs ") + enemies + ": " + Md.pct(o.win()) + " / " + Md.pct(o.loss());
+    }
+
+    /**
+     * Для каждого нашего игрока без героя, у кого на линии уже известны их герои: 3 его героя, лучшие против них
+     * (линия + по игре), с числом его игр.
+     */
+    private List<LaneOption> laneOptions(SquadModel us, double[][] prob, Set<Integer> used, Map<Integer, Integer> theirLaners) {
+        if (ctx.lanes.isEmpty() || theirLaners.isEmpty()) {
+            return List.of();
+        }
+        double[] free = freeProbability(prob, us.players.size());
+        List<LaneOption> result = new ArrayList<>();
+        for (int p = 0; p < us.players.size(); p++) {
+            PlayerStats player = us.players.get(p);
+            int pos = us.squad.position(player);
+            List<Integer> enemies = laneEnemies(pos, theirLaners);
+            if (free[p] < 0.5 || enemies.isEmpty()) {
+                continue;
+            }
+            List<Reasoned> heroes = new ArrayList<>();
+            for (Counters.Pool c : Counters.pool(ctx, player, pos, enemies, used, 3)) {
+                List<String> reasons = new ArrayList<>();
+                reasons.add(c.games() + " игр" + (Double.isNaN(c.winrate()) ? "" : ", " + Md.pct(c.winrate()))
+                        + (c.recent60() > 0 ? ", " + c.recent60() + " за 2 мес." : ""));
+                if (c.hero().laneMatches() > 0) {
+                    reasons.add("линия " + Md.pct(c.hero().laneWin()) + " / " + Md.pct(c.hero().laneLoss()));
+                }
+                if (!Double.isNaN(c.hero().gameAdv())) {
+                    reasons.add("по игре " + Md.signedPct(c.hero().gameAdv()));
+                }
+                heroes.add(new Reasoned(c.hero().heroId(), c.hero().name(), c.score(), player.nick(), reasons));
+            }
+            if (!heroes.isEmpty()) {
+                result.add(new LaneOption(player.nick(), pos, enemies.stream().map(meta::name).toList(), heroes));
+            }
+        }
+        return result;
     }
 
     /**

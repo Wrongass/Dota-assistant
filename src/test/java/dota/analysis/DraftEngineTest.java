@@ -180,4 +180,29 @@ class DraftEngineTest {
         assertEquals(5, a.ourAssignment().stream().map(DraftEngine.Assignment::player).distinct().count(),
                 "в итоговой расстановке у каждого нашего игрока свой герой");
     }
+
+    @Test
+    void ourPicksAreHeroesWePlayAndKnownLanesGetLaneOptions() throws Exception {
+        assumeTrue(Files.isDirectory(Path.of("data/raw")), "нет data/");
+        AnalysisContext ctx = AnalysisContext.load(Path.of("config/players.yaml"), Path.of("data"));
+        DraftEngine engine = new DraftEngine(ctx);
+        // их пики: Ember Spirit (106) — их мид Caraxes, Windranger (21) — их керри Nynge; остальные ходы пропущены
+        List<Integer> heroes = new ArrayList<>(List.of(0, 0, 0, 0, 0, 0, 0, 0, 106, 0, 0, 0, 21));
+        DraftEngine.Advice a = engine.advise(new DraftEngine.State("SD_Team", true, heroes,
+                java.util.Map.of(106, "Caraxes", 21, "Nynge")));
+
+        for (DraftEngine.Reasoned r : a.pickSuggestions()) {
+            PlayerStats p = ctx.ours.byPosition().stream().filter(x -> x.nick().equals(r.player())).findFirst().orElseThrow();
+            PlayerStats.HeroLine line = p.heroes.get(r.heroId());
+            assertTrue(line != null && line.games >= 1, r.player() + " не играет на " + r.name());
+        }
+        assumeTrue(ctx.hasLanes(), "нет data/raw/stratz");
+        DraftEngine.LaneOption mid = a.laneOptions().stream().filter(o -> o.position() == 2).findFirst().orElseThrow();
+        assertEquals(List.of("Ember Spirit"), mid.enemies());
+        assertFalse(mid.heroes().isEmpty());
+        assertTrue(a.laneOptions().stream().noneMatch(o -> o.position() == 1 || o.position() == 5),
+                "их 3 и 4 ещё не известны — нашей лёгкой линии подсказка не нужна");
+        assertTrue(a.pickSuggestions().stream().anyMatch(r -> r.reasons().stream().anyMatch(x -> x.startsWith("линия"))),
+                "хоть один наш пик объяснён линией");
+    }
 }

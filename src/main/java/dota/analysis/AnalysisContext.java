@@ -21,17 +21,20 @@ public final class AnalysisContext {
     public final PlayerConfig config;
     final Meta meta;
     final League league;
+    /** Линия и матчапы героев из STRATZ; пустые, если их не качали. */
+    final LaneStats lanes;
     public final Squad ours;
     public final List<Squad> opponents;
     public final LocalDate date;
     public final Instant loadedAt = Instant.now();
     public final Path dataDir;
 
-    private AnalysisContext(PlayerConfig config, Meta meta, League league, Squad ours, List<Squad> opponents,
-                            LocalDate date, Path dataDir) {
+    private AnalysisContext(PlayerConfig config, Meta meta, League league, LaneStats lanes, Squad ours,
+                            List<Squad> opponents, LocalDate date, Path dataDir) {
         this.config = config;
         this.meta = meta;
         this.league = league;
+        this.lanes = lanes;
         this.ours = ours;
         this.opponents = opponents;
         this.date = date;
@@ -57,7 +60,7 @@ public final class AnalysisContext {
                 }
             }
         }
-        return new AnalysisContext(config, meta, league, ours, opponents, date, dataDir);
+        return new AnalysisContext(config, meta, league, LaneStats.load(dataDir), ours, opponents, date, dataDir);
     }
 
     public static AnalysisContext load(Path configPath, Path dataDir) throws IOException {
@@ -85,6 +88,11 @@ public final class AnalysisContext {
 
     public Instant patchStart() {
         return meta.patchStart;
+    }
+
+    /** Есть ли статистика линии (STRATZ). */
+    public boolean hasLanes() {
+        return !lanes.isEmpty();
     }
 
     public boolean hasLeague() {
