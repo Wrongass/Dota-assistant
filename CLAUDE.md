@@ -6,7 +6,8 @@
 ## Команды
 
 - Сборка и тесты: `./gradlew build`
-- Выгрузка: `./gradlew run` (`--args="--refresh"` — перекачать всё, `--only <id>`, `--no-meta`)
+- Выгрузка: `./gradlew run` (`--args="--refresh"` — перекачать всё, `--only <id>`, `--no-meta`, `--no-stratz`;
+  линия героев из STRATZ — нужен `STRATZ_TOKEN` в `.env`, ADR 0005)
 - Отчёты: `./gradlew analyze` → `analysis/` (код в `src/main/java/dota/analysis`, веса в `Scoring`)
 - Сайт: `./gradlew web` → http://127.0.0.1:8070 (`dota.web`, шаблоны `src/main/jte`, статика `src/main/resources/static`)
 - Бэктест драфта: `./gradlew draftBacktest`
