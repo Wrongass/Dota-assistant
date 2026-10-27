@@ -56,8 +56,13 @@ our_team: {name: Team Visual, organization: Долг, team_id: 10255027}
 league:
   id: 18845                 # лига OpenDota
   since: 2026-10-01         # начало текущего сезона
-  group:                    # соперники по группе
+  stage: "Плей-ин …"         # текущая стадия — плашка на главной
+  next_opponent: BIM-TIM    # следующая игра: первая на главной, соперник по умолчанию в драфте
+  prepare: [comaTOZ, CyberDOM2]   # к кому готовимся дальше: тоже на главной
+  group:                    # соперники по группе (таблица группы)
     - {name: UPPO TEAM, organization: УППО, team_id: 9564376}
+  playin:                   # соперники плей-ина из других групп: в таблицу группы не входят
+    - {name: comaTOZ, organization: ИТОЗ, team_id: 10281979}
 players:
   - account_id: 138244651
     nick: Wrongass
