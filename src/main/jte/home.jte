@@ -2,31 +2,36 @@
 @import dota.analysis.Fmt
 @param Home model
 @template.layout(page = model.page(), content = @`
+    @if(model.stage() != null)
+        <p class="stage">${model.stage()}</p>
+    @endif
     <div class="grid2">
+        @if(model.next().isEmpty())
         <div class="panel">
-            @if(model.next() == null)
-                <h2>Следующая игра</h2>
-                <p class="muted">Соперник не задан: укажите <code>league.next_opponent</code> в config/players.yaml.</p>
-            @else
-                !{var n = model.next();}
-                <h2>Следующая игра: <a href="/opponent/${n.slug()}">${n.name()}</a> <span class="muted">${n.record()}</span></h2>
-                <p>
-                    @for(var r : n.roster())
-                        <span class="chip"><a href="/player/${r.accountId()}">${r.pos()} ${r.nick()}</a> @template.tag.rank(rankTier = r.rankTier()) @template.tag.profiles(accountId = r.accountId())</span>
-                    @endfor
-                </p>
-                <p><b>Банят в турнире:</b> ${Fmt.countList(n.bans(), false)}</p>
-                <p><b>Самые опасные:</b>
-                    @for(var t : n.threats())
-                        <span class="chip">${t.name()} <span class="muted">${t.nick()}</span></span>
-                    @endfor
-                </p>
-                <p>
-                    <a href="/opponent/${n.slug()}"><button>План на игру</button></a>
-                    <a href="/draft?opponent=${n.slug()}"><button class="primary">Начать драфт ▶</button></a>
-                </p>
-            @endif
+            <h2>Следующая игра</h2>
+            <p class="muted">Соперник не задан: укажите <code>league.next_opponent</code> в config/players.yaml.</p>
         </div>
+        @endif
+        @for(var n : model.next())
+        <div class="panel">
+            <h2>${n.label()}: <a href="/opponent/${n.slug()}">${n.name()}</a> <span class="muted small">${n.record()}</span></h2>
+            <p>
+                @for(var r : n.roster())
+                    <span class="chip"><a href="/player/${r.accountId()}">${r.pos()} ${r.nick()}</a> @template.tag.rank(rankTier = r.rankTier()) @template.tag.profiles(accountId = r.accountId())</span>
+                @endfor
+            </p>
+            <p><b>Банят в турнире:</b> ${Fmt.countList(n.bans(), false)}</p>
+            <p><b>Самые опасные:</b>
+                @for(var t : n.threats())
+                    <span class="chip">${t.name()} <span class="muted">${t.nick()}</span></span>
+                @endfor
+            </p>
+            <p>
+                <a href="/opponent/${n.slug()}"><button>План на игру</button></a>
+                <a href="/draft?opponent=${n.slug()}"><button class="primary">Начать драфт ▶</button></a>
+            </p>
+        </div>
+        @endfor
 
         <div class="panel">
             <h2>Группа</h2>

@@ -63,6 +63,23 @@ final class Site {
         return Files.exists(file) ? Optional.of(file) : Optional.empty();
     }
 
+    /** Следующий соперник и те, к кому готовимся дальше (league.prepare), без повторов. */
+    List<Squad> upcoming() {
+        PlayerConfig.League league = ctx.config.league();
+        List<Squad> result = new java.util.ArrayList<>();
+        Squad next = nextOpponent();
+        if (next != null) {
+            result.add(next);
+        }
+        if (league != null) {
+            for (String name : league.prepareOrEmpty()) {
+                ctx.opponents.stream().filter(s -> s.team().name().equals(name) && !result.contains(s))
+                        .findFirst().ifPresent(result::add);
+            }
+        }
+        return result;
+    }
+
     Squad nextOpponent() {
         PlayerConfig.League league = ctx.config.league();
         if (league == null || league.nextOpponent() == null) {

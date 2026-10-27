@@ -19,16 +19,32 @@ public record PlayerConfig(@JsonProperty("our_team") TeamInfo ourTeam, League le
     }
 
     /**
-     * Турнир: id лиги OpenDota, с какой даты считать матчи текущего сезона (yyyy-MM-dd),
-     * команды нашей группы (соперники), имя следующего соперника (для главной страницы сайта) и карты,
-     * которых нет в OpenDota, но результат известен с сайта турнира.
+     * Турнир: id лиги OpenDota, с какой даты считать матчи текущего сезона (yyyy-MM-dd), текущая стадия (stage, текст),
+     * команды нашей группы, соперники плей-ина (не из нашей группы), имя следующего соперника и тех, к кому готовимся
+     * дальше (для главной страницы сайта), и карты, которых нет в OpenDota, но результат известен с сайта турнира.
      */
-    public record League(Long id, String name, String since, List<TeamInfo> group,
+    public record League(Long id, String name, String since, String stage, List<TeamInfo> group, List<TeamInfo> playin,
                          @JsonProperty("next_opponent") String nextOpponent,
+                         List<String> prepare,
                          @JsonProperty("manual_maps") List<ManualMap> manualMaps) {
 
         public List<TeamInfo> groupOrEmpty() {
             return group == null ? List.of() : group;
+        }
+
+        public List<TeamInfo> playinOrEmpty() {
+            return playin == null ? List.of() : playin;
+        }
+
+        /** Все соперники: сначала группа, потом плей-ин. */
+        public List<TeamInfo> opponentsOrEmpty() {
+            List<TeamInfo> all = new java.util.ArrayList<>(groupOrEmpty());
+            all.addAll(playinOrEmpty());
+            return all;
+        }
+
+        public List<String> prepareOrEmpty() {
+            return prepare == null ? List.of() : prepare;
         }
 
         public List<ManualMap> manualMapsOrEmpty() {
@@ -93,7 +109,14 @@ public record PlayerConfig(@JsonProperty("our_team") TeamInfo ourTeam, League le
             if (ourTeam != null) {
                 teams.add(ourTeam.name());
             }
-            league.groupOrEmpty().forEach(t -> teams.add(t.name()));
+            league.opponentsOrEmpty().forEach(t -> teams.add(t.name()));
+            for (String name : league.nextOpponent() == null ? league.prepareOrEmpty()
+                    : java.util.stream.Stream.concat(java.util.stream.Stream.of(league.nextOpponent()),
+                    league.prepareOrEmpty().stream()).toList()) {
+                if (!teams.contains(name)) {
+                    throw new IllegalArgumentException("next_opponent / prepare: no such team in group or playin: " + name);
+                }
+            }
             for (ManualMap m : league.manualMapsOrEmpty()) {
                 if (m.date() == null || !teams.contains(m.winner()) || !teams.contains(m.loser())) {
                     throw new IllegalArgumentException(

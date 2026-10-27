@@ -23,11 +23,12 @@ public final class Models {
     public record OurLine(int pos, String nick, long accountId, int rankTier, List<Views.PoolEntry> pool) {
     }
 
-    public record NextOpponent(String slug, String name, String record, List<Views.RosterRow> roster,
+    /** label — «Следующая игра» или «Готовимся дальше». */
+    public record NextOpponent(String label, String slug, String name, String record, List<Views.RosterRow> roster,
                                List<Views.ThreatRow> threats, List<Views.Count> bans) {
     }
 
-    public record Home(Page page, List<OurLine> ours, Views.Group group, NextOpponent next) {
+    public record Home(Page page, List<OurLine> ours, Views.Group group, List<NextOpponent> next, String stage) {
     }
 
     public record Method(Page page) {

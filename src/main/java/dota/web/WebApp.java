@@ -185,17 +185,15 @@ public class WebApp {
             ours.add(new Models.OurLine(r.pos(), r.nick(), r.accountId(), r.rankTier(), pool.stream().limit(3).toList()));
         }
         Views.Group group = c.group();
-        Models.NextOpponent next = null;
-        Squad opp = site.nextOpponent();
-        if (opp != null) {
+        List<Models.NextOpponent> next = new ArrayList<>();
+        for (Squad opp : site.upcoming()) {
             Views.Threats threats = opp.threats(c.ours);
-            String record = group == null ? "" : group.standings().stream()
-                    .filter(s -> s.team().equals(opp.team().name())).findFirst()
-                    .map(s -> s.wins() + "–" + (s.games() - s.wins())).orElse("");
-            next = new Models.NextOpponent(opp.slug(), opp.teamName(), record, opp.roster().rows(),
-                    threats.threats().stream().limit(5).toList(), threats.bans());
+            next.add(new Models.NextOpponent(next.isEmpty() ? "Следующая игра" : "Готовимся дальше", opp.slug(),
+                    opp.teamName(), c.mapRecord(opp.team()), opp.roster().rows(),
+                    threats.threats().stream().limit(5).toList(), threats.bans()));
         }
-        render(http, "home.jte", new Models.Home(page("Главная", "home"), ours, group, next));
+        String stage = c.config.league() == null ? null : c.config.league().stage();
+        render(http, "home.jte", new Models.Home(page("Главная", "home"), ours, group, next, stage));
     }
 
     private void team(Context http) {

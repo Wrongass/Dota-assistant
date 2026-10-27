@@ -311,3 +311,4 @@ main.login input[type=password] { font-size: 16px; padding: 8px 10px; }
 .lane-options .who { font-size: 13px; color: var(--muted); min-width: 150px; }
 #lane-box { margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
 .grid3 td.num { white-space: nowrap; }
+.stage { margin: 0 0 12px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 4px; }

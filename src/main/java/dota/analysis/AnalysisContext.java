@@ -53,7 +53,7 @@ public final class AnalysisContext {
         Squad ours = new Squad(meta, loadPlayers(dataDir, config, null, meta, now), config.ourTeam(), true, league, today);
         List<Squad> opponents = new ArrayList<>();
         if (config.league() != null) {
-            for (PlayerConfig.TeamInfo t : config.league().groupOrEmpty()) {
+            for (PlayerConfig.TeamInfo t : config.league().opponentsOrEmpty()) {
                 List<PlayerStats> squad = loadPlayers(dataDir, config, t.name(), meta, now);
                 if (!squad.isEmpty()) {
                     opponents.add(new Squad(meta, squad, t, false, league, today));
@@ -101,6 +101,19 @@ public final class AnalysisContext {
 
     public Views.Group group() {
         return league == null ? null : Squad.group(meta, league, config);
+    }
+
+    /** Карты команды в лиге этого сезона: «побед–поражений», или пусто, если матчей нет. */
+    public String mapRecord(PlayerConfig.TeamInfo team) {
+        if (league == null || team == null || team.teamId() == null) {
+            return "";
+        }
+        List<League.Match> maps = league.of(team.teamId());
+        if (maps.isEmpty()) {
+            return "";
+        }
+        long wins = maps.stream().filter(m -> m.won(team.teamId())).count();
+        return wins + "–" + (maps.size() - wins) + " по картам";
     }
 
     public Squad opponent(String slug) {
