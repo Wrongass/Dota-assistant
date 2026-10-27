@@ -29,6 +29,10 @@ public final class Squad {
     /** Диапазон рангов команды для меты: медиана ±1 корзина. */
     final int teamFrom, teamTo;
     final String today;
+    /** Запасные: есть в конфиге, но не в составе на игру. В расчётах не участвуют, их можно поставить в состав. */
+    final List<PlayerStats> bench = new ArrayList<>();
+    /** Состав выбран на сайте, а не взят из конфига. */
+    boolean lineupChanged;
 
     Squad(Meta meta, List<PlayerStats> players, PlayerConfig.TeamInfo team, boolean ours, League league, String today) {
         this.meta = meta;
@@ -139,7 +143,26 @@ public final class Squad {
     }
 
     PlayerStats player(long accountId) {
-        return players.stream().filter(p -> p.config.accountId() == accountId).findFirst().orElse(null);
+        return java.util.stream.Stream.concat(players.stream(), bench.stream())
+                .filter(p -> p.config.accountId() == accountId).findFirst().orElse(null);
+    }
+
+    /** Состав на игру и запасные — для редактора состава на сайте. */
+    public Views.Lineup lineup() {
+        List<Views.LineupPlayer> all = new ArrayList<>();
+        for (PlayerStats p : java.util.stream.Stream.concat(byPosition().stream(), bench.stream()).toList()) {
+            boolean active = pos.containsKey(p);
+            int maps = 0;
+            if (hasTournament()) {
+                for (League.Match m : league.of(team.teamId())) {
+                    boolean radiant = m.isRadiant(team.teamId());
+                    maps += m.side(radiant).stream().anyMatch(x -> x.accountId() == p.config.accountId()) ? 1 : 0;
+                }
+            }
+            all.add(new Views.LineupPlayer(p.config.accountId(), p.nick(), p.rankTier, active ? pos.get(p) : 0,
+                    p.config.position() == null ? 0 : p.config.position(), p.config.isReserve(), maps, p.config.note()));
+        }
+        return new Views.Lineup(team == null ? "" : team.name(), teamName(), lineupChanged, all);
     }
 
     boolean hasTournament() {
@@ -307,7 +330,8 @@ public final class Squad {
     }
 
     Views.PlayerCard playerCard(PlayerStats p) {
-        int position = pos.get(p);
+        // запасной — по позиции из конфига (или 1, если она не задана)
+        int position = pos.containsKey(p) ? pos.get(p) : p.config.position() == null ? 1 : p.config.position();
         int[] r = bracketRange(p);
         List<Views.BestHero> best = new ArrayList<>();
         for (PlayerStats.HeroLine h : p.bestHeroes(TOP)) {

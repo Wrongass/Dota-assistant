@@ -8,6 +8,18 @@ import java.util.List;
  */
 public final class Views {
 
+    /**
+     * Игрок в редакторе состава. position — позиция в составе на игру (0 — запасной), configPosition — позиция в
+     * конфиге, maps — карт за эту команду в лиге сезона.
+     */
+    public record LineupPlayer(long accountId, String nick, int rankTier, int position, int configPosition,
+                               boolean reserve, int maps, String note) {
+    }
+
+    /** Состав команды: team — имя из конфига (ключ в state/lineups.json), changed — выбран на сайте. */
+    public record Lineup(String team, String teamName, boolean changed, List<LineupPlayer> players) {
+    }
+
     private Views() {
     }
 

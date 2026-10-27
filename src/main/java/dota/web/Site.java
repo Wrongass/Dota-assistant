@@ -3,6 +3,7 @@ package dota.web;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dota.analysis.AnalysisContext;
+import dota.analysis.Lineups;
 import dota.analysis.Squad;
 import dota.analysis.Views;
 import dota.fetch.PlayerConfig;
@@ -29,6 +30,9 @@ final class Site {
     final Path configPath;
     final Path dataDir;
     final Path analysisDir;
+    /** Файл состава на игру (state/lineups.json) или null — состав только по конфигу. */
+    final Path lineupsFile;
+    private volatile Lineups lineups = Lineups.none();
     private volatile AnalysisContext ctx;
     private volatile Status status;
 
@@ -37,15 +41,53 @@ final class Site {
     }
 
     Site(Path configPath, Path dataDir, Path analysisDir) {
+        this(configPath, dataDir, analysisDir, null);
+    }
+
+    Site(Path configPath, Path dataDir, Path analysisDir, Path lineupsFile) {
         this.configPath = configPath;
         this.dataDir = dataDir;
         this.analysisDir = analysisDir;
+        this.lineupsFile = lineupsFile;
     }
 
     synchronized void reload() throws IOException {
-        AnalysisContext fresh = AnalysisContext.load(configPath, dataDir);
+        if (lineupsFile != null) {
+            lineups = Lineups.load(lineupsFile);
+        }
+        AnalysisContext fresh = AnalysisContext.load(configPath, dataDir,
+                java.time.LocalDate.now(java.time.ZoneOffset.UTC), lineups);
         this.status = computeStatus(fresh);
         this.ctx = fresh;
+    }
+
+    /**
+     * Сохранить состав команды (позиция → account_id; null — вернуть состав по конфигу) и перечитать данные: состав
+     * сразу применяется на всех страницах и в драфте. Ошибка — IllegalArgumentException с текстом для пользователя.
+     */
+    synchronized void saveLineup(String team, java.util.Map<Integer, Long> lineup) throws IOException {
+        if (lineupsFile == null) {
+            throw new IllegalArgumentException("сайт запущен без файла состава (--state)");
+        }
+        Squad squad = ctx.squadNamed(team);
+        if (squad == null) {
+            throw new IllegalArgumentException("нет команды " + team);
+        }
+        if (lineup != null) {
+            java.util.Set<Long> known = new java.util.HashSet<>();
+            squad.lineup().players().forEach(p -> known.add(p.accountId()));
+            for (int pos = 1; pos <= 5; pos++) {
+                Long id = lineup.get(pos);
+                if (id == null || !known.contains(id)) {
+                    throw new IllegalArgumentException("позиция " + pos + ": выберите игрока команды");
+                }
+            }
+            if (lineup.values().stream().distinct().count() != 5) {
+                throw new IllegalArgumentException("один игрок стоит на двух позициях");
+            }
+        }
+        lineups = Lineups.load(lineupsFile).with(team, lineup);
+        reload();
     }
 
     AnalysisContext ctx() {

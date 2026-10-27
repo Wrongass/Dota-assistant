@@ -312,3 +312,8 @@ main.login input[type=password] { font-size: 16px; padding: 8px 10px; }
 #lane-box { margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
 .grid3 td.num { white-space: nowrap; }
 .stage { margin: 0 0 12px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 4px; }
+/* ---------------------------------------------------------------- состав на игру */
+.lineup summary { cursor: pointer; }
+.lineup-form { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: end; margin-top: 10px; }
+.lineup-form label { display: flex; flex-direction: column; gap: 3px; font-size: 13px; color: var(--muted); }
+.lineup-buttons { display: flex; gap: 8px; }

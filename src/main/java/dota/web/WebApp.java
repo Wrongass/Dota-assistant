@@ -30,6 +30,7 @@ import java.util.Set;
  *   --config &lt;path&gt;    по умолчанию config/players.yaml
  *   --data &lt;dir&gt;       по умолчанию data
  *   --analysis &lt;dir&gt;   по умолчанию analysis (ручные планы *_plan.md)
+ *   --state &lt;file&gt;     состав на игру, выбранный на сайте; по умолчанию state/lineups.json
  * </pre>
  */
 public class WebApp {
@@ -56,6 +57,7 @@ public class WebApp {
         Path config = Path.of("config/players.yaml");
         Path data = Path.of("data");
         Path analysis = Path.of("analysis");
+        Path state = dota.analysis.Lineups.DEFAULT_FILE;
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case "--port" -> port = Integer.parseInt(args[++i]);
@@ -63,10 +65,11 @@ public class WebApp {
                 case "--config" -> config = Path.of(args[++i]);
                 case "--data" -> data = Path.of(args[++i]);
                 case "--analysis" -> analysis = Path.of(args[++i]);
+                case "--state" -> state = Path.of(args[++i]);
                 default -> throw new IllegalArgumentException("Unknown argument: " + args[i]);
             }
         }
-        Site site = new Site(config, data, analysis);
+        Site site = new Site(config, data, analysis, state);
         long started = System.nanoTime();
         site.reload();
         System.out.printf("Data loaded in %d ms%n", (System.nanoTime() - started) / 1_000_000);
@@ -108,6 +111,7 @@ public class WebApp {
         app.get("/api/player/{id}", this::playerApi);
         app.get("/img/{kind}/{file}", this::image);
         app.post("/api/draft", this::draftApi);
+        app.post("/lineup", this::saveLineup);
         app.get("/method", ctx -> render(ctx, "method.jte", new Models.Method(page("Методика", "method"))));
         app.post("/reload", ctx -> {
             site.reload();
@@ -197,7 +201,8 @@ public class WebApp {
     }
 
     private void team(Context http) {
-        render(http, "team.jte", new Models.TeamPage(page("Команда", "team"), site.ctx().ours.roster(), "/player/"));
+        render(http, "team.jte", new Models.TeamPage(page("Команда", "team"), site.ctx().ours.roster(), "/player/",
+                site.ctx().ours.lineup(), http.queryParam("lineupError")));
     }
 
     private void player(Context http) {
@@ -248,8 +253,34 @@ public class WebApp {
         }
         String plan = site.planFile(opp).map(this::markdown).orElse(null);
         render(http, "opponent.jte", new Models.OpponentPage(page(opp.team().name(), "opponents"), opp.slug(),
-                opp.teamName(), plan, opp.roster(), opp.threats(site.ctx().ours),
+                opp.teamName(), plan, opp.lineup(), http.queryParam("lineupError"), opp.roster(), opp.threats(site.ctx().ours),
                 opp.hasTournamentData() ? opp.tournament() : null));
+    }
+
+    /**
+     * Форма состава: team — имя команды из конфига, p1..p5 — account_id на позициях, action=save|reset. После
+     * сохранения данные перечитываются — новый состав сразу везде. Возврат на ту же страницу (с ошибкой в адресе).
+     */
+    private void saveLineup(Context http) throws IOException {
+        String team = http.formParam("team");
+        String back = Auth.safeNext(http.formParam("back"));
+        try {
+            Map<Integer, Long> lineup = null;
+            if (!"reset".equals(http.formParam("action"))) {
+                lineup = new java.util.HashMap<>();
+                for (int pos = 1; pos <= 5; pos++) {
+                    String v = http.formParam("p" + pos);
+                    if (v != null && v.matches("\\d{1,12}")) {
+                        lineup.put(pos, Long.parseLong(v));
+                    }
+                }
+            }
+            site.saveLineup(team, lineup);
+            http.redirect(back);
+        } catch (IllegalArgumentException e) {
+            http.redirect(back + (back.contains("?") ? "&" : "?") + "lineupError="
+                    + java.net.URLEncoder.encode(e.getMessage(), java.nio.charset.StandardCharsets.UTF_8));
+        }
     }
 
     // ---------------------------------------------------------------- драфт

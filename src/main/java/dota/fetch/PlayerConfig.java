@@ -65,13 +65,24 @@ public record PlayerConfig(@JsonProperty("our_team") TeamInfo ourTeam, League le
         }
     }
 
+    /** reserve — запасной: в состав по умолчанию не входит, его можно поставить в состав на сайте. */
     public record Player(
             @JsonProperty("account_id") long accountId,
             String nick,
             Team team,
             Integer position,
             String note,
-            @JsonProperty("team_name") String teamName) {
+            @JsonProperty("team_name") String teamName,
+            Boolean reserve) {
+
+        public boolean isReserve() {
+            return Boolean.TRUE.equals(reserve);
+        }
+
+        /** Тот же игрок на другой позиции и в основе (для состава, выбранного на сайте). */
+        public Player at(int newPosition) {
+            return new Player(accountId, nick, team, newPosition, note, teamName, false);
+        }
     }
 
     public static PlayerConfig load(Path path) throws IOException {

@@ -40,7 +40,7 @@ public final class Models {
 
     // ---------------------------------------------------------------- отчёты
 
-    public record TeamPage(Page page, Views.Roster roster, String playerBase) {
+    public record TeamPage(Page page, Views.Roster roster, String playerBase, Views.Lineup lineup, String error) {
     }
 
     public record PlayerPage(Page page, Views.PlayerCard card, String teamName, String teamHref) {
@@ -58,7 +58,8 @@ public final class Models {
     public record GroupPage(Page page, Views.Group group, List<Link> teams) {
     }
 
-    public record OpponentPage(Page page, String slug, String name, String planHtml, Views.Roster roster,
+    public record OpponentPage(Page page, String slug, String name, String planHtml, Views.Lineup lineup, String error,
+                               Views.Roster roster,
                                Views.Threats threats, Views.Tournament tournament) {
     }
 
