@@ -1,5 +1,5 @@
 # team: our | opp; position: 1..5 или пусто; note — свободный комментарий о роли и стиле.
-# Для соперников обязателен team_name — имя команды из league.group.
+# Для соперников обязателен team_name — имя команды из league.group или league.playin.
 our_team:
   name: Team Visual
   organization: Долг
@@ -11,7 +11,10 @@ league:
   id: 18845
   name: Киберлига «Трудовые резервы», 6 сезон (осень) — дивизион Ancient, группа B
   since: 2026-10-01
-  next_opponent: SD Team     # следующая игра — показывается на главной странице сайта
+  # Группа закончилась 25.10: 2-е место (1 победа, 1 ничья, 1 поражение; карты 3–3), прямого выхода нет — плей-ин.
+  stage: "Плей-ин (верхняя сетка): W1 — мы против BIM Инжиниринг, W2 — ИТОЗ против Дом.РФ, W5 — победители W1 и W2. Проигравший W1 уходит в нижнюю сетку (L1)."
+  next_opponent: BIM-TIM     # следующая игра — первая на главной странице, соперник по умолчанию в драфте
+  prepare: [comaTOZ, CyberDOM2]   # к кому готовимся дальше (W5): показываются на главной ниже
   # Карты, которых нет в OpenDota, но результат известен с сайта турнира: идут только в счёт группы.
   manual_maps:
     - date: 2026-10-17
@@ -28,6 +31,18 @@ league:
     - name: Team Polyus
       organization: НИИ Полюс им. М.Ф. Стельмаха
       team_id: 9419839
+  # Соперники плей-ина из других групп. Добавлены только команды нашей ветки сетки (W1, W2): весь дивизион —
+  # ~25 команд и ~1200 запросов к OpenDota, а нужны нам максимум 3–4 соперника.
+  playin:
+    - name: BIM-TIM
+      organization: BIM Инжиниринг
+      team_id: 10282748
+    - name: comaTOZ
+      organization: ИТОЗ
+      team_id: 10281979
+    - name: CyberDOM2
+      organization: Дом.РФ
+      team_id: 10095821
 
 players:
   # --- Team Visual ---
@@ -152,3 +167,101 @@ players:
     team_name: Team Polyus
     position: 5
     note: Против нас Abaddon, Jakiro.
+
+  # --- Плей-ин. Составы и позиции — по 6 картам каждой команды в лиге (группы A и C): 1–3 — по линии и GPM,
+  # 4/5 — саппорт сложной / лёгкой линии. Ники — из профилей Steam. ---
+  # comaTOZ (ИТОЗ), группа A: 1–2, карты 2–4. Запасной Nick_Abram (150846436, оффлейн в 2 картах без kezi; тогда IAM- на миде).
+  - account_id: 279712792
+    nick: britishboi
+    team: opp
+    team_name: comaTOZ
+    position: 1
+    note: В турнире Windranger ×2, Nature's Prophet ×2, Drow Ranger, Lifestealer (safe, 700 GPM).
+  - account_id: 456755086
+    nick: kezi
+    team: opp
+    team_name: comaTOZ
+    position: 2
+    note: В турнире Dragon Knight, Earth Spirit, Lina, Earthshaker (mid, 4 карты из 6).
+  - account_id: 101847163
+    nick: IAM-
+    team: opp
+    team_name: comaTOZ
+    position: 3
+    note: В турнире Dragon Knight ×2, Doom, Slardar, Largo (off), Ember Spirit (mid, когда нет kezi).
+  - account_id: 115735715
+    nick: Asmodeus
+    team: opp
+    team_name: comaTOZ
+    position: 4
+    note: В турнире Spirit Breaker ×2, Hoodwink, Dark Willow, Rubick, Pudge (саппорт сложной линии).
+  - account_id: 125843531
+    nick: DrestoV1ch
+    team: opp
+    team_name: comaTOZ
+    position: 5
+    note: В турнире Bane, Undying, Clockwerk, Dark Willow, Techies, Oracle (саппорт лёгкой линии).
+
+  # CyberDOM2 (Дом.РФ), группа C: 1–2, карты 2–4. Запасной Timer (106079486: Medusa, Kez в 2 картах).
+  - account_id: 72893201
+    nick: COCKPIT
+    team: opp
+    team_name: CyberDOM2
+    position: 1
+    note: В турнире Drow Ranger ×2, Bloodseeker, Templar Assassin, Phantom Assassin, Techies (safe, 583 GPM).
+  - account_id: 62616773
+    nick: Aspera
+    team: opp
+    team_name: CyberDOM2
+    position: 2
+    note: В турнире Lina ×2, Outworld Devourer, Leshrac, Slark (mid), Disruptor.
+  - account_id: 66925112
+    nick: Kabal
+    team: opp
+    team_name: CyberDOM2
+    position: 3
+    note: В турнире Axe ×3, Tidehunter, Night Stalker, Underlord (off).
+  - account_id: 77289040
+    nick: krs
+    team: opp
+    team_name: CyberDOM2
+    position: 4
+    note: В турнире Hoodwink, Shadow Shaman, Jakiro, Dazzle (саппорт сложной линии, 4 карты из 6).
+  - account_id: 248563007
+    nick: sherdar
+    team: opp
+    team_name: CyberDOM2
+    position: 5
+    note: В турнире Snapfire ×2, Disruptor, Shadow Shaman, Witch Doctor, Lion (саппорт лёгкой линии).
+
+  # BIM-TIM (BIM Инжиниринг), группа A: 0–3, карты 0–6. Позиции 1 и 3 неточные: PecoPeco~ и Zitz оба стояли на лёгкой.
+  - account_id: 913576335
+    nick: Zitz
+    team: opp
+    team_name: BIM-TIM
+    position: 1
+    note: В турнире Faceless Void, Phantom Lancer, Drow Ranger, Legion Commander, Undying, Witch Doctor.
+  - account_id: 1191343277
+    nick: GoodDay
+    team: opp
+    team_name: BIM-TIM
+    position: 2
+    note: В турнире Sniper, Zeus, Mirana, Bloodseeker (mid), Witch Doctor, Vengeful Spirit.
+  - account_id: 86887038
+    nick: PecoPeco
+    team: opp
+    team_name: BIM-TIM
+    position: 3
+    note: В турнире Troll Warlord, Lifestealer, Dragon Knight, Axe, Magnus, Techies.
+  - account_id: 113258923
+    nick: montereyvoron
+    team: opp
+    team_name: BIM-TIM
+    position: 4
+    note: В турнире Lion ×2, Lich ×2, Silencer, Weaver (саппорт сложной линии).
+  - account_id: 61095001
+    nick: Барбазяк
+    team: opp
+    team_name: BIM-TIM
+    position: 5
+    note: В турнире Skywrath Mage ×2, Lina, Tidehunter, Wraith King, Chaos Knight (линия меняется).

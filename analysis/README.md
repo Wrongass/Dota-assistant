@@ -1,6 +1,6 @@
 # Анализ: Team Visual (Долг)
 
-Сгенерировано 2026-10-21 из `data/` (патч **7.41**, начало 2026-03-24). Пересобрать: `./gradlew analyze`.
+Сгенерировано 2026-10-27 из `data/` (патч **7.41**, начало 2026-03-24). Пересобрать: `./gradlew analyze`.
 
 ## Что где лежит
 
@@ -14,6 +14,9 @@
 | [opponents/SD_Team/](opponents/SD_Team/README.md) | Соперник SD Team (GGsel): состав, угрозы, турнирные драфты, игроки |
 | [opponents/UPPO_TEAM/](opponents/UPPO_TEAM/README.md) | Соперник UPPO TEAM (УППО): состав, угрозы, турнирные драфты, игроки |
 | [opponents/Team_Polyus/](opponents/Team_Polyus/README.md) | Соперник Team Polyus (НИИ Полюс им. М.Ф. Стельмаха): состав, угрозы, турнирные драфты, игроки |
+| [opponents/BIM_TIM/](opponents/BIM_TIM/README.md) | Соперник BIM-TIM (BIM Инжиниринг): состав, угрозы, турнирные драфты, игроки |
+| [opponents/comaTOZ/](opponents/comaTOZ/README.md) | Соперник comaTOZ (ИТОЗ): состав, угрозы, турнирные драфты, игроки |
+| [opponents/CyberDOM2/](opponents/CyberDOM2/README.md) | Соперник CyberDOM2 (Дом.РФ): состав, угрозы, турнирные драфты, игроки |
 | [meta/patch_7.41.md](meta/patch_7.41.md) | Мета патча: сильные/слабые по позициям, про-сцена (CM), лучшие связки и контрпики |
 | [players/pos1_kren.md](players/pos1_kren.md) | Позиция 1, kren: лучшие герои и герои под патч |
 | [players/pos2_Wrongass.md](players/pos2_Wrongass.md) | Позиция 2, Wrongass: лучшие герои и герои под патч |
