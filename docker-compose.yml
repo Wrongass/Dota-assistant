@@ -46,6 +46,7 @@ services:
     entrypoint: ["java", "-Dstdout.encoding=UTF-8", "-cp", "/app/lib/*", "dota.fetch.Main"]
     environment:
       - OPENDOTA_API_KEY
+      - STRATZ_TOKEN
     volumes:
       - ./data:/app/data
       - ./config:/app/config:ro
