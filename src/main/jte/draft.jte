@@ -58,6 +58,10 @@
                     <ol id="bans" class="advice"></ol>
                 </div>
                 <div class="panel advice-panel" id="panel-picks">
+                    <div id="lane-box" hidden>
+                        <h3>На линию <span class="hint">их герои на линии известны · только герои, на которых игрок играет · подробности — наведите</span></h3>
+                        <ul id="lane-options" class="lane-options"></ul>
+                    </div>
                     <h3>Нам брать</h3>
                     <ol id="picks" class="advice"></ol>
                 </div>

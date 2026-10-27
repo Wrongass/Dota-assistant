@@ -103,6 +103,7 @@ public class WebApp {
         app.get("/group", this::group);
         app.get("/opponent/{slug}", this::opponent);
         app.get("/draft", this::draftPage);
+        app.get("/counters", this::counters);
         app.get("/api/heroes", ctx -> ctx.json(site.ctx().heroList()));
         app.get("/api/player/{id}", this::playerApi);
         app.get("/img/{kind}/{file}", this::image);
@@ -273,6 +274,42 @@ public class WebApp {
         render(http, "draft.jte", new Models.DraftPage(page("Драфт", "draft"), JSON.writeValueAsString(c.heroList()),
                 JSON.writeValueAsString(opponents), opponent, JSON.writeValueAsString(DraftEngine.SLOTS),
                 JSON.writeValueAsString(c.ours.poolOwners()), JSON.writeValueAsString(rosters(c))));
+    }
+
+    /** Контрпики: ?h=Viper&h2=Lina&pos=2 (имена или id героев; pos 0 или нет — позиция по первому герою). */
+    private void counters(Context http) {
+        AnalysisContext c = site.ctx();
+        String first = http.queryParamAsClass("h", String.class).getOrDefault("").trim();
+        String second = http.queryParamAsClass("h2", String.class).getOrDefault("").trim();
+        int pos = http.queryParamAsClass("pos", Integer.class).getOrDefault(0);
+        List<Integer> enemies = new ArrayList<>();
+        List<String> unknown = new ArrayList<>();
+        for (String name : List.of(first, second)) {
+            if (name.isEmpty()) {
+                continue;
+            }
+            Integer id = heroId(c, name);
+            if (id == null) {
+                unknown.add(name);
+            } else if (!enemies.contains(id)) {
+                enemies.add(id);
+            }
+        }
+        String error = unknown.isEmpty() ? null : "Не нашёл героя: " + String.join(", ", unknown);
+        render(http, "counters.jte", new Models.CountersPage(page("Контрпики", "counters"), c.heroList(), first, second,
+                pos < 1 || pos > 5, dota.analysis.Counters.build(c, enemies, pos), error));
+    }
+
+    private static Integer heroId(AnalysisContext c, String text) {
+        String t = text.trim().toLowerCase(java.util.Locale.ROOT);
+        for (AnalysisContext.HeroInfo h : c.heroList()) {
+            if (h.name().toLowerCase(java.util.Locale.ROOT).equals(t) || String.valueOf(h.id()).equals(t)) {
+                return h.id();
+            }
+        }
+        List<AnalysisContext.HeroInfo> prefix = c.heroList().stream()
+                .filter(h -> h.name().toLowerCase(java.util.Locale.ROOT).startsWith(t)).toList();
+        return prefix.size() == 1 ? prefix.get(0).id() : null;
     }
 
     private static Map<String, Object> rosters(AnalysisContext c) {

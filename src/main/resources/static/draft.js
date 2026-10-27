@@ -383,6 +383,16 @@
     $("bans").innerHTML = a.banSuggestions.map((r) => pickable(r, "")).join("");
     $("picks").innerHTML = a.pickSuggestions.map((r) =>
       pickable(r, `<span class="muted">${esc(r.player)}</span>`)).join("");
+    const lo = a.laneOptions || [];
+    $("lane-box").hidden = lo.length === 0;
+    $("lane-options").innerHTML = lo.map((o) => {
+      const ids = o.enemies.map((n) => (HEROES.find((x) => x.name === n) || {}).id).filter(Boolean);
+      const href = `/counters?h=${encodeURIComponent(o.enemies[0])}&h2=${encodeURIComponent(o.enemies[1] || "")}&pos=${o.position}`;
+      const chips = o.heroes.map((r) => `<button class="hero-pick" data-id="${r.heroId}" title="${esc(r.reasons.join(" · "))}">${icon(r.heroId)}${esc(r.name)}</button>
+        <span class="reason">${esc(r.reasons.find((x) => x.startsWith("линия")) || r.reasons[0] || "")}</span>`).join(" ");
+      return `<li><span class="who"><b>${esc(o.player)}</b> (${o.position}) vs ${ids.map((id) => icon(id)).join("")}
+        <a href="${href}" target="_blank" rel="noopener" title="Все контрпики к ${esc(o.enemies.join(" + "))}">↗</a></span> ${chips}</li>`;
+    }).join("");
     $("their-likely-bans").innerHTML = a.theirLikelyBans.map((r) =>
       pickable(r, `<b>${pct(r.score)}</b>`)).join("") || '<li class="muted">—</li>';
     $("their-bans-left").textContent = a.theirBansLeft ? `осталось банов: ${a.theirBansLeft}` : "";

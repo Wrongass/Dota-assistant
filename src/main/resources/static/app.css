@@ -299,3 +299,15 @@ main.login input[type=password] { font-size: 16px; padding: 8px 10px; }
 .rank-ico { width: 24px; height: 24px; }
 .rank-star { position: absolute; left: 0; top: 0; width: 24px; height: 24px; }
 .theme-toggle { font-size: 12px; }
+
+/* ---------------------------------------------------------------- контрпики */
+.counters-form { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: end; }
+.counters-form label { display: flex; flex-direction: column; gap: 3px; font-size: 13px; color: var(--muted); }
+.counters-form input { min-width: 200px; }
+.counters-form p { flex-basis: 100%; margin: 0; }
+.grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 14px; }
+.lane-options { list-style: none; margin: 0; padding: 0; }
+.lane-options > li { margin-bottom: 6px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
+.lane-options .who { font-size: 13px; color: var(--muted); min-width: 150px; }
+#lane-box { margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+.grid3 td.num { white-space: nowrap; }

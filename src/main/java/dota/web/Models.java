@@ -61,6 +61,11 @@ public final class Models {
                                Views.Threats threats, Views.Tournament tournament) {
     }
 
+    /** Контрпики: введённые имена героев (как в форме), «авто» ли позиция, ошибка ввода или null. */
+    public record CountersPage(Page page, List<dota.analysis.AnalysisContext.HeroInfo> heroes, String first,
+                               String second, boolean posAuto, dota.analysis.Counters.View view, String error) {
+    }
+
     // ---------------------------------------------------------------- драфт
 
     /** poolJson — наши герои: id героя → кто из наших на нём играет (для предупреждения «баните своего»). */
