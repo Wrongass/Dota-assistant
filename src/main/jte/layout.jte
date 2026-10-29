@@ -18,7 +18,7 @@
         <a class="brand" href="/">Dota-помощник · ${page.teamName()}</a>
         <div class="status">
             <span>Патч ${page.patch()}</span>
-            <span title="Когда скачаны данные игроков (./gradlew run)">игроки: ${page.playersFetched()}</span>
+            <span title="Самые старые данные игроков: с этого времени новых матчей хотя бы у одного игрока в статистике нет">игроки от ${page.playersFetched()}</span>
             <span title="Когда скачана выборка меты: синергии и контрпики">мета: ${page.metaFetched()}</span>
             @if(!page.warnings().isEmpty())
                 <a href="/#warnings" title="Предупреждения о данных">⚠ ${page.warnings().size()}</a>

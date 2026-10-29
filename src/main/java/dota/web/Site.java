@@ -40,6 +40,9 @@ final class Site {
     record Status(String patch, String playersFetched, String metaFetched, List<String> warnings) {
     }
 
+    /** Данные игрока старше стольких дней — предупреждение (перед игрой обычно обновляют). */
+    static final int STALE_DAYS = 3;
+
     Site(Path configPath, Path dataDir, Path analysisDir) {
         this(configPath, dataDir, analysisDir, null);
     }
@@ -148,16 +151,28 @@ final class Site {
 
     private Status computeStatus(AnalysisContext c) {
         List<String> warnings = new ArrayList<>();
-        Instant playersAt = Instant.EPOCH;
+        // в шапке — самые старые данные игроков: выгрузка без --refresh не перекачивает уже скачанных, и по самому
+        // свежему файлу (новые игроки) устаревшие данные не видно
+        Instant playersAt = null;
+        Instant staleBefore = Instant.now().minus(java.time.Duration.ofDays(STALE_DAYS));
+        List<String> stale = new ArrayList<>();
         for (PlayerConfig.Player p : c.config.players()) {
             Path profile = dataDir.resolve("raw").resolve(p.team().dir()).resolve(String.valueOf(p.accountId()))
                     .resolve("profile.json");
             try {
                 Instant t = Files.getLastModifiedTime(profile).toInstant();
-                playersAt = t.isAfter(playersAt) ? t : playersAt;
+                playersAt = playersAt == null || t.isBefore(playersAt) ? t : playersAt;
+                if (t.isBefore(staleBefore)) {
+                    stale.add(p.nick());
+                }
             } catch (IOException e) {
                 warnings.add(p.nick() + ": нет данных — запустите ./gradlew run");
             }
+        }
+        if (!stale.isEmpty()) {
+            warnings.add("Данные игроков старше " + STALE_DAYS + " дней (самые старые от " + TIME.format(playersAt) + "): "
+                    + String.join(", ", stale) + ". Последние матчи, турнирные тоже, в статистике не видны. Обновите "
+                    + "выгрузку с --refresh: без него уже скачанные игроки не перекачиваются");
         }
         for (Views.RosterRow r : c.ours.roster().rows()) {
             if (r.personaName() != null && !r.personaName().equalsIgnoreCase(r.nick())) {
@@ -193,6 +208,6 @@ final class Site {
         } catch (Exception e) {
             warnings.add("Нет выборки меты (_sample.json) — синергии и контрпики могут отсутствовать");
         }
-        return new Status(c.patch(), playersAt == Instant.EPOCH ? "—" : TIME.format(playersAt), metaAt, warnings);
+        return new Status(c.patch(), playersAt == null ? "—" : TIME.format(playersAt), metaAt, warnings);
     }
 }
