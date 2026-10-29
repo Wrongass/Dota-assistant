@@ -92,6 +92,29 @@ class LineupTest {
     }
 
     @Test
+    void unwritableStateShowsReasonInsteadOfServerError() throws Exception {
+        Path notADir = Files.writeString(state.resolve("file-not-dir"), "x");
+        Site broken = new Site(Path.of("config/players.yaml"), Path.of("data"), Path.of("analysis"),
+                notADir.resolve("lineups.json"));
+        broken.reload();
+        Javalin other = new WebApp(broken).create().start("127.0.0.1", 0);
+        try {
+            String team = java.net.URLEncoder.encode(broken.ctx().ours.team().name(), java.nio.charset.StandardCharsets.UTF_8);
+            StringBuilder form = new StringBuilder("team=" + team + "&back=%2Fteam&action=save");
+            withDavajj().forEach((pos, id) -> form.append("&p").append(pos).append("=").append(id));
+            HttpResponse<String> r = HTTP.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:" + other.port() + "/lineup"))
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .POST(HttpRequest.BodyPublishers.ofString(form.toString())).build(), HttpResponse.BodyHandlers.ofString());
+            assertEquals(302, r.statusCode(), "не 500, а возврат на страницу с причиной");
+            assertTrue(r.headers().firstValue("Location").orElse("").startsWith("/team?lineupError="));
+            assertTrue(WebApp.lineupsStatus(notADir.resolve("lineups.json")).startsWith("ВНИМАНИЕ"));
+            assertTrue(WebApp.lineupsStatus(state.resolve("lineups.json")).startsWith("Состав на игру сохраняется"));
+        } finally {
+            other.stop();
+        }
+    }
+
+    @Test
     void formSavesAndRedirectsBack() throws Exception {
         String team = site.ctx().ours.team().name();
         StringBuilder form = new StringBuilder("team=" + java.net.URLEncoder.encode(team, java.nio.charset.StandardCharsets.UTF_8)

@@ -76,6 +76,7 @@ public class WebApp {
         Auth auth = Auth.fromEnvironment();
         System.out.println(auth.enabled() ? "Вход по паролю включён (SITE_PASSWORD)"
                 : "SITE_PASSWORD не задан — сайт открыт без пароля (только для локального запуска)");
+        System.out.println(lineupsStatus(state));
         new WebApp(site, auth).create().start(host, port);
         System.out.printf("Open http://%s:%d%n", host.equals("0.0.0.0") ? "localhost" : host, port);
     }
@@ -278,8 +279,30 @@ public class WebApp {
             site.saveLineup(team, lineup);
             http.redirect(back);
         } catch (IllegalArgumentException e) {
-            http.redirect(back + (back.contains("?") ? "&" : "?") + "lineupError="
-                    + java.net.URLEncoder.encode(e.getMessage(), java.nio.charset.StandardCharsets.UTF_8));
+            redirectWithError(http, back, e.getMessage());
+        } catch (IOException | RuntimeException e) {
+            // чаще всего папка state/ недоступна для записи (в Docker — нет тома ./state или нет прав на него)
+            System.err.printf("Не удалось сохранить состав %s в %s: %s%n", team, site.lineupsFile, e);
+            redirectWithError(http, back, "Не удалось сохранить состав на сервере (" + e.getClass().getSimpleName() + ": "
+                    + e.getMessage() + "). Проверьте, что папка state доступна сайту для записи.");
+        }
+    }
+
+    private static void redirectWithError(Context http, String back, String message) {
+        http.redirect(back + (back.contains("?") ? "&" : "?") + "lineupError="
+                + java.net.URLEncoder.encode(message, java.nio.charset.StandardCharsets.UTF_8));
+    }
+
+    /** При запуске: можно ли писать состав на игру. Ответ видно в логе (docker compose logs web). */
+    static String lineupsStatus(Path file) {
+        try {
+            Path dir = file.toAbsolutePath().getParent();
+            Files.createDirectories(dir);
+            Path probe = Files.createTempFile(dir, "write-check", ".tmp");
+            Files.delete(probe);
+            return "Состав на игру сохраняется в " + file.toAbsolutePath();
+        } catch (IOException | RuntimeException e) {
+            return "ВНИМАНИЕ: состав на игру не сохранится, нет записи в " + file.toAbsolutePath().getParent() + " (" + e + ")";
         }
     }
 
