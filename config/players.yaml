@@ -14,9 +14,9 @@ league:
   name: Киберлига «Трудовые резервы», 6 сезон (осень) — дивизион Ancient, группа B
   since: 2026-10-01
   # Группа закончилась 25.10: 2-е место (1 победа, 1 ничья, 1 поражение; карты 3–3), прямого выхода нет — плей-ин.
-  stage: "Плей-ин (верхняя сетка): W1 — мы против BIM Инжиниринг, W2 — ИТОЗ против Дом.РФ, W5 — победители W1 и W2. Проигравший W1 уходит в нижнюю сетку (L1)."
-  next_opponent: BIM-TIM     # следующая игра — первая на главной странице, соперник по умолчанию в драфте
-  prepare: [comaTOZ, CyberDOM2]   # к кому готовимся дальше (W5): показываются на главной ниже
+  stage: "Плей-ин (верхняя сетка): W1 мы прошли BIM Инжиниринг. W2 ИТОЗ против Дом.РФ идёт сейчас (31.10), по ходу матча выигрывает ИТОЗ. W5 — мы против победителя W2."
+  next_opponent: comaTOZ     # следующая игра — первая на главной странице, соперник по умолчанию в драфте
+  prepare: [CyberDOM2]       # запасной вариант W5, если Дом.РФ всё же выиграет W2
   # Карты, которых нет в OpenDota, но результат известен с сайта турнира: идут только в счёт группы.
   manual_maps:
     - date: 2026-10-17
@@ -199,11 +199,11 @@ players:
     position: 2
     note: В турнире Dragon Knight, Earth Spirit, Lina, Earthshaker (mid, 4 карты из 6).
   - account_id: 101847163
-    nick: IAM-
+    nick: YOURSELF
     team: opp
     team_name: comaTOZ
     position: 3
-    note: В турнире Dragon Knight ×2, Doom, Slardar, Largo (off), Ember Spirit (mid, когда нет kezi).
+    note: Steam-ник сейчас YOURSELF, в турнире играл как IAM- (Dragon Knight ×2, Doom, Slardar, Largo в оффлейне, Ember Spirit на миде, когда нет kezi).
   - account_id: 115735715
     nick: Asmodeus
     team: opp
@@ -222,7 +222,7 @@ players:
     team_name: comaTOZ
     position: 3
     reserve: true
-    note: Замена в 2 картах против Эльбрус (Viper, Slardar в оффлейне), тогда kezi не играл, а IAM- стоял на миде.
+    note: Замена в 2 картах против Эльбрус (Viper, Slardar в оффлейне), тогда kezi не играл, а YOURSELF (IAM-) стоял на миде.
 
   # CyberDOM2 (Дом.РФ), группа C: 1–2, карты 2–4.
   - account_id: 72893201

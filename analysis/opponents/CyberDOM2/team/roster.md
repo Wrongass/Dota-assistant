@@ -1,12 +1,12 @@
 # Состав: CyberDOM2 (Дом.РФ)
 
-Данные на 2026-10-27, патч 7.41. Турбо не учитывается.
+Данные на 2026-11-01, патч 7.41. Турбо не учитывается.
 
 | Поз. | Игрок | Steam-ник | account_id | Ранг | MMR (оценка) | Матчей всего / год / патч | WR в патче | Captains Mode | Роль в команде |
 |---|---|---|---|---|---|---|---|---|---|
 | 1 | [COCKPIT](../players/pos1_COCKPIT.md) | COCKPIT | 72893201 | Властелин 3 (Ancient) | 3854 | 3037 / 867 / 643 | 49.0% | 21 (38.1%) | В турнире Drow Ranger ×2, Bloodseeker, Templar Assassin, Phantom Assassin, Techies (safe, 583 GPM). |
 | 2 | [Aspera](../players/pos2_Aspera.md) | Aspera | 62616773 | Властелин 3 (Ancient) | 4359 | 6297 / 338 / 183 | 51.9% | 14 (35.7%) | В турнире Lina ×2, Outworld Devourer, Leshrac, Slark (mid), Disruptor. |
-| 3 | [Kabal](../players/pos3_Kabal.md) | Kabal | 66925112 | Властелин 3 (Ancient) | 4171 | 4598 / 534 / 385 | 50.6% | 117 (48.7%) | В турнире Axe ×3, Tidehunter, Night Stalker, Underlord (off). |
+| 3 | [Kabal](../players/pos3_Kabal.md) | Kabal | 66925112 | Властелин 3 (Ancient) | 4171 | 4598 / 530 / 385 | 50.6% | 117 (48.7%) | В турнире Axe ×3, Tidehunter, Night Stalker, Underlord (off). |
 | 4 | [krs](../players/pos4_krs.md) | krs | 77289040 | Герой 1 (Archon) | 3981 | 0 / 0 / 0 | — | 0 | В турнире Hoodwink, Shadow Shaman, Jakiro, Dazzle (саппорт сложной линии, 4 карты из 6). |
 | 5 | [sherdar](../players/pos5_sherdar.md) | sherdar? | 248563007 | Легенда 2 (Legend) | 3958 | 3732 / 780 / 627 | 49.6% | 17 (29.4%) | В турнире Snapfire ×2, Disruptor, Shadow Shaman, Witch Doctor, Lion (саппорт лёгкой линии). |
 
@@ -18,7 +18,7 @@
 |---|---|---|---|---|---|---|---|
 | COCKPIT | 1 | 48.8% | 3.9% | 6.0% | 21.2% | 20.1% | 103/3/51/0 |
 | Aspera | 2 | 15.0% | 32.4% | 15.9% | 19.5% | 17.2% | 6/20/10/0 |
-| Kabal | 3 | 9.4% | 26.7% | 49.2% | 7.1% | 7.5% | 5/8/43/0 |
+| Kabal | 3 | 9.5% | 26.4% | 49.4% | 7.1% | 7.5% | 5/8/43/0 |
 | krs | 4 | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0/0/0/0 |
 | sherdar | 5 | 52.9% | 12.0% | 11.1% | 11.4% | 12.6% | 43/3/16/0 |
 

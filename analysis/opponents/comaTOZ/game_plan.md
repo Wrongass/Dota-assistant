@@ -15,15 +15,15 @@
 | Поз. | Игрок | Ранг | В турнире | Лучшее в пабах | Комментарий |
 |---|---|---|---|---|---|
 | 1 | britishboi | **Божество 4** | Windranger ×2, Nature's Prophet ×2, Drow Ranger, Lifestealer | Phantom Lancer (157 игр), Lifestealer (5 из 6 за год), Anti-Mage, Spectre | **Главная угроза**: 60,6% побед в патче, 700 GPM в турнире |
-| 2 | kezi | **Божество 4** | Dragon Knight, Earth Spirit, Lina, Earthshaker | **Invoker** (508 игр, 67,6% за год), Viper, Ember Spirit | Сыграл 4 карты из 6. Без него мид — IAM- (Ember Spirit) |
-| 3 | IAM- | Герой 1 | Dragon Knight ×2, Doom, Slardar, Largo | Wraith King, Dragon Knight, Axe | Низкий ранг, но 283 игры в CM (52,7%) |
+| 2 | kezi | **Божество 4** | Dragon Knight, Earth Spirit, Lina, Earthshaker | **Invoker** (508 игр, 67,6% за год), Viper, Ember Spirit | Сыграл 4 карты из 6. Без него мид — YOURSELF (Ember Spirit) |
+| 3 | YOURSELF (в турнире IAM-) | Герой 1 | Dragon Knight ×2, Doom, Slardar, Largo | Wraith King, Dragon Knight, Axe | Низкий ранг, но 283 игры в CM (52,7%) |
 | 4 | Asmodeus | **Рыцарь 3** | Spirit Breaker ×2, Hoodwink, Dark Willow, Rubick, Pudge | Pudge, Vengeful Spirit | **Слабое звено**: самый низкий ранг, 130 игр всего |
 | 5 | DrestoV1ch | Божество 2 | Bane, Undying, Clockwerk, Dark Willow, Techies, Oracle | Techies, Bounty Hunter, Shadow Shaman | Каждую карту новый герой |
 
-Запасной Nick_Abram (оффлейн в 2 картах, Viper и Slardar). Тогда IAM- уходит на мид.
+Запасной Nick_Abram (оффлейн в 2 картах, Viper и Slardar). Тогда YOURSELF уходит на мид.
 
-**Линии во всех 6 картах одинаковые:** britishboi и DrestoV1ch на лёгкой, мид, IAM- и Asmodeus на сложной.
-Против нашего Артиста выйдут их сильнейший керри и Божество 2, против kren — IAM- и самый слабый Asmodeus.
+**Линии во всех 6 картах одинаковые:** britishboi и DrestoV1ch на лёгкой, мид, YOURSELF и Asmodeus на сложной.
+Против нашего Артиста выйдут их сильнейший керри и Божество 2, против kren — YOURSELF и самый слабый Asmodeus.
 
 ## Что они делают в драфте
 
@@ -44,7 +44,7 @@
 | 3 | **Lifestealer** | britishboi: 5 побед из 6 за год, брал в турнире. Если хотим Lifestealer себе (kren), забираем первым пиком, а не баним |
 | 4 | **Windranger** | britishboi брал 2 раза. Против Windranger у Артиста нет хорошей линии: у всех его героев, кроме Undying, линия в минус |
 | 5 | **Anti-Mage** или **Spectre** | britishboi: 183 и 103 игры. Spectre против них банили в 4 картах из 6 |
-| 6–7 | по ситуации | **Techies** (DrestoV1ch), **Spirit Breaker** (Asmodeus ×2), **Dragon Knight** (их первый пик, IAM- и kezi) |
+| 6–7 | по ситуации | **Techies** (DrestoV1ch), **Spirit Breaker** (Asmodeus ×2), **Dragon Knight** (их первый пик, YOURSELF и kezi) |
 
 ## Наш пик
 
@@ -65,7 +65,7 @@
 
 ## Как играть
 
-- **Наша лёгкая — главная линия.** Против kren стоят IAM- (Герой 1) и самый слабый Asmodeus (Рыцарь 3). kren
+- **Наша лёгкая — главная линия.** Против kren стоят YOURSELF (Герой 1) и самый слабый Asmodeus (Рыцарь 3). kren
   и Babayka выигрывают её и давят оффлейн.
 - **Наш офлейн будет тяжёлым.** britishboi (Божество 4) и DrestoV1ch (Божество 2). Артист (Титан) не должен проиграть
   её в ноль. Против Windranger, Drow и NP — Undying.

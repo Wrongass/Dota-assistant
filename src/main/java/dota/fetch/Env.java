@@ -3,8 +3,12 @@ package dota.fetch;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
-/** Переменная окружения, а если её нет — строка {@code NAME=value} из файла .env в текущей папке (он не в git). */
+/**
+ * Переменная окружения, а если её нет — строка {@code NAME=value} из файла .env в текущей папке (он не в git), а затем
+ * из {@code config/tokens.env} (в git, чтобы выгрузка работала без ручной настройки; в Docker папка config подключена).
+ */
 final class Env {
 
     private Env() {
@@ -15,7 +19,18 @@ final class Env {
         if (value != null && !value.isBlank()) {
             return value.trim();
         }
-        Path file = Path.of(".env");
+        for (Path file : FILES) {
+            String fromFile = fromFile(file, name);
+            if (fromFile != null) {
+                return fromFile;
+            }
+        }
+        return null;
+    }
+
+    static final List<Path> FILES = List.of(Path.of(".env"), Path.of("config/tokens.env"));
+
+    static String fromFile(Path file, String name) {
         if (!Files.isRegularFile(file)) {
             return null;
         }
@@ -28,7 +43,7 @@ final class Env {
                 }
             }
         } catch (IOException e) {
-            Log.error(".env: %s", e.getMessage());
+            Log.error("%s: %s", file, e.getMessage());
         }
         return null;
     }

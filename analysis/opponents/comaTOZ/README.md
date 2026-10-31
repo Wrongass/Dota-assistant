@@ -1,6 +1,6 @@
 # Соперник: comaTOZ (ИТОЗ)
 
-Сгенерировано 2026-10-27, патч 7.41. Позиции — по турнирным матчам (см. `config/players.yaml`).
+Сгенерировано 2026-11-01, патч 7.41. Позиции — по турнирным матчам (см. `config/players.yaml`).
 
 ## Файлы
 
@@ -12,7 +12,7 @@
 | [team/roster.md](team/roster.md) | Состав, ранги, на каких позициях играют в пабах, сыгранность |
 | [players/pos1_britishboi.md](players/pos1_britishboi.md) | Позиция 1, britishboi: лучшие герои и герои под патч |
 | [players/pos2_kezi.md](players/pos2_kezi.md) | Позиция 2, kezi: лучшие герои и герои под патч |
-| [players/pos3_IAM-.md](players/pos3_IAM-.md) | Позиция 3, IAM-: лучшие герои и герои под патч |
+| [players/pos3_YOURSELF.md](players/pos3_YOURSELF.md) | Позиция 3, YOURSELF: лучшие герои и герои под патч |
 | [players/pos4_Asmodeus.md](players/pos4_Asmodeus.md) | Позиция 4, Asmodeus: лучшие герои и герои под патч |
 | [players/pos5_DrestoV1ch.md](players/pos5_DrestoV1ch.md) | Позиция 5, DrestoV1ch: лучшие герои и герои под патч |
 

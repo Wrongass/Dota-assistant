@@ -8,7 +8,7 @@ Dire, 38 мин, [OpenDota](https://www.opendota.com/matches/9037812347), [Dotab
 
 | Игрок | Герой | Линия | GPM | K/D/A |
 |---|---|---|---|---|
-| IAM- | Dragon Knight | mid | 436 | 1/6/9 |
+| YOURSELF | Dragon Knight | mid | 436 | 1/6/9 |
 | DrestoV1ch | Bane | safe | 247 | 5/9/8 |
 | britishboi | Windranger | safe | 663 | 9/6/5 |
 | Nick_Abram | Viper | off | 296 | 1/7/5 |
@@ -27,7 +27,7 @@ Radiant, 31 мин, [OpenDota](https://www.opendota.com/matches/9037898073), [Do
 | Игрок | Герой | Линия | GPM | K/D/A |
 |---|---|---|---|---|
 | britishboi | Nature's Prophet | safe | 534 | 2/7/11 |
-| IAM- | Ember Spirit | mid | 383 | 4/5/6 |
+| YOURSELF | Ember Spirit | mid | 383 | 4/5/6 |
 | Nick_Abram | Slardar | off | 282 | 3/5/6 |
 | DrestoV1ch | Undying | safe | 224 | 3/9/7 |
 | Asmodeus | Hoodwink | off | 215 | 3/8/9 |
@@ -47,7 +47,7 @@ Dire, 41 мин, [OpenDota](https://www.opendota.com/matches/9061635631), [Dotab
 | britishboi | Drow Ranger | safe | 584 | 8/10/5 |
 | DrestoV1ch | Clockwerk | safe | 208 | 3/9/9 |
 | kezi | Dragon Knight | mid | 476 | 7/5/11 |
-| IAM- | Doom | off | 550 | 5/4/9 |
+| YOURSELF | Doom | off | 550 | 5/4/9 |
 | Asmodeus | Dark Willow | off | 233 | 1/10/11 |
 
 Соперник: Undying (kalibri), Slardar (SuperPoni), Windranger (死), Luna (Elsa), Techies (СГРЫЗ КАСТРЮЛЮ)
@@ -64,7 +64,7 @@ Radiant, 58 мин, [OpenDota](https://www.opendota.com/matches/9061760995), [Do
 |---|---|---|---|---|
 | DrestoV1ch | Dark Willow | safe | 298 | 8/5/19 |
 | britishboi | Nature's Prophet | safe | 871 | 13/7/19 |
-| IAM- | Slardar | off | 457 | 2/12/19 |
+| YOURSELF | Slardar | off | 457 | 2/12/19 |
 | kezi | Earth Spirit | mid | 489 | 12/8/19 |
 | Asmodeus | Rubick | off | 281 | 5/14/24 |
 
@@ -82,7 +82,7 @@ Radiant, 28 мин, [OpenDota](https://www.opendota.com/matches/9061900858), [Do
 |---|---|---|---|---|
 | DrestoV1ch | Techies | safe | 398 | 5/7/18 |
 | britishboi | Lifestealer | safe | 717 | 16/1/16 |
-| IAM- | Dragon Knight | off | 550 | 8/1/17 |
+| YOURSELF | Dragon Knight | off | 550 | 8/1/17 |
 | kezi | Lina | mid | 565 | 11/4/18 |
 | Asmodeus | Spirit Breaker | off | 355 | 10/6/25 |
 
@@ -100,7 +100,7 @@ Dire, 34 мин, [OpenDota](https://www.opendota.com/matches/9061966816), [Dotab
 |---|---|---|---|---|
 | DrestoV1ch | Oracle | safe | 331 | 5/5/37 |
 | britishboi | Windranger | safe | 828 | 23/4/22 |
-| IAM- | Largo | off | 463 | 2/3/17 |
+| YOURSELF | Largo | off | 463 | 2/3/17 |
 | kezi | Earthshaker | mid | 746 | 30/3/13 |
 | Asmodeus | Pudge | off | 382 | 7/9/28 |
 

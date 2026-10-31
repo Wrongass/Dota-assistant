@@ -1,6 +1,6 @@
 # Угрозы: CyberDOM2 (Дом.РФ)
 
-Сгенерировано 2026-10-27, патч 7.41.
+Сгенерировано 2026-11-01, патч 7.41.
 
 ## Пулы по позициям (топ-6 по пригодности в патче)
 
@@ -10,7 +10,7 @@
 | 2 | [Aspera](../players/pos2_Aspera.md) | Властелин 3 (Ancient) | Keeper of the Light 74, Pudge 71, Slark 70, Leshrac 68 ▲, Outworld Devourer 67 ▲, Invoker 66 | Lina ×2, Disruptor, Leshrac, Outworld Devourer, Slark |
 | 3 | [Kabal](../players/pos3_Kabal.md) | Властелин 3 (Ancient) | Wraith King 70 ▲, Enigma 66 ▲, Axe 66, Necrophos 64, Tidehunter 63, Night Stalker 62 ▲ | Axe ×3, Night Stalker, Tidehunter, Underlord |
 | 4 | [krs](../players/pos4_krs.md) | Герой 1 (Archon) | Bounty Hunter 38, Dazzle 35, Mirana 35, Witch Doctor 34 ▲, Nyx Assassin 34 ▲, Grimstroke 33 ▲ | Dazzle, Hoodwink, Jakiro, Shadow Shaman |
-| 5 | [sherdar](../players/pos5_sherdar.md) | Легенда 2 (Legend) | Witch Doctor 75 ▲, Dark Willow 64, Vengeful Spirit 63 ▲, Dazzle 59, Crystal Maiden 57, Bounty Hunter 56 ▲ | Snapfire ×2, Disruptor, Lion, Shadow Shaman, Witch Doctor |
+| 5 | [sherdar](../players/pos5_sherdar.md) | Легенда 2 (Legend) | Witch Doctor 75 ▲, Dark Willow 64, Vengeful Spirit 63 ▲, Dazzle 58, Crystal Maiden 57, Bounty Hunter 56 ▲ | Snapfire ×2, Disruptor, Lion, Shadow Shaman, Witch Doctor |
 
 ## Самые опасные герои (кандидаты в баны)
 
@@ -21,7 +21,7 @@
 | 1 | Techies | COCKPIT | 0.91 | 94 | 0.61 | 251 / 90 | 56.7% | ×1 | 4/5 |
 | 2 | Witch Doctor | sherdar | 0.86 | 80 | 0.70 | 12 / 4 | 100.0% | ×1 | 4/5 |
 | 3 | Nyx Assassin | Aspera | 0.84 | 93 | 0.71 | 93 / 11 | 72.7% |  | 4/5 |
-| 4 | Outworld Devourer | Kabal | 0.84 | 88 | 0.77 | 286 / 87 | 51.7% |  | 2 |
+| 4 | Outworld Devourer | Kabal | 0.84 | 88 | 0.77 | 286 / 84 | 52.4% |  | 2 |
 | 5 | Bounty Hunter | Aspera | 0.83 | 79 | 0.89 | 158 / 3 | 33.3% |  | 4/5 |
 | 6 | Dazzle | COCKPIT | 0.81 | 91 | 0.67 | 138 / 37 | 59.5% |  | 4/5 |
 | 7 | Leshrac | Aspera | 0.80 | 80 | 0.55 | 45 / 6 | 66.7% | ×1 | 2 |
@@ -32,7 +32,7 @@
 | 12 | Lina | Aspera | 0.76 | 90 | 0.29 | 144 / 37 | 54.1% | ×2 | 2 |
 | 13 | Spectre | sherdar | 0.76 | 94 | 0.48 | 81 / 32 | 68.8% |  | 1 |
 | 14 | Keeper of the Light | Aspera | 0.75 | 81 | 0.67 | 42 / 10 | 70.0% |  | 2/4 |
-| 15 | Underlord | Kabal | 0.75 | 96 | 0.20 | 66 / 61 | 57.4% | ×1 | 3 |
+| 15 | Underlord | Kabal | 0.75 | 96 | 0.20 | 66 / 60 | 56.7% | ×1 | 3 |
 
 ## Что они банят в турнире
 
@@ -51,7 +51,7 @@ Lifestealer ×5, Phantom Lancer ×3, Viper ×3, Disruptor ×2, Earth Spirit ×2,
 | Nyx Assassin | Aspera | Night Stalker +3.5% (Артист), Sven +3.2% (kren), Wraith King +3.0% (kren/Артист), Grimstroke +2.7% (Babayka/Enaria), Vengeful Spirit +2.4% (kren/Babayka/Enaria) |
 | Outworld Devourer | Kabal | Nyx Assassin +6.4% (Babayka), Phantom Lancer +3.6% (kren), Grimstroke +2.6% (Babayka/Enaria) |
 | Bounty Hunter | Aspera | Enigma +3.3% (Артист), Outworld Devourer +2.7% (Wrongass), Vengeful Spirit +2.6% (kren/Babayka/Enaria), Slark +2.3% (Wrongass) |
-| Dazzle | COCKPIT | Ancient Apparition +9.3% (Enaria), Puck +6.0% (Wrongass), Enigma +5.4% (Артист), Viper +5.2% (Wrongass/Артист), Silencer +3.7% (Babayka/Enaria), Wraith King +2.6% (kren/Артист) |
+| Dazzle | COCKPIT | Ancient Apparition +9.3% (Enaria), Puck +6.0% (Wrongass), Enigma +5.4% (Артист), Viper +5.2% (Wrongass), Silencer +3.7% (Babayka/Enaria), Wraith King +2.6% (kren/Артист) |
 | Leshrac | Aspera | Silencer +5.7% (Babayka/Enaria), Night Stalker +2.8% (Артист) |
 | Axe | Kabal | Lifestealer +4.9% (kren), Wraith King +3.6% (kren/Артист), Outworld Devourer +3.6% (Wrongass), Spectre +3.4% (kren), Leshrac +3.2% (Wrongass), Sven +3.1% (kren) |
 

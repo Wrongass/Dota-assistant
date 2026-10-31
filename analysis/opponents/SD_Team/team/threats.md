@@ -1,6 +1,6 @@
 # Угрозы: SD Team (GGsel)
 
-Сгенерировано 2026-10-27, патч 7.41.
+Сгенерировано 2026-11-01, патч 7.41.
 
 ## Пулы по позициям (топ-6 по пригодности в патче)
 
@@ -18,10 +18,10 @@
 
 | # | Герой | Игрок | Угроза | Умение | Сила в мете | Игр всего / год | WR за год | В турнире | Позиции героя |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | Bounty Hunter | IRD | 0.94 | 90 | 0.99 | 62 / 13 | 69.2% |  | 4/5 |
+| 1 | Bounty Hunter | IRD | 0.93 | 90 | 0.99 | 62 / 13 | 69.2% |  | 4/5 |
 | 2 | Mirana | IRD | 0.90 | 92 | 0.62 | 175 / 14 | 57.1% | ×1 | 4/5 |
 | 3 | Dragon Knight | Nynge | 0.87 | 77 | 0.78 | 77 / 10 | 50.0% | ×2 | 1/2/3 |
-| 4 | Windranger | IRD | 0.87 | 89 | 0.60 | 184 / 19 | 57.9% | ×2 | 1/4 |
+| 4 | Windranger | IRD | 0.87 | 88 | 0.60 | 184 / 19 | 57.9% | ×2 | 1/4 |
 | 5 | Dawnbreaker | IRD | 0.85 | 98 | 0.66 | 126 / 15 | 53.3% |  | 3 |
 | 6 | Crystal Maiden | montekri | 0.85 | 92 | 0.49 | 58 / 21 | 90.5% | ×1 | 4/5 |
 | 7 | Dark Seer | XANDR | 0.83 | 86 | 0.52 | 53 / 4 | 100.0% | ×1 | 3 |
@@ -31,7 +31,7 @@
 | 11 | Earth Spirit | Nynge | 0.79 | 87 | 0.67 | 10 / 8 | 87.5% |  | 2 |
 | 12 | Vengeful Spirit | Nynge | 0.76 | 91 | 0.53 | 34 / 17 | 64.7% |  | 1/4/5 |
 | 13 | Winter Wyvern | Caraxes | 0.76 | 82 | 0.67 | 11 / 11 | 63.6% |  | 4/5 |
-| 14 | Witch Doctor | IRD | 0.75 | 86 | 0.60 | 200 / 23 | 47.8% |  | 4/5 |
+| 14 | Witch Doctor | IRD | 0.75 | 86 | 0.60 | 200 / 22 | 50.0% |  | 4/5 |
 | 15 | Largo | montekri | 0.75 | 89 | 0.55 | 12 / 12 | 75.0% |  | 3 |
 
 ## Что они банят в турнире
@@ -48,7 +48,7 @@ Necrophos ×3, Centaur Warrunner ×2, Lifestealer ×2, Lina ×2, Timbersaw ×2, 
 |---|---|---|
 | Bounty Hunter | IRD | Enigma +3.3% (Артист), Outworld Devourer +2.7% (Wrongass), Vengeful Spirit +2.6% (kren/Babayka/Enaria), Slark +2.3% (Wrongass) |
 | Mirana | IRD | Wraith King +5.6% (kren/Артист), Abaddon +3.9% (Артист), Outworld Devourer +3.5% (Wrongass), Phantom Lancer +2.7% (kren), Spirit Breaker +2.3% (Артист/Babayka), Dawnbreaker +2.1% (Артист) |
-| Dragon Knight | Nynge | Viper +3.7% (Wrongass/Артист), Necrophos +3.6% (kren/Wrongass), Witch Doctor +3.0% (Babayka/Enaria), Leshrac +2.9% (Wrongass), Spectre +2.4% (kren), Lich +2.3% (Enaria) |
+| Dragon Knight | Nynge | Viper +3.7% (Wrongass), Necrophos +3.6% (kren/Wrongass), Witch Doctor +3.0% (Babayka/Enaria), Leshrac +2.9% (Wrongass), Spectre +2.4% (kren), Lich +2.3% (Enaria) |
 | Windranger | IRD | Phantom Lancer +5.0% (kren), Wraith King +4.6% (kren/Артист), Outworld Devourer +3.4% (Wrongass), Nyx Assassin +3.1% (Babayka), Puck +3.1% (Wrongass), Spectre +2.7% (kren) |
 | Dawnbreaker | IRD | Nyx Assassin +5.9% (Babayka), Enigma +4.5% (Артист), Silencer +3.9% (Babayka/Enaria) |
 | Crystal Maiden | montekri | Enigma +3.7% (Артист), Leshrac +3.7% (Wrongass), Lifestealer +3.3% (kren), Grimstroke +3.2% (Babayka/Enaria), Dawnbreaker +2.9% (Артист), Night Stalker +2.8% (Артист) |
@@ -57,19 +57,19 @@ Necrophos ×3, Centaur Warrunner ×2, Lifestealer ×2, Lina ×2, Timbersaw ×2, 
 
 ## Против кого они проигрывают
 
-Их матчи за 2 года (без турбо), сглажено к их среднему (50.3%) весом 30 игр; минимум 40 игр. ✔ — герой есть в наших пулах.
+Их матчи за 2 года (без турбо), сглажено к их среднему (50.4%) весом 30 игр; минимум 40 игр. ✔ — герой есть в наших пулах.
 
 | # | Герой | Их WR против | Игр | В наших пулах |
 |---|---|---|---|---|
 | 1 | Medusa | 42.7% | 146 |  |
 | 2 | Lone Druid | 43.3% | 51 |  |
 | 3 | Wraith King | 43.8% | 274 | ✔ |
-| 4 | Spectre | 44.1% | 199 | ✔ |
+| 4 | Io | 44.3% | 108 |  |
 | 5 | Leshrac | 44.3% | 83 | ✔ |
-| 6 | Night Stalker | 44.4% | 146 | ✔ |
-| 7 | Warlock | 44.4% | 164 |  |
-| 8 | Io | 44.7% | 109 |  |
-| 9 | Legion Commander | 44.9% | 309 |  |
-| 10 | Silencer | 45.2% | 240 | ✔ |
-| 11 | Clockwerk | 45.5% | 102 |  |
-| 12 | Keeper of the Light | 45.5% | 91 |  |
+| 6 | Spectre | 44.3% | 198 | ✔ |
+| 7 | Night Stalker | 44.4% | 146 | ✔ |
+| 8 | Warlock | 44.4% | 164 |  |
+| 9 | Legion Commander | 45.0% | 308 |  |
+| 10 | Silencer | 45.4% | 239 | ✔ |
+| 11 | Keeper of the Light | 45.5% | 91 |  |
+| 12 | Skywrath Mage | 45.7% | 222 |  |

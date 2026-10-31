@@ -1,10 +1,10 @@
 # Состав: BIM-TIM (BIM Инжиниринг)
 
-Данные на 2026-10-27, патч 7.41. Турбо не учитывается.
+Данные на 2026-11-01, патч 7.41. Турбо не учитывается.
 
 | Поз. | Игрок | Steam-ник | account_id | Ранг | MMR (оценка) | Матчей всего / год / патч | WR в патче | Captains Mode | Роль в команде |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | [Zitz](../players/pos1_Zitz.md) | Zitz | 913576335 | Легенда 2 (Legend) | 4124 | 2660 / 488 / 252 | 46.4% | 6 (0.0%) | В турнире Faceless Void, Phantom Lancer, Drow Ranger, Legion Commander, Undying, Witch Doctor. |
+| 1 | [Zitz](../players/pos1_Zitz.md) | Zitz | 913576335 | Легенда 2 (Legend) | 4124 | 2660 / 485 / 252 | 46.4% | 6 (0.0%) | В турнире Faceless Void, Phantom Lancer, Drow Ranger, Legion Commander, Undying, Witch Doctor. |
 | 2 | [GoodDay](../players/pos2_GoodDay.md) | GoodDay | 1191343277 | Страж 4 (Guardian) | 4030 | 132 / 132 / 121 | 55.4% | 6 (0.0%) | В турнире Sniper, Zeus, Mirana, Bloodseeker (mid), Witch Doctor, Vengeful Spirit. |
 | 3 | [PecoPeco](../players/pos3_PecoPeco.md) | PecoPeco~ | 86887038 | Рыцарь 3 (Crusader) | 4261 | 2063 / 244 / 127 | 52.8% | 9 (11.1%) | В турнире Troll Warlord, Lifestealer, Dragon Knight, Axe, Magnus, Techies. |
 | 4 | [montereyvoron](../players/pos4_montereyvoron.md) | montereyvoron | 113258923 | без ранга | 3898 | 21 / 21 / 21 | 38.1% | 6 (0.0%) | В турнире Lion ×2, Lich ×2, Silencer, Weaver (саппорт сложной линии). |
@@ -16,7 +16,7 @@
 
 | Игрок | Поз. в команде | 1 | 2 | 3 | 4 | 5 | Линии в разобранных матчах (safe/mid/off/лес) |
 |---|---|---|---|---|---|---|---|
-| Zitz | 1 | 22.3% | 7.0% | 19.5% | 24.7% | 26.6% | 9/0/14/0 |
+| Zitz | 1 | 22.4% | 7.0% | 19.5% | 24.7% | 26.4% | 9/0/14/0 |
 | GoodDay | 2 | 18.4% | 26.1% | 1.8% | 35.4% | 18.3% | 8/5/6/0 |
 | PecoPeco | 3 | 18.6% | 12.1% | 9.5% | 30.6% | 29.2% | 8/0/5/0 |
 | montereyvoron | 4 | 17.9% | 6.4% | 8.5% | 24.8% | 42.3% | 1/0/5/0 |
