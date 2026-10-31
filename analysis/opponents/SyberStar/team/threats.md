@@ -14,7 +14,7 @@
 
 ## Самые опасные герои (кандидаты в баны)
 
-Угроза = 60% умение игрока на герое + 40% сила героя в мете на его ранге; +0.1, если герой уже был в турнире.
+Угроза = (60% умение игрока на герое + 40% сила героя в мете на его ранге) × свежесть (100% при 10+ играх за год или пике в турнире, 60% без игр за год); +0.1, если герой уже был в турнире.
 
 | # | Герой | Игрок | Угроза | Умение | Сила в мете | Игр всего / год | WR за год | В турнире | Позиции героя |
 |---|---|---|---|---|---|---|---|---|---|
@@ -25,14 +25,14 @@
 | 5 | Vengeful Spirit | kalibri | 0.82 | 83 | 0.55 | 25 / 25 | 56.0% | ×1 | 1/4/5 |
 | 6 | Phantom Assassin | 死 | 0.79 | 96 | 0.29 | 175 / 20 | 65.0% | ×1 | 1 |
 | 7 | Luna | Elsa | 0.79 | 84 | 0.48 | 32 / 5 | 80.0% | ×1 | 1 |
-| 8 | Sven | 死 | 0.79 | 87 | 0.68 | 30 / 7 | 85.7% |  | 1 |
-| 9 | Techies | СГРЫЗ_КАСТРЮЛЮ | 0.79 | 72 | 0.63 | 31 / 18 | 50.0% | ×1 | 4/5 |
-| 10 | Necrophos | Elsa | 0.76 | 82 | 0.67 | 41 / 7 | 100.0% |  | 1/2/3 |
-| 11 | Doom | 死 | 0.76 | 83 | 0.66 | 39 / 34 | 52.9% |  | 3 |
-| 12 | Ursa | 死 | 0.76 | 98 | 0.44 | 112 / 38 | 71.1% |  | 1 |
-| 13 | Hoodwink | СГРЫЗ_КАСТРЮЛЮ | 0.76 | 80 | 0.45 | 15 / 12 | 66.7% | ×3 | 4/5 |
-| 14 | Phoenix | Elsa | 0.76 | 73 | 0.54 | 23 / 18 | 55.6% | ×1 | 4 |
-| 15 | Dawnbreaker | kalibri | 0.75 | 77 | 0.70 | 11 / 11 | 81.8% |  | 3 |
+| 8 | Techies | СГРЫЗ_КАСТРЮЛЮ | 0.79 | 72 | 0.63 | 31 / 18 | 50.0% | ×1 | 4/5 |
+| 9 | Doom | 死 | 0.76 | 83 | 0.66 | 39 / 34 | 52.9% |  | 3 |
+| 10 | Ursa | 死 | 0.76 | 98 | 0.44 | 112 / 38 | 71.1% |  | 1 |
+| 11 | Hoodwink | СГРЫЗ_КАСТРЮЛЮ | 0.76 | 80 | 0.45 | 15 / 12 | 66.7% | ×3 | 4/5 |
+| 12 | Phoenix | Elsa | 0.76 | 73 | 0.54 | 23 / 18 | 55.6% | ×1 | 4 |
+| 13 | Dawnbreaker | kalibri | 0.75 | 77 | 0.70 | 11 / 11 | 81.8% |  | 3 |
+| 14 | Axe | SuperPoni | 0.74 | 92 | 0.46 | 430 / 19 | 63.2% |  | 3 |
+| 15 | Legion Commander | 死 | 0.74 | 88 | 0.53 | 60 / 30 | 56.7% |  | 3 |
 
 ## Что они банят в турнире
 
@@ -53,7 +53,7 @@ Phantom Lancer ×4, Lifestealer ×3, Bane ×2, Doom ×2, Earth Spirit ×2, Ember
 | Vengeful Spirit | kalibri | Phantom Lancer +6.0% (kren), Spectre +3.3% (kren) |
 | Phantom Assassin | 死 | Doom +5.1% (Артист), Wraith King +4.3% (kren/Артист), Omniknight +3.6% (Артист), Vengeful Spirit +3.5% (kren/Babayka/Enaria), Grimstroke +2.8% (Babayka/Enaria), Nyx Assassin +2.8% (Babayka) |
 | Luna | Elsa | Abaddon +5.8% (Артист), Nyx Assassin +5.3% (Babayka), Wraith King +4.7% (kren/Артист), Crystal Maiden +3.5% (Babayka/Enaria), Spectre +2.3% (kren), Slark +2.2% (Wrongass) |
-| Sven | 死 | Enigma +3.5% (Артист), Doom +2.5% (Артист), Night Stalker +2.3% (Артист), Wraith King +2.3% (kren/Артист), Dragon Knight +2.1% (kren/Wrongass), Vengeful Spirit +2.1% (kren/Babayka/Enaria) |
+| Techies | СГРЫЗ_КАСТРЮЛЮ | Leshrac +6.0% (Wrongass), Nyx Assassin +5.5% (Babayka), Omniknight +3.9% (Артист), Enigma +3.4% (Артист), Spectre +2.9% (kren), Lifestealer +2.6% (kren) |
 
 ## Против кого они проигрывают
 

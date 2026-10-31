@@ -703,7 +703,7 @@ public final class Squad {
     }
 
     /**
-     * Угроза = 60% умение игрока на герое + 40% сила героя в мете на его ранге; +0.1, если герой был в турнире.
+     * Угроза = (60% умение игрока на герое + 40% сила героя в мете на его ранге) × свежесть (100% при 10+ играх за год или пике в турнире, 60% без игр за год); +0.1, если герой уже был в турнире.
      * Герой может быть у нескольких игроков — остаётся самый опасный.
      */
     List<Threat> threatList(Map<Long, Map<Integer, Integer>> tourneyPicks) {
@@ -718,7 +718,10 @@ public final class Squad {
                 int mp = Math.max(1, meta.mainPos(h.heroId));
                 double ms = metaStrength(h.heroId, mp, r[0], r[1]);
                 int picksInTourney = tp.getOrDefault(h.heroId, 0);
-                double score = 0.6 * h.skill / 100 + 0.4 * ms + (picksInTourney > 0 ? 0.1 : 0);
+                // свежесть: герой, на котором за год не играли, — не угроза сейчас, даже с высоким рангом на герое
+                // за всё время. 10+ игр за год или пик в турнире — полный вес, 0 игр за год — 60%
+                double fresh = picksInTourney > 0 ? 1 : Math.min(1, h.yearGames / 10.0);
+                double score = (0.6 * h.skill / 100 + 0.4 * ms) * (0.6 + 0.4 * fresh) + (picksInTourney > 0 ? 0.1 : 0);
                 list.add(new Threat(p, h.heroId, score, h.skill, ms, picksInTourney));
             }
         }
