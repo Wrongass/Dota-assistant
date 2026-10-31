@@ -320,9 +320,16 @@ public final class Squad {
         int[][] games = new int[n][n], wins = new int[n][n];
         for (int a = 0; a < n; a++) {
             for (int b = 0; b < n; b++) {
-                long id = ordered.get(b).config.accountId();
-                games[a][b] = a == b ? -1 : ordered.get(a).withTeammate.getOrDefault(id, 0);
-                wins[a][b] = a == b ? -1 : ordered.get(a).winsWithTeammate.getOrDefault(id, 0);
+                if (a == b) {
+                    games[a][b] = wins[a][b] = -1;
+                    continue;
+                }
+                // объединение матчей пары из истории обоих: матрица симметрична
+                PlayerStats pa = ordered.get(a), pb = ordered.get(b);
+                Map<Long, Boolean> together = new HashMap<>(pa.matchesWithTeammate.getOrDefault(pb.config.accountId(), Map.of()));
+                together.putAll(pb.matchesWithTeammate.getOrDefault(pa.config.accountId(), Map.of()));
+                games[a][b] = together.size();
+                wins[a][b] = (int) together.values().stream().filter(w -> w).count();
             }
         }
         return new Views.Roster(teamName(), today, meta.patch, rows, posInferred.containsValue(true), shares,
