@@ -167,7 +167,7 @@ final class Site {
                     stale.add(p.nick());
                 }
             } catch (IOException e) {
-                warnings.add(p.nick() + ": нет данных — запустите ./gradlew run");
+                warnings.add(p.nick() + " (" + (p.teamName() == null ? "наша команда" : p.teamName()) + "): данных ещё нет, игрок появится на сайте после ближайшего обновления данных");
             }
         }
         if (!stale.isEmpty()) {
