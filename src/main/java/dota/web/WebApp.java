@@ -110,6 +110,7 @@ public class WebApp {
         app.get("/counters", this::counters);
         app.get("/api/heroes", ctx -> ctx.json(site.ctx().heroList()));
         app.get("/api/player/{id}", this::playerApi);
+        app.get("/api/counters", this::countersApi);
         app.get("/img/{kind}/{file}", this::image);
         app.post("/api/draft", this::draftApi);
         app.post("/lineup", this::saveLineup);
@@ -371,6 +372,47 @@ public class WebApp {
     }
 
     /** Контрпики: ?h=Viper&h2=Lina&pos=2 (имена или id героев; pos 0 или нет — позиция по первому герою). */
+    /**
+     * Контрпики для драфта (JSON): ?h=<id или имя>&pos=<наша позиция 1..5>. NaN (нет данных) → null, top — по 6 героев.
+     */
+    private void countersApi(Context http) {
+        AnalysisContext c = site.ctx();
+        Integer hero = heroId(c, http.queryParamAsClass("h", String.class).getOrDefault(""));
+        if (hero == null) {
+            throw new NotFoundResponse("герой «" + http.queryParam("h") + "»");
+        }
+        String rawPos = http.queryParam("pos");
+        int pos = rawPos != null && rawPos.matches("[1-5]") ? Integer.parseInt(rawPos) : 0;
+        dota.analysis.Counters.View v = dota.analysis.Counters.build(c, List.of(hero), pos);
+        java.util.function.Function<Double, Double> num = x -> x == null || x.isNaN() ? null : x;
+        java.util.function.Function<dota.analysis.Counters.Hero, Map<String, Object>> row = h -> {
+            Map<String, Object> m = new java.util.LinkedHashMap<>();
+            m.put("heroId", h.heroId());
+            m.put("name", h.name());
+            m.put("laneMatches", h.laneMatches());
+            m.put("laneWin", num.apply(h.laneWin()));
+            m.put("laneLoss", num.apply(h.laneLoss()));
+            m.put("laneAdv", num.apply(h.laneAdv()));
+            m.put("gameAdv", num.apply(h.gameAdv()));
+            return m;
+        };
+        Map<String, Object> result = new java.util.LinkedHashMap<>();
+        result.put("enemy", v.enemyNames().get(0));
+        result.put("position", v.position());
+        result.put("player", v.player());
+        result.put("hasLane", v.hasLane());
+        result.put("lane", v.lane().stream().limit(6).map(row).toList());
+        result.put("game", v.game().stream().limit(6).map(row).toList());
+        result.put("ours", v.ours().stream().limit(6).map(o -> {
+            Map<String, Object> m = row.apply(o.hero());
+            m.put("games", o.games());
+            m.put("winrate", num.apply(o.winrate()));
+            m.put("recent60", o.recent60());
+            return m;
+        }).toList());
+        http.json(result);
+    }
+
     private void counters(Context http) {
         AnalysisContext c = site.ctx();
         String first = http.queryParamAsClass("h", String.class).getOrDefault("").trim();

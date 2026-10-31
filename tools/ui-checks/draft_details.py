@@ -168,6 +168,13 @@ try:
     time.sleep(2.5)
     check("свёрнутая сетка героев остаётся свёрнутой", js("document.getElementById('grid-box').open") is False)
     js("document.getElementById('grid-box').open = true")
+    # CNT-06: клик по их герою — «Чем отвечать»
+    js("location.hash = 'first=us&heroes=23,22,1,2,31,32,33,42,106'; location.reload();")
+    time.sleep(3)
+    js("(() => { const b = document.querySelector('#their-slots .counter-open'); if (b) b.click(); })()")
+    time.sleep(1.5)
+    d = js("(() => document.getElementById('drawer').hidden ? '' : document.getElementById('drawer-body').innerText)()")
+    check("клик по их герою открывает «Чем отвечать»", "Чем отвечать на" in d and "Из наших героев" in d, d[:120])
     shot = call("Page.captureScreenshot")
     open(os.path.join(SCRATCH, "cdp_small.png"), "wb").write(base64.b64decode(shot["data"]))
     print(f"{sum(ok for _, ok, _ in results)}/{len(results)} проверок прошли")

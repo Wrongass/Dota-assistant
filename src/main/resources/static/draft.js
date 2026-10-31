@@ -327,8 +327,13 @@
     // ручной выбор героя игрока — компактный список в строке героя, чтобы строка игрока не переносилась (UX-07)
     const assign = picks.length
       ? `<select class="slot-assign" data-player="${esc(p.nick)}" title="Кто на каком герое: выбрать вручную"><option value="">авто</option>${options}</select>` : "";
+    // их герой: клик по портрету — «Чем отвечать» для нашей позиции на этой линии (CNT-06)
+    const answerPos = { 1: 3, 2: 2, 3: 1, 4: 1, 5: 3 }[p.pos] || 0;
+    const portrait = hero && side.theirs
+      ? `<button class="counter-open link" data-hero="${hero}" data-pos="${answerPos}" title="Чем отвечать на ${esc(name(hero))}">${heroPortrait(hero, name(hero))}</button>`
+      : hero ? heroPortrait(hero, name(hero)) : "";
     const heroLine = hero
-      ? `<div class="slot-hero">${heroPortrait(hero, name(hero))}<div><b>${esc(name(hero))}</b>
+      ? `<div class="slot-hero">${portrait}<div><b>${esc(name(hero))}</b>
            <div class="small muted">${a.fixed ? "вручную" : pct(a.probability) + (a.alternative ? ` · или ${esc(a.alternative)} ${pct(a.alternativeProbability)}` : "")}</div></div>${assign}</div>`
       : `<div class="slot-hero empty"><span class="hero-portrait empty"></span><span class="muted small">${free && free.probability < 0.95 ? `свободен ${pct(free.probability)}` : "без героя"}</span>${assign}</div>`;
     const odds = !hero && outlook && outlook.heroes.length
@@ -379,7 +384,7 @@
     $("our-bans").innerHTML = banRow(parts.ourBans);
     $("their-bans").innerHTML = banRow(parts.theirBans);
     const ours = { assignment: advice?.ourAssignment ?? [], remaining: advice?.ourRemaining ?? [], outlook: [] };
-    const theirs = { assignment: advice?.theirAssignment ?? [], remaining: advice?.theirRemaining ?? [], outlook: advice?.theirPlayers ?? [] };
+    const theirs = { theirs: true, assignment: advice?.theirAssignment ?? [], remaining: advice?.theirRemaining ?? [], outlook: advice?.theirPlayers ?? [] };
     $("our-slots").innerHTML = (ROSTERS.ours || []).map((p) => playerSlot(p, ours, parts.ourPicks)).join("");
     $("their-slots").innerHTML = (ROSTERS[state.opponent] || []).map((p) => playerSlot(p, theirs, parts.theirPicks)).join("");
     $("their-title").textContent = $("opponent").selectedOptions[0]?.textContent || "Они";
@@ -547,12 +552,39 @@
       $("drawer-body").innerHTML = `<p class="weak">Не удалось загрузить игрока: ${esc(e.message)}</p>`;
     }
   }
+  /** «Чем отвечать на X»: лучшие на линии, по игре и из наших героев для нашей позиции на этой линии. */
+  async function openCounters(heroId, pos) {
+    $("drawer").hidden = false;
+    $("drawer-body").innerHTML = '<p class="muted">Загрузка…</p>';
+    try {
+      const res = await fetch(`/api/counters?h=${heroId}&pos=${pos}`);
+      if (!res.ok) throw new Error(res.status);
+      const v = await res.json();
+      const sp = (x) => x == null ? "—" : (x >= 0 ? "+" : "") + (100 * x).toFixed(1) + "%";
+      const list = (rows, extra) => rows.length ? `<ol class="advice">${rows.map((r) => `<li><button class="hero-pick" data-id="${r.heroId}">${icon(r.heroId)}${esc(r.name)}</button>
+          ${extra(r)}</li>`).join("")}</ol>` : '<p class="muted small">нет данных</p>';
+      $("drawer-body").innerHTML = `
+        <h3>Чем отвечать на ${icon(heroId)}${esc(name(heroId))}</h3>
+        <p class="small muted">Наша позиция ${v.position}${v.player ? ` (${esc(v.player)})` : ""} на этой линии ·
+          <a href="/counters?h=${encodeURIComponent(name(heroId))}&pos=${v.position}" target="_blank" rel="noopener">все контрпики ↗</a></p>
+        <h4>Из наших героев <span class="hint">игрок на них играет</span></h4>
+        ${list(v.ours, (r) => `<span class="reason">линия ${sp(r.laneAdv)}</span> <span class="reason">по игре ${sp(r.gameAdv)}</span> <span class="muted small">${r.games} игр${r.winrate != null ? ", " + Math.round(100 * r.winrate) + "%" : ""}</span>`)}
+        ${v.hasLane ? `<h4>На линии</h4>${list(v.lane, (r) => `<span class="reason key">${sp(r.laneAdv)}</span> <span class="muted small">${r.laneMatches} линий</span>`)}` : '<p class="muted small">Данные о линиях пока не загружены.</p>'}
+        <h4>По игре</h4>
+        ${list(v.game, (r) => `<span class="reason key">${sp(r.gameAdv)}</span>`)}
+        <p class="small muted">Клик по герою — внести в текущий ход.</p>`;
+    } catch (e) {
+      $("drawer-body").innerHTML = `<p class="weak">Не удалось загрузить контрпики: ${esc(e.message)}</p>`;
+    }
+  }
   function closeDrawer() { $("drawer").hidden = true; }
   $("drawer-close").onclick = closeDrawer;
 
   root.addEventListener("click", (e) => {
     const nick = e.target.closest(".nick[data-account]");
     if (nick) { openDrawer(nick.dataset.account); return; }
+    const counter = e.target.closest(".counter-open[data-hero]");
+    if (counter) { openCounters(Number(counter.dataset.hero), Number(counter.dataset.pos)); return; }
     const b = e.target.closest(".hero-pick, #grid .hero-tile");
     if (b && b.closest(".advice-panel") && adviceLocked()) return; // список ещё не обновился после хода
     if (b && !b.disabled) apply(Number(b.dataset.id));
