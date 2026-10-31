@@ -13,6 +13,7 @@
                     <option value="them">они</option>
                 </select>
             </label>
+            <span class="maps" id="maps" title="Серия bo2/bo3: у каждой карты свой драфт"></span>
             <span id="turn" class="turn"></span>
             <span class="muted small" id="timing"></span>
             <span class="spacer"></span>
@@ -20,6 +21,8 @@
             <button id="undo" title="Ctrl+Z">Отменить ход</button>
             <button id="reset">Сбросить</button>
         </div>
+
+        <div class="maps-past small" id="maps-past" hidden></div>
 
         <div class="panel ribbon-panel">
             <div id="ribbon" class="ribbon"></div>

@@ -335,3 +335,9 @@ button.reason.more { border: 0; cursor: pointer; font: inherit; font-size: 11px;
 .toast { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 60; display: flex; gap: 10px;
   align-items: center; background: var(--panel); border: 1px solid var(--accent); border-radius: 8px; padding: 8px 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4); }
+/* ---------------------------------------------------------------- серия bo2/bo3 */
+.maps { display: inline-flex; gap: 4px; }
+.map-tab { padding: 4px 10px; font-size: 13px; }
+.map-tab.current { border-color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+.maps-past { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: -6px 0 10px; color: var(--muted); }
+.maps-past .hero-ico { width: 22px; height: 22px; }

@@ -57,7 +57,9 @@
   const ROSTERS = JSON.parse(root.dataset.rosters); // {"ours": [...], "<slug>": [...]}
 
   // ------------------------------------------------------------ состояние
-  let state = { opponent: root.dataset.defaultOpponent, weFirst: true, heroes: [], assign: {} };
+  // map — карта серии (bo2/bo3): у каждой свой драфт; карта 1 хранится под старым ключом, сохранённые драфты не теряются
+  let state = { opponent: root.dataset.defaultOpponent, map: 1, weFirst: true, heroes: [], assign: {} };
+  const MAPS = 3;
   let advice = null;
   let editIndex = null; // исправляемый ход (клик по ленте)
   let pendingWarn = null; // герой, для которого показано предупреждение: второй ввод — подтверждение
@@ -67,12 +69,18 @@
   const LOCK_MS = 400;
   let lockedUntil = 0;
   let awaiting = false;
-  const key = () => "draft:" + state.opponent;
-  const load = () => {
+  const keyOf = (opponent, map) => "draft:" + opponent + (map > 1 ? ":" + map : "");
+  const key = () => keyOf(state.opponent, state.map);
+  const readSaved = (opponent, map) => {
     try {
-      const saved = JSON.parse(localStorage.getItem(key()) || "null");
-      if (saved) Object.assign(state, { weFirst: saved.weFirst, heroes: saved.heroes || [], assign: saved.assign || {} });
-    } catch (e) { /* без localStorage просто начинаем заново */ }
+      return JSON.parse(localStorage.getItem(keyOf(opponent, map)) || "null");
+    } catch (e) { return null; /* без localStorage просто начинаем заново */ }
+  };
+  const load = () => {
+    const saved = readSaved(state.opponent, state.map);
+    Object.assign(state, saved
+      ? { weFirst: saved.weFirst !== false, heroes: saved.heroes || [], assign: saved.assign || {} }
+      : { weFirst: true, heroes: [], assign: {} });
   };
   const save = () => {
     try {
@@ -186,7 +194,8 @@
     save();
     const assign = Object.entries(state.assign).map(([h, p]) => `${h}:${encodeURIComponent(p)}`).join(",");
     history.replaceState(null, "", `#first=${state.weFirst ? "us" : "them"}&heroes=${state.heroes.join(",")}`
-      + (assign ? `&assign=${assign}` : ""));
+      + (assign ? `&assign=${assign}` : "") + (state.map > 1 ? `&map=${state.map}` : ""));
+    renderMaps();
     $("search").value = "";
     selected = 0;
     renderSearch();
@@ -576,9 +585,7 @@
   $("opponent").value = state.opponent;
   $("opponent").onchange = (e) => {
     state.opponent = e.target.value;
-    state.heroes = [];
-    state.assign = {};
-    state.weFirst = true;
+    state.map = 1;
     editIndex = null;
     advice = null;
     load();
@@ -587,9 +594,51 @@
   };
   $("first").onchange = (e) => { state.weFirst = e.target.value === "us"; afterChange(); };
 
-  load();
-  // Драфт из адреса: /draft?opponent=X#first=us&heroes=23,22,0,42&assign=42:kren (0 — пропущенный ход)
+  // ------------------------------------------------------------ серия: карта 1 / 2 / 3
+  /** Пики карты: [наши, их] по сохранённому драфту. */
+  function picksOf(saved) {
+    const ours = [], theirs = [];
+    (saved?.heroes || []).forEach((h, i) => {
+      if (h > 0 && i < ORDER.length && ORDER[i].pick) ((ORDER[i].firstTeam === (saved.weFirst !== false)) ? ours : theirs).push(h);
+    });
+    return [ours, theirs];
+  }
+  function renderMaps() {
+    const tabs = [];
+    const others = [];
+    for (let m = 1; m <= MAPS; m++) {
+      const saved = m === state.map ? state : readSaved(state.opponent, m);
+      const [ours, theirs] = picksOf(saved);
+      const moves = (saved?.heroes || []).length;
+      tabs.push(`<button type="button" class="map-tab${m === state.map ? " current" : ""}" data-map="${m}"
+        title="${moves ? `Ходов: ${moves}/24` : "Пусто"}">Карта ${m}${moves ? (moves >= ORDER.length ? " ✓" : ` · ${moves}`) : ""}</button>`);
+      if (m !== state.map && (ours.length || theirs.length)) {
+        others.push(`<span class="map-past"><b>Карта ${m}:</b> мы ${ours.map((h) => icon(h)).join("") || "—"}
+          · они ${theirs.map((h) => icon(h)).join("") || "—"}</span>`);
+      }
+    }
+    $("maps").innerHTML = tabs.join("");
+    $("maps-past").innerHTML = others.join("");
+    $("maps-past").hidden = others.length === 0;
+  }
+  $("maps").addEventListener("click", (e) => {
+    const b = e.target.closest(".map-tab");
+    if (!b || Number(b.dataset.map) === state.map) return;
+    save();
+    state.map = Number(b.dataset.map);
+    editIndex = null;
+    advice = null;
+    load();
+    $("first").value = state.weFirst ? "us" : "them";
+    toast(`Карта ${state.map}: ${state.heroes.length ? "продолжаем драфт" : "новый драфт"}`, false);
+    afterChange();
+  });
+
+  // Драфт из адреса: /draft?opponent=X#first=us&heroes=23,22,0,42&assign=42:kren&map=2 (0 — пропущенный ход)
   const hash = new URLSearchParams(location.hash.slice(1));
+  const hashMap = Number(hash.get("map"));
+  if (hashMap >= 1 && hashMap <= MAPS) state.map = hashMap;
+  load();
   if (hash.has("heroes")) {
     state.heroes = hash.get("heroes").split(",").filter((x) => x !== "").map(Number).slice(0, ORDER.length);
     state.weFirst = hash.get("first") !== "them";
@@ -601,6 +650,7 @@
     save();
   }
   $("first").value = state.weFirst ? "us" : "them";
+  renderMaps();
   renderSearch();
   renderBoard();
   requestAdvice();
