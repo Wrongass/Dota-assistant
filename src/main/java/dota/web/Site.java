@@ -125,10 +125,11 @@ final class Site {
         return result;
     }
 
+    /** Следующий соперник из league.next_opponent или null, если он пока неизвестен (драфт тогда берёт первого). */
     Squad nextOpponent() {
         PlayerConfig.League league = ctx.config.league();
         if (league == null || league.nextOpponent() == null) {
-            return ctx.opponents.isEmpty() ? null : ctx.opponents.get(0);
+            return null;
         }
         return ctx.opponents.stream().filter(s -> s.team().name().equals(league.nextOpponent()))
                 .findFirst().orElse(null);

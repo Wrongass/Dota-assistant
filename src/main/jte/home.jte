@@ -9,7 +9,7 @@
         @if(model.next().isEmpty())
         <div class="panel">
             <h2>Следующая игра</h2>
-            <p class="muted">Соперник не задан: укажите <code>league.next_opponent</code> в config/players.yaml.</p>
+            <p class="muted">Следующий соперник пока неизвестен. Все соперники — в меню «Соперники», драфт можно начать с любым.</p>
         </div>
         @endif
         @for(var n : model.next())
