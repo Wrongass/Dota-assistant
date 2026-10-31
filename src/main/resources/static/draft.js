@@ -324,10 +324,13 @@
     const hero = a ? a.heroId : null;
     const options = picks.map((h) =>
       `<option value="${h}" ${hero === h && a.fixed ? "selected" : ""}>${esc(name(h))}</option>`).join("");
+    // ручной выбор героя игрока — компактный список в строке героя, чтобы строка игрока не переносилась (UX-07)
+    const assign = picks.length
+      ? `<select class="slot-assign" data-player="${esc(p.nick)}" title="Кто на каком герое: выбрать вручную"><option value="">авто</option>${options}</select>` : "";
     const heroLine = hero
       ? `<div class="slot-hero">${heroPortrait(hero, name(hero))}<div><b>${esc(name(hero))}</b>
-           <div class="small muted">${a.fixed ? "вручную" : pct(a.probability) + (a.alternative ? ` · или ${esc(a.alternative)} ${pct(a.alternativeProbability)}` : "")}</div></div></div>`
-      : `<div class="slot-hero empty"><span class="hero-portrait empty"></span><span class="muted small">${free && free.probability < 0.95 ? `свободен ${pct(free.probability)}` : "без героя"}</span></div>`;
+           <div class="small muted">${a.fixed ? "вручную" : pct(a.probability) + (a.alternative ? ` · или ${esc(a.alternative)} ${pct(a.alternativeProbability)}` : "")}</div></div>${assign}</div>`
+      : `<div class="slot-hero empty"><span class="hero-portrait empty"></span><span class="muted small">${free && free.probability < 0.95 ? `свободен ${pct(free.probability)}` : "без героя"}</span>${assign}</div>`;
     const odds = !hero && outlook && outlook.heroes.length
       ? `<div class="odds small">вероятно: ${outlook.heroes.slice(0, 3).map((h) =>
           `<button class="hero-pick link" data-id="${h.heroId}">${icon(h.heroId)}${esc(h.name)}</button> ${pct(h.probability)}`).join(" ")}</div>`
@@ -338,7 +341,6 @@
         <button class="nick link" data-account="${p.accountId}" title="Карточка игрока">${esc(p.nick)}</button>
         ${rankIcon(p.rankTier, p.rank)}
         ${profiles(p.accountId)}
-        ${picks.length ? `<select class="slot-assign" data-player="${esc(p.nick)}" title="Кто на каком герое: выбрать вручную"><option value="">авто</option>${options}</select>` : ""}
       </div>
       <div class="recent small" title="Игры за 2 месяца без Турбо (подробнее — наведите на героя)">2 мес: ${recentLine(p)}</div>
       ${odds}
@@ -431,7 +433,10 @@
     advice = a;
     $("their-next").innerHTML = a.theirNextPicks.map((r) =>
       pickable(r, `<b>${pct(r.score)}</b> <span class="muted">${esc(r.player)}</span>`)).join("");
-    $("bans").innerHTML = a.banSuggestions.map((r) => pickable(r, ourMark(r))).join("");
+    // важность бана 0–100 от лучшего в списке: вероятность их пика × вред для нас (UX-03)
+    const topBan = Math.max(...a.banSuggestions.map((r) => r.score), 1e-9);
+    $("bans").innerHTML = a.banSuggestions.map((r) => pickable(r,
+      `<b class="ban-score" title="Важность бана: шанс их пика × вред для нас (угроза игрока на герое, контрпик наших, наш плохой винрейт против него). 100 — самый важный в списке">${Math.round(100 * r.score / topBan)}</b> ${ourMark(r)}`)).join("");
     $("picks").innerHTML = a.pickSuggestions.map((r) =>
       pickable(r, `<span class="muted">${esc(r.player)}</span>`)).join("");
     const lo = a.laneOptions || [];
@@ -623,13 +628,13 @@
       const [ours, theirs] = picksOf(saved);
       const moves = (saved?.heroes || []).length;
       tabs.push(`<button type="button" class="map-tab${m === state.map ? " current" : ""}" data-map="${m}"
-        title="${moves ? `Ходов: ${moves}/24` : "Пусто"}">Карта ${m}${moves ? (moves >= ORDER.length ? " ✓" : ` · ${moves}`) : ""}</button>`);
+        title="Карта ${m}: ${moves ? `ходов ${moves}/24` : "пусто"}">${m}${moves ? (moves >= ORDER.length ? " ✓" : ` · ${moves}`) : ""}</button>`);
       if (m !== state.map && (ours.length || theirs.length)) {
         others.push(`<span class="map-past"><b>Карта ${m}:</b> мы ${ours.map((h) => icon(h)).join("") || "—"}
           · они ${theirs.map((h) => icon(h)).join("") || "—"}</span>`);
       }
     }
-    $("maps").innerHTML = tabs.join("");
+    $("maps").innerHTML = '<span class="muted small">Карта</span>' + tabs.join("");
     $("maps-past").innerHTML = others.join("");
     $("maps-past").hidden = others.length === 0;
   }

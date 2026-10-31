@@ -839,7 +839,8 @@ public final class DraftEngine {
             double damage = 0.4 + threat + 6 * counter + 0.3 * nemesis;
             List<String> reasons = new ArrayList<>();
             reasons.add("возьмут: " + Md.pct(e.getValue()) + " (" + them.players.get(theirs.bestPlayer().get(h)).nick() + ")");
-            if (threat >= 0.7) {
+            // угроза — та же, что на странице соперника (UX-04): показываем всегда, чтобы цифры сходились
+            if (threat > 0) {
                 reasons.add("угроза " + Md.dec(threat));
             }
             String cnt = bestPair(h, ourPicks, false);

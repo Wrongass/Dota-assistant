@@ -367,3 +367,8 @@ button.reason.more { border: 0; cursor: pointer; font: inherit; font-size: 11px;
   border-radius: 8px; padding: 8px 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4); }
 /* светлая тема: подписи ленты ходов и 👥 читаются */
 :root[data-theme="light"] .ribbon .slot .kind { color: #4b5563; }
+.slot-hero .slot-assign { margin-left: auto; align-self: flex-start; max-width: 92px; }
+.draft-setup { gap: 6px 10px; }
+.draft-setup button { padding: 5px 9px; }
+.maps { align-items: center; }
+.map-tab { padding: 3px 8px; }
