@@ -74,6 +74,22 @@ public final class AnalysisContext {
                 }
             }
         }
+        // имена для матчей лиги — из конфига: команды «SD Team (GGsel)» вместо «GGsel» из OpenDota, ники вместо Steam-ников
+        List<Squad> all = new ArrayList<>(opponents);
+        all.add(ours);
+        for (Squad s : all) {
+            for (Squad other : all) {
+                if (other.team != null && other.team.teamId() != null) {
+                    s.teamNames.put(other.team.teamId(), other.teamName());
+                }
+            }
+            config.players().forEach(p -> s.nicks.put(p.accountId(), p.nick()));
+            if (config.league() != null && s.team != null) {
+                config.league().manualMapsOrEmpty().stream()
+                        .filter(mm -> s.team.name().equals(mm.winner()) || s.team.name().equals(mm.loser()))
+                        .forEach(s.manualMaps::add);
+            }
+        }
         return new AnalysisContext(config, meta, league, LaneStats.load(dataDir), ours, opponents, date, dataDir, missing);
     }
 

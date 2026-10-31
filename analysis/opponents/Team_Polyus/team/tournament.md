@@ -1,8 +1,8 @@
 # Турнир: Team Polyus (НИИ Полюс им. М.Ф. Стельмаха)
 
-Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 6, побед: 2. Переигровки (пустая статистика) не учитываются.
+Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 7, побед: 2. Переигровки (пустая статистика) не учитываются.
 
-## 2026-10-10 14:31 UTC — против Team Visual: поражение
+## 2026-10-10 14:31 UTC — против Team Visual (Долг): поражение
 
 Radiant, 69 мин, [OpenDota](https://www.opendota.com/matches/9038270542), [Dotabuff](https://ru.dotabuff.com/matches/9038270542)
 
@@ -14,13 +14,13 @@ Radiant, 69 мин, [OpenDota](https://www.opendota.com/matches/9038270542), [Do
 | UshKO | Abaddon | safe | 270 | 0/9/22 |
 | ГYYYYYСЬ | Underlord | off | 423 | 3/7/22 |
 
-Соперник: Centaur Warrunner (Большой Дима), Viper (Wrongass), Lich (Enaria), Vengeful Spirit (BABAYKA), Wraith King (kren)
+Соперник: Centaur Warrunner (Артист), Viper (Wrongass), Lich (Enaria), Vengeful Spirit (Babayka), Wraith King (kren)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 
 **b Lone Druid** → **b Outworld Devourer** → b Winter Wyvern → b Bounty Hunter → **b Snapfire** → b Undying → b Phantom Lancer → **P Lion** → P Lich → **b Juggernaut** → **b Lifestealer** → b Slark → P Vengeful Spirit → **P Underlord** → **P Abaddon** → P Viper → P Wraith King → **P Lina** → **b Dawnbreaker** → **b Mars** → b Sniper → **P Drow Ranger** → P Centaur Warrunner
 
-## 2026-10-10 16:08 UTC — против Team Visual: поражение
+## 2026-10-10 16:08 UTC — против Team Visual (Долг): поражение
 
 Dire, 47 мин, [OpenDota](https://www.opendota.com/matches/9038460786), [Dotabuff](https://ru.dotabuff.com/matches/9038460786)
 
@@ -32,13 +32,17 @@ Dire, 47 мин, [OpenDota](https://www.opendota.com/matches/9038460786), [Dotab
 | ГYYYYYСЬ | Underlord | off | 412 | 5/12/18 |
 | UshKO | Jakiro | safe | 281 | 3/9/20 |
 
-Соперник: Tiny (Wrongass), Ogre Magi (Большой Дима), Lich (Enaria), Wraith King (kren), Vengeful Spirit (BABAYKA)
+Соперник: Tiny (Wrongass), Ogre Magi (Артист), Lich (Enaria), Wraith King (kren), Vengeful Spirit (Babayka)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 
 b Undying → b Winter Wyvern → **b Lone Druid** → **b Outworld Devourer** → b Sniper → **b Centaur Warrunner** → **b Dawnbreaker** → P Wraith King → **P Hoodwink** → b Drow Ranger → b Lina → **b Doom** → **P Underlord** → P Vengeful Spirit → P Tiny → **P Jakiro** → **P Windranger** → P Lich → b Necrophos → **b Axe** → b Queen of Pain → **b Night Stalker** → P Ogre Magi → **P Juggernaut**
 
-## 2026-10-17 11:58 UTC — против GGsel: победа
+## 2026-10-17 — против SD Team (GGsel): поражение
+
+BO2 закончился 1:1, вторая карта не попала в OpenDota (счёт с сайта турнира).
+
+## 2026-10-17 11:58 UTC — против SD Team (GGsel): победа
 
 Dire, 35 мин, [OpenDota](https://www.opendota.com/matches/9049021074), [Dotabuff](https://ru.dotabuff.com/matches/9049021074)
 
@@ -56,7 +60,7 @@ Dire, 35 мин, [OpenDota](https://www.opendota.com/matches/9049021074), [Dotab
 
 b Techies → b Hoodwink → **b Rubick** → **b Outworld Devourer** → b Undying → **b Brewmaster** → **b Doom** → P Dragon Knight → **P Ogre Magi** → b Lina → b Sniper → **b Nyx Assassin** → **P Necrophos** → P Windranger → P Dark Willow → **P Ring Master** → **P Tiny** → P Huskar → b Viper → **b Muerta** → b Timbersaw → **b Wraith King** → P Slardar → **P Queen of Pain**
 
-## 2026-10-23 16:10 UTC — против UPPO: поражение
+## 2026-10-23 16:10 UTC — против UPPO TEAM (УППО): поражение
 
 Dire, 53 мин, [OpenDota](https://www.opendota.com/matches/9058237205), [Dotabuff](https://ru.dotabuff.com/matches/9058237205)
 
@@ -74,7 +78,7 @@ Dire, 53 мин, [OpenDota](https://www.opendota.com/matches/9058237205), [Dotab
 
 **b Outworld Devourer** → **b Brewmaster** → b Necrophos → b Wraith King → **b Rubick** → b Dawnbreaker → b Juggernaut → **P Death Prophet** → P Ancient Apparition → **b Luna** → **b Faceless Void** → b Jakiro → P Lina → **P Techies** → **P Ogre Magi** → P Largo → P Lifestealer → **P Doom** → **b Nyx Assassin** → b Sven → **b Timbersaw** → b Sniper → **P Ursa** → P Legion Commander
 
-## 2026-10-23 17:30 UTC — против UPPO: поражение
+## 2026-10-23 17:30 UTC — против UPPO TEAM (УППО): поражение
 
 Dire, 47 мин, [OpenDota](https://www.opendota.com/matches/9058372468), [Dotabuff](https://ru.dotabuff.com/matches/9058372468)
 
@@ -92,7 +96,7 @@ Dire, 47 мин, [OpenDota](https://www.opendota.com/matches/9058372468), [Dotab
 
 b Necrophos → b Doom → **b Outworld Devourer** → **b Brewmaster** → b Wraith King → **b Rubick** → **b Dragon Knight** → P Luna → **P Lion** → b Juggernaut → b Jakiro → **b Undying** → **P Techies** → P Hoodwink → P Lina → **P Witch Doctor** → **P Axe** → P Shadow Demon → b Lifestealer → **b Centaur Warrunner** → b Sven → **b Legion Commander** → P Kunkka → **P Phantom Assassin**
 
-## 2026-10-31 08:28 UTC — против ggsel: победа
+## 2026-10-31 08:28 UTC — против SD Team (GGsel): победа
 
 Radiant, 65 мин, [OpenDota](https://www.opendota.com/matches/9069627947), [Dotabuff](https://ru.dotabuff.com/matches/9069627947)
 
@@ -114,7 +118,7 @@ b Techies → b Hoodwink → **b Rubick** → **b Dragon Knight** → b Witch Do
 
 **Пики команды** (в скобках — победы): Ogre Magi ×3 (2), Death Prophet ×2 (1), Lion ×2 (0), Queen of Pain ×2 (2), Ring Master ×2 (2), Techies ×2 (0), Underlord ×2 (0), Abaddon (0), Axe (0), Doom (0), Drow Ranger (0), Hoodwink (0), Jakiro (0), Juggernaut (0), Lina (0), Necrophos (1), Phantom Assassin (0), Tiny (1), Ursa (0), Windranger (0), Witch Doctor (0), Wraith King (1)
 
-**Баны команды:** Outworld Devourer ×6, Rubick ×4, Brewmaster ×3, Centaur Warrunner ×2, Dawnbreaker ×2, Doom ×2, Dragon Knight ×2, Lone Druid ×2, Luna ×2, Nyx Assassin ×2, Axe, Faceless Void, Juggernaut, Legion Commander, Lifestealer, Mars, Muerta, Night Stalker, Pangolier, Snapfire, Sven, Timbersaw, Undying, Windranger, Wraith King
+**Баны команды** (по 6 картам из 7: у остальных драфт не записан): Outworld Devourer ×6, Rubick ×4, Brewmaster ×3, Centaur Warrunner ×2, Dawnbreaker ×2, Doom ×2, Dragon Knight ×2, Lone Druid ×2, Luna ×2, Nyx Assassin ×2, Axe, Faceless Void, Juggernaut, Legion Commander, Lifestealer, Mars, Muerta, Night Stalker, Pangolier, Snapfire, Sven, Timbersaw, Undying, Windranger, Wraith King
 
 **Банят против команды** (чего боятся соперники): Sniper ×5, Necrophos ×4, Lina ×3, Undying ×3, Hoodwink ×2, Jakiro ×2, Juggernaut ×2, Sven ×2, Techies ×2, Viper ×2, Winter Wyvern ×2, Wraith King ×2, Bounty Hunter, Dawnbreaker, Doom, Drow Ranger, Lifestealer, Phantom Lancer, Queen of Pain, Slark, Timbersaw, Witch Doctor
 

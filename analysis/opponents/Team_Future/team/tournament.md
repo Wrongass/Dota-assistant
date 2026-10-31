@@ -114,7 +114,7 @@ Dire, 45 мин, [OpenDota](https://www.opendota.com/matches/9059564086), [Dotab
 
 **Пики команды** (в скобках — победы): Witch Doctor ×5 (5), Dragon Knight ×4 (4), Lifestealer ×2 (2), Rubick ×2 (2), Techies ×2 (2), Tidehunter ×2 (2), Tinker ×2 (2), Bristleback (1), Grimstroke (1), Luna (1), Mirana (1), Night Stalker (1), Pangolier (1), Queen of Pain (1), Razor (1), Slardar (1), Troll Warlord (1), Tusk (1)
 
-**Баны команды:** Lina ×4, Outworld Devourer ×4, Ursa ×4, Grimstroke ×3, Phantom Lancer ×3, Viper ×3, Beastmaster ×2, Hoodwink ×2, Huskar ×2, Lich ×2, Lycan ×2, Slark ×2, Axe, Legion Commander, Lion, Night Stalker, Queen of Pain, Snapfire, Spectre, Techies, Underlord
+**Баны команды**: Lina ×4, Outworld Devourer ×4, Ursa ×4, Grimstroke ×3, Phantom Lancer ×3, Viper ×3, Beastmaster ×2, Hoodwink ×2, Huskar ×2, Lich ×2, Lycan ×2, Slark ×2, Axe, Legion Commander, Lion, Night Stalker, Queen of Pain, Snapfire, Spectre, Techies, Underlord
 
 **Банят против команды** (чего боятся соперники): Invoker ×5, Lifestealer ×3, Tinker ×3, Dazzle ×2, Disruptor ×2, Doom ×2, Earth Spirit ×2, Lina ×2, Mirana ×2, Outworld Devourer ×2, Ring Master ×2, Sniper ×2, Anti-Mage, Beastmaster, Dragon Knight, Keeper of the Light, Lion, Necrophos, Phantom Lancer, Razor, Skywrath Mage, Sven, Techies, Viper, Witch Doctor
 

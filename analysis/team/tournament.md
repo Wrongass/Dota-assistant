@@ -2,7 +2,7 @@
 
 Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 7, побед: 4. Переигровки (пустая статистика) не учитываются.
 
-## 2026-10-10 14:31 UTC — против Team Polyus: победа
+## 2026-10-10 14:31 UTC — против Team Polyus (НИИ Полюс им. М.Ф. Стельмаха): победа
 
 Dire, 69 мин, [OpenDota](https://www.opendota.com/matches/9038270542), [Dotabuff](https://ru.dotabuff.com/matches/9038270542)
 
@@ -14,13 +14,13 @@ Dire, 69 мин, [OpenDota](https://www.opendota.com/matches/9038270542), [Dotab
 | Babayka | Vengeful Spirit | safe | 300 | 1/11/32 |
 | kren | Wraith King | safe | 693 | 12/6/20 |
 
-Соперник: Drow Ranger (Unlearnable), Lina (0123), Lion (Sladkiy_arbyzik), Abaddon (BuffaloJump), Underlord (ГYYYYYСЬ)
+Соперник: Drow Ranger (Unlearnable), Lina (ryota), Lion (Sladkiy_arbyzik), Abaddon (UshKO), Underlord (ГYYYYYСЬ)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 
 b Lone Druid → b Outworld Devourer → **b Winter Wyvern** → **b Bounty Hunter** → b Snapfire → **b Undying** → **b Phantom Lancer** → P Lion → **P Lich** → b Juggernaut → b Lifestealer → **b Slark** → **P Vengeful Spirit** → P Underlord → P Abaddon → **P Viper** → **P Wraith King** → P Lina → b Dawnbreaker → b Mars → **b Sniper** → P Drow Ranger → **P Centaur Warrunner**
 
-## 2026-10-10 16:08 UTC — против Team Polyus: победа
+## 2026-10-10 16:08 UTC — против Team Polyus (НИИ Полюс им. М.Ф. Стельмаха): победа
 
 Radiant, 47 мин, [OpenDota](https://www.opendota.com/matches/9038460786), [Dotabuff](https://ru.dotabuff.com/matches/9038460786)
 
@@ -32,13 +32,13 @@ Radiant, 47 мин, [OpenDota](https://www.opendota.com/matches/9038460786), [Do
 | kren | Wraith King | safe | 689 | 11/3/24 |
 | Babayka | Vengeful Spirit | safe | 376 | 5/7/29 |
 
-Соперник: Juggernaut (Unlearnable), Windranger (0123), Hoodwink (Sladkiy_arbyzik), Underlord (ГYYYYYСЬ), Jakiro (BuffaloJump)
+Соперник: Juggernaut (Unlearnable), Windranger (ryota), Hoodwink (Sladkiy_arbyzik), Underlord (ГYYYYYСЬ), Jakiro (UshKO)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 
 **b Undying** → **b Winter Wyvern** → b Lone Druid → b Outworld Devourer → **b Sniper** → b Centaur Warrunner → b Dawnbreaker → **P Wraith King** → P Hoodwink → **b Drow Ranger** → **b Lina** → b Doom → P Underlord → **P Vengeful Spirit** → **P Tiny** → P Jakiro → P Windranger → **P Lich** → **b Necrophos** → b Axe → **b Queen of Pain** → b Night Stalker → **P Ogre Magi** → P Juggernaut
 
-## 2026-10-17 10:42 UTC — против UPPO: поражение
+## 2026-10-17 10:42 UTC — против UPPO TEAM (УППО): поражение
 
 Dire, 44 мин, [OpenDota](https://www.opendota.com/matches/9048922513), [Dotabuff](https://ru.dotabuff.com/matches/9048922513)
 
@@ -56,7 +56,7 @@ Dire, 44 мин, [OpenDota](https://www.opendota.com/matches/9048922513), [Dotab
 
 b Silencer → b Lich → **b Sniper** → **b Beastmaster** → b Tidehunter → **b Slark** → **b Kunkka** → P Lina → **P Lion** → b Dragon Knight → b Lifestealer → **b Phantom Lancer** → **P Wraith King** → P Hoodwink → P Dark Willow → **P Ogre Magi** → **P Outworld Devourer** → P Dawnbreaker → b Night Stalker → **b Morphling** → b Axe → **b Anti-Mage** → P Luna → **P Disruptor**
 
-## 2026-10-17 11:52 UTC — против UPPO: поражение
+## 2026-10-17 11:52 UTC — против UPPO TEAM (УППО): поражение
 
 Dire, 28 мин, [OpenDota](https://www.opendota.com/matches/9049022198), [Dotabuff](https://ru.dotabuff.com/matches/9049022198)
 
@@ -74,9 +74,11 @@ Dire, 28 мин, [OpenDota](https://www.opendota.com/matches/9049022198), [Dotab
 
 b Silencer → b Lich → **b Hoodwink** → **b Dark Willow** → b Lina → **b Sniper** → **b Dawnbreaker** → P Outworld Devourer → **P Lion** → b Dragon Knight → b Lifestealer → **b Slark** → **P Vengeful Spirit** → P Disruptor → P Mirana → **P Night Stalker** → **P Razor** → P Luna → b Wraith King → **b Kunkka** → b Sven → **b Underlord** → P Beastmaster → **P Drow Ranger**
 
-## 2026-10-24 07:22 UTC — против GGsel: победа
+## 2026-10-24 07:22 UTC — против SD Team (GGsel): победа
 
 Radiant, 58 мин, [OpenDota](https://www.opendota.com/matches/9059152056), [Dotabuff](https://ru.dotabuff.com/matches/9059152056)
+
+драфт не записан в OpenDota: пики есть, банов нет.
 
 | Игрок | Герой | Линия | GPM | K/D/A |
 |---|---|---|---|---|
@@ -88,11 +90,7 @@ Radiant, 58 мин, [OpenDota](https://www.opendota.com/matches/9059152056), [Do
 
 Соперник: Dragon Knight (XANDR), Windranger (Nynge), Pangolier (Caraxes), Rubick (IRD), Grimstroke (montekri)
 
-Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
-
-
-
-## 2026-10-24 08:35 UTC — против GGsel: поражение
+## 2026-10-24 08:35 UTC — против SD Team (GGsel): поражение
 
 Dire, 40 мин, [OpenDota](https://www.opendota.com/matches/9059226622), [Dotabuff](https://ru.dotabuff.com/matches/9059226622)
 
@@ -110,7 +108,7 @@ Dire, 40 мин, [OpenDota](https://www.opendota.com/matches/9059226622), [Dotab
 
 **b Mirana** → **b Dark Willow** → b Outworld Devourer → b Wraith King → **b Phoenix** → b Necrophos → b Dawnbreaker → **P Vengeful Spirit** → P Dragon Knight → **b Spirit Breaker** → **b Huskar** → b Viper → P Windranger → **P Lich** → **P Lifestealer** → P Dark Seer → P Warlock → **P Lina** → **b Ember Spirit** → b Centaur Warrunner → **b Phantom Lancer** → b Ogre Magi → **P Underlord** → P Slardar
 
-## 2026-10-31 08:21 UTC — против comaTOZ: победа
+## 2026-10-31 08:21 UTC — против comaTOZ (ИТОЗ): победа
 
 Radiant, 34 мин, [OpenDota](https://www.opendota.com/matches/9069619079), [Dotabuff](https://ru.dotabuff.com/matches/9069619079)
 
@@ -122,7 +120,7 @@ Radiant, 34 мин, [OpenDota](https://www.opendota.com/matches/9069619079), [Do
 | kren | Wraith King | safe | 643 | 14/1/10 |
 | Babayka | Ogre Magi | off | 437 | 7/3/29 |
 
-Соперник: Bane (-DrestoV1ch (starplayer)), Anti-Mage (britishboi), Night Stalker (YOURSELF), Lina (kezi), Hoodwink (-Asmodeus)
+Соперник: Bane (DrestoV1ch), Anti-Mage (britishboi), Night Stalker (YOURSELF), Lina (kezi), Hoodwink (Asmodeus)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 
@@ -132,7 +130,7 @@ b Lone Druid → b Doom → **b Invoker** → **b Techies** → b Earth Spirit �
 
 **Пики команды** (в скобках — победы): Vengeful Spirit ×5 (3), Lich ×4 (3), Wraith King ×4 (3), Ogre Magi ×3 (2), Centaur Warrunner ×2 (2), Lifestealer ×2 (1), Lion ×2 (0), Outworld Devourer ×2 (1), Dawnbreaker (1), Disruptor (0), Drow Ranger (0), Enigma (1), Lina (0), Night Stalker (0), Razor (0), Tiny (1), Underlord (0), Viper (1), Warlock (1)
 
-**Баны команды:** Phantom Lancer ×4, Sniper ×4, Dark Willow ×3, Slark ×3, Dawnbreaker ×2, Kunkka ×2, Undying ×2, Winter Wyvern ×2, Anti-Mage, Beastmaster, Bounty Hunter, Centaur Warrunner, Dragon Knight, Drow Ranger, Ember Spirit, Hoodwink, Huskar, Invoker, Lina, Mirana, Morphling, Necrophos, Phoenix, Queen of Pain, Spirit Breaker, Techies, Underlord
+**Баны команды** (по 6 картам из 7: у остальных драфт не записан): Phantom Lancer ×4, Sniper ×4, Dark Willow ×3, Slark ×3, Dawnbreaker ×2, Kunkka ×2, Undying ×2, Winter Wyvern ×2, Anti-Mage, Beastmaster, Bounty Hunter, Centaur Warrunner, Dragon Knight, Drow Ranger, Ember Spirit, Hoodwink, Huskar, Invoker, Lina, Mirana, Morphling, Necrophos, Phoenix, Queen of Pain, Spirit Breaker, Techies, Underlord
 
 **Банят против команды** (чего боятся соперники): Dawnbreaker ×3, Lifestealer ×3, Lone Druid ×3, Outworld Devourer ×3, Silencer ×3, Axe ×2, Centaur Warrunner ×2, Doom ×2, Dragon Knight ×2, Lich ×2, Night Stalker ×2, Sven ×2, Wraith King ×2, Earth Spirit, Juggernaut, Lina, Mars, Necrophos, Ogre Magi, Rubick, Slark, Snapfire, Tidehunter, Viper
 

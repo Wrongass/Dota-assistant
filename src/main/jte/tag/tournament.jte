@@ -6,7 +6,7 @@
 
 <div class="panel">
     <p><b>Пики команды</b> <span class="muted">(в скобках — победы)</span>: ${Fmt.countList(t.picks(), true)}</p>
-    <p><b>Баны команды:</b> ${Fmt.countList(t.bans(), false)}</p>
+    <p><b>Баны команды</b>@if(t.draftMaps() < t.matches().size()) <span class="muted">(по ${t.draftMaps()} картам из ${t.matches().size()}: у остальных драфт не записан)</span>@endif: ${Fmt.countList(t.bans(), false)}</p>
     <p><b>Банят против команды</b> <span class="muted">(чего боятся соперники)</span>: ${Fmt.countList(t.bansAgainst(), false)}</p>
     <p><b>Пики соперников</b> <span class="muted">(в скобках — их победы)</span>: ${Fmt.countList(t.enemyPicks(), true)}</p>
 </div>
@@ -14,10 +14,16 @@
 @for(var m : t.matches())
     <div class="panel">
         <h3>${m.date()} — против ${m.opponent()}: <span class="${m.won() ? "strong" : "weak"}">${m.won() ? "победа" : "поражение"}</span></h3>
+        @if(m.matchId() > 0)
         <p class="small muted">${m.radiant() ? "Radiant" : "Dire"}, ${m.minutes()} мин ·
             <a href="https://www.opendota.com/matches/${m.matchId()}" target="_blank">OpenDota</a> ·
             <a href="https://ru.dotabuff.com/matches/${m.matchId()}" target="_blank">Dotabuff</a></p>
+        @endif
+        @if(m.note() != null)<p class="small muted">${m.note()}</p>@endif
+        @if(!m.draft().isEmpty())
         @template.tag.draftStrip(steps = m.draft())
+        @endif
+        @if(m.matchId() > 0)
         <div class="grid2" style="margin-top:8px">
             <table>
                 <thead><tr><th>Игрок</th><th>Герой</th><th>Линия</th><th class="num">GPM</th><th>K/D/A</th></tr></thead>
@@ -38,5 +44,6 @@
                 </tbody>
             </table>
         </div>
+        @endif
     </div>
 @endfor

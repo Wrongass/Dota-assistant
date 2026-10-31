@@ -38,7 +38,7 @@ Dire, 26 мин, [OpenDota](https://www.opendota.com/matches/9040156456), [Dotab
 
 b Bounty Hunter → b Outworld Devourer → **b Phantom Lancer** → **b Doom** → b Dragon Knight → **b Legion Commander** → **b Silencer** → P Weaver → **P Hoodwink** → b Dawnbreaker → b Ursa → **b Lifestealer** → **P Ogre Magi** → P Techies → P Sniper → **P Phoenix** → **P Windranger** → P Tidehunter → b Axe → **b Medusa** → b Wraith King → **b Juggernaut** → P Faceless Void → **P Phantom Assassin**
 
-## 2026-10-17 16:13 UTC — против Эльбрус team: поражение
+## 2026-10-17 16:13 UTC — против Elbrus team (МЦСТ): поражение
 
 Dire, 27 мин, [OpenDota](https://www.opendota.com/matches/9049473158), [Dotabuff](https://ru.dotabuff.com/matches/9049473158)
 
@@ -50,13 +50,13 @@ Dire, 27 мин, [OpenDota](https://www.opendota.com/matches/9049473158), [Dotab
 | kalibri | Jakiro | safe | 174 | 1/9/7 |
 | SuperPoni | Dragon Knight | off | 434 | 6/6/4 |
 
-Соперник: Night Stalker (zero excuses), Templar Assassin (Участковый разберётся), Witch Doctor (Tort), Techies (Sladenky), Brewmaster (Блинолопатный гражданин)
+Соперник: Night Stalker (zero_excuses), Templar Assassin (Участковый), Witch Doctor (Tort), Techies (Sladenky), Brewmaster (Блинолопатный)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 
 **b Lone Druid** → **b Earth Spirit** → b Hoodwink → b Dawnbreaker → **b Invoker** → b Slark → b Phantom Lancer → **P Dragon Knight** → P Techies → **b Outworld Devourer** → **b Underlord** → b Lifestealer → P Witch Doctor → **P Lion** → **P Jakiro** → P Night Stalker → P Brewmaster → **P Luna** → **b Windranger** → b Ember Spirit → **b Ursa** → b Queen of Pain → **P Lina** → P Templar Assassin
 
-## 2026-10-17 17:17 UTC — против Эльбрус team: поражение
+## 2026-10-17 17:17 UTC — против Elbrus team (МЦСТ): поражение
 
 Radiant, 42 мин, [OpenDota](https://www.opendota.com/matches/9049587846), [Dotabuff](https://ru.dotabuff.com/matches/9049587846)
 
@@ -68,13 +68,13 @@ Radiant, 42 мин, [OpenDota](https://www.opendota.com/matches/9049587846), [Do
 | kalibri | Vengeful Spirit | safe | 229 | 0/11/16 |
 | Леонид Ильич | Leshrac | mid | 554 | 8/6/10 |
 
-Соперник: Void Spirit (zero excuses), Magnus (Блинолопатный гражданин), Clockwerk (Sladenky), Lifestealer (Участковый разберётся), Shadow Shaman (Tort)
+Соперник: Void Spirit (zero_excuses), Magnus (Блинолопатный), Clockwerk (Sladenky), Lifestealer (Участковый), Shadow Shaman (Tort)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 
 **b Lone Druid** → **b Invoker** → b Dragon Knight → b Dawnbreaker → **b Earth Spirit** → b Phantom Lancer → b Slark → **P Hoodwink** → P Clockwerk → **b Techies** → **b Night Stalker** → b Lina → P Shadow Shaman → **P Vengeful Spirit** → **P Centaur Warrunner** → P Lifestealer → P Void Spirit → **P Windranger** → **b Underlord** → b Queen of Pain → **b Mars** → b Ember Spirit → **P Leshrac** → P Magnus
 
-## 2026-10-25 16:04 UTC — против comaTOZ: победа
+## 2026-10-25 16:04 UTC — против comaTOZ (ИТОЗ): победа
 
 Radiant, 41 мин, [OpenDota](https://www.opendota.com/matches/9061635631), [Dotabuff](https://ru.dotabuff.com/matches/9061635631)
 
@@ -86,13 +86,13 @@ Radiant, 41 мин, [OpenDota](https://www.opendota.com/matches/9061635631), [Do
 | Elsa | Luna | safe | 735 | 3/1/14 |
 | СГРЫЗ_КАСТРЮЛЮ | Techies | off | 358 | 7/5/20 |
 
-Соперник: Drow Ranger (britishboi), Clockwerk (-DrestoV1ch (starplayer)), Dragon Knight (kezi), Doom (IAM-), Dark Willow (-Asmodeus)
+Соперник: Drow Ranger (britishboi), Clockwerk (DrestoV1ch), Dragon Knight (kezi), Doom (YOURSELF), Dark Willow (Asmodeus)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 
 b Earth Spirit → b Hoodwink → **b Bane** → **b Spirit Breaker** → b Lina → **b Ember Spirit** → **b Phantom Lancer** → P Dragon Knight → **P Techies** → b Lifestealer → b Outworld Devourer → **b Sven** → **P Undying** → P Dark Willow → P Clockwerk → **P Windranger** → **P Slardar** → P Doom → b Storm Spirit → **b Spectre** → b Tinker → **b Nature's Prophet** → P Drow Ranger → **P Luna**
 
-## 2026-10-25 17:15 UTC — против comaTOZ: победа
+## 2026-10-25 17:15 UTC — против comaTOZ (ИТОЗ): победа
 
 Dire, 58 мин, [OpenDota](https://www.opendota.com/matches/9061760995), [Dotabuff](https://ru.dotabuff.com/matches/9061760995)
 
@@ -104,7 +104,7 @@ Dire, 58 мин, [OpenDota](https://www.opendota.com/matches/9061760995), [Dotab
 | SuperPoni | Outworld Devourer | mid | 628 | 16/9/16 |
 | СГРЫЗ_КАСТРЮЛЮ | Skywrath Mage | off | 341 | 4/5/26 |
 
-Соперник: Dark Willow (-DrestoV1ch (starplayer)), Nature's Prophet (britishboi), Slardar (IAM-), Earth Spirit (kezi), Rubick (-Asmodeus)
+Соперник: Dark Willow (DrestoV1ch), Nature's Prophet (britishboi), Slardar (YOURSELF), Earth Spirit (kezi), Rubick (Asmodeus)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 
@@ -114,7 +114,7 @@ Dire, 58 мин, [OpenDota](https://www.opendota.com/matches/9061760995), [Dotab
 
 **Пики команды** (в скобках — победы): Dragon Knight ×3 (2), Hoodwink ×3 (2), Luna ×3 (2), Windranger ×3 (2), Ogre Magi ×2 (2), Skywrath Mage ×2 (2), Centaur Warrunner (0), Dawnbreaker (1), Drow Ranger (1), Jakiro (0), Leshrac (0), Lina (0), Lion (0), Outworld Devourer (1), Phantom Assassin (1), Phoenix (1), Slardar (1), Techies (1), Undying (1), Vengeful Spirit (0)
 
-**Баны команды:** Phantom Lancer ×4, Lifestealer ×3, Bane ×2, Doom ×2, Earth Spirit ×2, Ember Spirit ×2, Invoker ×2, Lone Druid ×2, Spirit Breaker ×2, Techies ×2, Underlord ×2, Ursa ×2, Anti-Mage, Juggernaut, Legion Commander, Mars, Medusa, Nature's Prophet, Necrophos, Night Stalker, Outworld Devourer, Silencer, Slark, Spectre, Sven, Undying, Windranger
+**Баны команды**: Phantom Lancer ×4, Lifestealer ×3, Bane ×2, Doom ×2, Earth Spirit ×2, Ember Spirit ×2, Invoker ×2, Lone Druid ×2, Spirit Breaker ×2, Techies ×2, Underlord ×2, Ursa ×2, Anti-Mage, Juggernaut, Legion Commander, Mars, Medusa, Nature's Prophet, Necrophos, Night Stalker, Outworld Devourer, Silencer, Slark, Spectre, Sven, Undying, Windranger
 
 **Банят против команды** (чего боятся соперники): Dawnbreaker ×3, Hoodwink ×3, Lina ×3, Outworld Devourer ×3, Slark ×3, Axe ×2, Bounty Hunter ×2, Dragon Knight ×2, Ember Spirit ×2, Lifestealer ×2, Phantom Lancer ×2, Queen of Pain ×2, Storm Spirit ×2, Ursa ×2, Clinkz, Doom, Earth Spirit, Night Stalker, Terrorblade, Timbersaw, Tinker, Undying, Wraith King
 
