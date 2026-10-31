@@ -96,4 +96,30 @@ class WebAppTest {
     void unknownPlayerIs404() throws Exception {
         assertEquals(404, get("/player/1").statusCode());
     }
+
+    @Test
+    void badAddressesGiveSitePagesNotServerErrors() throws Exception {
+        HttpResponse<String> byNick = get("/player/kren");
+        assertEquals(200, byNick.statusCode(), "игрок по нику из конфига");
+        assertTrue(byNick.body().contains("kren"));
+
+        for (String path : new String[]{"/player/99999999999999999999", "/player/nobody", "/opponent/NOPE_TEAM", "/nonexistent"}) {
+            HttpResponse<String> r = get(path);
+            assertEquals(404, r.statusCode(), path);
+            assertTrue(r.headers().firstValue("Content-Type").orElse("").toLowerCase().contains("utf-8"), path);
+            assertTrue(r.body().contains("Не найдено") && r.body().contains("На главную"), path + ": страница сайта");
+        }
+        HttpResponse<String> api = get("/api/player/nobody");
+        assertEquals(404, api.statusCode());
+        assertTrue(api.body().startsWith("{"), "для /api — JSON");
+
+        HttpResponse<String> lower = get("/opponent/sd_team");
+        assertEquals(302, lower.statusCode(), "id соперника без учёта регистра");
+        assertEquals("/opponent/SD_Team", lower.headers().firstValue("Location").orElse(""));
+
+        HttpResponse<String> pos = get("/counters?h=Sniper&pos=abc");
+        assertEquals(200, pos.statusCode());
+        assertTrue(pos.body().contains("такой нет, показываю «авто»"));
+    }
 }
+

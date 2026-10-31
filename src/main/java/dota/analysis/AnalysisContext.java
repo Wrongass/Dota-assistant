@@ -171,7 +171,9 @@ public final class AnalysisContext {
     }
 
     public Squad opponent(String slug) {
-        return opponents.stream().filter(s -> s.slug().equals(slug)).findFirst().orElse(null);
+        // адрес без учёта регистра: /opponent/bim_tim и /opponent/BIM_TIM — одна страница
+        return slug == null ? null
+                : opponents.stream().filter(s -> s.slug().equalsIgnoreCase(slug)).findFirst().orElse(null);
     }
 
     /** Команда, в которой играет account_id (в составе или запасным), или null. */

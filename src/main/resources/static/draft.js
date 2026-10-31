@@ -579,8 +579,15 @@
 
   $("opponent").innerHTML = OPPONENTS.map((o) => `<option value="${esc(o.href)}">${esc(o.label)}</option>`).join("");
   $("opponent").value = state.opponent;
+  /** Соперник — в адресе (?opponent=…): после F5 откроется тот же. */
+  const setOpponentInUrl = () => {
+    const u = new URL(location.href);
+    u.searchParams.set("opponent", state.opponent);
+    history.replaceState(null, "", u.pathname + u.search + location.hash);
+  };
   $("opponent").onchange = (e) => {
     state.opponent = e.target.value;
+    setOpponentInUrl();
     state.map = 1;
     editIndex = null;
     advice = null;
@@ -654,6 +661,11 @@
     save();
   }
   $("first").value = state.weFirst ? "us" : "them";
+  const wanted = new URLSearchParams(location.search).get("opponent");
+  if (wanted && wanted.toLowerCase() !== state.opponent.toLowerCase()) {
+    toast(`Соперник «${wanted}» не найден, открыт ${$("opponent").selectedOptions[0]?.textContent || state.opponent}`, false);
+  }
+  setOpponentInUrl();
   renderMaps();
   renderSearch();
   renderBoard();

@@ -34,6 +34,10 @@ public final class Models {
     public record Method(Page page) {
     }
 
+    /** Страница ошибки в стиле сайта: 404 и 500 вместо служебного текста. */
+    public record ErrorPage(Page page, String title, String message) {
+    }
+
     /** Страница входа: куда вернуть после входа и текст ошибки (или null). */
     public record Login(String next, String error) {
     }

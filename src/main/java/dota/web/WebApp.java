@@ -119,7 +119,24 @@ public class WebApp {
             String back = ctx.header("Referer");
             ctx.redirect(back == null ? "/" : back);
         });
-        app.exception(NotFoundResponse.class, (e, ctx) -> ctx.status(404).result("Не найдено: " + e.getMessage()));
+        app.exception(NotFoundResponse.class, (e, ctx) -> notFound(ctx, e.getMessage()));
+        app.error(404, ctx -> {
+            if (ctx.result() == null || ctx.result().isEmpty() || ctx.result().startsWith("Endpoint ")) {
+                notFound(ctx, "такой страницы нет");
+            }
+        });
+        app.exception(Exception.class, (e, ctx) -> {
+            System.err.printf("Ошибка на %s: %s%n", ctx.path(), e);
+            e.printStackTrace();
+            ctx.status(500);
+            if (ctx.path().startsWith("/api/")) {
+                ctx.json(Map.of("error", "ошибка на сервере: " + e.getClass().getSimpleName()));
+            } else {
+                render(ctx, "error.jte", new Models.ErrorPage(page("Ошибка", ""), "Что-то сломалось",
+                        "Сайт не смог показать эту страницу (" + e.getClass().getSimpleName() + "). Попробуйте обновить "
+                                + "страницу; если не поможет — сообщите, что делали, и время."));
+            }
+        });
         return app;
     }
 
@@ -206,8 +223,29 @@ public class WebApp {
                 site.ctx().ours.lineup(), http.queryParam("lineupError")));
     }
 
+    /** 404 страницей сайта (или JSON для /api) с кодировкой UTF-8, а не служебным текстом фреймворка. */
+    private void notFound(Context ctx, String what) {
+        ctx.status(404);
+        if (ctx.path().startsWith("/api/")) {
+            ctx.json(Map.of("error", "не найдено: " + what));
+            return;
+        }
+        render(ctx, "error.jte", new Models.ErrorPage(page("Не найдено", ""), "Не найдено", "Не нашёл: " + what + "."));
+    }
+
+    /** id игрока из адреса: число (account_id) или ник из конфига без учёта регистра; иначе 404, а не 500. */
+    private long playerId(String raw) {
+        if (raw != null && raw.matches("\\d{1,18}")) {
+            return Long.parseLong(raw);
+        }
+        return site.ctx().config.players().stream()
+                .filter(p -> p.nick().equalsIgnoreCase(raw == null ? "" : raw.trim()))
+                .map(dota.fetch.PlayerConfig.Player::accountId).findFirst()
+                .orElseThrow(() -> new NotFoundResponse("игрок «" + raw + "»"));
+    }
+
     private void player(Context http) {
-        long id = Long.parseLong(http.pathParam("id"));
+        long id = playerId(http.pathParam("id"));
         AnalysisContext c = site.ctx();
         Squad squad = c.squadOf(id);
         if (squad == null) {
@@ -250,7 +288,11 @@ public class WebApp {
     private void opponent(Context http) {
         Squad opp = site.ctx().opponent(http.pathParam("slug"));
         if (opp == null) {
-            throw new NotFoundResponse("соперник " + http.pathParam("slug"));
+            throw new NotFoundResponse("соперник «" + http.pathParam("slug") + "» (все соперники — в меню «Соперники»)");
+        }
+        if (!opp.slug().equals(http.pathParam("slug"))) {
+            http.redirect("/opponent/" + opp.slug());
+            return;
         }
         String plan = site.planFile(opp).map(this::markdown).orElse(null);
         render(http, "opponent.jte", new Models.OpponentPage(page(opp.team().name(), "opponents"), opp.slug(),
@@ -319,7 +361,7 @@ public class WebApp {
         AnalysisContext c = site.ctx();
         Squad next = site.nextOpponent();
         String requested = http.queryParam("opponent");
-        String opponent = requested != null && c.opponent(requested) != null ? requested
+        String opponent = c.opponent(requested) != null ? c.opponent(requested).slug()
                 : next != null ? next.slug() : c.opponents.isEmpty() ? "" : c.opponents.get(0).slug();
         List<Models.Link> opponents = c.opponents.stream()
                 .map(o -> new Models.Link(o.slug(), o.teamName())).toList();
@@ -333,7 +375,11 @@ public class WebApp {
         AnalysisContext c = site.ctx();
         String first = http.queryParamAsClass("h", String.class).getOrDefault("").trim();
         String second = http.queryParamAsClass("h2", String.class).getOrDefault("").trim();
-        int pos = http.queryParamAsClass("pos", Integer.class).getOrDefault(0);
+        // pos: 1..5 или «авто»; мусор в адресе — «авто» с пояснением, а не JSON-ошибка
+        String rawPos = http.queryParam("pos");
+        int pos = rawPos != null && rawPos.matches("[0-5]") ? Integer.parseInt(rawPos) : 0;
+        String posError = rawPos == null || rawPos.isEmpty() || rawPos.matches("[0-5]") ? null
+                : "Позиция «" + rawPos + "» — такой нет, показываю «авто».";
         List<Integer> enemies = new ArrayList<>();
         List<String> unknown = new ArrayList<>();
         for (String name : List.of(first, second)) {
@@ -347,7 +393,8 @@ public class WebApp {
                 enemies.add(id);
             }
         }
-        String error = unknown.isEmpty() ? null : "Не нашёл героя: " + String.join(", ", unknown);
+        String error = unknown.isEmpty() ? posError
+                : "Не нашёл героя: " + String.join(", ", unknown) + (posError == null ? "" : " " + posError);
         render(http, "counters.jte", new Models.CountersPage(page("Контрпики", "counters"), c.heroList(), first, second,
                 pos < 1 || pos > 5, dota.analysis.Counters.build(c, enemies, pos), error));
     }
@@ -373,7 +420,7 @@ public class WebApp {
 
     /** Карточка игрока для боковой панели драфта: чем играет сейчас и топ «играет лучше всего». */
     private void playerApi(Context http) {
-        long id = Long.parseLong(http.pathParam("id"));
+        long id = playerId(http.pathParam("id"));
         Squad squad = site.ctx().squadOf(id);
         if (squad == null) {
             throw new NotFoundResponse("игрок " + id);
@@ -505,6 +552,7 @@ public class WebApp {
     void render(Context http, String template, Object model) {
         StringOutput out = new StringOutput();
         templates.render(template, model, out);
-        http.html(out.toString());
+        // кодировка явно: иначе браузер может показать русский текст кракозябрами (так было на 404)
+        http.contentType("text/html; charset=utf-8").result(out.toString());
     }
 }

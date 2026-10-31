@@ -351,3 +351,4 @@ button.reason.more { border: 0; cursor: pointer; font: inherit; font-size: 11px;
 .hero-input .suggest { position: absolute; left: 0; right: 0; top: 100%; z-index: 20; background: var(--panel);
   border: 1px solid var(--line); border-radius: 8px; padding: 4px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35); }
 .hero-input .suggest:empty { display: none; }
+.error-page { max-width: 640px; margin: 40px auto; }
