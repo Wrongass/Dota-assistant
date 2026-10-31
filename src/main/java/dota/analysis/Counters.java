@@ -33,6 +33,8 @@ public final class Counters {
     static final int MIN_POOL_GAMES = 5;
     /** Вес преимущества по игре в оценке героя из пула (на линии ±0,3 — обычный разброс, по игре ±0,05). */
     static final double GAME_WEIGHT = 3;
+    /** Вес личного винрейта игрока на герое (сглаженного): −24% от 50% дают −0,24. */
+    static final double PERSONAL_WEIGHT = 1;
 
     private Counters() {
     }
@@ -134,8 +136,15 @@ public final class Counters {
             if (hero.laneMatches() == 0 && Double.isNaN(hero.gameAdv())) {
                 continue;
             }
-            double score = (hero.laneMatches() == 0 ? 0 : hero.laneAdv())
-                    + GAME_WEIGHT * (Double.isNaN(hero.gameAdv()) ? 0 : hero.gameAdv())
+            double lane = hero.laneMatches() == 0 ? 0 : hero.laneAdv();
+            double game = Double.isNaN(hero.gameAdv()) ? 0 : hero.gameAdv();
+            // герой не отвечает ни на линии, ни по игре — не совет, даже если игрок на нём много играет
+            if (lane < 0 && game < 0) {
+                continue;
+            }
+            // личный винрейт игрока на герое, сглаженный к 50% весом 20 игр: 26% на 53 играх — сильный минус
+            double personal = Scoring.shrink(line.wins, line.games, 0.5, 20) - 0.5;
+            double score = lane + GAME_WEIGHT * game + PERSONAL_WEIGHT * personal
                     + 0.1 * Math.min(1, line.games / 30.0) + 0.05 * Math.min(1, recent60 / 5.0);
             result.add(new Pool(hero, line.games, line.winrate(), recent60, score));
         }
