@@ -4,7 +4,8 @@
 !{var m = model.meta();}
 @template.layout(page = model.page(), content = @`
     <h1>Мета патча ${m.patch()}</h1>
-    <p class="muted small">Данные на ${m.today()}. Винрейты в пабах — на рангах <b>${m.rangeName()}</b> (медиана нашей команды ±1).
+    <p class="muted small">Выборка меты скачана ${model.page().metaFetched()}: синергии и контрпики — по матчам Legend+ примерно за
+        15 часов до этого момента. Винрейты в пабах — на рангах <b>${m.rangeName()}</b> (медиана нашей команды ±1).
         Про-сцена — ${m.proMatches()} матчей в выборке OpenDota.
         <input type="search" id="hero-filter" placeholder="Найти героя: Sniper, снайп, вк…" style="margin-left:8px"></p>
     <p class="muted small" id="filter-note" hidden></p>
