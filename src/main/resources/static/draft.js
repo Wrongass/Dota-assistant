@@ -9,51 +9,7 @@
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
-  // Сокращения, которыми героев называют в игре (дополняются инициалами: WK, OD, PA…).
-  // Ищутся и по началу: «кунк» → Kunkka.
-  const SLANG = {
-    "вк": "Wraith King", "ам": "Anti-Mage", "пудж": "Pudge", "инвокер": "Invoker", "инвок": "Invoker",
-    "леш": "Leshrac", "лешрак": "Leshrac", "од": "Outworld Devourer", "лич": "Lich", "лион": "Lion",
-    "лина": "Lina", "вайпер": "Viper", "тини": "Tiny", "свен": "Sven", "сларк": "Slark",
-    "кунка": "Kunkka", "куннка": "Kunkka", "варлок": "Warlock", "ворлок": "Warlock", "рубик": "Rubick",
-    "энигма": "Enigma", "дб": "Dawnbreaker", "даунбрейкер": "Dawnbreaker", "огр": "Ogre Magi",
-    "кентавр": "Centaur Warrunner", "цм": "Crystal Maiden", "см": "Crystal Maiden", "вс": "Vengeful Spirit",
-    "венга": "Vengeful Spirit", "грим": "Grimstroke", "гримстрок": "Grimstroke", "дизраптор": "Disruptor",
-    "никс": "Nyx Assassin", "сб": "Spirit Breaker", "бара": "Spirit Breaker", "дк": "Dragon Knight",
-    "некр": "Necrophos", "некрофос": "Necrophos", "войд": "Faceless Void", "фв": "Faceless Void",
-    "пл": "Phantom Lancer", "па": "Phantom Assassin", "сф": "Shadow Fiend", "шторм": "Storm Spirit",
-    "эмбер": "Ember Spirit", "котл": "Keeper of the Light", "котел": "Keeper of the Light", "бх": "Bounty Hunter",
-    "ww": "Winter Wyvern", "вивер": "Winter Wyvern", "виверна": "Winter Wyvern", "андерлорд": "Underlord",
-    "андер": "Underlord", "дроу": "Drow Ranger", "джагер": "Juggernaut", "джаг": "Juggernaut",
-    "джагернаут": "Juggernaut", "ведьмак": "Witch Doctor", "вд": "Witch Doctor", "шаман": "Shadow Shaman",
-    "раста": "Shadow Shaman", "акс": "Axe", "мипо": "Meepo", "тид": "Tidehunter", "тайд": "Tidehunter",
-    "тайдхантер": "Tidehunter", "хускар": "Huskar", "луна": "Luna", "мирана": "Mirana", "уилоу": "Dark Willow",
-    "вилоу": "Dark Willow", "худ": "Hoodwink", "худвинк": "Hoodwink", "джакиро": "Jakiro", "абаддон": "Abaddon",
-    "аба": "Abaddon", "омни": "Omniknight", "клинкз": "Clinkz", "санд": "Sand King", "ск": "Sand King",
-    "легионка": "Legion Commander", "лц": "Legion Commander", "найт": "Night Stalker", "нс": "Night Stalker",
-    "спектра": "Spectre", "спектр": "Spectre", "вр": "Windranger", "виндра": "Windranger",
-    "виндрейнджер": "Windranger", "слардар": "Slardar", "разор": "Razor", "бист": "Beastmaster",
-    "бистмастер": "Beastmaster", "снайпер": "Sniper", "тимбер": "Timbersaw", "лайфстилер": "Lifestealer",
-    "гуль": "Lifestealer", "наикс": "Lifestealer", "силенсер": "Silencer", "сайленсер": "Silencer",
-    "текис": "Techies", "течис": "Techies", "квопа": "Queen of Pain", "квоп": "Queen of Pain",
-    "королева": "Queen of Pain", "рингмастер": "Ring Master", "феникс": "Phoenix", "веном": "Venomancer",
-    "веномансер": "Venomancer", "снапфаер": "Snapfire", "снеп": "Snapfire", "ларго": "Largo", "энча": "Enchantress",
-    "чен": "Chen", "зевс": "Zeus", "пак": "Puck", "пук": "Puck", "морф": "Morphling", "монки": "Monkey King",
-    "мк": "Monkey King", "урса": "Ursa", "медуза": "Medusa", "дарк сир": "Dark Seer", "дс": "Dark Seer",
-    "доом": "Doom", "дум": "Doom", "марс": "Mars", "брю": "Brewmaster",
-    "антимаг": "Anti-Mage", "эс": "Earth Spirit", "эшейкер": "Earthshaker", "шейкер": "Earthshaker",
-    "ио": "Io", "висп": "Io", "оракл": "Oracle", "дазл": "Dazzle", "бейн": "Bane", "варик": "Warlock",
-  };
-  const NAME_TO_ID = new Map(HEROES.map((h) => [h.name.toLowerCase(), h.id]));
-  const ALIASES = new Map();
-  for (const h of HEROES) {
-    const words = h.name.toLowerCase().replace(/'/g, "").split(/[\s-]+/);
-    if (words.length > 1) ALIASES.set(words.map((w) => w[0]).join(""), h.id);
-  }
-  for (const [alias, name] of Object.entries(SLANG)) {
-    const id = NAME_TO_ID.get(name.toLowerCase());
-    if (id) ALIASES.set(alias, id);
-  }
+  const SEARCH = heroSearch(HEROES); // общий поиск: имя, начало, инициалы, сленг, раскладка (heroes.js)
   const ROSTERS = JSON.parse(root.dataset.rosters); // {"ours": [...], "<slug>": [...]}
 
   // ------------------------------------------------------------ состояние
@@ -244,39 +200,36 @@
   });
 
   // ------------------------------------------------------------ поиск
+  /** Герои, которых сейчас советуют (на коротком вводе — выше в подсказке). */
+  function advised() {
+    const a = advice;
+    if (!a) return new Set();
+    return new Set([...a.pickSuggestions, ...a.banSuggestions, ...a.theirNextPicks].map((r) => r.heroId));
+  }
   function search(q) {
-    q = q.trim().toLowerCase().replace(/'/g, "");
-    if (!q) return [];
     const taken = used();
     const current = editIndex !== null ? state.heroes[editIndex] : -1;
-    const exact = ALIASES.get(q);
-    const prefixAliases = new Set();
-    if (q.length >= 2) {
-      for (const [alias, id] of ALIASES) if (alias.startsWith(q)) prefixAliases.add(id);
-    }
-    const scored = [];
-    for (const h of HEROES) {
-      if (taken.has(h.id) && h.id !== current) continue;
-      const n = h.name.toLowerCase().replace(/'/g, "");
-      let score = -1;
-      if (h.id === exact || n === q) score = 0;
-      else if (n.startsWith(q)) score = 1;
-      else if (prefixAliases.has(h.id)) score = 1.5;
-      else if (n.split(/[\s-]+/).some((w) => w.startsWith(q))) score = 2;
-      else if (n.includes(q)) score = 3;
-      if (score >= 0) scored.push([score, h]);
-    }
-    return scored.sort((a, b) => a[0] - b[0] || a[1].name.localeCompare(b[1].name)).map((x) => x[1]);
+    if (current > 0) taken.delete(current);
+    return SEARCH.find(q, { exclude: taken, boost: advised() });
+  }
+  /** Уже внесённые герои, подходящие под ввод: показываем серой строкой «уже взят (ход N)». */
+  function takenMatches(q) {
+    const taken = used();
+    return SEARCH.find(q).filter((h) => taken.has(h.id)).slice(0, 2);
   }
   function renderSearch() {
-    const found = search($("search").value).slice(0, 6);
+    const q = $("search").value;
+    const found = search(q).slice(0, 6);
     if (selected >= found.length) selected = 0;
+    const gone = q.trim() ? takenMatches(q) : [];
+    const note = (h) => { const i = state.heroes.indexOf(h.id); return `${slot(i).pick ? "взят" : "забанен"} (ход ${i + 1})`; };
     $("suggest").innerHTML = found.map((h, i) =>
       `<li class="${i === selected ? "sel" : ""}" data-id="${h.id}">${icon(h.id)} ${esc(h.name)}${freeOwners(h.id)
-        ? ` <span class="muted small">наш: ${esc(freeOwners(h.id).join(", "))}</span>` : ""}</li>`).join("");
-    const q = $("search").value.trim();
+        ? ` <span class="muted small">наш: ${esc(freeOwners(h.id).join(", "))}</span>` : ""}</li>`).join("")
+      + gone.map((h) => `<li class="taken">${icon(h.id)} ${esc(h.name)} <span class="small">уже ${note(h)}</span></li>`).join("")
+      + (q.trim() && !found.length && !gone.length ? `<li class="none">Не нашёл героя «${esc(q.trim())}»</li>` : "");
     document.querySelectorAll("#grid .hero-tile").forEach((b) => {
-      b.classList.toggle("match", q !== "" && found.some((h) => h.id === Number(b.dataset.id)));
+      b.classList.toggle("match", q.trim() !== "" && found.some((h) => h.id === Number(b.dataset.id)));
     });
   }
   // pendingWarn не сбрасываем: повторный ввод того же героя после предупреждения — тоже подтверждение

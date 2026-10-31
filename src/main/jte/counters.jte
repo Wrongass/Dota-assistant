@@ -5,8 +5,8 @@
 @template.layout(page = model.page(), content = @`
     <h1>Контрпики</h1>
     <form class="panel counters-form" method="get" action="/counters">
-        <label>Их герой <input type="text" name="h" list="hero-names" value="${model.first()}" placeholder="Viper" autocomplete="off" autofocus></label>
-        <label>и второй на линии <input type="text" name="h2" list="hero-names" value="${model.second()}" placeholder="необязательно" autocomplete="off"></label>
+        <label>Их герой <span class="hero-input"><input type="text" name="h" value="${model.first()}" placeholder="например, Viper или вайпер" autocomplete="off" autofocus><ul class="suggest"></ul></span></label>
+        <label>и второй на линии <span class="hero-input"><input type="text" name="h2" value="${model.second()}" placeholder="необязательно" autocomplete="off"><ul class="suggest"></ul></span></label>
         <label>Наша позиция
             <select name="pos">
                 <option value="0" selected="${model.posAuto()}">авто</option>
@@ -16,9 +16,6 @@
             </select>
         </label>
         <button>Показать</button>
-        <datalist id="hero-names">
-            @for(var h : model.heroes())<option value="${h.name()}"></option>@endfor
-        </datalist>
         <p class="muted small">Кто стоит против этих героев на линии вашей позиции и кто сильнее их по игре. Два героя —
             например, их хард и саппорт: линия считается против обоих. «Авто» — позиция, которая обычно стоит против
             первого героя (мид против мида, наша сложная против их керри, наша лёгкая против их оффлейна).</p>
@@ -98,4 +95,4 @@
             </div>
         </div>
     @endif
-`)
+`, scripts = "<script src=\"/static/counters.js\"></script>")
