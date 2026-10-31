@@ -28,9 +28,11 @@ public final class AnalysisContext {
     public final LocalDate date;
     public final Instant loadedAt = Instant.now();
     public final Path dataDir;
+    /** Игроки из конфига, чьих данных ещё нет в data/ (новые игроки до первой выгрузки): их пропускаем. */
+    private final List<String> missingData;
 
     private AnalysisContext(PlayerConfig config, Meta meta, League league, LaneStats lanes, Squad ours,
-                            List<Squad> opponents, LocalDate date, Path dataDir) {
+                            List<Squad> opponents, LocalDate date, Path dataDir, List<String> missingData) {
         this.config = config;
         this.meta = meta;
         this.league = league;
@@ -39,6 +41,12 @@ public final class AnalysisContext {
         this.opponents = opponents;
         this.date = date;
         this.dataDir = dataDir;
+        this.missingData = List.copyOf(missingData);
+    }
+
+    /** «ник (команда)» игроков без скачанных данных — для предупреждения на сайте. */
+    public List<String> missingData() {
+        return missingData;
     }
 
     public static AnalysisContext load(Path configPath, Path dataDir, LocalDate date) throws IOException {
@@ -55,17 +63,18 @@ public final class AnalysisContext {
         Instant now = date.atStartOfDay(ZoneOffset.UTC).toInstant();
         String today = date.toString();
 
-        Squad ours = squad(dataDir, config, null, config.ourTeam(), true, meta, league, now, today, lineups);
+        List<String> missing = new ArrayList<>();
+        Squad ours = squad(dataDir, config, null, config.ourTeam(), true, meta, league, now, today, lineups, missing);
         List<Squad> opponents = new ArrayList<>();
         if (config.league() != null) {
             for (PlayerConfig.TeamInfo t : config.league().opponentsOrEmpty()) {
-                Squad s = squad(dataDir, config, t.name(), t, false, meta, league, now, today, lineups);
+                Squad s = squad(dataDir, config, t.name(), t, false, meta, league, now, today, lineups, missing);
                 if (!s.players.isEmpty()) {
                     opponents.add(s);
                 }
             }
         }
-        return new AnalysisContext(config, meta, league, LaneStats.load(dataDir), ours, opponents, date, dataDir);
+        return new AnalysisContext(config, meta, league, LaneStats.load(dataDir), ours, opponents, date, dataDir, missing);
     }
 
     public static AnalysisContext load(Path configPath, Path dataDir) throws IOException {
@@ -77,11 +86,14 @@ public final class AnalysisContext {
      * сайте (если все его игроки есть в конфиге этой команды), иначе игроки без reserve; остальные — запасные (bench).
      */
     private static Squad squad(Path dataDir, PlayerConfig config, String teamName, PlayerConfig.TeamInfo team,
-                               boolean ours, Meta meta, League league, Instant now, String today, Lineups lineups)
-            throws IOException {
+                               boolean ours, Meta meta, League league, Instant now, String today, Lineups lineups,
+                               List<String> missing) throws IOException {
+        // игрок есть в конфиге, а данных ещё нет (на сервере новый конфиг приходит с деплоем, данные — со следующей
+        // выгрузкой): пропускаем его, иначе сайт не запустится
         List<PlayerConfig.Player> all = config.players().stream()
                 .filter(p -> teamName == null ? p.team() == PlayerConfig.Team.OUR
                         : p.team() == PlayerConfig.Team.OPP && teamName.equals(p.teamName()))
+                .filter(p -> hasData(dataDir, p, missing))
                 .toList();
         Set<Long> ids = all.stream().map(PlayerConfig.Player::accountId).collect(Collectors.toSet());
         java.util.Map<Integer, Long> chosen = team == null ? null : lineups.of(team.name());
@@ -112,6 +124,16 @@ public final class AnalysisContext {
         }
         squad.lineupChanged = changed;
         return squad;
+    }
+
+    private static boolean hasData(Path dataDir, PlayerConfig.Player p, List<String> missing) {
+        Path dir = dataDir.resolve("raw").resolve(p.team().dir()).resolve(String.valueOf(p.accountId()));
+        boolean ok = java.nio.file.Files.isRegularFile(dir.resolve("profile.json"))
+                && java.nio.file.Files.isRegularFile(dir.resolve("matches.json"));
+        if (!ok) {
+            missing.add(p.nick() + " (" + (p.teamName() == null ? "наша команда" : p.teamName()) + ")");
+        }
+        return ok;
     }
 
     public String patch() {
