@@ -17,6 +17,8 @@ services:
       - ./data:/app/data:ro
       - ./config:/app/config:ro
       - ./analysis:/app/analysis:ro
+      # состав на игру, выбранный на сайте (state/lineups.json): единственное, что сайт пишет на диск
+      - ./state:/app/state
     restart: unless-stopped
 
   # HTTPS-прокси с автоматическим сертификатом Let's Encrypt. Нужны домен ($DOMAIN) и свободные порты 80/443.
@@ -46,6 +48,7 @@ services:
     entrypoint: ["java", "-Dstdout.encoding=UTF-8", "-cp", "/app/lib/*", "dota.fetch.Main"]
     environment:
       - OPENDOTA_API_KEY
+      - STRATZ_TOKEN
     volumes:
       - ./data:/app/data
       - ./config:/app/config:ro

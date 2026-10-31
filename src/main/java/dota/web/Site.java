@@ -3,6 +3,7 @@ package dota.web;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dota.analysis.AnalysisContext;
+import dota.analysis.Lineups;
 import dota.analysis.Squad;
 import dota.analysis.Views;
 import dota.fetch.PlayerConfig;
@@ -29,6 +30,9 @@ final class Site {
     final Path configPath;
     final Path dataDir;
     final Path analysisDir;
+    /** Файл состава на игру (state/lineups.json) или null — состав только по конфигу. */
+    final Path lineupsFile;
+    private volatile Lineups lineups = Lineups.none();
     private volatile AnalysisContext ctx;
     private volatile Status status;
 
@@ -36,16 +40,57 @@ final class Site {
     record Status(String patch, String playersFetched, String metaFetched, List<String> warnings) {
     }
 
+    /** Данные игрока старше стольких дней — предупреждение (перед игрой обычно обновляют). */
+    static final int STALE_DAYS = 3;
+
     Site(Path configPath, Path dataDir, Path analysisDir) {
+        this(configPath, dataDir, analysisDir, null);
+    }
+
+    Site(Path configPath, Path dataDir, Path analysisDir, Path lineupsFile) {
         this.configPath = configPath;
         this.dataDir = dataDir;
         this.analysisDir = analysisDir;
+        this.lineupsFile = lineupsFile;
     }
 
     synchronized void reload() throws IOException {
-        AnalysisContext fresh = AnalysisContext.load(configPath, dataDir);
+        if (lineupsFile != null) {
+            lineups = Lineups.load(lineupsFile);
+        }
+        AnalysisContext fresh = AnalysisContext.load(configPath, dataDir,
+                java.time.LocalDate.now(java.time.ZoneOffset.UTC), lineups);
         this.status = computeStatus(fresh);
         this.ctx = fresh;
+    }
+
+    /**
+     * Сохранить состав команды (позиция → account_id; null — вернуть состав по конфигу) и перечитать данные: состав
+     * сразу применяется на всех страницах и в драфте. Ошибка — IllegalArgumentException с текстом для пользователя.
+     */
+    synchronized void saveLineup(String team, java.util.Map<Integer, Long> lineup) throws IOException {
+        if (lineupsFile == null) {
+            throw new IllegalArgumentException("сайт запущен без файла состава (--state)");
+        }
+        Squad squad = ctx.squadNamed(team);
+        if (squad == null) {
+            throw new IllegalArgumentException("нет команды " + team);
+        }
+        if (lineup != null) {
+            java.util.Set<Long> known = new java.util.HashSet<>();
+            squad.lineup().players().forEach(p -> known.add(p.accountId()));
+            for (int pos = 1; pos <= 5; pos++) {
+                Long id = lineup.get(pos);
+                if (id == null || !known.contains(id)) {
+                    throw new IllegalArgumentException("позиция " + pos + ": выберите игрока команды");
+                }
+            }
+            if (lineup.values().stream().distinct().count() != 5) {
+                throw new IllegalArgumentException("один игрок стоит на двух позициях");
+            }
+        }
+        lineups = Lineups.load(lineupsFile).with(team, lineup);
+        reload();
     }
 
     AnalysisContext ctx() {
@@ -63,10 +108,28 @@ final class Site {
         return Files.exists(file) ? Optional.of(file) : Optional.empty();
     }
 
+    /** Следующий соперник и те, к кому готовимся дальше (league.prepare), без повторов. */
+    List<Squad> upcoming() {
+        PlayerConfig.League league = ctx.config.league();
+        List<Squad> result = new java.util.ArrayList<>();
+        Squad next = nextOpponent();
+        if (next != null) {
+            result.add(next);
+        }
+        if (league != null) {
+            for (String name : league.prepareOrEmpty()) {
+                ctx.opponents.stream().filter(s -> s.team().name().equals(name) && !result.contains(s))
+                        .findFirst().ifPresent(result::add);
+            }
+        }
+        return result;
+    }
+
+    /** Следующий соперник из league.next_opponent или null, если он пока неизвестен (драфт тогда берёт первого). */
     Squad nextOpponent() {
         PlayerConfig.League league = ctx.config.league();
         if (league == null || league.nextOpponent() == null) {
-            return ctx.opponents.isEmpty() ? null : ctx.opponents.get(0);
+            return null;
         }
         return ctx.opponents.stream().filter(s -> s.team().name().equals(league.nextOpponent()))
                 .findFirst().orElse(null);
@@ -89,16 +152,28 @@ final class Site {
 
     private Status computeStatus(AnalysisContext c) {
         List<String> warnings = new ArrayList<>();
-        Instant playersAt = Instant.EPOCH;
+        // в шапке — самые старые данные игроков: выгрузка без --refresh не перекачивает уже скачанных, и по самому
+        // свежему файлу (новые игроки) устаревшие данные не видно
+        Instant playersAt = null;
+        Instant staleBefore = Instant.now().minus(java.time.Duration.ofDays(STALE_DAYS));
+        List<String> stale = new ArrayList<>();
         for (PlayerConfig.Player p : c.config.players()) {
             Path profile = dataDir.resolve("raw").resolve(p.team().dir()).resolve(String.valueOf(p.accountId()))
                     .resolve("profile.json");
             try {
                 Instant t = Files.getLastModifiedTime(profile).toInstant();
-                playersAt = t.isAfter(playersAt) ? t : playersAt;
+                playersAt = playersAt == null || t.isBefore(playersAt) ? t : playersAt;
+                if (t.isBefore(staleBefore)) {
+                    stale.add(p.nick());
+                }
             } catch (IOException e) {
                 warnings.add(p.nick() + ": нет данных — запустите ./gradlew run");
             }
+        }
+        if (!stale.isEmpty()) {
+            warnings.add("Данные игроков старше " + STALE_DAYS + " дней (самые старые от " + TIME.format(playersAt) + "): "
+                    + String.join(", ", stale) + ". Последние матчи, турнирные тоже, в статистике не видны. Обновите "
+                    + "выгрузку с --refresh: без него уже скачанные игроки не перекачиваются");
         }
         for (Views.RosterRow r : c.ours.roster().rows()) {
             if (r.personaName() != null && !r.personaName().equalsIgnoreCase(r.nick())) {
@@ -134,6 +209,6 @@ final class Site {
         } catch (Exception e) {
             warnings.add("Нет выборки меты (_sample.json) — синергии и контрпики могут отсутствовать");
         }
-        return new Status(c.patch(), playersAt == Instant.EPOCH ? "—" : TIME.format(playersAt), metaAt, warnings);
+        return new Status(c.patch(), playersAt == null ? "—" : TIME.format(playersAt), metaAt, warnings);
     }
 }

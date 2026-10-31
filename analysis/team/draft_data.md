@@ -1,16 +1,16 @@
 # Данные для драфта: Team Visual (Долг)
 
-Сгенерировано 2026-10-21, патч 7.41. Выводы — в [draft_plan.md](draft_plan.md).
+Сгенерировано 2026-11-01, патч 7.41. Выводы — в [draft_plan.md](draft_plan.md).
 
 ## Пулы по позициям (топ-6 по пригодности в патче)
 
 | Поз. | Игрок | Кандидаты (пригодность; ▲ — сильный в патче) |
 |---|---|---|
-| 1 | kren | Wraith King 75 ▲, Windranger 72, Dragon Knight 67 ▲, Vengeful Spirit 67 ▲, Sniper 65, Necrophos 64 |
-| 2 | Wrongass | Outworld Devourer 84 ▲, Dragon Knight 79 ▲, Leshrac 71 ▲, Necrophos 68, Viper 67, Slark 65 |
-| 3 | Артист | Enigma 83 ▲, Dawnbreaker 78, Wraith King 71 ▲, Spirit Breaker 70 ▲, Omniknight 67 ▲, Doom 65 |
-| 4 | Babayka | Grimstroke 78 ▲, Vengeful Spirit 70 ▲, Disruptor 67, Witch Doctor 64 ▲, Earthshaker 59, Nyx Assassin 59 ▲ |
-| 5 | Enaria | Lich 76 ▲, Lion 66, Witch Doctor 64 ▲, Crystal Maiden 63 ▲, Grimstroke 57, Silencer 57 |
+| 1 | kren | Wraith King 75 ▲, Windranger 74, Necrophos 71, Sniper 68, Sven 67 ▲, Dragon Knight 65 ▲ |
+| 2 | Wrongass | Outworld Devourer 85 ▲, Dragon Knight 78 ▲, Leshrac 71 ▲, Necrophos 70, Viper 67, Slark 65 |
+| 3 | Артист | Enigma 83 ▲, Dawnbreaker 77, Wraith King 71 ▲, Doom 71, Spirit Breaker 69 ▲, Omniknight 67 ▲ |
+| 4 | Babayka | Grimstroke 77 ▲, Vengeful Spirit 69 ▲, Disruptor 66, Witch Doctor 63 ▲, Earthshaker 59, Ogre Magi 59 |
+| 5 | Enaria | Lich 75 ▲, Lion 66, Witch Doctor 64 ▲, Crystal Maiden 63 ▲, Grimstroke 57, Silencer 56 |
 
 ## Связки внутри наших пулов
 
@@ -47,27 +47,27 @@
 
 ## Против кого мы проигрываем чаще всего
 
-Все матчи 5 игроков за 2 года (без турбо), герой во вражеской команде. Винрейт сглажен к нашему среднему (51.8%) весом 30 игр.
+Все матчи 5 игроков за 2 года (без турбо), герой во вражеской команде. Винрейт сглажен к нашему среднему (51.7%) весом 30 игр.
 
 | # | Герой соперника | Наш WR против | Игр | WR героя в пабах (Герой–Властелин) |
 |---|---|---|---|---|
-| 1 | Warlock | 42.4% | 115 | 49.8% |
-| 2 | Clinkz | 42.5% | 56 | 50.2% |
-| 3 | Muerta | 43.7% | 65 | 47.8% |
-| 4 | Earth Spirit | 43.9% | 51 | 49.6% |
-| 5 | Medusa | 44.8% | 94 | 48.9% |
-| 6 | Enigma | 46.1% | 47 | 51.1% |
+| 1 | Muerta | 42.5% | 63 | 47.8% |
+| 2 | Warlock | 42.6% | 112 | 49.8% |
+| 3 | Clinkz | 43.1% | 57 | 50.2% |
+| 4 | Earth Spirit | 43.3% | 52 | 49.6% |
+| 5 | Medusa | 44.3% | 93 | 48.9% |
+| 6 | Enigma | 45.5% | 48 | 51.1% |
 | 7 | Broodmother | 46.1% | 47 | 49.1% |
-| 8 | Outworld Devourer | 46.4% | 66 | 54.1% |
-| 9 | Meepo | 46.5% | 40 | 53.1% |
-| 10 | Anti-Mage | 46.7% | 211 | 51.3% |
-| 11 | Keeper of the Light | 46.9% | 67 | 49.4% |
-| 12 | Slark | 47.1% | 105 | 49.4% |
-| 13 | Weaver | 47.1% | 126 | 47.7% |
-| 14 | Juggernaut | 47.2% | 181 | 53.0% |
-| 15 | Vengeful Spirit | 47.5% | 129 | 52.6% |
+| 8 | Tidehunter | 46.2% | 116 | 49.2% |
+| 9 | Weaver | 46.4% | 124 | 47.7% |
+| 10 | Anti-Mage | 46.7% | 215 | 51.3% |
+| 11 | Vengeful Spirit | 46.8% | 127 | 52.6% |
+| 12 | Slark | 46.8% | 112 | 49.4% |
+| 13 | Outworld Devourer | 46.9% | 67 | 54.1% |
+| 14 | Meepo | 47.2% | 41 | 53.1% |
+| 15 | Juggernaut | 47.4% | 184 | 53.0% |
 
-**Против кого играем лучше всего:** Morphling 62.5%, Bristleback 61.5%, Monkey King 61.4%, Faceless Void 60.4%, Nature's Prophet 60.0%, Ember Spirit 59.5%, Drow Ranger 58.7%, Beastmaster 58.7%, Windranger 58.5%, Hoodwink 58.4%
+**Против кого играем лучше всего:** Morphling 62.7%, Bristleback 61.0%, Monkey King 60.6%, Nature's Prophet 60.4%, Faceless Void 60.2%, Bane 59.9%, Ember Spirit 59.8%, Hoodwink 59.6%, Kez 58.2%, Beastmaster 57.9%
 
 ## Кандидаты в баны
 
@@ -76,21 +76,21 @@
 
 | # | Герой | Оценка | Наш WR против | WR в пабах | Про пик+бан | Позиции |
 |---|---|---|---|---|---|---|
-| 1 | Earth Spirit | 0.82 | 43.9% (51) | 49.6% | 55.5% | 2 |
-| 2 | Clinkz | 0.74 | 42.5% (56) | 50.2% | 6.6% | 1 |
-| 3 | Warlock | 0.69 | 42.4% (115) | 49.8% | 3.9% | 4/5 |
-| 4 | Muerta | 0.66 | 43.7% (65) | 47.8% | 2.2% | 1 |
-| 5 | Anti-Mage | 0.65 | 46.7% (211) | 51.3% | 30.1% | 1 |
-| 6 | Juggernaut | 0.61 | 47.2% (181) | 53.0% | 3.9% | 1 |
-| 7 | Keeper of the Light | 0.61 | 46.9% (67) | 49.4% | 32.3% | 2/4 |
-| 8 | Meepo | 0.58 | 46.5% (40) | 53.1% | 2.2% | 1/2 |
-| 9 | Medusa | 0.56 | 44.8% (94) | 48.9% | 0.4% | 1 |
-| 10 | Winter Wyvern | 0.52 | 48.5% (101) | 49.7% | 50.7% | 4/5 |
-| 11 | Broodmother | 0.51 | 46.1% (47) | 49.1% | 0.9% | 1/2/3 |
-| 12 | Night Stalker | 0.49 | 48.2% (81) | 52.3% | 12.7% | 3 |
-| 13 | Tidehunter | 0.45 | 47.5% (110) | 49.2% | 9.2% | 3 |
-| 14 | Dazzle | 0.44 | 50.0% (107) | 51.3% | 36.7% | 4/5 |
-| 15 | Undying | 0.43 | 47.6% (133) | 49.9% | 6.6% | 3/4/5 |
+| 1 | Earth Spirit | 0.82 | 43.3% (52) | 49.6% | 55.5% | 2 |
+| 2 | Clinkz | 0.74 | 43.1% (57) | 50.2% | 6.6% | 1 |
+| 3 | Warlock | 0.69 | 42.6% (112) | 49.8% | 3.9% | 4/5 |
+| 4 | Muerta | 0.66 | 42.5% (63) | 47.8% | 2.2% | 1 |
+| 5 | Anti-Mage | 0.65 | 46.7% (215) | 51.3% | 30.1% | 1 |
+| 6 | Nyx Assassin | 0.60 | 47.8% (82) | 52.5% | 17.0% | 4/5 |
+| 7 | Juggernaut | 0.60 | 47.4% (184) | 53.0% | 3.9% | 1 |
+| 8 | Medusa | 0.59 | 44.3% (93) | 48.9% | 0.4% | 1 |
+| 9 | Keeper of the Light | 0.58 | 47.5% (68) | 49.4% | 32.3% | 2/4 |
+| 10 | Tidehunter | 0.53 | 46.2% (116) | 49.2% | 9.2% | 3 |
+| 11 | Meepo | 0.53 | 47.2% (41) | 53.1% | 2.2% | 1/2 |
+| 12 | Winter Wyvern | 0.51 | 48.5% (105) | 49.7% | 50.7% | 4/5 |
+| 13 | Broodmother | 0.51 | 46.1% (47) | 49.1% | 0.9% | 1/2/3 |
+| 14 | Night Stalker | 0.46 | 48.7% (82) | 52.3% | 12.7% | 3 |
+| 15 | Rubick | 0.43 | 49.2% (272) | 49.6% | 33.2% | 4/5 |
 
 ## Чем контрят наших лучших героев
 
@@ -100,7 +100,7 @@
 |---|---|---|
 | kren | Wraith King | Phantom Lancer +5.8%, Anti-Mage +3.3%, Venomancer +2.9%, Undying +2.8% |
 | kren | Windranger | Phantom Lancer +5.0%, Bristleback +4.7%, Bane +4.6%, Wraith King +4.6% |
-| kren | Dragon Knight | Visage +4.3%, Viper +3.7%, Necrophos +3.6%, Bloodseeker +3.3% |
+| kren | Necrophos | Ancient Apparition +6.5%, Pugna +6.2%, Leshrac +5.6%, Enigma +5.3% |
 | Wrongass | Outworld Devourer | Nyx Assassin +6.4%, Visage +4.3%, Phantom Lancer +3.6%, Grimstroke +2.6% |
 | Wrongass | Dragon Knight | Visage +4.3%, Viper +3.7%, Necrophos +3.6%, Bloodseeker +3.3% |
 | Wrongass | Leshrac | Silencer +5.7%, Hoodwink +3.9%, Skywrath Mage +3.9%, Night Stalker +2.8% |

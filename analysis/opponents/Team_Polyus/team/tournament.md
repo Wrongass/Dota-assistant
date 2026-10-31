@@ -1,6 +1,6 @@
 # Турнир: Team Polyus (НИИ Полюс им. М.Ф. Стельмаха)
 
-Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 3, побед: 1. Переигровки (пустая статистика) не учитываются.
+Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 6, побед: 2. Переигровки (пустая статистика) не учитываются.
 
 ## 2026-10-10 14:31 UTC — против Team Visual: поражение
 
@@ -56,12 +56,66 @@ Dire, 35 мин, [OpenDota](https://www.opendota.com/matches/9049021074), [Dotab
 
 b Techies → b Hoodwink → **b Rubick** → **b Outworld Devourer** → b Undying → **b Brewmaster** → **b Doom** → P Dragon Knight → **P Ogre Magi** → b Lina → b Sniper → **b Nyx Assassin** → **P Necrophos** → P Windranger → P Dark Willow → **P Ring Master** → **P Tiny** → P Huskar → b Viper → **b Muerta** → b Timbersaw → **b Wraith King** → P Slardar → **P Queen of Pain**
 
+## 2026-10-23 16:10 UTC — против UPPO: поражение
+
+Dire, 53 мин, [OpenDota](https://www.opendota.com/matches/9058237205), [Dotabuff](https://ru.dotabuff.com/matches/9058237205)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| Unlearnable | Ursa | safe | 653 | 15/10/15 |
+| ryota | Doom | off | 738 | 18/7/19 |
+| ГYYYYYСЬ | Ogre Magi | safe | 467 | 7/5/27 |
+| Sladkiy_arbyzik | Techies | off | 345 | 5/13/25 |
+| татарский стиль | Death Prophet | mid | 436 | 6/6/24 |
+
+Соперник: Largo (Kaiju), Lifestealer (Togo), Lina (Sacred), Ancient Apparition (Nate), Legion Commander (Odar.sp)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+**b Outworld Devourer** → **b Brewmaster** → b Necrophos → b Wraith King → **b Rubick** → b Dawnbreaker → b Juggernaut → **P Death Prophet** → P Ancient Apparition → **b Luna** → **b Faceless Void** → b Jakiro → P Lina → **P Techies** → **P Ogre Magi** → P Largo → P Lifestealer → **P Doom** → **b Nyx Assassin** → b Sven → **b Timbersaw** → b Sniper → **P Ursa** → P Legion Commander
+
+## 2026-10-23 17:30 UTC — против UPPO: поражение
+
+Dire, 47 мин, [OpenDota](https://www.opendota.com/matches/9058372468), [Dotabuff](https://ru.dotabuff.com/matches/9058372468)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| Unlearnable | Phantom Assassin | safe | 665 | 7/9/12 |
+| ryota | Lion | mid | 566 | 14/10/5 |
+| ГYYYYYСЬ | Witch Doctor | safe | 297 | 8/8/12 |
+| Sladkiy_arbyzik | Techies | off | 295 | 1/12/19 |
+| татарский стиль | Axe | off | 374 | 6/15/11 |
+
+Соперник: Shadow Demon (Kaiju), Luna (Togo), Lina (Sacred), Kunkka (Odar.sp), Hoodwink (Nate)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+b Necrophos → b Doom → **b Outworld Devourer** → **b Brewmaster** → b Wraith King → **b Rubick** → **b Dragon Knight** → P Luna → **P Lion** → b Juggernaut → b Jakiro → **b Undying** → **P Techies** → P Hoodwink → P Lina → **P Witch Doctor** → **P Axe** → P Shadow Demon → b Lifestealer → **b Centaur Warrunner** → b Sven → **b Legion Commander** → P Kunkka → **P Phantom Assassin**
+
+## 2026-10-31 08:28 UTC — против ggsel: победа
+
+Radiant, 65 мин, [OpenDota](https://www.opendota.com/matches/9069627947), [Dotabuff](https://ru.dotabuff.com/matches/9069627947)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| Unlearnable | Wraith King | safe | 605 | 6/9/20 |
+| ryota | Queen of Pain | mid | 785 | 22/10/12 |
+| татарский стиль | Death Prophet | off | 394 | 3/13/23 |
+| Sladkiy_arbyzik | Ring Master | off | 271 | 1/14/19 |
+| ГYYYYYСЬ | Ogre Magi | safe | 309 | 7/12/24 |
+
+Соперник: Lifestealer (Nynge), Ember Spirit (Caraxes), Dark Willow (montekri), Dark Seer (XANDR), Spirit Breaker (IRD)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+b Techies → b Hoodwink → **b Rubick** → **b Dragon Knight** → b Witch Doctor → **b Windranger** → **b Outworld Devourer** → P Dark Willow → **P Wraith King** → b Necrophos → b Lina → **b Pangolier** → **P Ogre Magi** → P Spirit Breaker → P Dark Seer → **P Ring Master** → **P Death Prophet** → P Ember Spirit → b Sniper → **b Luna** → b Viper → **b Sven** → P Lifestealer → **P Queen of Pain**
+
 ## Сводка
 
-**Пики команды** (в скобках — победы): Underlord ×2 (0), Abaddon (0), Drow Ranger (0), Hoodwink (0), Jakiro (0), Juggernaut (0), Lina (0), Lion (0), Necrophos (1), Ogre Magi (1), Queen of Pain (1), Ring Master (1), Tiny (1), Windranger (0)
+**Пики команды** (в скобках — победы): Ogre Magi ×3 (2), Death Prophet ×2 (1), Lion ×2 (0), Queen of Pain ×2 (2), Ring Master ×2 (2), Techies ×2 (0), Underlord ×2 (0), Abaddon (0), Axe (0), Doom (0), Drow Ranger (0), Hoodwink (0), Jakiro (0), Juggernaut (0), Lina (0), Necrophos (1), Phantom Assassin (0), Tiny (1), Ursa (0), Windranger (0), Witch Doctor (0), Wraith King (1)
 
-**Баны команды:** Outworld Devourer ×3, Dawnbreaker ×2, Doom ×2, Lone Druid ×2, Axe, Brewmaster, Centaur Warrunner, Juggernaut, Lifestealer, Mars, Muerta, Night Stalker, Nyx Assassin, Rubick, Snapfire, Wraith King
+**Баны команды:** Outworld Devourer ×6, Rubick ×4, Brewmaster ×3, Centaur Warrunner ×2, Dawnbreaker ×2, Doom ×2, Dragon Knight ×2, Lone Druid ×2, Luna ×2, Nyx Assassin ×2, Axe, Faceless Void, Juggernaut, Legion Commander, Lifestealer, Mars, Muerta, Night Stalker, Pangolier, Snapfire, Sven, Timbersaw, Undying, Windranger, Wraith King
 
-**Банят против команды** (чего боятся соперники): Sniper ×3, Undying ×3, Lina ×2, Winter Wyvern ×2, Bounty Hunter, Drow Ranger, Hoodwink, Necrophos, Phantom Lancer, Queen of Pain, Slark, Techies, Timbersaw, Viper
+**Банят против команды** (чего боятся соперники): Sniper ×5, Necrophos ×4, Lina ×3, Undying ×3, Hoodwink ×2, Jakiro ×2, Juggernaut ×2, Sven ×2, Techies ×2, Viper ×2, Winter Wyvern ×2, Wraith King ×2, Bounty Hunter, Dawnbreaker, Doom, Drow Ranger, Lifestealer, Phantom Lancer, Queen of Pain, Slark, Timbersaw, Witch Doctor
 
-**Пики соперников** (в скобках — их победы): Lich ×2 (2), Vengeful Spirit ×2 (2), Wraith King ×2 (2), Centaur Warrunner (1), Dark Willow (0), Dragon Knight (0), Huskar (0), Ogre Magi (1), Slardar (0), Tiny (1), Viper (1), Windranger (0)
+**Пики соперников** (в скобках — их победы): Dark Willow ×2 (0), Lich ×2 (2), Lifestealer ×2 (1), Lina ×2 (2), Vengeful Spirit ×2 (2), Wraith King ×2 (2), Ancient Apparition (1), Centaur Warrunner (1), Dark Seer (0), Dragon Knight (0), Ember Spirit (0), Hoodwink (1), Huskar (0), Kunkka (1), Largo (1), Legion Commander (1), Luna (1), Ogre Magi (1), Shadow Demon (1), Slardar (0), Spirit Breaker (0), Tiny (1), Viper (1), Windranger (0)

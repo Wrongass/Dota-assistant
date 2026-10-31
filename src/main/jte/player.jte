@@ -5,17 +5,18 @@
 @template.layout(page = model.page(), content = @`
     <h1>Позиция ${c.pos()} — ${c.nick()} <span class="muted small"><a href="${model.teamHref()}">${model.teamName()}</a></span></h1>
     <div class="panel">
-        <p>Steam: <b>${c.personaName()}</b>, account_id ${c.accountId()} ·
-            <a href="https://www.opendota.com/players/${c.accountId()}" target="_blank">OpenDota</a> ·
-            <a href="https://ru.dotabuff.com/players/${c.accountId()}" target="_blank">Dotabuff</a></p>
-        <p>Ранг: <b>${Fmt.rank(c.rankTier())}</b>, оценка MMR ${Fmt.num(c.mmr())}</p>
+        <p>Steam: <b>${c.personaName()}</b>, account_id ${c.accountId()} · @template.tag.profiles(accountId = c.accountId())</p>
+        <p>Ранг: @template.tag.rank(rankTier = c.rankTier()) <b>${Fmt.rank(c.rankTier())}</b>, оценка MMR ${Fmt.num(c.mmr())}</p>
         <p>Матчей (без турбо): всего ${c.totalGames()}, за год ${c.yearGames()}, в патче ${c.patch()} — ${c.patchGames()}
             (WR ${Fmt.ratio(c.patchWins(), c.patchGames())}); Captains Mode: ${c.cmGames()}</p>
         @if(c.note() != null)<p>Роль: ${c.note()}</p>@endif
         <p class="muted small">Мета для этого игрока считается на рангах <b>${c.rangeName()}</b>. <a href="/method">Как считаются оценки</a></p>
     </div>
 
-    <h2>Топ-${c.best().size()} героев, на которых играет лучше всего</h2>
+    <h2>Чем играет сейчас: 14 дней и 2 месяца</h2>
+    @template.tag.form(form = c.form())
+
+    <h2>Топ-${c.best().size()} героев, на которых играет лучше всего <span class="muted small">— «всегда может достать»</span></h2>
     <div class="panel table-wrap">
         <table class="sortable">
             <thead><tr><th>#</th><th>Герой</th><th class="num">Умение</th><th>Игр всего / год / патч</th><th class="num">WR всего</th>

@@ -46,6 +46,17 @@ final class PlayerStats {
         }
     }
 
+    /**
+     * Недавний матч (за {@link #RECENT_DAYS} дней, Турбо тоже): для срезов «14 дней / 2 месяца / с командой» и списка
+     * последних матчей. mates — account_id игроков его команды из конфига, бывших в этом матче на его стороне.
+     */
+    record Game(long matchId, long start, int heroId, boolean win, int kills, int deaths, int assists, int partySize,
+                boolean turbo, int gameMode, List<Long> mates) {
+    }
+
+    /** Сколько дней истории хранить в {@link #recent}. */
+    static final int RECENT_DAYS = 120;
+
     /** Герой во вражеской команде в матче игрока (для «неудобных» героев). */
     record Enemy(long matchId, int heroId, boolean win) {
     }
@@ -63,6 +74,8 @@ final class PlayerStats {
     final Map<Long, Integer> winsWithTeammate = new HashMap<>();
     /** Игры по линии в разобранных матчах за год: 1 safe, 2 mid, 3 off, 4 jungle. */
     final int[] yearLaneRole = new int[5];
+    /** Недавние матчи, новые первыми. */
+    final List<Game> recent = new ArrayList<>();
 
     private PlayerStats(PlayerConfig.Player config, String personaName, int rankTier, double computedMmr) {
         this.config = config;
@@ -81,8 +94,15 @@ final class PlayerStats {
         long yearAgo = now.getEpochSecond() - 365L * 86400;
         long patch = patchStart.getEpochSecond();
 
+        long recentFrom = now.getEpochSecond() - RECENT_DAYS * 86400L;
         for (JsonNode m : JSON.readTree(dir.resolve("matches.json").toFile())) {
-            if (m.path("radiant_win").isNull() || m.path("game_mode").asInt() == TURBO) {
+            if (m.path("radiant_win").isNull()) {
+                continue;
+            }
+            if (m.get("start_time").asLong() >= recentFrom && m.get("start_time").asLong() <= now.getEpochSecond() + 86400) {
+                s.recent.add(recentGame(m, p.accountId(), teammates));
+            }
+            if (m.path("game_mode").asInt() == TURBO) {
                 continue;
             }
             boolean radiant = m.get("player_slot").asInt() < 128;
@@ -145,7 +165,109 @@ final class PlayerStats {
         for (HeroLine h : s.heroes.values()) {
             h.skill = Scoring.skill(h.percentRank, h.wWins, h.wGames);
         }
+        s.recent.sort(Comparator.comparingLong(Game::start).reversed());
         return s;
+    }
+
+    private static Game recentGame(JsonNode m, long self, Set<Long> teammates) {
+        boolean radiant = m.get("player_slot").asInt() < 128;
+        List<Long> mates = new ArrayList<>();
+        for (var it = m.path("heroes").fields(); it.hasNext(); ) {
+            var e = it.next();
+            long acc = e.getValue().path("account_id").asLong(0);
+            if ((Integer.parseInt(e.getKey()) < 128) == radiant && acc != self && teammates.contains(acc)) {
+                mates.add(acc);
+            }
+        }
+        return new Game(m.get("match_id").asLong(), m.get("start_time").asLong(), m.get("hero_id").asInt(),
+                radiant == m.get("radiant_win").asBoolean(), m.path("kills").asInt(), m.path("deaths").asInt(),
+                m.path("assists").asInt(), m.path("party_size").asInt(0), m.path("game_mode").asInt() == TURBO,
+                m.path("game_mode").asInt(), List.copyOf(mates));
+    }
+
+    /** Герой в окне времени: игры и победы без Турбо, Турбо отдельно, игры с сокомандниками из конфига. */
+    static final class Form {
+        final int heroId;
+        int games, wins, turbo, withTeam, kills, deaths, assists;
+        long last;
+        final Set<Long> mates = new java.util.TreeSet<>();
+
+        Form(int heroId) {
+            this.heroId = heroId;
+        }
+    }
+
+    /** Срез по героям за [from, to) (секунды эпохи). */
+    Map<Integer, Form> form(long from, long to) {
+        Map<Integer, Form> result = new HashMap<>();
+        for (Game g : recent) {
+            if (g.start() < from || g.start() >= to) {
+                continue;
+            }
+            Form f = result.computeIfAbsent(g.heroId(), Form::new);
+            f.last = Math.max(f.last, g.start());
+            if (g.turbo()) {
+                f.turbo++;
+                continue;
+            }
+            f.games++;
+            f.wins += g.win() ? 1 : 0;
+            f.kills += g.kills();
+            f.deaths += g.deaths();
+            f.assists += g.assists();
+            if (!g.mates().isEmpty()) {
+                f.withTeam++;
+                f.mates.addAll(g.mates());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Все герои разом: id → {доля в играх без Турбо за days дней до asOf, доля в играх с сокомандниками}.
+     * Для движка драфта; asOf в бэктесте — время проверяемого матча, чтобы не подсматривать в будущее.
+     */
+    Map<Integer, double[]> recentShares(long asOf, int days) {
+        Map<Integer, int[]> count = new HashMap<>();
+        int all = 0, team = 0;
+        for (Game g : recent) {
+            if (g.turbo() || g.start() >= asOf || g.start() < asOf - days * 86400L) {
+                continue;
+            }
+            int[] c = count.computeIfAbsent(g.heroId(), k -> new int[2]);
+            all++;
+            c[0]++;
+            if (!g.mates().isEmpty()) {
+                team++;
+                c[1]++;
+            }
+        }
+        Map<Integer, double[]> result = new HashMap<>();
+        for (var e : count.entrySet()) {
+            result.put(e.getKey(), new double[]{all == 0 ? 0 : (double) e.getValue()[0] / all,
+                    team == 0 ? 0 : (double) e.getValue()[1] / team});
+        }
+        return result;
+    }
+
+    /**
+     * Доля героя в играх без Турбо за days дней до asOf, плюс отдельно — доля в играх с сокомандниками.
+     * Для движка драфта: asOf в бэктесте — время проверяемого матча, чтобы не подсматривать в будущее.
+     */
+    double[] recentShare(int heroId, long asOf, int days) {
+        int all = 0, on = 0, team = 0, teamOn = 0;
+        for (Game g : recent) {
+            if (g.turbo() || g.start() >= asOf || g.start() < asOf - days * 86400L) {
+                continue;
+            }
+            all++;
+            on += g.heroId() == heroId ? 1 : 0;
+            if (!g.mates().isEmpty()) {
+                team++;
+                teamOn += g.heroId() == heroId ? 1 : 0;
+            }
+        }
+        return new double[]{all == 0 ? 0 : (double) on / all, team == 0 ? 0 : (double) teamOn / team};
     }
 
     /** Топ героев по умению: минимум 5 игр всего, хоть сколько-то свежих (вес ≥ 1). */

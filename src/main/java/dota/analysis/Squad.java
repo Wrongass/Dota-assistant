@@ -29,6 +29,10 @@ public final class Squad {
     /** Диапазон рангов команды для меты: медиана ±1 корзина. */
     final int teamFrom, teamTo;
     final String today;
+    /** Запасные: есть в конфиге, но не в составе на игру. В расчётах не участвуют, их можно поставить в состав. */
+    final List<PlayerStats> bench = new ArrayList<>();
+    /** Состав выбран на сайте, а не взят из конфига. */
+    boolean lineupChanged;
 
     Squad(Meta meta, List<PlayerStats> players, PlayerConfig.TeamInfo team, boolean ours, League league, String today) {
         this.meta = meta;
@@ -139,7 +143,26 @@ public final class Squad {
     }
 
     PlayerStats player(long accountId) {
-        return players.stream().filter(p -> p.config.accountId() == accountId).findFirst().orElse(null);
+        return java.util.stream.Stream.concat(players.stream(), bench.stream())
+                .filter(p -> p.config.accountId() == accountId).findFirst().orElse(null);
+    }
+
+    /** Состав на игру и запасные — для редактора состава на сайте. */
+    public Views.Lineup lineup() {
+        List<Views.LineupPlayer> all = new ArrayList<>();
+        for (PlayerStats p : java.util.stream.Stream.concat(byPosition().stream(), bench.stream()).toList()) {
+            boolean active = pos.containsKey(p);
+            int maps = 0;
+            if (hasTournament()) {
+                for (League.Match m : league.of(team.teamId())) {
+                    boolean radiant = m.isRadiant(team.teamId());
+                    maps += m.side(radiant).stream().anyMatch(x -> x.accountId() == p.config.accountId()) ? 1 : 0;
+                }
+            }
+            all.add(new Views.LineupPlayer(p.config.accountId(), p.nick(), p.rankTier, active ? pos.get(p) : 0,
+                    p.config.position() == null ? 0 : p.config.position(), p.config.isReserve(), maps, p.config.note()));
+        }
+        return new Views.Lineup(team == null ? "" : team.name(), teamName(), lineupChanged, all);
     }
 
     boolean hasTournament() {
@@ -185,6 +208,22 @@ public final class Squad {
     }
 
     record Fit(int hero, double fit, double meta, double skill) {
+    }
+
+    /**
+     * Чьи это герои: id героя → «ник (поз. N)» игроков, у которых герой в топ-12 под патч на их позиции с умением
+     * от 40, или который занимает от 3% их игр. Для предупреждения «вы баните героя своего игрока».
+     */
+    public Map<Integer, List<String>> poolOwners() {
+        Map<Integer, List<String>> owners = new java.util.TreeMap<>();
+        for (PlayerStats p : byPosition()) {
+            Set<Integer> heroes = new HashSet<>();
+            patchFit(p, position(p), 12).stream().filter(f -> f.skill() >= 40).forEach(f -> heroes.add(f.hero()));
+            p.heroes.keySet().stream().filter(h -> DraftEngine.share(p, h) >= 0.03).forEach(heroes::add);
+            String label = p.nick() + " (поз. " + position(p) + ")";
+            heroes.forEach(h -> owners.computeIfAbsent(h, k -> new ArrayList<>()).add(label));
+        }
+        return owners;
     }
 
     /** Герои, которых в патче играют на позиции (≥15% разобранных игр), по пригодности для игрока. */
@@ -291,7 +330,8 @@ public final class Squad {
     }
 
     Views.PlayerCard playerCard(PlayerStats p) {
-        int position = pos.get(p);
+        // запасной — по позиции из конфига (или 1, если она не задана)
+        int position = pos.containsKey(p) ? pos.get(p) : p.config.position() == null ? 1 : p.config.position();
         int[] r = bracketRange(p);
         List<Views.BestHero> best = new ArrayList<>();
         for (PlayerStats.HeroLine h : p.bestHeroes(TOP)) {
@@ -322,7 +362,91 @@ public final class Squad {
                 p.computedMmr, p.totalGames, p.yearGames, meta.patch, p.patchGames, p.patchWins, p.cmGames,
                 p.config.note(), rangeName(r[0], r[1]), best, fits,
                 heroValues(standouts(position, r[0], r[1], true, 10), r[0], r[1]),
-                heroValues(standouts(position, r[0], r[1], false, 8), r[0], r[1]), weakInPool);
+                heroValues(standouts(position, r[0], r[1], false, 8), r[0], r[1]), weakInPool, form(p));
+    }
+
+    /**
+     * Состав для страницы драфта (JSON): ник, позиция, ранг, account_id, что играет последние 14 дней / 2 месяца
+     * (топ-4, с пометками «новый» и «с командой») и топ-5 «играет лучше всего». Без NaN — их не понимает JSON.parse.
+     */
+    public List<Map<String, Object>> draftRoster() {
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (PlayerStats p : byPosition()) {
+            Views.Form f = form(p);
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("nick", p.nick());
+            m.put("pos", position(p));
+            m.put("accountId", p.config.accountId());
+            m.put("rankTier", p.rankTier);
+            m.put("rank", Meta.bracketName(p.rankTier));
+            m.put("games14", f.games14());
+            m.put("games60", f.games60());
+            m.put("recent", f.heroes().stream()
+                    .sorted(Comparator.comparingInt(Views.HeroForm::games14).reversed()
+                            .thenComparing(Comparator.comparingInt(Views.HeroForm::games60).reversed()))
+                    .limit(4)
+                    .map(h -> Map.<String, Object>of("id", h.heroId(), "name", h.name(), "g14", h.games14(),
+                            "g60", h.games60(), "team", h.team60(), "fresh", h.fresh(), "signature", h.signature()))
+                    .toList());
+            m.put("best", p.bestHeroes(5).stream()
+                    .map(h -> Map.<String, Object>of("id", h.heroId, "name", meta.name(h.heroId), "games", h.games))
+                    .toList());
+            result.add(m);
+        }
+        return result;
+    }
+
+    /** Срезы «14 дней / 2 месяца / с командой» и последние 20 матчей — от даты отчёта today. */
+    Views.Form form(PlayerStats p) {
+        long now = java.time.LocalDate.parse(today).plusDays(1).atStartOfDay(java.time.ZoneOffset.UTC).toEpochSecond();
+        Map<Integer, PlayerStats.Form> d14 = p.form(now - 14 * 86400L, now), d60 = p.form(now - 60 * 86400L, now);
+        Set<Integer> best = new HashSet<>();
+        p.bestHeroes(TOP).forEach(h -> best.add(h.heroId));
+        Map<Long, String> nicks = new HashMap<>();
+        players.forEach(x -> nicks.put(x.config.accountId(), x.nick()));
+        List<Views.HeroForm> heroes = d60.values().stream()
+                .filter(f -> f.games + f.turbo > 0)
+                .sorted(Comparator.comparingInt((PlayerStats.Form f) -> f.games).reversed()
+                        .thenComparing(Comparator.comparingInt((PlayerStats.Form f) -> f.turbo).reversed()))
+                .limit(15)
+                .map(f -> {
+                    PlayerStats.Form f14 = d14.get(f.heroId);
+                    int g14 = f14 == null ? 0 : f14.games, w14 = f14 == null ? 0 : f14.wins;
+                    double kda = f.games == 0 ? 0 : (f.kills + f.assists) / (double) Math.max(1, f.deaths);
+                    return new Views.HeroForm(f.heroId, meta.name(f.heroId), g14, w14, f.games, f.wins, f.turbo,
+                            f.withTeam, f.mates.stream().map(nicks::get).filter(java.util.Objects::nonNull).toList(), kda,
+                            DAY.format(java.time.Instant.ofEpochSecond(f.last)), best.contains(f.heroId),
+                            g14 >= 3 && !best.contains(f.heroId));
+                })
+                .toList();
+        int games14 = d14.values().stream().mapToInt(f -> f.games).sum();
+        int games60 = d60.values().stream().mapToInt(f -> f.games).sum();
+        int turbo60 = d60.values().stream().mapToInt(f -> f.turbo).sum();
+        int team60 = d60.values().stream().mapToInt(f -> f.withTeam).sum();
+        List<Views.RecentMatch> matches = p.recent.stream().filter(g -> g.start() < now).limit(20)
+                .map(g -> new Views.RecentMatch(g.matchId(), DAY.format(java.time.Instant.ofEpochSecond(g.start())),
+                        g.heroId(), meta.name(g.heroId()), g.win(), g.kills() + "/" + g.deaths() + "/" + g.assists(),
+                        g.partySize(), g.mates().stream().map(nicks::get).filter(java.util.Objects::nonNull).toList(),
+                        g.turbo(), modeName(g.gameMode())))
+                .toList();
+        return new Views.Form(today, games14, games60, turbo60, team60, heroes, matches);
+    }
+
+    private static final java.time.format.DateTimeFormatter DAY =
+            java.time.format.DateTimeFormatter.ofPattern("dd.MM").withZone(java.time.ZoneOffset.UTC);
+
+    static String modeName(int gameMode) {
+        return switch (gameMode) {
+            case 1 -> "All Pick";
+            case 2 -> "Captains Mode";
+            case 3 -> "Random Draft";
+            case 4 -> "Single Draft";
+            case 16 -> "Captains Draft";
+            case 18 -> "Ability Draft";
+            case 22 -> "All Pick";
+            case 23 -> "Turbo";
+            default -> "режим " + gameMode;
+        };
     }
 
     /** Мета на рангах этой команды (медиана ±1). */

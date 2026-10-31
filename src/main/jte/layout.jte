@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>${page.title()} · Dota-помощник</title>
     <link rel="stylesheet" href="/static/app.css">
+    <script>try { if (localStorage.getItem("theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}</script>
 </head>
 <body>
 <header class="top">
@@ -17,7 +18,7 @@
         <a class="brand" href="/">Dota-помощник · ${page.teamName()}</a>
         <div class="status">
             <span>Патч ${page.patch()}</span>
-            <span title="Когда скачаны данные игроков (./gradlew run)">игроки: ${page.playersFetched()}</span>
+            <span title="Самые старые данные игроков: с этого времени новых матчей хотя бы у одного игрока в статистике нет">игроки от ${page.playersFetched()}</span>
             <span title="Когда скачана выборка меты: синергии и контрпики">мета: ${page.metaFetched()}</span>
             @if(!page.warnings().isEmpty())
                 <a href="/#warnings" title="Предупреждения о данных">⚠ ${page.warnings().size()}</a>
@@ -25,6 +26,7 @@
             @if(page.authEnabled())
                 <a href="/logout" title="Выйти на этом устройстве">Выйти</a>
             @endif
+            <button type="button" class="theme-toggle" id="theme-toggle" title="Светлая или тёмная тема">◐</button>
             <form method="post" action="/reload">
                 <button title="Перечитать data/ и config/ с диска без перезапуска (к OpenDota не обращается)">Перечитать данные</button>
             </form>
@@ -45,6 +47,7 @@
             </div>
         </details>
         <a href="/meta" class="${page.active().equals("meta") ? "active" : null}">Мета</a>
+        <a href="/counters" class="${page.active().equals("counters") ? "active" : null}">Контрпики</a>
         <a href="/method" class="${page.active().equals("method") ? "active" : null}">Методика</a>
         <a href="/draft" class="cta">Драфт ▶</a>
     </nav>
@@ -53,6 +56,7 @@
     ${content}
 </main>
 <script src="/static/sort.js"></script>
+<script src="/static/heroes.js"></script>
 $unsafe{scripts}
 </body>
 </html>

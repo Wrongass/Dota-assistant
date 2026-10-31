@@ -23,11 +23,12 @@ public final class Models {
     public record OurLine(int pos, String nick, long accountId, int rankTier, List<Views.PoolEntry> pool) {
     }
 
-    public record NextOpponent(String slug, String name, String record, List<Views.RosterRow> roster,
+    /** label — «Следующая игра» или «Готовимся дальше». */
+    public record NextOpponent(String label, String slug, String name, String record, List<Views.RosterRow> roster,
                                List<Views.ThreatRow> threats, List<Views.Count> bans) {
     }
 
-    public record Home(Page page, List<OurLine> ours, Views.Group group, NextOpponent next) {
+    public record Home(Page page, List<OurLine> ours, Views.Group group, List<NextOpponent> next, String stage) {
     }
 
     public record Method(Page page) {
@@ -39,7 +40,7 @@ public final class Models {
 
     // ---------------------------------------------------------------- отчёты
 
-    public record TeamPage(Page page, Views.Roster roster, String playerBase) {
+    public record TeamPage(Page page, Views.Roster roster, String playerBase, Views.Lineup lineup, String error) {
     }
 
     public record PlayerPage(Page page, Views.PlayerCard card, String teamName, String teamHref) {
@@ -57,13 +58,21 @@ public final class Models {
     public record GroupPage(Page page, Views.Group group, List<Link> teams) {
     }
 
-    public record OpponentPage(Page page, String slug, String name, String planHtml, Views.Roster roster,
+    public record OpponentPage(Page page, String slug, String name, String planHtml, Views.Lineup lineup, String error,
+                               Views.Roster roster,
                                Views.Threats threats, Views.Tournament tournament) {
+    }
+
+    /** Контрпики: введённые имена героев (как в форме), «авто» ли позиция, ошибка ввода или null. */
+    public record CountersPage(Page page, List<dota.analysis.AnalysisContext.HeroInfo> heroes, String first,
+                               String second, boolean posAuto, dota.analysis.Counters.View view, String error) {
     }
 
     // ---------------------------------------------------------------- драфт
 
+    /** poolJson — наши герои: id героя → кто из наших на нём играет (для предупреждения «баните своего»). */
+    /** rostersJson — составы для слотов игроков: {"ours": [...], "<slug соперника>": [...]}, см. Squad.draftRoster. */
     public record DraftPage(Page page, String heroesJson, String opponentsJson, String defaultOpponent,
-                            String orderJson) {
+                            String orderJson, String poolJson, String rostersJson) {
     }
 }

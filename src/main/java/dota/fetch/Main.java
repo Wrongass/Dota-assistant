@@ -14,10 +14,13 @@ import java.time.LocalDate;
  *   --only &lt;account_id&gt;    только один игрок (справочники и мета качаются всегда)
  *   --no-meta              не качать данные по текущему патчу (data/meta)
  *   --no-league            не качать матчи лиги из config (data/raw/league)
+ *   --no-images            не качать картинки героев и рангов для сайта (data/img)
+ *   --no-stratz            не качать линию и матчапы героев из STRATZ (data/raw/stratz)
  *   --meta-window &lt;n&gt;     сколько последних match_id брать для синергий/контрпиков, по умолчанию 1000000
  *   --meta-min-rank &lt;n&gt;   минимальный средний rank_tier матча, по умолчанию 50 (Legend 0)
  * </pre>
- * Необязательный ключ API берётся из переменной окружения OPENDOTA_API_KEY.
+ * Необязательный ключ API берётся из переменной окружения OPENDOTA_API_KEY. Токен STRATZ — из STRATZ_TOKEN
+ * (переменная окружения или строка в .env); без него STRATZ пропускается.
  */
 public class Main {
 
@@ -25,6 +28,8 @@ public class Main {
         boolean refresh = false;
         boolean meta = true;
         boolean league = true;
+        boolean images = true;
+        boolean stratz = true;
         long metaWindow = 1_000_000;
         int metaMinRank = 50;
         Path configPath = Path.of("config/players.yaml");
@@ -39,6 +44,8 @@ public class Main {
                 case "--only" -> only = Long.parseLong(value(args, ++i));
                 case "--no-meta" -> meta = false;
                 case "--no-league" -> league = false;
+                case "--no-images" -> images = false;
+                case "--no-stratz" -> stratz = false;
                 case "--meta-window" -> metaWindow = Long.parseLong(value(args, ++i));
                 case "--meta-min-rank" -> metaMinRank = Integer.parseInt(value(args, ++i));
                 default -> {
@@ -57,6 +64,9 @@ public class Main {
 
         for (Endpoints.Target t : Endpoints.constants(constants)) {
             fetcher.fetch(t);
+        }
+        if (images) {
+            new ImageFetcher().fetch(constants.resolve("heroes.json"), dataDir.resolve("img"));
         }
 
         for (PlayerConfig.Player p : config.players()) {
@@ -79,6 +89,16 @@ public class Main {
         if (meta) {
             fetchMeta(client, fetcher, constants.resolve("patch.json"), dataDir.resolve("meta"),
                     refresh, metaWindow, metaMinRank);
+        }
+
+        if (stratz) {
+            String token = Env.get("STRATZ_TOKEN");
+            if (token == null) {
+                Log.info("STRATZ_TOKEN not set, skip STRATZ lanes");
+            } else {
+                new StratzFetcher(new StratzClient(StratzClient.URL, token, Duration.ofMillis(1100)), fetcher, refresh)
+                        .fetch(constants.resolve("heroes.json"), raw.resolve("stratz"), java.time.Instant.now());
+            }
         }
 
         Log.info("Done: downloaded %d, skipped %d, failed %d",

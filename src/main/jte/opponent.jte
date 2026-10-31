@@ -4,6 +4,8 @@
     <h1>${model.name()}
         <a href="/draft?opponent=${model.slug()}"><button class="primary">Начать драфт ▶</button></a></h1>
 
+    @template.tag.lineup(lineup = model.lineup(), back = "/opponent/" + model.slug(), error = model.error())
+
     @if(model.planHtml() != null)
         <details class="panel plan" open>
             <summary><b>План на игру</b> <span class="muted small">game_plan.md — пишется вручную</span></summary>

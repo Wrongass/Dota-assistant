@@ -1,15 +1,15 @@
 # Группа: Киберлига «Трудовые резервы», 6 сезон (осень) — дивизион Ancient, группа B
 
-Матчи между командами группы из лиги OpenDota 18845. Переигровок отброшено (по всей лиге): 2.
+Матчи между командами группы из лиги OpenDota 18845. Переигровок отброшено (по всей лиге): 4.
 
 ## Карты
 
 | Команда | Карт | Побед | Поражений |
 |---|---|---|---|
-| Team Visual | 4 | 2 | 2 |
-| SD Team | 4 | 2 | 2 |
-| UPPO TEAM | 4 | 3 | 1 |
-| Team Polyus | 4 | 1 | 3 |
+| Team Visual | 6 | 3 | 3 |
+| SD Team | 7 | 3 | 4 |
+| UPPO TEAM | 6 | 5 | 1 |
+| Team Polyus | 7 | 2 | 5 |
 
 ## Матчи
 
@@ -23,3 +23,8 @@
 | 2026-10-17 10:42 UTC | UPPO TEAM | Team Visual | UPPO TEAM | 44 | Dark Willow, Dawnbreaker, Lina, Hoodwink, Luna | Lion, Outworld Devourer, Ogre Magi, Wraith King, Disruptor | [9048922513](https://www.opendota.com/matches/9048922513) |
 | 2026-10-17 11:52 UTC | UPPO TEAM | Team Visual | UPPO TEAM | 28 | Mirana, Luna, Outworld Devourer, Beastmaster, Disruptor | Razor, Night Stalker, Lion, Vengeful Spirit, Drow Ranger | [9049022198](https://www.opendota.com/matches/9049022198) |
 | 2026-10-17 11:58 UTC | SD Team | Team Polyus | Team Polyus | 35 | Slardar, Windranger, Dark Willow, Huskar, Dragon Knight | Tiny, Necrophos, Ring Master, Ogre Magi, Queen of Pain | [9049021074](https://www.opendota.com/matches/9049021074) |
+| 2026-10-23 16:10 UTC | UPPO TEAM | Team Polyus | UPPO TEAM | 53 | Largo, Lifestealer, Lina, Ancient Apparition, Legion Commander | Ursa, Doom, Ogre Magi, Techies, Death Prophet | [9058237205](https://www.opendota.com/matches/9058237205) |
+| 2026-10-23 17:30 UTC | UPPO TEAM | Team Polyus | UPPO TEAM | 47 | Shadow Demon, Luna, Lina, Kunkka, Hoodwink | Phantom Assassin, Lion, Witch Doctor, Techies, Axe | [9058372468](https://www.opendota.com/matches/9058372468) |
+| 2026-10-24 07:22 UTC | Team Visual | SD Team | Team Visual | 58 | Dawnbreaker, Centaur Warrunner, Vengeful Spirit, Lifestealer, Lich | Dragon Knight, Windranger, Pangolier, Rubick, Grimstroke | [9059152056](https://www.opendota.com/matches/9059152056) |
+| 2026-10-24 08:35 UTC | SD Team | Team Visual | SD Team | 40 | Slardar, Windranger, Dragon Knight, Dark Seer, Warlock | Lina, Underlord, Lifestealer, Lich, Vengeful Spirit | [9059226622](https://www.opendota.com/matches/9059226622) |
+| 2026-10-31 08:28 UTC | Team Polyus | SD Team | Team Polyus | 65 | Wraith King, Queen of Pain, Death Prophet, Ring Master, Ogre Magi | Lifestealer, Ember Spirit, Dark Willow, Dark Seer, Spirit Breaker | [9069627947](https://www.opendota.com/matches/9069627947) |

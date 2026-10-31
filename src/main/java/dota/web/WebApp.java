@@ -3,6 +3,7 @@ package dota.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dota.analysis.AnalysisContext;
 import dota.analysis.DraftEngine;
+import dota.analysis.Fmt;
 import dota.analysis.Squad;
 import dota.analysis.Views;
 import gg.jte.ContentType;
@@ -14,10 +15,12 @@ import io.javalin.http.NotFoundResponse;
 import io.javalin.http.staticfiles.Location;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Локальный сайт. Запуск: {@code ./gradlew web} → http://127.0.0.1:8070
@@ -27,6 +30,7 @@ import java.util.Map;
  *   --config &lt;path&gt;    по умолчанию config/players.yaml
  *   --data &lt;dir&gt;       по умолчанию data
  *   --analysis &lt;dir&gt;   по умолчанию analysis (ручные планы *_plan.md)
+ *   --state &lt;file&gt;     состав на игру, выбранный на сайте; по умолчанию state/lineups.json
  * </pre>
  */
 public class WebApp {
@@ -53,6 +57,7 @@ public class WebApp {
         Path config = Path.of("config/players.yaml");
         Path data = Path.of("data");
         Path analysis = Path.of("analysis");
+        Path state = dota.analysis.Lineups.DEFAULT_FILE;
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case "--port" -> port = Integer.parseInt(args[++i]);
@@ -60,16 +65,18 @@ public class WebApp {
                 case "--config" -> config = Path.of(args[++i]);
                 case "--data" -> data = Path.of(args[++i]);
                 case "--analysis" -> analysis = Path.of(args[++i]);
+                case "--state" -> state = Path.of(args[++i]);
                 default -> throw new IllegalArgumentException("Unknown argument: " + args[i]);
             }
         }
-        Site site = new Site(config, data, analysis);
+        Site site = new Site(config, data, analysis, state);
         long started = System.nanoTime();
         site.reload();
         System.out.printf("Data loaded in %d ms%n", (System.nanoTime() - started) / 1_000_000);
         Auth auth = Auth.fromEnvironment();
         System.out.println(auth.enabled() ? "Вход по паролю включён (SITE_PASSWORD)"
                 : "SITE_PASSWORD не задан — сайт открыт без пароля (только для локального запуска)");
+        System.out.println(lineupsStatus(state));
         new WebApp(site, auth).create().start(host, port);
         System.out.printf("Open http://%s:%d%n", host.equals("0.0.0.0") ? "localhost" : host, port);
     }
@@ -100,7 +107,12 @@ public class WebApp {
         app.get("/group", this::group);
         app.get("/opponent/{slug}", this::opponent);
         app.get("/draft", this::draftPage);
+        app.get("/counters", this::counters);
+        app.get("/api/heroes", ctx -> ctx.json(site.ctx().heroList()));
+        app.get("/api/player/{id}", this::playerApi);
+        app.get("/img/{kind}/{file}", this::image);
         app.post("/api/draft", this::draftApi);
+        app.post("/lineup", this::saveLineup);
         app.get("/method", ctx -> render(ctx, "method.jte", new Models.Method(page("Методика", "method"))));
         app.post("/reload", ctx -> {
             site.reload();
@@ -178,21 +190,20 @@ public class WebApp {
             ours.add(new Models.OurLine(r.pos(), r.nick(), r.accountId(), r.rankTier(), pool.stream().limit(3).toList()));
         }
         Views.Group group = c.group();
-        Models.NextOpponent next = null;
-        Squad opp = site.nextOpponent();
-        if (opp != null) {
+        List<Models.NextOpponent> next = new ArrayList<>();
+        for (Squad opp : site.upcoming()) {
             Views.Threats threats = opp.threats(c.ours);
-            String record = group == null ? "" : group.standings().stream()
-                    .filter(s -> s.team().equals(opp.team().name())).findFirst()
-                    .map(s -> s.wins() + "–" + (s.games() - s.wins())).orElse("");
-            next = new Models.NextOpponent(opp.slug(), opp.teamName(), record, opp.roster().rows(),
-                    threats.threats().stream().limit(5).toList(), threats.bans());
+            next.add(new Models.NextOpponent(next.isEmpty() ? "Следующая игра" : "Готовимся дальше", opp.slug(),
+                    opp.teamName(), c.mapRecord(opp.team()), opp.roster().rows(),
+                    threats.threats().stream().limit(5).toList(), threats.bans()));
         }
-        render(http, "home.jte", new Models.Home(page("Главная", "home"), ours, group, next));
+        String stage = c.config.league() == null ? null : c.config.league().stage();
+        render(http, "home.jte", new Models.Home(page("Главная", "home"), ours, group, next, stage));
     }
 
     private void team(Context http) {
-        render(http, "team.jte", new Models.TeamPage(page("Команда", "team"), site.ctx().ours.roster(), "/player/"));
+        render(http, "team.jte", new Models.TeamPage(page("Команда", "team"), site.ctx().ours.roster(), "/player/",
+                site.ctx().ours.lineup(), http.queryParam("lineupError")));
     }
 
     private void player(Context http) {
@@ -243,14 +254,65 @@ public class WebApp {
         }
         String plan = site.planFile(opp).map(this::markdown).orElse(null);
         render(http, "opponent.jte", new Models.OpponentPage(page(opp.team().name(), "opponents"), opp.slug(),
-                opp.teamName(), plan, opp.roster(), opp.threats(site.ctx().ours),
+                opp.teamName(), plan, opp.lineup(), http.queryParam("lineupError"), opp.roster(), opp.threats(site.ctx().ours),
                 opp.hasTournamentData() ? opp.tournament() : null));
+    }
+
+    /**
+     * Форма состава: team — имя команды из конфига, p1..p5 — account_id на позициях, action=save|reset. После
+     * сохранения данные перечитываются — новый состав сразу везде. Возврат на ту же страницу (с ошибкой в адресе).
+     */
+    private void saveLineup(Context http) throws IOException {
+        String team = http.formParam("team");
+        String back = Auth.safeNext(http.formParam("back"));
+        try {
+            Map<Integer, Long> lineup = null;
+            if (!"reset".equals(http.formParam("action"))) {
+                lineup = new java.util.HashMap<>();
+                for (int pos = 1; pos <= 5; pos++) {
+                    String v = http.formParam("p" + pos);
+                    if (v != null && v.matches("\\d{1,12}")) {
+                        lineup.put(pos, Long.parseLong(v));
+                    }
+                }
+            }
+            site.saveLineup(team, lineup);
+            http.redirect(back);
+        } catch (IllegalArgumentException e) {
+            redirectWithError(http, back, e.getMessage());
+        } catch (IOException | RuntimeException e) {
+            // чаще всего папка state/ недоступна для записи (в Docker — нет тома ./state или нет прав на него)
+            System.err.printf("Не удалось сохранить состав %s в %s: %s%n", team, site.lineupsFile, e);
+            redirectWithError(http, back, "Не удалось сохранить состав на сервере (" + e.getClass().getSimpleName() + ": "
+                    + e.getMessage() + "). Проверьте, что папка state доступна сайту для записи.");
+        }
+    }
+
+    private static void redirectWithError(Context http, String back, String message) {
+        http.redirect(back + (back.contains("?") ? "&" : "?") + "lineupError="
+                + java.net.URLEncoder.encode(message, java.nio.charset.StandardCharsets.UTF_8));
+    }
+
+    /** При запуске: можно ли писать состав на игру. Ответ видно в логе (docker compose logs web). */
+    static String lineupsStatus(Path file) {
+        try {
+            Path dir = file.toAbsolutePath().getParent();
+            Files.createDirectories(dir);
+            Path probe = Files.createTempFile(dir, "write-check", ".tmp");
+            Files.delete(probe);
+            return "Состав на игру сохраняется в " + file.toAbsolutePath();
+        } catch (IOException | RuntimeException e) {
+            return "ВНИМАНИЕ: состав на игру не сохранится, нет записи в " + file.toAbsolutePath().getParent() + " (" + e + ")";
+        }
     }
 
     // ---------------------------------------------------------------- драфт
 
-    /** Тело POST /api/draft: соперник, кто ходит первым, герои по ходам (0 — ход пропущен). */
-    record DraftRequest(String opponent, boolean weFirst, List<Integer> heroes) {
+    /**
+     * Тело POST /api/draft: соперник, кто ходит первым, герои по ходам (0 — ход пропущен) и ручное назначение
+     * «герой → ник игрока» (обе команды).
+     */
+    record DraftRequest(String opponent, boolean weFirst, List<Integer> heroes, Map<Integer, String> assign) {
     }
 
     private void draftPage(Context http) throws Exception {
@@ -262,7 +324,73 @@ public class WebApp {
         List<Models.Link> opponents = c.opponents.stream()
                 .map(o -> new Models.Link(o.slug(), o.teamName())).toList();
         render(http, "draft.jte", new Models.DraftPage(page("Драфт", "draft"), JSON.writeValueAsString(c.heroList()),
-                JSON.writeValueAsString(opponents), opponent, JSON.writeValueAsString(DraftEngine.SLOTS)));
+                JSON.writeValueAsString(opponents), opponent, JSON.writeValueAsString(DraftEngine.SLOTS),
+                JSON.writeValueAsString(c.ours.poolOwners()), JSON.writeValueAsString(rosters(c))));
+    }
+
+    /** Контрпики: ?h=Viper&h2=Lina&pos=2 (имена или id героев; pos 0 или нет — позиция по первому герою). */
+    private void counters(Context http) {
+        AnalysisContext c = site.ctx();
+        String first = http.queryParamAsClass("h", String.class).getOrDefault("").trim();
+        String second = http.queryParamAsClass("h2", String.class).getOrDefault("").trim();
+        int pos = http.queryParamAsClass("pos", Integer.class).getOrDefault(0);
+        List<Integer> enemies = new ArrayList<>();
+        List<String> unknown = new ArrayList<>();
+        for (String name : List.of(first, second)) {
+            if (name.isEmpty()) {
+                continue;
+            }
+            Integer id = heroId(c, name);
+            if (id == null) {
+                unknown.add(name);
+            } else if (!enemies.contains(id)) {
+                enemies.add(id);
+            }
+        }
+        String error = unknown.isEmpty() ? null : "Не нашёл героя: " + String.join(", ", unknown);
+        render(http, "counters.jte", new Models.CountersPage(page("Контрпики", "counters"), c.heroList(), first, second,
+                pos < 1 || pos > 5, dota.analysis.Counters.build(c, enemies, pos), error));
+    }
+
+    private static Integer heroId(AnalysisContext c, String text) {
+        String t = text.trim().toLowerCase(java.util.Locale.ROOT);
+        for (AnalysisContext.HeroInfo h : c.heroList()) {
+            if (h.name().toLowerCase(java.util.Locale.ROOT).equals(t) || String.valueOf(h.id()).equals(t)) {
+                return h.id();
+            }
+        }
+        List<AnalysisContext.HeroInfo> prefix = c.heroList().stream()
+                .filter(h -> h.name().toLowerCase(java.util.Locale.ROOT).startsWith(t)).toList();
+        return prefix.size() == 1 ? prefix.get(0).id() : null;
+    }
+
+    private static Map<String, Object> rosters(AnalysisContext c) {
+        Map<String, Object> result = new java.util.LinkedHashMap<>();
+        result.put("ours", c.ours.draftRoster());
+        c.opponents.forEach(o -> result.put(o.slug(), o.draftRoster()));
+        return result;
+    }
+
+    /** Карточка игрока для боковой панели драфта: чем играет сейчас и топ «играет лучше всего». */
+    private void playerApi(Context http) {
+        long id = Long.parseLong(http.pathParam("id"));
+        Squad squad = site.ctx().squadOf(id);
+        if (squad == null) {
+            throw new NotFoundResponse("игрок " + id);
+        }
+        Views.PlayerCard card = squad.playerCard(id);
+        Map<String, Object> result = new java.util.LinkedHashMap<>();
+        result.put("nick", card.nick());
+        result.put("pos", card.pos());
+        result.put("team", squad.teamName());
+        result.put("accountId", card.accountId());
+        result.put("rankTier", card.rankTier());
+        result.put("note", card.note() == null ? "" : card.note());
+        result.put("form", card.form());
+        result.put("best", card.best().stream().limit(10).map(h -> Map.of("id", h.heroId(), "name", h.name(),
+                "skill", Math.round(h.skill()), "games", h.games(), "yearGames", h.yearGames(),
+                "top", Fmt.topPercent(h.percentRank()))).toList());
+        http.json(result);
     }
 
     private void draftApi(Context http) {
@@ -272,7 +400,22 @@ public class WebApp {
             return;
         }
         List<Integer> heroes = req.heroes() == null ? List.of() : req.heroes();
-        http.json(new DraftEngine(site.ctx()).advise(new DraftEngine.State(req.opponent(), req.weFirst(), heroes)));
+        Map<Integer, String> assign = req.assign() == null ? Map.of() : req.assign();
+        http.json(new DraftEngine(site.ctx()).advise(new DraftEngine.State(req.opponent(), req.weFirst(), heroes, assign)));
+    }
+
+    // ---------------------------------------------------------------- картинки
+
+    private static final Set<String> IMAGE_KINDS = Set.of("heroes", "icons", "ranks");
+
+    /** Картинки Valve из data/img (портреты, иконки героев, значки рангов) — их качает выгрузка, см. ImageFetcher. */
+    private void image(Context http) throws IOException {
+        String kind = http.pathParam("kind"), file = http.pathParam("file");
+        Path path = site.dataDir.resolve("img").resolve(kind).resolve(file);
+        if (!IMAGE_KINDS.contains(kind) || !file.matches("[a-z0-9_]{1,40}\\.png") || !Files.isRegularFile(path)) {
+            throw new NotFoundResponse(kind + "/" + file);
+        }
+        http.header("Cache-Control", "public, max-age=604800").contentType("image/png").result(Files.readAllBytes(path));
     }
 
     // ---------------------------------------------------------------- общее

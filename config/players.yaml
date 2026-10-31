@@ -1,5 +1,7 @@
 # team: our | opp; position: 1..5 или пусто; note — свободный комментарий о роли и стиле.
-# Для соперников обязателен team_name — имя команды из league.group.
+# reserve: true — запасной: в состав по умолчанию не входит. Состав на игру меняется на сайте (страница команды или
+# соперника → «Состав на игру» → Сохранить), хранится в state/lineups.json; «Вернуть по конфигу» — обратно к этому файлу.
+# Для соперников обязателен team_name — имя команды из league.group, league.playin или league.playoff.
 our_team:
   name: Team Visual
   organization: Долг
@@ -11,7 +13,10 @@ league:
   id: 18845
   name: Киберлига «Трудовые резервы», 6 сезон (осень) — дивизион Ancient, группа B
   since: 2026-10-01
-  next_opponent: SD Team     # следующая игра — показывается на главной странице сайта
+  # Группа закончилась 25.10: 2-е место (1 победа, 1 ничья, 1 поражение; карты 3–3), прямого выхода нет — плей-ин.
+  # Плей-ин закончился 1.11: мы прошли в плей-офф.
+  stage: "Плей-офф, 8 команд. Из групп: УППО, МЦСТ (Elbrus team), НПП «Звезда» (SyberStar), НИИЭП (Team Future). Из плей-ина: Долг (мы), GGsel (SD Team), НИИ Полюс, ИТОЗ. Следующий соперник пока неизвестен."
+  # next_opponent: <имя команды>   # следующая игра — первая на главной, соперник по умолчанию в драфте; пока неизвестна
   # Карты, которых нет в OpenDota, но результат известен с сайта турнира: идут только в счёт группы.
   manual_maps:
     - date: 2026-10-17
@@ -28,6 +33,20 @@ league:
     - name: Team Polyus
       organization: НИИ Полюс им. М.Ф. Стельмаха
       team_id: 9419839
+  # Плей-офф: команды не из нашей группы. Только те 8 команд, что в плей-офф; BIM и Дом.РФ выбыли в плей-ине.
+  playoff:
+    - name: comaTOZ
+      organization: ИТОЗ
+      team_id: 10281979
+    - name: Elbrus team
+      organization: МЦСТ
+      team_id: 7586446
+    - name: SyberStar
+      organization: НПП «Звезда»
+      team_id: 6990376
+    - name: Team Future
+      organization: НИИЭП
+      team_id: 9324740
 
 players:
   # --- Team Visual ---
@@ -56,6 +75,12 @@ players:
     team: our
     position: 5
     note: Саппорт, позиция 5. Самый слабый игрок, небольшой пул героев (Lich, Crystal Maiden, Lion, Witch Doctor).
+  - account_id: 108859089
+    nick: Davajj
+    team: our
+    position: 3
+    reserve: true
+    note: Играл на хардлайне вместо Артиста в плей-ине (27.10–1.11). С плей-офф Артист снова на тройке. Ранг Титан.
 
   # --- UPPO TEAM (УППО): 5 активных игроков; позиции — по турнирным матчам против SD Team ---
   - account_id: 361977946
@@ -152,3 +177,161 @@ players:
     team_name: Team Polyus
     position: 5
     note: Против нас Abaddon, Jakiro.
+  - account_id: 250563280
+    nick: татарский стиль
+    team: opp
+    team_name: Team Polyus
+    position: 2
+    reserve: true
+    note: Играл 3 карты в лиге с 17.10 (Queen of Pain и Death Prophet на миде, Axe в оффлейне). Возможно, новый мид вместо ryota.
+
+  # --- Плей-офф, команды не из нашей группы. Составы и позиции — по 6 картам каждой в группе: 1–3 — по линии и GPM,
+  # 4/5 — саппорт сложной / лёгкой линии. Ники — из профилей Steam. ---
+  # comaTOZ (ИТОЗ), группа A: 1–2, карты 2–4.
+  - account_id: 279712792
+    nick: britishboi
+    team: opp
+    team_name: comaTOZ
+    position: 1
+    note: В турнире Windranger ×2, Nature's Prophet ×2, Drow Ranger, Lifestealer (safe, 700 GPM).
+  - account_id: 456755086
+    nick: kezi
+    team: opp
+    team_name: comaTOZ
+    position: 2
+    note: В турнире Dragon Knight, Earth Spirit, Lina, Earthshaker (mid, 4 карты из 6).
+  - account_id: 101847163
+    nick: YOURSELF
+    team: opp
+    team_name: comaTOZ
+    position: 3
+    note: Steam-ник сейчас YOURSELF, в турнире играл как IAM- (Dragon Knight ×2, Doom, Slardar, Largo в оффлейне, Ember Spirit на миде, когда нет kezi).
+  - account_id: 115735715
+    nick: Asmodeus
+    team: opp
+    team_name: comaTOZ
+    position: 4
+    note: В турнире Spirit Breaker ×2, Hoodwink, Dark Willow, Rubick, Pudge (саппорт сложной линии).
+  - account_id: 125843531
+    nick: DrestoV1ch
+    team: opp
+    team_name: comaTOZ
+    position: 5
+    note: В турнире Bane, Undying, Clockwerk, Dark Willow, Techies, Oracle (саппорт лёгкой линии).
+  - account_id: 150846436
+    nick: Nick_Abram
+    team: opp
+    team_name: comaTOZ
+    position: 3
+    reserve: true
+    note: Замена в 2 картах против Эльбрус (Viper, Slardar в оффлейне), тогда kezi не играл, а YOURSELF (IAM-) стоял на миде.
+
+  # Elbrus team (МЦСТ), группа A: 3–0, карты 6–0. Мид Блинолопатный (4 карты), в остальных 2 на миде Участковый.
+  - account_id: 1069467776
+    nick: zero_excuses
+    team: opp
+    team_name: Elbrus team
+    position: 1
+    note: В турнире Lone Druid ×2, Lifestealer, Night Stalker, Void Spirit, Lina (680 GPM, лёгкая и сложная поровну).
+  - account_id: 295808187
+    nick: Блинолопатный
+    team: opp
+    team_name: Elbrus team
+    position: 2
+    note: Steam-ник «Блинолопатный гражданин». В турнире Invoker, Meepo, Brewmaster, Magnus (мид, 685 GPM).
+  - account_id: 101102378
+    nick: MAjeRoK
+    team: opp
+    team_name: Elbrus team
+    position: 3
+    note: В турнире Tidehunter ×2, Underlord (оффлейн), Drow Ranger. 4 карты из 6.
+  - account_id: 108125964
+    nick: Sladenky
+    team: opp
+    team_name: Elbrus team
+    position: 4
+    note: В турнире Techies ×3, Rubick ×2, Clockwerk (саппорт сложной линии).
+  - account_id: 191870820
+    nick: Tort
+    team: opp
+    team_name: Elbrus team
+    position: 5
+    note: В турнире Witch Doctor ×2, Silencer, Snapfire, Shadow Shaman, Ogre Magi (саппорт лёгкой линии).
+  - account_id: 1151498448
+    nick: Участковый
+    team: opp
+    team_name: Elbrus team
+    position: 2
+    reserve: true
+    note: Steam-ник «Участковый разберётся». Играл 4 карты (Templar Assassin, Shadow Fiend на миде, Lifestealer, Phoenix).
+
+  # SyberStar (НПП «Звезда»), группа A: 2–0–1, карты 4–2. Без Леонида Ильича SuperPoni на миде, с ним — в оффлейне.
+  - account_id: 323776798
+    nick: 死
+    team: opp
+    team_name: SyberStar
+    position: 1
+    note: В турнире Luna ×2, Windranger ×2, Phantom Assassin, Dragon Knight (лёгкая, 678 GPM).
+  - account_id: 302784953
+    nick: SuperPoni
+    team: opp
+    team_name: SyberStar
+    position: 2
+    note: В турнире Dragon Knight ×2, Windranger, Outworld Devourer (мид), Centaur Warrunner, Slardar (оффлейн).
+  - account_id: 395555261
+    nick: Elsa
+    team: opp
+    team_name: SyberStar
+    position: 3
+    note: В турнире Dawnbreaker, Phoenix, Luna, Drow Ranger. 4 карты из 6, линия меняется.
+  - account_id: 843021665
+    nick: СГРЫЗ_КАСТРЮЛЮ
+    team: opp
+    team_name: SyberStar
+    position: 4
+    note: Steam-ник «СГРЫЗ КАСТРЮЛЮ». В турнире Hoodwink ×3, Lion, Techies, Skywrath Mage (саппорт сложной линии).
+  - account_id: 141490608
+    nick: kalibri
+    team: opp
+    team_name: SyberStar
+    position: 5
+    note: В турнире Ogre Magi ×2, Skywrath Mage, Jakiro, Vengeful Spirit, Undying (саппорт лёгкой линии).
+  - account_id: 121408000
+    nick: Леонид Ильич
+    team: opp
+    team_name: SyberStar
+    position: 2
+    reserve: true
+    note: Играл 2 карты на миде (Lina, Leshrac).
+
+  # Team Future (НИИЭП), группа C: 3–0, карты 6–0. Один и тот же состав и линии во всех картах.
+  - account_id: 213246942
+    nick: twilight
+    team: opp
+    team_name: Team Future
+    position: 1
+    note: В турнире Lifestealer ×2, Luna, Dragon Knight, Bristleback, Troll Warlord (лёгкая, 667 GPM).
+  - account_id: 196163091
+    nick: Saja
+    team: opp
+    team_name: Team Future
+    position: 2
+    note: В турнире Tinker ×2, Queen of Pain, Razor, Pangolier, Slardar (мид, 679 GPM).
+  - account_id: 124108992
+    nick: めつきすてみ
+    team: opp
+    team_name: Team Future
+    position: 3
+    note: В турнире Dragon Knight ×3, Tidehunter ×2, Night Stalker (оффлейн).
+  - account_id: 76747573
+    nick: Furs
+    team: opp
+    team_name: Team Future
+    position: 4
+    note: В турнире Rubick ×2, Techies, Mirana, Grimstroke, Tusk (саппорт сложной линии).
+  - account_id: 195155536
+    nick: R3N
+    team: opp
+    team_name: Team Future
+    position: 5
+    note: В турнире Witch Doctor ×5, Techies (саппорт лёгкой линии).
