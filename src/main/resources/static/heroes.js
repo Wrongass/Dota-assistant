@@ -11,6 +11,56 @@
     };
   }
 
+  // ------------------------------------------------------------ меню «Соперники»: закрывать по клику снаружи и Esc
+  const menus = () => document.querySelectorAll("nav.menu details[open]");
+  document.addEventListener("click", (e) => menus().forEach((d) => { if (!d.contains(e.target) || e.target.closest(".dropdown a")) d.open = false; }));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") menus().forEach((d) => { d.open = false; }); });
+
+  // ------------------------------------------------------------ «Перечитать данные»: индикатор и сообщение после
+  const reload = document.getElementById("reload-form");
+  if (reload) {
+    reload.addEventListener("submit", () => {
+      const b = reload.querySelector("button");
+      b.disabled = true;
+      b.textContent = "Перечитываю…";
+      try { sessionStorage.setItem("reload-started", String(Date.now())); } catch (e) { /* ок */ }
+    });
+    let started = null;
+    try { started = sessionStorage.getItem("reload-started"); sessionStorage.removeItem("reload-started"); } catch (e) { /* ок */ }
+    if (started) {
+      const s = ((Date.now() - Number(started)) / 1000).toFixed(1);
+      const note = document.createElement("div");
+      note.className = "reload-note";
+      note.textContent = `Данные перечитаны за ${s} с`;
+      document.body.appendChild(note);
+      setTimeout(() => note.remove(), 4000);
+    }
+  }
+
+  // ------------------------------------------------------------ время матчей: «2026-10-10 14:31 UTC» → по часам браузера
+  const UTC = /(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}) UTC/g;
+  const localTime = (y, mo, d, h, mi) => {
+    const t = new Date(Date.UTC(+y, +mo - 1, +d, +h, +mi));
+    const p = (x) => String(x).padStart(2, "0");
+    return `${t.getFullYear()}-${p(t.getMonth() + 1)}-${p(t.getDate())} ${p(t.getHours())}:${p(t.getMinutes())}`;
+  };
+  function localizeTimes() {
+    const main = document.querySelector("main");
+    if (!main) return;
+    const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) if (walker.currentNode.nodeValue.includes(" UTC")) nodes.push(walker.currentNode);
+    for (const node of nodes) {
+      const original = node.nodeValue;
+      const changed = original.replace(UTC, (_, y, mo, d, h, mi) => localTime(y, mo, d, h, mi));
+      if (changed !== original) {
+        node.nodeValue = changed;
+        if (node.parentElement && !node.parentElement.title) node.parentElement.title = original.trim() + " (по UTC)";
+      }
+    }
+  }
+  localizeTimes();
+
   // ------------------------------------------------------------ иконки героев
   const initials = (name) => name.replace(/'/g, "").split(/[\s-]+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
 

@@ -7,7 +7,7 @@ PORT = 9333
 SCRATCH = os.path.join(tempfile.gettempdir(), "dota-ui-checks")
 os.makedirs(SCRATCH, exist_ok=True)
 proc = subprocess.Popen([CHROME, "--headless=new", "--disable-gpu", f"--remote-debugging-port={PORT}",
-                         f"--user-data-dir={os.path.join(SCRATCH, 'cdp-prof5')}", "--window-size=1400,1000",
+                         f"--user-data-dir={os.path.join(SCRATCH, 'chrome-profile-hero_search')}", "--window-size=1400,1000",
                          "about:blank"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 try:
     for _ in range(50):
@@ -76,6 +76,9 @@ try:
     call("Page.enable")
     call("Page.navigate", url="http://127.0.0.1:8070/draft?opponent=SD_Team#first=us&heroes=")
     time.sleep(2.5)
+    js("localStorage.clear()")  # чистый старт: драфты прошлых прогонов не мешают
+    call("Page.reload")
+    time.sleep(2.5)
     js("document.getElementById('reset').click(); document.getElementById('reset').click();")
     wait_idle()
 
@@ -133,7 +136,7 @@ try:
     time.sleep(2)
     url = js("location.href")
     body = js("document.querySelector('main').innerText")
-    check("контрпики: «снайп» отправляется как Sniper", "h=Sniper" in url and "Против" in body, url)
+    check("контрпики: «снайп» отправляется как Sniper", "h=Sniper" in url and "Наша позиция" in body and "Sniper" in body, url)
     call("Page.navigate", url="http://127.0.0.1:8070/counters")
     time.sleep(2)
     js("(() => document.querySelector('.counters-form').requestSubmit())()")

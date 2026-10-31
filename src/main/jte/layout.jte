@@ -27,15 +27,15 @@
                 <a href="/logout" title="Выйти на этом устройстве">Выйти</a>
             @endif
             <button type="button" class="theme-toggle" id="theme-toggle" title="Светлая или тёмная тема">◐</button>
-            <form method="post" action="/reload">
-                <button title="Перечитать data/ и config/ с диска без перезапуска (к OpenDota не обращается)">Перечитать данные</button>
+            <form method="post" action="/reload" id="reload-form">
+                <button title="Перечитать уже скачанные данные (сами данные обновляются раз в сутки)">Перечитать данные</button>
             </form>
         </div>
     </div>
     <nav class="menu">
         <a href="/" class="${page.active().equals("home") ? "active" : null}">Главная</a>
         <a href="/team" class="${page.active().equals("team") ? "active" : null}">Команда</a>
-        <a href="/draft-data" class="${page.active().equals("draft-data") ? "active" : null}">Наш драфт</a>
+        <a href="/draft-data" class="${page.active().equals("draft-data") ? "active" : null}" title="Ручной план драфта и наши пулы">План драфта</a>
         <a href="/tournament" class="${page.active().equals("tournament") ? "active" : null}">Турнир</a>
         <a href="/group" class="${page.active().equals("group") ? "active" : null}">Группа</a>
         <details>
@@ -49,7 +49,7 @@
         <a href="/meta" class="${page.active().equals("meta") ? "active" : null}">Мета</a>
         <a href="/counters" class="${page.active().equals("counters") ? "active" : null}">Контрпики</a>
         <a href="/method" class="${page.active().equals("method") ? "active" : null}">Методика</a>
-        <a href="/draft" class="cta">Драфт ▶</a>
+        <a href="/draft" class="cta" title="Живой драфт: вносите ходы во время игры">Живой драфт ▶</a>
     </nav>
 </header>
 <main>

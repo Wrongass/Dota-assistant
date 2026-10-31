@@ -373,7 +373,7 @@
       if (h <= 0) return;
       parts[(isOurs(i) ? "our" : "their") + (slot(i).pick ? "Picks" : "Bans")].push(h);
     });
-    const banRow = (list) => list.map((h) => `<span class="ban-chip" title="${esc(name(h))}">${icon(h)}</span>`).join("") || '<span class="muted">—</span>';
+    const banRow = (list) => list.map((h) => `<span class="ban-chip" title="${esc(name(h))}">${icon(h)}<span class="ban-name">${esc(name(h))}</span></span>`).join("") || '<span class="muted">—</span>';
     $("our-bans").innerHTML = banRow(parts.ourBans);
     $("their-bans").innerHTML = banRow(parts.theirBans);
     const ours = { assignment: advice?.ourAssignment ?? [], remaining: advice?.ourRemaining ?? [], outlook: [] };
@@ -565,7 +565,8 @@
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || res.status);
       renderAdvice(data);
-      $("timing").textContent = `пересчёт ${Math.round(performance.now() - started)} мс`;
+      $("timing").textContent = "";
+      $("timing").title = `пересчёт ${Math.round(performance.now() - started)} мс`;
     } catch (e) {
       if (e.name !== "AbortError") { $("timing").textContent = "ошибка: " + e.message; unmarkStale(); }
     }

@@ -4,7 +4,7 @@
 <div class="panel table-wrap">
     <table class="sortable">
         <thead><tr>
-            <th>Поз.</th><th>Игрок</th><th>Steam-ник</th><th>Ранг</th><th class="num">MMR (оценка)</th>
+            <th>Поз.</th><th>Игрок</th><th>Steam-ник</th><th>Ранг</th><th class="num" title="Оценка OpenDota по среднему рангу матчей игрока, а не его личный MMR. Для сравнения игроков смотрите ранг">Ср. MMR матчей</th>
             <th>Матчей всего / год / патч</th><th class="num">WR в патче</th><th>Captains Mode</th><th>Роль в команде</th>
         </tr></thead>
         <tbody>
@@ -13,7 +13,7 @@
                 <td>${r.pos()}${r.inferred() ? "*" : ""}</td>
                 <td><a href="/player/${r.accountId()}">${r.nick()}</a> @template.tag.profiles(accountId = r.accountId())</td>
                 <td>${r.personaName()}</td>
-                <td>@template.tag.rank(rankTier = r.rankTier()) ${Fmt.rank(r.rankTier())}</td>
+                <td data-sort-value="${r.rankTier()}">@template.tag.rank(rankTier = r.rankTier()) ${Fmt.rank(r.rankTier())}</td>
                 <td class="num">${Fmt.num(r.mmr())}</td>
                 <td>${r.totalGames()} / ${r.yearGames()} / ${r.patchGames()}</td>
                 <td class="num">${Fmt.ratio(r.patchWins(), r.patchGames())}</td>
