@@ -90,6 +90,7 @@ public class WebApp {
                 sf.location = Location.CLASSPATH;
             });
         });
+        app.before(WebApp::rejectCrossSitePost);
         app.before(this::requireLogin);
         app.get("/health", ctx -> ctx.result("ok"));
         app.get("/login", this::loginPage);
@@ -142,6 +143,43 @@ public class WebApp {
     }
 
     // ---------------------------------------------------------------- вход
+
+    /**
+     * Защита от подделки запроса с чужого сайта (CSRF): POST, у которого Origin или Referer — другой сайт, отклоняется.
+     * Браузер присылает Origin со всеми POST-формами и fetch; cookie сессии и так SameSite=Lax, это второй рубеж.
+     * Без Origin и Referer (curl, тесты) пропускаем: подделать такой запрос из браузера нельзя.
+     */
+    static void rejectCrossSitePost(Context ctx) {
+        if (!"POST".equals(ctx.method().name())) {
+            return;
+        }
+        String source = ctx.header("Origin");
+        if (source == null || source.isBlank() || "null".equals(source)) {
+            source = ctx.header("Referer");
+        }
+        if (source == null || source.isBlank()) {
+            return;
+        }
+        String host = ctx.header("X-Forwarded-Host");
+        if (host == null || host.isBlank()) {
+            host = ctx.header("Host");
+        }
+        // прокси переписал Host на внутренний адрес — сравнить не с чем; не ломаем сайт, защищает SameSite=Lax
+        if (host == null || host.isBlank() || host.matches("(?i)(127\\.0\\.0\\.1|localhost|\\[::1]|web)(:\\d+)?")) {
+            return;
+        }
+        try {
+            java.net.URI uri = java.net.URI.create(source);
+            String from = uri.getHost() + (uri.getPort() > 0 ? ":" + uri.getPort() : "");
+            if (host != null && (from.equalsIgnoreCase(host) || uri.getHost().equalsIgnoreCase(host.split(":")[0]))) {
+                return;
+            }
+        } catch (IllegalArgumentException e) {
+            // кривой Origin — как чужой
+        }
+        ctx.status(403).result("Запрос с другого сайта отклонён");
+        ctx.skipRemainingHandlers();
+    }
 
     /** Всё, кроме входа, проверки здоровья и статики, — только после входа (если SITE_PASSWORD задан). */
     private void requireLogin(Context ctx) {
