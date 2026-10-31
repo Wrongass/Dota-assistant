@@ -317,6 +317,26 @@
     ? p.recent.map((h) => `<span class="mini" title="${esc(h.name)}: ${h.g14} игр за 14 дней, ${h.g60} за 2 месяца${h.team ? `, ${h.team} с командой` : ""}">${icon(h.id)}${h.g60}${h.fresh ? "🔥" : ""}${h.team ? "👥" : ""}</span>`).join("")
     : '<span class="muted">нет игр</span>';
 
+  // ------------------------------------------------------------ состав команды (FEAT-03)
+  const ROLES = [["Disabler", "контроль"], ["Initiator", "инициация"], ["Durable", "плотные"], ["Nuker", "урон"],
+    ["Pusher", "пуш"], ["Carry", "керри"], ["Escape", "мобильные"]];
+  /** Сколько героев с каждой ролью и чего не хватает: после 3 пиков — нет контроля/инициации/плотного/керри. */
+  function composition(picks, ours) {
+    if (!picks.length) return "";
+    const roles = picks.map((h) => byId.get(h)?.roles || []);
+    const count = (r) => roles.filter((x) => x.includes(r)).length;
+    const chips = ROLES.map(([r, label]) => `<span class="comp-chip${count(r) ? "" : " zero"}" title="${label}: ${roles.length ? picks.filter((h, i) => roles[i].includes(r)).map(name).join(", ") || "нет" : ""}">${label} ${count(r)}</span>`).join("");
+    const missing = [];
+    if (picks.length >= 3) {
+      if (!count("Disabler")) missing.push("нет контроля");
+      if (!count("Initiator")) missing.push("нет инициации");
+      if (!count("Durable")) missing.push("нет плотного героя");
+      if (!count("Carry")) missing.push("нет керри");
+    }
+    const warn = missing.length ? `<div class="comp-warn${ours ? " ours" : ""}">⚠ ${missing.join(" · ")}</div>` : "";
+    return `<div class="muted">Состав</div><div class="comp-chips">${chips}</div>${warn}`;
+  }
+
   function playerSlot(p, side, picks) {
     const a = side.assignment.find((x) => x.player === p.nick);
     const free = side.remaining.find((r) => r.player === p.nick);
@@ -383,6 +403,8 @@
     const banRow = (list) => list.map((h) => `<span class="ban-chip" title="${esc(name(h))}">${icon(h)}<span class="ban-name">${esc(name(h))}</span></span>`).join("") || '<span class="muted">—</span>';
     $("our-bans").innerHTML = banRow(parts.ourBans);
     $("their-bans").innerHTML = banRow(parts.theirBans);
+    $("our-comp").innerHTML = composition(parts.ourPicks, true);
+    $("their-comp").innerHTML = composition(parts.theirPicks, false);
     const ours = { assignment: advice?.ourAssignment ?? [], remaining: advice?.ourRemaining ?? [], outlook: [] };
     const theirs = { theirs: true, assignment: advice?.theirAssignment ?? [], remaining: advice?.theirRemaining ?? [], outlook: advice?.theirPlayers ?? [] };
     $("our-slots").innerHTML = (ROSTERS.ours || []).map((p) => playerSlot(p, ours, parts.ourPicks)).join("");

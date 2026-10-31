@@ -29,6 +29,7 @@
                     <p><b>нам неудобен 49%</b> — наш винрейт против этого героя ниже обычного. <b>⚠ наш</b> — герой нашего игрока без героя.</p>
                     <p><b>2 мес: 9👥</b> — игр за 2 месяца, 👥 — в пати с командой, 🔥 — новый герой, ★ — сигнатурка.</p>
                     <p><b>свободен 87%</b> — вероятность, что игрок ещё не выбрал героя.</p>
+                    <p><b>Состав (под командой)</b> — сколько героев с ролью по справочнику OpenDota: контроль (Disabler), инициация (Initiator), плотные (Durable), урон (Nuker), пуш (Pusher), керри (Carry). ⚠ — чего не хватает после 3+ пиков.</p>
                     <p><b>Число у бана (100, 74…)</b> — важность бана относительно первого в списке: шанс их пика × вред для нас.</p>
                 </div>
             </details>
@@ -51,6 +52,7 @@
                 <div id="our-slots" class="slots"></div>
                 <div class="small muted">Наши баны</div>
                 <div id="our-bans" class="ban-row"></div>
+                <div id="our-comp" class="comp small"></div>
             </section>
 
             <section class="center">
@@ -100,6 +102,7 @@
                 <div id="their-slots" class="slots"></div>
                 <div class="small muted">Их баны</div>
                 <div id="their-bans" class="ban-row"></div>
+                <div id="their-comp" class="comp small"></div>
             </section>
         </div>
 

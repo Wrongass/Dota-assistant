@@ -212,14 +212,14 @@ public final class AnalysisContext {
         return meta.name(heroId);
     }
 
-    /** Герой для сетки драфта: attr — str / agi / int / all. */
-    public record HeroInfo(int id, String name, String attr) {
+    /** Герой для сетки драфта: attr — str / agi / int / all; roles — роли из справочника OpenDota (Carry, Disabler…). */
+    public record HeroInfo(int id, String name, String attr, List<String> roles) {
     }
 
     public List<HeroInfo> heroList() {
         return meta.heroes.values().stream()
                 .sorted(java.util.Comparator.comparing(Meta.Hero::name))
-                .map(h -> new HeroInfo(h.id(), h.name(), h.attr()))
+                .map(h -> new HeroInfo(h.id(), h.name(), h.attr(), h.roles()))
                 .toList();
     }
 }
