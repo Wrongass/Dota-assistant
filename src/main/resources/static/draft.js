@@ -459,6 +459,10 @@
 
   function renderSummary(a) {
     if (!a.finished) return;
+    // E-23: пропущенный пик — в игре за него выдают случайного героя, итог без него неполный
+    const skipped = state.heroes.map((h, i) => (h === 0 && ORDER[i].pick && isOurs(i) ? i + 1 : 0)).filter(Boolean);
+    $("summary-warn").innerHTML = skipped.length
+      ? `<p class="warn">Наш пик ${skipped.join(", ")} пропущен: в игре за него выдали случайного героя. Впишите его — клик по ходу ${skipped[0]} в ленте.</p>` : "";
     const heroes = (names) => names.map((n) => { const h = HEROES.find((x) => x.name === n); return h ? icon(h.id) + esc(n) : esc(n); }).join(", ");
     $("lanes").innerHTML = "<tr><th>Линия</th><th>Мы</th><th>Они</th><th>Преим.</th><th></th></tr>" + a.lanes.map((l) =>
       `<tr><td>${esc(l.name)}</td><td>${heroes(l.ours)}</td><td>${heroes(l.theirs)}</td>
@@ -576,6 +580,12 @@
       if (e.name !== "AbortError") { $("timing").textContent = "ошибка: " + e.message; unmarkStale(); }
     }
   }
+
+  // сетка героев: свернуть/развернуть, выбор запоминается (UX-06)
+  try { if (localStorage.getItem("draft:grid") === "closed") $("grid-box").open = false; } catch (e) { /* ок */ }
+  $("grid-box").addEventListener("toggle", () => {
+    try { localStorage.setItem("draft:grid", $("grid-box").open ? "open" : "closed"); } catch (e) { /* ок */ }
+  });
 
   // ------------------------------------------------------------ старт
   const ATTR = { str: "Сила", agi: "Ловкость", int: "Интеллект", all: "Универсальные" };

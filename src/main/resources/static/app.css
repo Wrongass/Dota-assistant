@@ -372,3 +372,6 @@ button.reason.more { border: 0; cursor: pointer; font: inherit; font-size: 11px;
 .draft-setup button { padding: 5px 9px; }
 .maps { align-items: center; }
 .map-tab { padding: 3px 8px; }
+/* UX-06: поиск героя всегда на экране при прокрутке советов */
+.draft-main .center .search-panel { position: sticky; top: 6px; z-index: 25; }
+#grid-box > summary { cursor: pointer; margin-bottom: 6px; }

@@ -87,6 +87,7 @@
 
                 <div class="panel" id="summary" hidden>
                     <h3>Итог драфта <button id="copy" class="small-btn">Скопировать текстом</button> <span id="copied" class="muted small"></span></h3>
+                    <div id="summary-warn"></div>
                     <div class="small muted">Линии по позициям расстановки; преимущество — по встречным парам героев</div>
                     <table id="lanes"></table>
                     <div class="small muted">Их самые опасные герои</div>
@@ -102,10 +103,10 @@
             </section>
         </div>
 
-        <div class="panel">
-            <h3>Все герои <span class="muted small">клик — внести в текущий ход</span></h3>
+        <details class="panel" id="grid-box" open>
+            <summary><b>Все герои</b> <span class="muted small">клик — внести в текущий ход · нажмите, чтобы свернуть</span></summary>
             <div id="grid" class="hero-grid"></div>
-        </div>
+        </details>
         <p class="muted small">Порядок ходов Captains Mode — как в 39 матчах нашей лиги. Прогноз — статистика по data/
             (без сети): умение, турнир, герои за 2 месяца и в пати со своей командой. Бэктест на 6 матчах группы: реальный
             пик в топ-5 прогноза в 47% случаев, в топ-10 — 67% (простой бейзлайн «частые герои игроков» — 32% и 47%).
