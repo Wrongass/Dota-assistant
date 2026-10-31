@@ -34,11 +34,12 @@
                 <span class="muted small">Линия — ${v.sample()}: доля выигранных / ничейных / проигранных линий
                     (около 10-й минуты, по формуле STRATZ) и винрейт в этих играх.</span>
             @else
-                <span class="warn small">Нет данных о линии: задайте STRATZ_TOKEN и запустите выгрузку. Ниже — только «по игре» из OpenDota.</span>
+                <span class="muted small">Данные о линиях пока не загружены (они обновляются раз в сутки). Ниже — только «по игре».</span>
             @endif
         </p>
 
         <div class="grid3">
+            @if(v.hasLane())
             <div class="panel table-wrap">
                 <h2>На линии</h2>
                 <p class="muted small">Кто чаще выигрывает линию против них. «Перевес» — выиграно минус проиграно,
@@ -55,6 +56,7 @@
                     </tbody>
                 </table>
             </div>
+            @endif
             <div class="panel table-wrap">
                 <h2>По игре</h2>
                 <p class="muted small">Кто сильнее их за всю игру, независимо от линии: преимущество в винрейте против

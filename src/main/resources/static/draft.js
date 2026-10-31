@@ -62,6 +62,11 @@
   let editIndex = null; // исправляемый ход (клик по ленте)
   let pendingWarn = null; // герой, для которого показано предупреждение: второй ввод — подтверждение
   let selected = 0; // выбранная строка в списке поиска
+  // После хода списки советов устарели, пока сервер не ответит, и ещё LOCK_MS: клики по ним не принимаем,
+  // чтобы второй клик в то же место не внёс другого героя (список под курсором успел перестроиться)
+  const LOCK_MS = 400;
+  let lockedUntil = 0;
+  let awaiting = false;
   const key = () => "draft:" + state.opponent;
   const load = () => {
     try {
@@ -82,15 +87,24 @@
   const pct = (x) => (100 * x).toFixed(x < 0.1 ? 1 : 0) + "%";
 
   // ------------------------------------------------------------ ввод ходов
-  /** Предупреждение перед подозрительным ходом: наш бан нашего героя или наш пик не из наших пулов. */
+  /** Наши игроки, у которых этот герой в пуле и которые ещё без героя (POOL: «kren (поз. 1)»). */
+  function freeOwners(heroId) {
+    const owners = POOL[heroId];
+    if (!owners) return null;
+    const busy = new Set((advice?.ourAssignment || []).map((a) => a.player));
+    const free = owners.filter((o) => !busy.has(o.split(" (")[0]));
+    return free.length ? free : null;
+  }
+
+  /** Предупреждение перед подозрительным ходом: наш бан героя свободного нашего игрока или наш пик не из наших пулов. */
   function warning(i, heroId) {
     if (i >= ORDER.length) return null;
-    const owners = POOL[heroId];
+    const owners = freeOwners(heroId);
     if (isOurs(i) && !slot(i).pick && owners) {
-      return `${name(heroId)} — герой наших: ${owners.join(", ")}. Это НАШ бан. Ещё раз Enter или клик — забанить.`;
+      return { text: `${name(heroId)} — герой наших: ${owners.join(", ")}. Это НАШ бан.`, action: `Забанить ${name(heroId)}` };
     }
-    if (isOurs(i) && slot(i).pick && !owners) {
-      return `${name(heroId)} нет в наших пулах. Это НАШ пик? Ещё раз Enter или клик — внести.`;
+    if (isOurs(i) && slot(i).pick && !POOL[heroId]) {
+      return { text: `${name(heroId)} нет в наших пулах. Это НАШ пик?`, action: `Внести ${name(heroId)}` };
     }
     return null;
   }
@@ -106,23 +120,66 @@
       return;
     }
     pendingWarn = null;
+    const s = slot(target), what = `${s.pick ? "пик" : "бан"} ${name(heroId)} (ход ${target + 1}, ${isOurs(target) ? "наш" : "их"})`;
     if (editIndex !== null) {
       const old = state.heroes[editIndex];
       if (old > 0) delete state.assign[old];
       state.heroes[editIndex] = heroId;
       editIndex = null;
+      toast(`Исправлено: ${what}`, false);
     } else {
       state.heroes.push(heroId);
+      toast(`Внесено: ${what}`, true);
     }
     afterChange();
   }
-  function showWarn(text) {
-    $("warn").textContent = text;
-    $("warn").hidden = !text;
+  /** Предупреждение поверх списков (ничего не сдвигает) с кнопками «Забанить X» / «Отмена». */
+  function showWarn(w) {
+    if (!w) { $("warn").hidden = true; $("warn").innerHTML = ""; return; }
+    $("warn").innerHTML = `<span>${esc(w.text)}</span>
+      <button type="button" class="primary" data-act="confirm">${esc(w.action)}</button>
+      <button type="button" data-act="cancel">Отмена</button>
+      <span class="muted small">или ещё раз Enter</span>`;
+    $("warn").hidden = false;
   }
+  $("warn").addEventListener("click", (e) => {
+    const act = e.target.closest("button")?.dataset.act;
+    if (act === "confirm" && pendingWarn) apply(pendingWarn);
+    if (act === "cancel") { pendingWarn = null; showWarn(null); }
+    $("search").focus();
+  });
+  /** Короткое сообщение о внесённом ходе с кнопкой отмены. */
+  let toastTimer = 0;
+  function toast(text, undoable) {
+    $("toast").innerHTML = `<span>${esc(text)}</span>${undoable ? ' <button type="button" data-act="undo">Отменить</button>' : ""}`;
+    $("toast").hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { $("toast").hidden = true; }, 4000);
+  }
+  $("toast").addEventListener("click", (e) => {
+    if (e.target.closest("button")?.dataset.act === "undo") { $("toast").hidden = true; $("undo").click(); }
+  });
+  /** Списки советов устарели: гасим их и сразу убираем из них уже внесённых героев. */
+  function markStale() {
+    lockedUntil = Date.now() + LOCK_MS;
+    awaiting = true;
+    const taken = used();
+    document.querySelectorAll(".advice-panel").forEach((p) => p.classList.add("stale"));
+    document.querySelectorAll(".advice-panel .hero-pick").forEach((b) => {
+      if (taken.has(Number(b.dataset.id))) b.closest("li")?.classList.add("gone");
+    });
+  }
+  function unmarkStale() {
+    awaiting = false;
+    setTimeout(() => {
+      if (!awaiting) document.querySelectorAll(".advice-panel").forEach((p) => p.classList.remove("stale"));
+    }, Math.max(0, lockedUntil - Date.now()));
+  }
+  const adviceLocked = () => awaiting || Date.now() < lockedUntil;
   function afterChange() {
     pendingWarn = null;
-    showWarn("");
+    showWarn(null);
+    markStale();
     // ручное назначение — только для героев, которые ещё в пиках
     const picks = new Set(state.heroes.filter((h, i) => h > 0 && slot(i).pick));
     Object.keys(state.assign).forEach((h) => { if (!picks.has(Number(h))) delete state.assign[h]; });
@@ -145,7 +202,11 @@
   };
   $("skip").onclick = () => {
     if (editIndex !== null) { state.heroes[editIndex] = 0; editIndex = null; afterChange(); return; }
-    if (state.heroes.length < ORDER.length) { state.heroes.push(0); afterChange(); }
+    if (state.heroes.length < ORDER.length) {
+      toast(`Ход ${state.heroes.length + 1} пропущен`, true);
+      state.heroes.push(0);
+      afterChange();
+    }
   };
   $("reset").onclick = () => { if (confirmReset()) { state.heroes = []; state.assign = {}; editIndex = null; afterChange(); } };
   // без браузерного confirm(): второй клик в течение 3 секунд подтверждает сброс
@@ -192,8 +253,8 @@
     const found = search($("search").value).slice(0, 6);
     if (selected >= found.length) selected = 0;
     $("suggest").innerHTML = found.map((h, i) =>
-      `<li class="${i === selected ? "sel" : ""}" data-id="${h.id}">${icon(h.id)} ${esc(h.name)}${POOL[h.id]
-        ? ` <span class="muted small">наш: ${esc(POOL[h.id].join(", "))}</span>` : ""}</li>`).join("");
+      `<li class="${i === selected ? "sel" : ""}" data-id="${h.id}">${icon(h.id)} ${esc(h.name)}${freeOwners(h.id)
+        ? ` <span class="muted small">наш: ${esc(freeOwners(h.id).join(", "))}</span>` : ""}</li>`).join("");
     const q = $("search").value.trim();
     document.querySelectorAll("#grid .hero-tile").forEach((b) => {
       b.classList.toggle("match", q !== "" && found.some((h) => h.id === Number(b.dataset.id)));
@@ -214,7 +275,7 @@
       $("search").value = "";
       editIndex = null;
       pendingWarn = null;
-      showWarn("");
+      showWarn(null);
       renderSearch();
       renderBoard();
     }
@@ -248,7 +309,7 @@
     const i = Number(b.dataset.i);
     editIndex = editIndex === i ? null : i;
     pendingWarn = null;
-    showWarn("");
+    showWarn(null);
     renderBoard();
     $("search").focus();
   });
@@ -359,28 +420,34 @@
     $("panel-their").hidden = a.theirPicksLeft === 0 && a.theirBansLeft === 0;
     $("panel-bans").hidden = a.ourBansLeft === 0;
     $("panel-picks").hidden = a.ourPicksLeft === 0;
+    // панели не переставляем (иначе клик попадает не туда): нужная на этом ходу только подсвечивается
     const focus = ours ? (s.pick ? "panel-picks" : "panel-bans") : "panel-their";
-    ["panel-their", "panel-bans", "panel-picks"].forEach((p) => {
-      $(p).classList.toggle("focus", p === focus);
-      $(p).style.order = p === focus ? 0 : 1;
-    });
-    // на их ходу наверху то, что они сделают сейчас: пик или бан
-    if (!ours) {
-      $("panel-their").insertBefore(s.pick ? $("their-next-box") : $("their-bans-box"), $("panel-their").firstChild);
-    }
+    ["panel-their", "panel-bans", "panel-picks"].forEach((p) => $(p).classList.toggle("focus", p === focus));
+    $("their-next-box").classList.toggle("focus-box", !ours && s.pick);
+    $("their-bans-box").classList.toggle("focus-box", !ours && !s.pick);
   }
 
   // ------------------------------------------------------------ подсказки
-  const reasons = (r, n) => (r.reasons || []).slice(0, n).map((x) => `<span class="reason">${esc(x)}</span>`).join(" ");
-  const more = (r, n) => (r.reasons || []).length > n ? `<span class="reason more" title="${esc(r.reasons.slice(n).join(" · "))}">+${r.reasons.length - n}</span>` : "";
+  // причины этого драфта (контрит, связка, линия, пик-отказ) сервер ставит первыми — показываем три, остальные по клику
+  const SHOWN = 3;
+  const CONTEXT = /^(контрит|связка|линия|пик-отказ)/;
+  const chip = (x) => `<span class="reason${CONTEXT.test(x) ? " key" : ""}">${esc(x)}</span>`;
+  const reasons = (r, n) => (r.reasons || []).slice(0, n).map(chip).join(" ");
+  const more = (r, n) => (r.reasons || []).length > n
+    ? `<button type="button" class="reason more" data-more="${esc(JSON.stringify(r.reasons.slice(n)))}" title="Показать остальные причины">+${r.reasons.length - n}</button>` : "";
+  const ourMark = (r) => { const o = freeOwners(r.heroId); return o ? `<span class="reason ours-mark" title="Герой наших: ${esc(o.join(", "))}">⚠ наш: ${esc(o.map((x) => x.split(" (")[0]).join(", "))}</span>` : ""; };
   const pickable = (r, extra) => `<li><button class="hero-pick" data-id="${r.heroId}">${icon(r.heroId)}${esc(r.name)}</button>
-    ${extra} ${reasons(r, 2)} ${more(r, 2)}</li>`;
+    ${extra} ${reasons(r, SHOWN)} ${more(r, SHOWN)}</li>`;
+  root.addEventListener("click", (e) => {
+    const m = e.target.closest(".reason.more[data-more]");
+    if (m) m.outerHTML = JSON.parse(m.dataset.more).map(chip).join(" ");
+  });
 
   function renderAdvice(a) {
     advice = a;
     $("their-next").innerHTML = a.theirNextPicks.map((r) =>
       pickable(r, `<b>${pct(r.score)}</b> <span class="muted">${esc(r.player)}</span>`)).join("");
-    $("bans").innerHTML = a.banSuggestions.map((r) => pickable(r, "")).join("");
+    $("bans").innerHTML = a.banSuggestions.map((r) => pickable(r, ourMark(r))).join("");
     $("picks").innerHTML = a.pickSuggestions.map((r) =>
       pickable(r, `<span class="muted">${esc(r.player)}</span>`)).join("");
     const lo = a.laneOptions || [];
@@ -398,6 +465,7 @@
     $("their-bans-left").textContent = a.theirBansLeft ? `осталось банов: ${a.theirBansLeft}` : "";
     renderSummary(a);
     renderBoard();
+    unmarkStale();
   }
 
   function renderSummary(a) {
@@ -472,6 +540,7 @@
     const nick = e.target.closest(".nick[data-account]");
     if (nick) { openDrawer(nick.dataset.account); return; }
     const b = e.target.closest(".hero-pick, #grid .hero-tile");
+    if (b && b.closest(".advice-panel") && adviceLocked()) return; // список ещё не обновился после хода
     if (b && !b.disabled) apply(Number(b.dataset.id));
   });
 
@@ -493,7 +562,7 @@
       renderAdvice(data);
       $("timing").textContent = `пересчёт ${Math.round(performance.now() - started)} мс`;
     } catch (e) {
-      if (e.name !== "AbortError") $("timing").textContent = "ошибка: " + e.message;
+      if (e.name !== "AbortError") { $("timing").textContent = "ошибка: " + e.message; unmarkStale(); }
     }
   }
 

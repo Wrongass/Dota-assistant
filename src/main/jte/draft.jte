@@ -92,6 +92,8 @@
             пик в топ-5 прогноза в 47% случаев, в топ-10 — 67% (простой бейзлайн «частые герои игроков» — 32% и 47%).
             <a href="/method">Методика</a></p>
 
+        <div id="toast" class="toast" hidden></div>
+
         <aside id="drawer" class="drawer" hidden>
             <button id="drawer-close" class="drawer-close" title="Закрыть (Esc)">✕</button>
             <div id="drawer-body"></div>

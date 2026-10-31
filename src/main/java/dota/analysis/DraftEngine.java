@@ -637,9 +637,13 @@ public final class DraftEngine {
         return result;
     }
 
+    /**
+     * Причины пика: сначала то, что относится к этому драфту (связка с их или нашими героями, контрпик), потом статистика
+     * игрока и героя. Капитан видит первые причины сразу, остальные — по клику.
+     */
     private List<String> pickReasons(SquadModel model, PlayerStats p, int h, List<Integer> allies, List<Integer> enemies,
                                      String enemyWord) {
-        List<String> reasons = new ArrayList<>();
+        List<String> reasons = new ArrayList<>(draftReasons(h, allies, enemies, enemyWord));
         int t = model.tourneyPicks(p, h);
         if (t > 0) {
             reasons.add("×" + t + " в турнире");
@@ -659,13 +663,18 @@ public final class DraftEngine {
         } else if (wr <= Meta.WEAK_WR) {
             reasons.add("▼ " + Md.pct(wr));
         }
-        String syn = bestPair(h, allies, true);
-        if (syn != null) {
-            reasons.add("связка с " + syn);
-        }
+        return reasons;
+    }
+
+    private List<String> draftReasons(int h, List<Integer> allies, List<Integer> enemies, String enemyWord) {
+        List<String> reasons = new ArrayList<>();
         String cnt = bestPair(h, enemies, false);
         if (cnt != null) {
             reasons.add("контрит " + enemyWord + " " + cnt);
+        }
+        String syn = bestPair(h, allies, true);
+        if (syn != null) {
+            reasons.add("связка с " + syn);
         }
         return reasons;
     }
@@ -719,7 +728,9 @@ public final class DraftEngine {
             }
             double denyChance = theirs.chance().getOrDefault(h, 0.0);
             if (denyChance >= 0.15) {
-                reasons.add("пик-отказ: у них " + Md.pct(denyChance));
+                // сразу после причин этого драфта: линия, контрпик, связка
+                int at = (laneNote != null ? 1 : 0) + draftReasons(h, ourPicks, theirPicks, "их").size();
+                reasons.add(at, "пик-отказ: у них " + Md.pct(denyChance));
             }
             result.add(new Reasoned(h, meta.name(h), 100 * score, bestPlayer.nick(), reasons));
         }
