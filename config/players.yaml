@@ -1,7 +1,7 @@
 # team: our | opp; position: 1..5 или пусто; note — свободный комментарий о роли и стиле.
 # reserve: true — запасной: в состав по умолчанию не входит. Состав на игру меняется на сайте (страница команды или
 # соперника → «Состав на игру» → Сохранить), хранится в state/lineups.json; «Вернуть по конфигу» — обратно к этому файлу.
-# Для соперников обязателен team_name — имя команды из league.group или league.playin.
+# Для соперников обязателен team_name — имя команды из league.group, league.playin или league.playoff.
 our_team:
   name: Team Visual
   organization: Долг
@@ -14,9 +14,9 @@ league:
   name: Киберлига «Трудовые резервы», 6 сезон (осень) — дивизион Ancient, группа B
   since: 2026-10-01
   # Группа закончилась 25.10: 2-е место (1 победа, 1 ничья, 1 поражение; карты 3–3), прямого выхода нет — плей-ин.
-  stage: "Плей-ин (верхняя сетка): W1 мы прошли BIM Инжиниринг. W2 ИТОЗ против Дом.РФ идёт сейчас (31.10), по ходу матча выигрывает ИТОЗ. W5 — мы против победителя W2."
-  next_opponent: comaTOZ     # следующая игра — первая на главной странице, соперник по умолчанию в драфте
-  prepare: [CyberDOM2]       # запасной вариант W5, если Дом.РФ всё же выиграет W2
+  # Плей-ин закончился 1.11: мы прошли в плей-офф.
+  stage: "Плей-офф, 8 команд. Из групп: УППО, МЦСТ (Elbrus team), НПП «Звезда» (SyberStar), НИИЭП (Team Future). Из плей-ина: Долг (мы), GGsel (SD Team), НИИ Полюс, ИТОЗ. По сетке: Долг — GGsel, НИИ Полюс — ИТОЗ."
+  next_opponent: SD Team     # следующая игра — первая на главной странице, соперник по умолчанию в драфте
   # Карты, которых нет в OpenDota, но результат известен с сайта турнира: идут только в счёт группы.
   manual_maps:
     - date: 2026-10-17
@@ -33,18 +33,20 @@ league:
     - name: Team Polyus
       organization: НИИ Полюс им. М.Ф. Стельмаха
       team_id: 9419839
-  # Соперники плей-ина из других групп. Добавлены только команды нашей ветки сетки (W1, W2): весь дивизион —
-  # ~25 команд и ~1200 запросов к OpenDota, а нужны нам максимум 3–4 соперника.
-  playin:
-    - name: BIM-TIM
-      organization: BIM Инжиниринг
-      team_id: 10282748
+  # Плей-офф: команды не из нашей группы. Только те 8 команд, что в плей-офф; BIM и Дом.РФ выбыли в плей-ине.
+  playoff:
     - name: comaTOZ
       organization: ИТОЗ
       team_id: 10281979
-    - name: CyberDOM2
-      organization: Дом.РФ
-      team_id: 10095821
+    - name: Elbrus team
+      organization: МЦСТ
+      team_id: 7586446
+    - name: SyberStar
+      organization: НПП «Звезда»
+      team_id: 6990376
+    - name: Team Future
+      organization: НИИЭП
+      team_id: 9324740
 
 players:
   # --- Team Visual ---
@@ -183,7 +185,7 @@ players:
     reserve: true
     note: Играл 3 карты в лиге с 17.10 (Queen of Pain и Death Prophet на миде, Axe в оффлейне). Возможно, новый мид вместо ryota.
 
-  # --- Плей-ин. Составы и позиции — по 6 картам каждой команды в лиге (группы A и C): 1–3 — по линии и GPM,
+  # --- Плей-офф, команды не из нашей группы. Составы и позиции — по 6 картам каждой в группе: 1–3 — по линии и GPM,
   # 4/5 — саппорт сложной / лёгкой линии. Ники — из профилей Steam. ---
   # comaTOZ (ИТОЗ), группа A: 1–2, карты 2–4.
   - account_id: 279712792
@@ -224,73 +226,112 @@ players:
     reserve: true
     note: Замена в 2 картах против Эльбрус (Viper, Slardar в оффлейне), тогда kezi не играл, а YOURSELF (IAM-) стоял на миде.
 
-  # CyberDOM2 (Дом.РФ), группа C: 1–2, карты 2–4.
-  - account_id: 72893201
-    nick: COCKPIT
+  # Elbrus team (МЦСТ), группа A: 3–0, карты 6–0. Мид Блинолопатный (4 карты), в остальных 2 на миде Участковый.
+  - account_id: 1069467776
+    nick: zero_excuses
     team: opp
-    team_name: CyberDOM2
+    team_name: Elbrus team
     position: 1
-    note: В турнире Drow Ranger ×2, Bloodseeker, Templar Assassin, Phantom Assassin, Techies (safe, 583 GPM).
-  - account_id: 62616773
-    nick: Aspera
+    note: В турнире Lone Druid ×2, Lifestealer, Night Stalker, Void Spirit, Lina (680 GPM, лёгкая и сложная поровну).
+  - account_id: 295808187
+    nick: Блинолопатный
     team: opp
-    team_name: CyberDOM2
+    team_name: Elbrus team
     position: 2
-    note: В турнире Lina ×2, Outworld Devourer, Leshrac, Slark (mid), Disruptor.
-  - account_id: 66925112
-    nick: Kabal
+    note: Steam-ник «Блинолопатный гражданин». В турнире Invoker, Meepo, Brewmaster, Magnus (мид, 685 GPM).
+  - account_id: 101102378
+    nick: MAjeRoK
     team: opp
-    team_name: CyberDOM2
+    team_name: Elbrus team
     position: 3
-    note: В турнире Axe ×3, Tidehunter, Night Stalker, Underlord (off).
-  - account_id: 77289040
-    nick: krs
+    note: В турнире Tidehunter ×2, Underlord (оффлейн), Drow Ranger. 4 карты из 6.
+  - account_id: 108125964
+    nick: Sladenky
     team: opp
-    team_name: CyberDOM2
+    team_name: Elbrus team
     position: 4
-    note: В турнире Hoodwink, Shadow Shaman, Jakiro, Dazzle (саппорт сложной линии, 4 карты из 6).
-  - account_id: 248563007
-    nick: sherdar
+    note: В турнире Techies ×3, Rubick ×2, Clockwerk (саппорт сложной линии).
+  - account_id: 191870820
+    nick: Tort
     team: opp
-    team_name: CyberDOM2
+    team_name: Elbrus team
     position: 5
-    note: В турнире Snapfire ×2, Disruptor, Shadow Shaman, Witch Doctor, Lion (саппорт лёгкой линии).
-  - account_id: 106079486
-    nick: Timer
+    note: В турнире Witch Doctor ×2, Silencer, Snapfire, Shadow Shaman, Ogre Magi (саппорт лёгкой линии).
+  - account_id: 1151498448
+    nick: Участковый
     team: opp
-    team_name: CyberDOM2
-    position: 1
+    team_name: Elbrus team
+    position: 2
     reserve: true
-    note: Замена в 2 картах против НИИЭП (Medusa на лёгкой, Kez на миде).
+    note: Steam-ник «Участковый разберётся». Играл 4 карты (Templar Assassin, Shadow Fiend на миде, Lifestealer, Phoenix).
 
-  # BIM-TIM (BIM Инжиниринг), группа A: 0–3, карты 0–6. Позиции 1 и 3 неточные: PecoPeco~ и Zitz оба стояли на лёгкой.
-  - account_id: 913576335
-    nick: Zitz
+  # SyberStar (НПП «Звезда»), группа A: 2–0–1, карты 4–2. Без Леонида Ильича SuperPoni на миде, с ним — в оффлейне.
+  - account_id: 323776798
+    nick: 死
     team: opp
-    team_name: BIM-TIM
+    team_name: SyberStar
     position: 1
-    note: В турнире Faceless Void, Phantom Lancer, Drow Ranger, Legion Commander, Undying, Witch Doctor.
-  - account_id: 1191343277
-    nick: GoodDay
+    note: В турнире Luna ×2, Windranger ×2, Phantom Assassin, Dragon Knight (лёгкая, 678 GPM).
+  - account_id: 302784953
+    nick: SuperPoni
     team: opp
-    team_name: BIM-TIM
+    team_name: SyberStar
     position: 2
-    note: В турнире Sniper, Zeus, Mirana, Bloodseeker (mid), Witch Doctor, Vengeful Spirit.
-  - account_id: 86887038
-    nick: PecoPeco
+    note: В турнире Dragon Knight ×2, Windranger, Outworld Devourer (мид), Centaur Warrunner, Slardar (оффлейн).
+  - account_id: 395555261
+    nick: Elsa
     team: opp
-    team_name: BIM-TIM
+    team_name: SyberStar
     position: 3
-    note: В турнире Troll Warlord, Lifestealer, Dragon Knight, Axe, Magnus, Techies.
-  - account_id: 113258923
-    nick: montereyvoron
+    note: В турнире Dawnbreaker, Phoenix, Luna, Drow Ranger. 4 карты из 6, линия меняется.
+  - account_id: 843021665
+    nick: СГРЫЗ_КАСТРЮЛЮ
     team: opp
-    team_name: BIM-TIM
+    team_name: SyberStar
     position: 4
-    note: В турнире Lion ×2, Lich ×2, Silencer, Weaver (саппорт сложной линии).
-  - account_id: 61095001
-    nick: Барбазяк
+    note: Steam-ник «СГРЫЗ КАСТРЮЛЮ». В турнире Hoodwink ×3, Lion, Techies, Skywrath Mage (саппорт сложной линии).
+  - account_id: 141490608
+    nick: kalibri
     team: opp
-    team_name: BIM-TIM
+    team_name: SyberStar
     position: 5
-    note: В турнире Skywrath Mage ×2, Lina, Tidehunter, Wraith King, Chaos Knight (линия меняется).
+    note: В турнире Ogre Magi ×2, Skywrath Mage, Jakiro, Vengeful Spirit, Undying (саппорт лёгкой линии).
+  - account_id: 121408000
+    nick: Леонид Ильич
+    team: opp
+    team_name: SyberStar
+    position: 2
+    reserve: true
+    note: Играл 2 карты на миде (Lina, Leshrac).
+
+  # Team Future (НИИЭП), группа C: 3–0, карты 6–0. Один и тот же состав и линии во всех картах.
+  - account_id: 213246942
+    nick: twilight
+    team: opp
+    team_name: Team Future
+    position: 1
+    note: В турнире Lifestealer ×2, Luna, Dragon Knight, Bristleback, Troll Warlord (лёгкая, 667 GPM).
+  - account_id: 196163091
+    nick: Saja
+    team: opp
+    team_name: Team Future
+    position: 2
+    note: В турнире Tinker ×2, Queen of Pain, Razor, Pangolier, Slardar (мид, 679 GPM).
+  - account_id: 124108992
+    nick: めつきすてみ
+    team: opp
+    team_name: Team Future
+    position: 3
+    note: В турнире Dragon Knight ×3, Tidehunter ×2, Night Stalker (оффлейн).
+  - account_id: 76747573
+    nick: Furs
+    team: opp
+    team_name: Team Future
+    position: 4
+    note: В турнире Rubick ×2, Techies, Mirana, Grimstroke, Tusk (саппорт сложной линии).
+  - account_id: 195155536
+    nick: R3N
+    team: opp
+    team_name: Team Future
+    position: 5
+    note: В турнире Witch Doctor ×5, Techies (саппорт лёгкой линии).

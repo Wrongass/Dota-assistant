@@ -7,9 +7,9 @@
 | Команда | Карт | Побед | Поражений |
 |---|---|---|---|
 | Team Visual | 6 | 3 | 3 |
-| SD Team | 6 | 3 | 3 |
+| SD Team | 7 | 3 | 4 |
 | UPPO TEAM | 6 | 5 | 1 |
-| Team Polyus | 6 | 1 | 5 |
+| Team Polyus | 7 | 2 | 5 |
 
 ## Матчи
 
@@ -27,3 +27,4 @@
 | 2026-10-23 17:30 UTC | UPPO TEAM | Team Polyus | UPPO TEAM | 47 | Shadow Demon, Luna, Lina, Kunkka, Hoodwink | Phantom Assassin, Lion, Witch Doctor, Techies, Axe | [9058372468](https://www.opendota.com/matches/9058372468) |
 | 2026-10-24 07:22 UTC | Team Visual | SD Team | Team Visual | 58 | Dawnbreaker, Centaur Warrunner, Vengeful Spirit, Lifestealer, Lich | Dragon Knight, Windranger, Pangolier, Rubick, Grimstroke | [9059152056](https://www.opendota.com/matches/9059152056) |
 | 2026-10-24 08:35 UTC | SD Team | Team Visual | SD Team | 40 | Slardar, Windranger, Dragon Knight, Dark Seer, Warlock | Lina, Underlord, Lifestealer, Lich, Vengeful Spirit | [9059226622](https://www.opendota.com/matches/9059226622) |
+| 2026-10-31 08:28 UTC | Team Polyus | SD Team | Team Polyus | 65 | Wraith King, Queen of Pain, Death Prophet, Ring Master, Ogre Magi | Lifestealer, Ember Spirit, Dark Willow, Dark Seer, Spirit Breaker | [9069627947](https://www.opendota.com/matches/9069627947) |

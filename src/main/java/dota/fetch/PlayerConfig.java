@@ -24,6 +24,7 @@ public record PlayerConfig(@JsonProperty("our_team") TeamInfo ourTeam, League le
      * дальше (для главной страницы сайта), и карты, которых нет в OpenDota, но результат известен с сайта турнира.
      */
     public record League(Long id, String name, String since, String stage, List<TeamInfo> group, List<TeamInfo> playin,
+                         List<TeamInfo> playoff,
                          @JsonProperty("next_opponent") String nextOpponent,
                          List<String> prepare,
                          @JsonProperty("manual_maps") List<ManualMap> manualMaps) {
@@ -36,10 +37,15 @@ public record PlayerConfig(@JsonProperty("our_team") TeamInfo ourTeam, League le
             return playin == null ? List.of() : playin;
         }
 
-        /** Все соперники: сначала группа, потом плей-ин. */
+        public List<TeamInfo> playoffOrEmpty() {
+            return playoff == null ? List.of() : playoff;
+        }
+
+        /** Все соперники: сначала группа, потом плей-ин и плей-офф (команды не из нашей группы). */
         public List<TeamInfo> opponentsOrEmpty() {
             List<TeamInfo> all = new java.util.ArrayList<>(groupOrEmpty());
             all.addAll(playinOrEmpty());
+            all.addAll(playoffOrEmpty());
             return all;
         }
 

@@ -1,6 +1,6 @@
 # Турнир: comaTOZ (ИТОЗ)
 
-Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 6, побед: 2. Переигровки (пустая статистика) не учитываются.
+Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 11, побед: 5. Переигровки (пустая статистика) не учитываются.
 
 ## 2026-10-10 09:48 UTC — против Эльбрус team: поражение
 
@@ -110,12 +110,102 @@ Dire, 34 мин, [OpenDota](https://www.opendota.com/matches/9061966816), [Dotab
 
 b Phoenix → b Bounty Hunter → **b Night Stalker** → **b Keeper of the Light** → b Invoker → **b Earth Spirit** → **b Dragon Knight** → P Phantom Lancer → **P Windranger** → b Dawnbreaker → b Axe → **b Ember Spirit** → **P Pudge** → P Bloodseeker → P Lion → **P Oracle** → **P Earthshaker** → P Skywrath Mage → b Spectre → **b Viper** → b Lone Druid → **b Huskar** → P Magnus → **P Largo**
 
+## 2026-10-31 07:02 UTC — против DOM2: победа
+
+Radiant, 40 мин, [OpenDota](https://www.opendota.com/matches/9069549338), [Dotabuff](https://ru.dotabuff.com/matches/9069549338)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| DrestoV1ch | Techies | safe | 350 | 3/10/19 |
+| YOURSELF | Centaur Warrunner | off | 630 | 2/4/21 |
+| kezi | Lina | mid | 651 | 18/1/16 |
+| britishboi | Anti-Mage | safe | 790 | 19/2/11 |
+| Asmodeus | Hoodwink | off | 340 | 5/6/18 |
+
+Соперник: Lion (sherdar?), Phantom Assassin (COCKPIT), Axe (Kabal), Jakiro (krs), Void Spirit (Aspera)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+**b Lone Druid** → **b Earth Spirit** → b Undying → b Invoker → **b Doom** → b Windranger → b Phantom Lancer → **P Lina** → P Lion → **b Dragon Knight** → **b Dark Willow** → b Lifestealer → P Jakiro → **P Hoodwink** → **P Techies** → P Axe → P Void Spirit → **P Centaur Warrunner** → **b Luna** → b Drow Ranger → **b Slark** → b Spectre → **P Anti-Mage** → P Phantom Assassin
+
+## 2026-10-31 08:21 UTC — против Team Visual: поражение
+
+Dire, 34 мин, [OpenDota](https://www.opendota.com/matches/9069619079), [Dotabuff](https://ru.dotabuff.com/matches/9069619079)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| DrestoV1ch | Bane | safe | 211 | 1/15/11 |
+| britishboi | Anti-Mage | safe | 695 | 10/6/3 |
+| YOURSELF | Night Stalker | off | 358 | 0/7/5 |
+| kezi | Lina | mid | 442 | 4/9/6 |
+| Asmodeus | Hoodwink | off | 221 | 0/8/7 |
+
+Соперник: Outworld Devourer (Wrongass), Enigma (Davajj), Warlock (Enaria), Wraith King (kren), Ogre Magi (BABAYKA)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+**b Lone Druid** → **b Doom** → b Invoker → b Techies → **b Earth Spirit** → b Dark Willow → b Dragon Knight → **P Lina** → P Outworld Devourer → **b Rubick** → **b Silencer** → b Phantom Lancer → P Wraith King → **P Bane** → **P Hoodwink** → P Ogre Magi → P Warlock → **P Anti-Mage** → **b Slark** → b Centaur Warrunner → **b Sven** → b Dawnbreaker → **P Night Stalker** → P Enigma
+
+## 2026-10-31 09:38 UTC — против РПКБ: победа
+
+Dire, 50 мин, [OpenDota](https://www.opendota.com/matches/9069697842), [Dotabuff](https://ru.dotabuff.com/matches/9069697842)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| YOURSELF | Slardar | off | 549 | 7/3/23 |
+| DrestoV1ch | Techies | safe | 429 | 7/6/23 |
+| kezi | Invoker | mid | 579 | 13/5/26 |
+| britishboi | Slark | safe | 656 | 24/7/19 |
+| Asmodeus | Hoodwink | off | 381 | 7/7/30 |
+
+Соперник: Anti-Mage (AWL), Spirit Breaker (I'm Okак), Outworld Devourer (7), Bristleback (admın_d0ti), Lion (Chapman coffee)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+b Earthshaker → b Disruptor → **b Lone Druid** → **b Enigma** → b Lich → **b Lina** → **b Phantom Lancer** → P Spirit Breaker → **P Invoker** → b Sven → b Dragon Knight → **b Meepo** → **P Techies** → P Lion → P Bristleback → **P Hoodwink** → **P Slardar** → P Anti-Mage → b Terrorblade → **b Earth Spirit** → b Lifestealer → **b Puck** → P Outworld Devourer → **P Slark**
+
+## 2026-10-31 10:55 UTC — против РПКБ: поражение
+
+Radiant, 60 мин, [OpenDota](https://www.opendota.com/matches/9069785330), [Dotabuff](https://ru.dotabuff.com/matches/9069785330)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| DrestoV1ch | Witch Doctor | safe | 391 | 9/4/28 |
+| britishboi | Muerta | safe | 833 | 18/7/15 |
+| YOURSELF | Doom | off | 602 | 7/9/26 |
+| kezi | Earth Spirit | mid | 609 | 14/5/28 |
+| Asmodeus | Hoodwink | off | 350 | 4/9/19 |
+
+Соперник: Anti-Mage (AWL), Dragon Knight (admın_d0ti), Jakiro (I'm Okак), Necrophos (7), Techies (Chapman coffee)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+**b Lone Druid** → **b Enigma** → b Disruptor → b Earthshaker → **b Phantom Lancer** → b Ring Master → b Lich → **P Earth Spirit** → P Techies → **b Lina** → **b Dark Willow** → b Sven → P Dragon Knight → **P Hoodwink** → **P Witch Doctor** → P Jakiro → P Necrophos → **P Doom** → **b Ursa** → b Lifestealer → **b Luna** → b Slark → **P Muerta** → P Anti-Mage
+
+## 2026-10-31 12:23 UTC — против РПКБ: победа
+
+Radiant, 39 мин, [OpenDota](https://www.opendota.com/matches/9069901208), [Dotabuff](https://ru.dotabuff.com/matches/9069901208)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| DrestoV1ch | Techies | safe | 350 | 1/3/16 |
+| kezi | Lina | mid | 704 | 17/2/6 |
+| britishboi | Drow Ranger | safe | 807 | 13/1/5 |
+| YOURSELF | Centaur Warrunner | off | 593 | 3/2/15 |
+| Asmodeus | Hoodwink | off | 326 | 4/1/16 |
+
+Соперник: Jakiro (I'm Okак), Dragon Knight (7), Invoker (admın_d0ti), Juggernaut (AWL), Grimstroke (Chapman coffee)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+**b Anti-Mage** → **b Lone Druid** → b Disruptor → b Doom → **b Phantom Lancer** → b Earth Spirit → b Earthshaker → **P Lina** → P Dragon Knight → **b Luna** → **b Lifestealer** → b Witch Doctor → P Jakiro → **P Techies** → **P Centaur Warrunner** → P Grimstroke → P Invoker → **P Hoodwink** → **b Slark** → b Sven → **b Faceless Void** → b Spectre → **P Drow Ranger** → P Juggernaut
+
 ## Сводка
 
-**Пики команды** (в скобках — победы): Dragon Knight ×3 (1), Dark Willow ×2 (0), Nature's Prophet ×2 (0), Slardar ×2 (0), Spirit Breaker ×2 (1), Windranger ×2 (1), Bane (0), Clockwerk (0), Doom (0), Drow Ranger (0), Earth Spirit (0), Earthshaker (1), Ember Spirit (0), Hoodwink (0), Largo (1), Lifestealer (1), Lina (1), Oracle (1), Pudge (1), Rubick (0), Techies (1), Undying (0), Viper (0)
+**Пики команды** (в скобках — победы): Hoodwink ×6 (3), Lina ×4 (3), Techies ×4 (4), Dragon Knight ×3 (1), Slardar ×3 (1), Anti-Mage ×2 (1), Bane ×2 (0), Centaur Warrunner ×2 (2), Dark Willow ×2 (0), Doom ×2 (0), Drow Ranger ×2 (1), Earth Spirit ×2 (0), Nature's Prophet ×2 (0), Spirit Breaker ×2 (1), Windranger ×2 (1), Clockwerk (0), Earthshaker (1), Ember Spirit (0), Invoker (1), Largo (1), Lifestealer (1), Muerta (0), Night Stalker (0), Oracle (1), Pudge (1), Rubick (0), Slark (1), Undying (0), Viper (0), Witch Doctor (0)
 
-**Баны команды:** Earth Spirit ×5, Lina ×4, Outworld Devourer ×4, Dark Willow ×2, Ember Spirit ×2, Hoodwink ×2, Storm Spirit ×2, Viper ×2, Bane, Doom, Dragon Knight, Huskar, Invoker, Keeper of the Light, Lich, Lifestealer, Lone Druid, Monkey King, Necrophos, Night Stalker, Pangolier, Slardar, Slark, Terrorblade, Timbersaw, Tinker, Undying
+**Баны команды:** Earth Spirit ×8, Lina ×6, Lone Druid ×6, Dark Willow ×4, Outworld Devourer ×4, Slark ×4, Doom ×3, Luna ×3, Phantom Lancer ×3, Dragon Knight ×2, Ember Spirit ×2, Enigma ×2, Hoodwink ×2, Lifestealer ×2, Storm Spirit ×2, Viper ×2, Anti-Mage, Bane, Faceless Void, Huskar, Invoker, Keeper of the Light, Lich, Meepo, Monkey King, Necrophos, Night Stalker, Pangolier, Puck, Rubick, Silencer, Slardar, Sven, Terrorblade, Timbersaw, Tinker, Undying, Ursa
 
-**Банят против команды** (чего боятся соперники): Phantom Lancer ×5, Spectre ×4, Sven ×3, Bane ×2, Bounty Hunter ×2, Drow Ranger ×2, Invoker ×2, Lifestealer ×2, Phoenix ×2, Spirit Breaker ×2, Undying ×2, Anti-Mage, Axe, Dawnbreaker, Ember Spirit, Hoodwink, Juggernaut, Lone Druid, Mirana, Nature's Prophet, Slark, Techies, Terrorblade, Ursa, Witch Doctor
+**Банят против команды** (чего боятся соперники): Phantom Lancer ×7, Spectre ×6, Sven ×6, Lifestealer ×5, Invoker ×4, Disruptor ×3, Drow Ranger ×3, Earthshaker ×3, Undying ×3, Bane ×2, Bounty Hunter ×2, Dawnbreaker ×2, Dragon Knight ×2, Lich ×2, Phoenix ×2, Slark ×2, Spirit Breaker ×2, Techies ×2, Terrorblade ×2, Witch Doctor ×2, Anti-Mage, Axe, Centaur Warrunner, Dark Willow, Doom, Earth Spirit, Ember Spirit, Hoodwink, Juggernaut, Lone Druid, Mirana, Nature's Prophet, Ring Master, Ursa, Windranger
 
-**Пики соперников** (в скобках — их победы): Drow Ranger ×2 (1), Skywrath Mage ×2 (1), Techies ×2 (2), Axe (0), Bloodseeker (0), Chaos Knight (0), Dragon Knight (1), Invoker (1), Lich (0), Lifestealer (1), Lion (0), Lone Druid (1), Luna (1), Magnus (0), Meepo (1), Mirana (0), Ogre Magi (1), Outworld Devourer (1), Phantom Lancer (0), Rubick (1), Silencer (1), Slardar (1), Snapfire (1), Tidehunter (1), Underlord (1), Undying (1), Windranger (1)
+**Пики соперников** (в скобках — их победы): Dragon Knight ×3 (2), Jakiro ×3 (1), Lion ×3 (0), Outworld Devourer ×3 (2), Techies ×3 (3), Anti-Mage ×2 (1), Axe ×2 (0), Drow Ranger ×2 (1), Invoker ×2 (1), Ogre Magi ×2 (2), Skywrath Mage ×2 (1), Bloodseeker (0), Bristleback (0), Chaos Knight (0), Enigma (1), Grimstroke (0), Juggernaut (0), Lich (0), Lifestealer (1), Lone Druid (1), Luna (1), Magnus (0), Meepo (1), Mirana (0), Necrophos (1), Phantom Assassin (0), Phantom Lancer (0), Rubick (1), Silencer (1), Slardar (1), Snapfire (1), Spirit Breaker (0), Tidehunter (1), Underlord (1), Undying (1), Void Spirit (0), Warlock (1), Windranger (1), Wraith King (1)
