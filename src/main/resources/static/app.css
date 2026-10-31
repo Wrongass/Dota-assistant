@@ -341,3 +341,5 @@ button.reason.more { border: 0; cursor: pointer; font: inherit; font-size: 11px;
 .map-tab.current { border-color: var(--accent); background: var(--accent-soft); font-weight: 600; }
 .maps-past { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: -6px 0 10px; color: var(--muted); }
 .maps-past .hero-ico { width: 22px; height: 22px; }
+.turn.editing-turn { background: transparent; border: 2px dashed var(--accent); color: var(--accent); }
+.copy-box { width: 100%; font: 12px/1.4 ui-monospace, monospace; margin-top: 6px; }

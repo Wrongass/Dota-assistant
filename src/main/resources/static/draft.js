@@ -142,17 +142,20 @@
     afterChange();
   }
   /** Предупреждение поверх списков (ничего не сдвигает) с кнопками «Забанить X» / «Отмена». */
-  function showWarn(w) {
+  let warnAction = null; // что сделать по кнопке подтверждения; null — внести героя из pendingWarn
+  function showWarn(w, action) {
+    warnAction = action || null;
     if (!w) { $("warn").hidden = true; $("warn").innerHTML = ""; return; }
     $("warn").innerHTML = `<span>${esc(w.text)}</span>
       <button type="button" class="primary" data-act="confirm">${esc(w.action)}</button>
       <button type="button" data-act="cancel">Отмена</button>
-      <span class="muted small">или ещё раз Enter</span>`;
+      ${action ? "" : '<span class="muted small">или ещё раз Enter</span>'}`;
     $("warn").hidden = false;
   }
   $("warn").addEventListener("click", (e) => {
     const act = e.target.closest("button")?.dataset.act;
-    if (act === "confirm" && pendingWarn) apply(pendingWarn);
+    if (act === "confirm" && warnAction) { const f = warnAction; showWarn(null); f(); }
+    else if (act === "confirm" && pendingWarn) apply(pendingWarn);
     if (act === "cancel") { pendingWarn = null; showWarn(null); }
     $("search").focus();
   });
@@ -218,14 +221,21 @@
     }
   };
   $("reset").onclick = () => { if (confirmReset()) { state.heroes = []; state.assign = {}; editIndex = null; afterChange(); } };
-  // без браузерного confirm(): второй клик в течение 3 секунд подтверждает сброс
-  let resetArmed = 0;
+  // без браузерного confirm(): второй клик в течение 6 секунд подтверждает сброс, на кнопке обратный отсчёт
+  const RESET_WINDOW = 6;
+  let resetArmed = 0, resetTimer = 0;
   function confirmReset() {
     const now = Date.now();
-    if (now - resetArmed < 3000) { resetArmed = 0; $("reset").textContent = "Сбросить"; return true; }
+    clearInterval(resetTimer);
+    if (now - resetArmed < RESET_WINDOW * 1000) { resetArmed = 0; $("reset").textContent = "Сбросить"; return true; }
     resetArmed = now;
-    $("reset").textContent = "Точно сбросить?";
-    setTimeout(() => { $("reset").textContent = "Сбросить"; }, 3000);
+    let left = RESET_WINDOW;
+    $("reset").textContent = `Точно сбросить? (${left})`;
+    resetTimer = setInterval(() => {
+      left--;
+      if (left <= 0) { clearInterval(resetTimer); resetArmed = 0; $("reset").textContent = "Сбросить"; }
+      else $("reset").textContent = `Точно сбросить? (${left})`;
+    }, 1000);
     return false;
   }
   document.addEventListener("keydown", (e) => {
@@ -326,9 +336,21 @@
   function renderTurn() {
     const step = state.heroes.length;
     const turn = $("turn");
+    const done = step >= ORDER.length && editIndex === null;
+    $("search").disabled = done;
+    $("search").placeholder = done ? "Драфт завершён · клик по ходу в ленте, чтобы исправить"
+      : "Герой: имя, начало имени, WK, вк, кунк… ↑↓ и Enter — внести ход";
+    $("skip").disabled = done;
+    $("skip").textContent = editIndex !== null ? "Сделать пропуском" : "Пропустить ход";
     if (step >= ORDER.length) {
-      turn.textContent = "Драфт завершён";
-      turn.className = "turn";
+      turn.textContent = editIndex !== null ? `Исправление хода ${editIndex + 1}` : "Драфт завершён";
+      turn.className = "turn" + (editIndex !== null ? " editing-turn" : "");
+      return;
+    }
+    if (editIndex !== null) {
+      // BUG-08: в режиме исправления крупный индикатор говорит, какой ход правим
+      turn.textContent = `Исправление хода ${editIndex + 1}: ${slot(editIndex).pick ? "ПИК" : "БАН"} ${isOurs(editIndex) ? "НАШ" : "ИХ"}`;
+      turn.className = "turn editing-turn";
       return;
     }
     const s = slot(step), ours = isOurs(step);
@@ -339,7 +361,7 @@
   // ------------------------------------------------------------ слоты игроков
   /** Чем играет последние 14 дней: иконки с числом игр и пометками 🔥 (новый) и 👥 (с командой). */
   const recentLine = (p) => p.recent.length
-    ? p.recent.map((h) => `<span class="mini" title="${esc(h.name)}: ${h.g14} игр за 14 дней, ${h.g60} за 2 месяца${h.team ? `, ${h.team} с командой` : ""}">${icon(h.id)}${h.g14 || h.g60}${h.fresh ? "🔥" : ""}${h.team ? "👥" : ""}</span>`).join("")
+    ? p.recent.map((h) => `<span class="mini" title="${esc(h.name)}: ${h.g14} игр за 14 дней, ${h.g60} за 2 месяца${h.team ? `, ${h.team} с командой` : ""}">${icon(h.id)}${h.g60}${h.fresh ? "🔥" : ""}${h.team ? "👥" : ""}</span>`).join("")
     : '<span class="muted">нет игр</span>';
 
   function playerSlot(p, side, picks) {
@@ -365,7 +387,7 @@
         ${profiles(p.accountId)}
         ${picks.length ? `<select class="slot-assign" data-player="${esc(p.nick)}" title="Кто на каком герое: выбрать вручную"><option value="">авто</option>${options}</select>` : ""}
       </div>
-      <div class="recent small" title="Последние 14 дней (без Турбо)">14д: ${recentLine(p)}</div>
+      <div class="recent small" title="Игры за 2 месяца без Турбо (подробнее — наведите на героя)">2 мес: ${recentLine(p)}</div>
       ${odds}
     </div>`;
   }
@@ -498,13 +520,34 @@
       ...a.lanes.map((l) => `${l.name}: ${l.ours.join(" + ")} vs ${l.theirs.join(" + ")} (${(l.advantage >= 0 ? "+" : "") + (100 * l.advantage).toFixed(1)}%)${l.note ? ", " + l.note : ""}`),
       `Опасные у них: ${a.theirThreats.slice(0, 3).map((t) => `${t.name} (${t.player})`).join(", ")}`,
     ].join("\n");
-    try {
-      await navigator.clipboard.writeText(text);
+    if (await copyText(text)) {
       $("copied").textContent = "скопировано";
-    } catch (e) {
-      $("copied").textContent = "не удалось скопировать";
+    } else {
+      // не вышло даже запасным способом: показываем текст выделенным, Ctrl+C скопирует
+      $("copied").innerHTML = `<textarea class="copy-box" rows="8" readonly>${esc(text)}</textarea>`;
+      const box = $("copied").querySelector("textarea");
+      box.focus();
+      box.select();
     }
   };
+
+  /** Буфер обмена: Clipboard API работает только по HTTPS, по HTTP — запасной путь через скрытый textarea. */
+  async function copyText(text) {
+    try {
+      if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); return true; }
+    } catch (e) { /* пробуем запасной путь */ }
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    ta.remove();
+    return ok;
+  }
 
   // ------------------------------------------------------------ карточка игрока (боковая панель)
   async function openDrawer(accountId) {
@@ -592,7 +635,15 @@
     $("first").value = state.weFirst ? "us" : "them";
     afterChange();
   };
-  $("first").onchange = (e) => { state.weFirst = e.target.value === "us"; afterChange(); };
+  $("first").onchange = (e) => {
+    const weFirst = e.target.value === "us";
+    const made = state.heroes.length;
+    if (made === 0) { state.weFirst = weFirst; afterChange(); return; }
+    // все внесённые ходы поменяют сторону: без подтверждения не меняем
+    $("first").value = state.weFirst ? "us" : "them";
+    showWarn({ text: `Сменить первый ход? Все внесённые ходы (${made}) поменяют сторону: наши станут их.`,
+      action: "Сменить первый ход" }, () => { state.weFirst = weFirst; $("first").value = weFirst ? "us" : "them"; afterChange(); });
+  };
 
   // ------------------------------------------------------------ серия: карта 1 / 2 / 3
   /** Пики карты: [наши, их] по сохранённому драфту. */
