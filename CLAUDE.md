@@ -11,6 +11,7 @@
 - Отчёты: `./gradlew analyze` → `analysis/` (код в `src/main/java/dota/analysis`, веса в `Scoring`)
 - Сайт: `./gradlew web` → http://127.0.0.1:8070 (`dota.web`, шаблоны `src/main/jte`, статика `src/main/resources/static`)
 - Бэктест драфта: `./gradlew draftBacktest`
+- Проверки сайта в браузере (после правок JS/шаблонов, при запущенном сайте): `python tools/ui-checks/<скрипт>.py`
 
 Архитектура (ADR 0003): `AnalysisContext` грузит всё один раз → `Squad` считает view-модели (`Views`) →
 их показывают `MarkdownRenderer` и сайт. Live-драфт — `DraftEngine`. `GoldenReportTest` сверяет генератор с
