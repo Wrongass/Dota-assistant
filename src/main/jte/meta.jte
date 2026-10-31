@@ -6,7 +6,8 @@
     <h1>Мета патча ${m.patch()}</h1>
     <p class="muted small">Данные на ${m.today()}. Винрейты в пабах — на рангах <b>${m.rangeName()}</b> (медиана нашей команды ±1).
         Про-сцена — ${m.proMatches()} матчей в выборке OpenDota.
-        <input type="search" id="hero-filter" placeholder="Найти героя…" style="margin-left:8px"></p>
+        <input type="search" id="hero-filter" placeholder="Найти героя: Sniper, снайп, вк…" style="margin-left:8px"></p>
+    <p class="muted small" id="filter-note" hidden></p>
 
     <div class="tabs">
         @for(var p : m.positions())<a href="#pos${p.pos()}">Позиция ${p.pos()}</a>@endfor
@@ -23,7 +24,7 @@
                 <tbody>
                 @for(int i = 0; i < p.top().size(); i++)
                     !{var r = p.top().get(i);}
-                    <tr><td>${i + 1}</td><td><b>${r.name()}</b></td><td class="num">${Fmt.dec(r.strength())}</td>
+                    <tr data-heroes="${r.heroId()}"><td>${i + 1}</td><td><b>${r.name()}</b></td><td class="num">${Fmt.dec(r.strength())}</td>
                         <td class="num ${Fmt.labelClass(r.winrate())}">${Fmt.pct(r.winrate())}</td><td class="num">${Fmt.pct(r.pickRate())}</td>
                         <td class="num">${Fmt.pct(r.posWinrate())}</td><td class="num">${Fmt.pct(r.proContest())}</td></tr>
                 @endfor
@@ -31,7 +32,7 @@
             </table>
             <p class="small"><b class="weak">▼ Слабые:</b>
                 @if(p.weak().isEmpty()) нет @endif
-                @for(var h : p.weak())<span class="chip">${h.name()} ${Fmt.pct(h.value())}</span>@endfor</p>
+                @for(var h : p.weak())<span class="chip" data-heroes="${h.heroId()}">${h.name()} ${Fmt.pct(h.value())}</span>@endfor</p>
         </div>
     @endfor
     </div>
@@ -43,7 +44,7 @@
             <tbody>
             @for(int i = 0; i < m.pro().size(); i++)
                 !{var r = m.pro().get(i);}
-                <tr><td>${i + 1}</td><td><b>${r.name()}</b></td><td class="num">${Fmt.pct(r.contest())}</td><td class="num">${r.picks()}</td>
+                <tr data-heroes="${r.heroId()}"><td>${i + 1}</td><td><b>${r.name()}</b></td><td class="num">${Fmt.pct(r.contest())}</td><td class="num">${r.picks()}</td>
                     <td class="num">${r.bans()}</td><td class="num">${Fmt.pct(r.proWinrate())}</td><td>${r.positions()}</td></tr>
             @endfor
             </tbody>
@@ -58,7 +59,7 @@
                 <thead><tr><th>Связка</th><th class="num">Синергия</th><th class="num">WR пары</th><th class="num">Игр</th></tr></thead>
                 <tbody>
                 @for(var r : m.synergies())
-                    <tr><td>${r.aName()} + ${r.bName()}</td><td class="num strong">${Fmt.signedPct(r.value())}</td>
+                    <tr data-heroes="${r.a()} ${r.b()}"><td>${r.aName()} + ${r.bName()}</td><td class="num strong">${Fmt.signedPct(r.value())}</td>
                         <td class="num">${Fmt.pct(r.winrate())}</td><td class="num">${r.games()}</td></tr>
                 @endfor
                 </tbody>
@@ -68,14 +69,32 @@
             <h2>Самые жёсткие контрпики</h2>
             <p class="muted small">Преимущество = винрейт против героя − ожидаемый. Минимум 400 игр.</p>
             <table class="sortable filterable">
-                <thead><tr><th>Герой</th><th>контрит</th><th class="num">Преимущество</th><th class="num">WR</th><th class="num">Игр</th></tr></thead>
+                <thead><tr><th>Герой</th><th title="Первый герой выигрывает против второго чаще ожидаемого">→ сильнее против</th><th class="num">Преимущество</th><th class="num">WR</th><th class="num">Игр</th></tr></thead>
                 <tbody>
                 @for(var r : m.counters())
-                    <tr><td>${r.aName()}</td><td>${r.bName()}</td><td class="num strong">${Fmt.signedPct(r.value())}</td>
+                    <tr data-heroes="${r.a()} ${r.b()}"><td>${r.aName()}</td><td>${r.bName()}</td><td class="num strong">${Fmt.signedPct(r.value())}</td>
                         <td class="num">${Fmt.pct(r.winrate())}</td><td class="num">${r.games()}</td></tr>
                 @endfor
                 </tbody>
             </table>
         </div>
     </div>
-`, scripts = "<script>document.getElementById('hero-filter').addEventListener('input', e => { const q = e.target.value.toLowerCase(); document.querySelectorAll('table.filterable tbody tr').forEach(r => r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none'); });</script>")
+
+    <details class="panel" id="all-heroes">
+        <summary><b>Все герои патча</b> <span class="muted small">— если героя нет в топах выше; поиск открывает сам</span></summary>
+        <div class="table-wrap">
+        <table class="sortable filterable">
+            <thead><tr><th>Герой</th><th>Позиции</th><th class="num">Сила в мете</th><th class="num">WR в пабах</th>
+                <th class="num">Пикрейт</th><th class="num">WR на основной поз.</th><th class="num">Про пик+бан</th></tr></thead>
+            <tbody>
+            @for(var r : m.all())
+                <tr data-heroes="${r.heroId()}"><td><b>${r.name()}</b></td><td>${r.positions()}</td>
+                    <td class="num">${Double.isNaN(r.strength()) ? "—" : Fmt.dec(r.strength())}</td>
+                    <td class="num ${Fmt.labelClass(r.winrate())}">${Fmt.pct(r.winrate())}</td><td class="num">${Fmt.pct(r.pickRate())}</td>
+                    <td class="num">${Double.isNaN(r.posWinrate()) ? "—" : Fmt.pct(r.posWinrate())}</td><td class="num">${Fmt.pct(r.proContest())}</td></tr>
+            @endfor
+            </tbody>
+        </table>
+        </div>
+    </details>
+`, scripts = "<script src=\"/static/meta.js\"></script>")

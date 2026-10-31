@@ -500,8 +500,17 @@ public final class Squad {
                 .limit(30)
                 .map(e -> pairRow(e.getKey().a(), e.getKey().b(), meta.counterAdvantage(e.getKey().a(), e.getKey().b(), 400), e.getValue()))
                 .toList();
+        List<Views.AllRow> all = meta.heroes.keySet().stream()
+                .sorted(Comparator.comparing(meta::name))
+                .map(h -> {
+                    int mp = meta.mainPos(h);
+                    return new Views.AllRow(h, meta.name(h), meta.positions(h), meta.winrate(h, teamFrom, teamTo),
+                            meta.pickRate(h, teamFrom, teamTo), mp, mp == 0 ? Double.NaN : meta.posWinrate(h, mp),
+                            mp == 0 ? Double.NaN : metaStrength(h, mp, teamFrom, teamTo), meta.proContest(h));
+                })
+                .toList();
         return new Views.MetaView(meta.patch, today, rangeName(teamFrom, teamTo), meta.proMatches, positions, pro,
-                synergies, counters);
+                synergies, counters, all);
     }
 
     private Views.PairRow pairRow(int a, int b, double value, Meta.PairStats s) {

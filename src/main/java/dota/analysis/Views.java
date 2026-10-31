@@ -109,9 +109,14 @@ public final class Views {
     public record PairRow(int a, String aName, int b, String bName, double value, double winrate, long games) {
     }
 
+    /** Любой герой патча для поиска на «Мете», даже если его нет в топе позиций (E-15). */
+    public record AllRow(int heroId, String name, String positions, double winrate, double pickRate,
+                         int mainPos, double posWinrate, double strength, double proContest) {
+    }
+
     public record MetaView(String patch, String today, String rangeName, long proMatches,
                            List<PositionMeta> positions, List<ProRow> pro, List<PairRow> synergies,
-                           List<PairRow> counters) {
+                           List<PairRow> counters, List<AllRow> all) {
     }
 
     // ---------------------------------------------------------------- данные для драфта
