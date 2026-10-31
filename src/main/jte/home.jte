@@ -23,7 +23,7 @@
             <p><b>Банят в турнире:</b> ${Fmt.countList(n.bans(), false)}</p>
             <p><b>Самые опасные:</b>
                 @for(var t : n.threats())
-                    <span class="chip">${t.name()} <span class="muted">${t.nick()}</span></span>
+                    <span class="chip">${t.name()} <span class="muted"><a href="/player/${java.net.URLEncoder.encode(t.nick(), java.nio.charset.StandardCharsets.UTF_8).replace("+", "%20")}">${t.nick()}</a></span></span>
                 @endfor
             </p>
             <p>
