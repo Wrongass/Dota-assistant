@@ -1,6 +1,8 @@
 name: Dota Assistant
 
 on:
+  push:
+    branches: [dev, main]
   workflow_dispatch:
     inputs:
       operation:
@@ -25,7 +27,7 @@ concurrency:
 
 jobs:
   build:
-    if: inputs.operation != 'rollback'
+    if: github.event_name == 'push' || inputs.operation != 'rollback'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -37,7 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.sha }}
           persist-credentials: false
       - name: Build and publish image
         id: image
@@ -63,7 +65,7 @@ jobs:
 
   deploy:
     needs: build
-    if: inputs.operation == 'deploy'
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || inputs.operation == 'deploy'
     runs-on: [self-hosted, Linux, X64, dota-prod]
     timeout-minutes: 30
     permissions: {}
@@ -78,7 +80,7 @@ jobs:
           sudo -n /usr/local/sbin/krbk-dota-deploy "$IMAGE_DIGEST" "$SOURCE_COMMIT"
 
   rollback:
-    if: inputs.operation == 'rollback'
+    if: github.event_name == 'workflow_dispatch' && inputs.operation == 'rollback'
     runs-on: [self-hosted, Linux, X64, dota-prod]
     timeout-minutes: 15
     permissions: {}
