@@ -25,8 +25,10 @@
             <span class="muted small" id="timing"></span>
             <span class="turn-timer small" id="turn-timer" title="Сколько идёт текущий ход. В CM на ход 30 секунд, дальше — резерв"></span>
             <details class="legend">
-                <summary title="Что значат подписи в советах">?</summary>
-                <div class="legend-body small">
+                <summary title="Что значат подписи в советах">? Обозначения</summary>
+                <div class="legend-body small" role="dialog" aria-label="Обозначения">
+                    <div class="legend-head"><b>Что значат подписи в советах</b>
+                        <button type="button" class="legend-close" title="Закрыть (Esc)">Закрыть ✕</button></div>
                     <p><b>контрит их X / связка с Y</b> — преимущество героя против их героя или в паре с нашим (выше среднего винрейта пары), по выборке патча.</p>
                     <p><b>линия ▲/▼ vs X: 62% / 14%</b> — сколько линий против этих героев выиграно / проиграно (STRATZ, Legend–Immortal).</p>
                     <p><b>пик-отказ: у них 30%</b> — шанс, что этого героя возьмут они, если не возьмём мы.</p>
@@ -77,17 +79,17 @@
 
                 <div class="panel advice-panel" id="panel-their">
                     <div id="their-next-box">
-                        <h3>Что они возьмут <span class="hint">шанс до конца драфта</span></h3>
+                        <h3 class="toggle-h">Что они возьмут <span class="hint">шанс до конца драфта</span></h3>
                         <ol id="their-next" class="advice"></ol>
                     </div>
                     <div id="their-bans-box">
-                        <h3 title="Наши герои у наших игроков, ещё не выбравших героя, плюс их привычка банить в турнире">
+                        <h3 class="toggle-h" title="Наши герои у наших игроков, ещё не выбравших героя, плюс их привычка банить в турнире">
                             Что они забанят у нас <span class="hint" id="their-bans-left"></span></h3>
                         <ol id="their-likely-bans" class="advice"></ol>
                     </div>
                 </div>
                 <div class="panel advice-panel" id="panel-bans">
-                    <h3>Нам банить</h3>
+                    <h3 class="toggle-h">Нам банить</h3>
                     <ol id="bans" class="advice"></ol>
                 </div>
                 <div class="panel advice-panel" id="panel-picks">
@@ -99,7 +101,7 @@
                         <h3>На линию <span class="hint">их герои на линии известны · только герои, на которых игрок играет · подробности — наведите</span></h3>
                         <ul id="lane-options" class="lane-options"></ul>
                     </div>
-                    <h3>Нам брать</h3>
+                    <h3 class="toggle-h">Нам брать</h3>
                     <ol id="picks" class="advice"></ol>
                 </div>
 
@@ -127,7 +129,7 @@
         </div>
 
         <details class="panel" id="grid-box" open>
-            <summary><b>Все герои</b> <span class="muted small">клик — внести в текущий ход · нажмите, чтобы свернуть</span></summary>
+            <summary><b>Все герои</b> <span class="muted small">клик по герою — внести в текущий ход</span></summary>
             <div id="grid" class="hero-grid"></div>
         </details>
         <p class="muted small">Порядок ходов Captains Mode — как в 39 матчах нашей лиги. Прогноз — статистика по data/

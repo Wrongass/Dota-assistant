@@ -41,13 +41,13 @@
     try { saved = JSON.parse(localStorage.getItem(key()) || "null"); } catch (e) { /* без localStorage — заново */ }
     Object.assign(state, saved
       ? { weFirst: saved.weFirst !== false, heroes: saved.heroes || [], assign: saved.assign || {},
-          seed: saved.seed || newSeed(), revealed: !!saved.revealed, swaps: saved.swaps || [] }
-      : { weFirst: true, heroes: [], assign: {}, seed: newSeed(), revealed: false, swaps: [] });
+          seed: saved.seed || newSeed(), revealed: !!saved.revealed, swaps: saved.swaps || [], botAssign: saved.botAssign || {} }
+      : { weFirst: true, heroes: [], assign: {}, seed: newSeed(), revealed: false, swaps: [], botAssign: {} });
   };
   const save = () => {
     try {
       localStorage.setItem(key(), JSON.stringify({ weFirst: state.weFirst, heroes: state.heroes, assign: state.assign,
-        seed: state.seed, revealed: state.revealed, swaps: state.swaps }));
+        seed: state.seed, revealed: state.revealed, swaps: state.swaps, botAssign: state.botAssign }));
     } catch (e) { /* ок */ }
   };
   /** Симуляция, и сейчас ход соперника: ввод закрыт, ходит бот. */
@@ -86,6 +86,7 @@
     const target = editIndex ?? state.heroes.length;
     if (target >= ORDER.length) return;
     if (state.sim && !isOurs(target)) { toast("Сейчас ход соперника: его баны и пики делает сайт", false); return; }
+    if (state.sim) { botLog.length = 0; botNew.clear(); }
     if (used().has(heroId) && state.heroes[target] !== heroId) return;
     const w = warning(target, heroId);
     if (w && pendingWarn !== heroId) {
@@ -243,7 +244,17 @@
     // «/» — к поиску героя из любого места страницы (FEAT-09)
     if (e.key === "/" && !e.target.closest("input, textarea, select")) { e.preventDefault(); $("search").focus(); }
     if (e.key === "Escape" && !$("drawer").hidden) closeDrawer();
+    if (e.key === "Escape") document.querySelector(".legend")?.removeAttribute("open");
   });
+
+  const legend = document.querySelector(".legend");
+  legend.querySelector(".legend-close").addEventListener("click", () => legend.removeAttribute("open"));
+  document.addEventListener("click", (e) => { if (legend.open && !legend.contains(e.target)) legend.removeAttribute("open"); });
+
+  const headerHeight = () => document.documentElement.style.setProperty("--header-h",
+    (document.querySelector("header.top")?.offsetHeight || 0) + "px");
+  headerHeight();
+  window.addEventListener("resize", headerHeight);
 
   // ------------------------------------------------------------ поиск
   /** Герои, которых сейчас советуют (на коротком вводе — выше в подсказке). */
@@ -312,6 +323,7 @@
       if (i === step && editIndex === null) cls.push("current");
       if (i === editIndex) cls.push("editing");
       if (i > step) cls.push("future");
+      if (state.sim && botNew.has(i)) cls.push("bot-new");
       const label = h > 0 ? `${icon(h)}<span class="who">${esc(name(h))}</span>` : h === 0 ? '<span class="who muted">пропуск</span>' : "";
       return `<button class="${cls.join(" ")}" data-i="${i}" ${i >= step ? "disabled" : ""}
         title="Ход ${i + 1}: ${s.pick ? "пик" : "бан"} ${isOurs(i) ? "наш" : "их"}">
@@ -338,6 +350,7 @@
     const step = state.heroes.length;
     const turn = $("turn");
     const done = step >= ORDER.length && editIndex === null;
+    root.classList.toggle("finished", done);
     $("search").disabled = done || botTurn();
     $("search").placeholder = done ? (state.sim ? "Драфт завершён · позиции героев можно поправить, оценка ниже"
         : "Драфт завершён · клик по ходу в ленте, чтобы исправить")
@@ -404,7 +417,8 @@
       : hero ? heroPortrait(hero, name(hero)) : "";
     const heroLine = hero
       ? `<div class="slot-hero">${portrait}<div><b>${esc(name(hero))}</b>
-           <div class="small muted">${a.fixed ? "вручную" : pct(a.probability) + (a.alternative ? ` · или ${esc(a.alternative)} ${pct(a.alternativeProbability)}` : "")}</div></div>${assign}</div>`
+           <div class="small muted">${a.fixed ? (side.theirs && state.sim && state.botAssign && state.botAssign[a.heroId] === a.player
+             ? "расстановка соперника" : "вручную") : pct(a.probability) + (a.alternative ? ` · или ${esc(a.alternative)} ${pct(a.alternativeProbability)}` : "")}</div></div>${assign}</div>`
       : `<div class="slot-hero empty"><span class="hero-portrait empty"></span><span class="muted small">${free && free.probability < 0.95 ? `свободен ${pct(free.probability)}` : "без героя"}</span>${assign}</div>`;
     const odds = !hero && outlook && outlook.heroes.length
       ? `<div class="odds small">вероятно: ${outlook.heroes.slice(0, 3).map((h) =>
@@ -524,13 +538,25 @@
     : `<span class="reason${CONTEXT.test(x) ? " key" : ""}">${esc(x)}</span>`;
   const reasons = (r, n) => (r.reasons || []).slice(0, n).map(chip).join(" ");
   const more = (r, n) => (r.reasons || []).length > n
-    ? `<button type="button" class="reason more" data-more="${esc(JSON.stringify(r.reasons.slice(n)))}" title="Показать остальные причины">+${r.reasons.length - n}</button>` : "";
+    ? `<button type="button" class="reason more" aria-expanded="false" data-n="${r.reasons.length - n}" data-more="${esc(JSON.stringify(r.reasons.slice(n)))}" title="Показать остальные причины">ещё ${r.reasons.length - n} ▾</button>` : "";
   const ourMark = (r) => { const o = freeOwners(r.heroId); return o ? `<span class="reason ours-mark" title="Герой наших: ${esc(o.join(", "))}">⚠ наш: ${esc(o.map((x) => x.split(" (")[0]).join(", "))}</span>` : ""; };
   const pickable = (r, extra) => `<li><button class="hero-pick" data-id="${r.heroId}">${icon(r.heroId)}${esc(r.name)}</button>
     ${extra} ${reasons(r, SHOWN)} ${more(r, SHOWN)}</li>`;
   root.addEventListener("click", (e) => {
     const m = e.target.closest(".reason.more[data-more]");
-    if (m) m.outerHTML = JSON.parse(m.dataset.more).map(chip).join(" ");
+    if (!m) return;
+    // раскрыть: причины встают после кнопки, кнопка становится «скрыть ▴»; второй клик сворачивает обратно
+    const open = m.getAttribute("aria-expanded") === "true";
+    if (open) {
+      m.previousElementSibling?.classList.contains("more-list") && m.previousElementSibling.remove();
+      m.textContent = `ещё ${m.dataset.n} ▾`;
+      m.title = "Показать остальные причины";
+    } else {
+      m.insertAdjacentHTML("beforebegin", `<span class="more-list">${JSON.parse(m.dataset.more).map(chip).join(" ")} </span>`);
+      m.textContent = "скрыть ▴";
+      m.title = "Скрыть дополнительные причины";
+    }
+    m.setAttribute("aria-expanded", String(!open));
   });
 
   function renderAdvice(a) {
@@ -773,6 +799,7 @@
   const simBody = () => JSON.stringify({ opponent: state.opponent, weFirst: state.weFirst, heroes: state.heroes,
     assign: state.assign, seed: state.seed });
   let botTimer = 0;
+  const botLog = [], botNew = new Set(); // ходы соперника после нашего последнего хода: в сообщении и подсветкой в ленте
   /** После каждого изменения: на ходу соперника — его ход через 0,7 с; в конце — раскрыть план бота и оценить. */
   function simStep() {
     clearTimeout(botTimer);
@@ -791,12 +818,16 @@
       if (!res.ok) throw new Error(m.error || res.status);
       if (!state.sim || state.heroes.length !== at) return; // пока думал, ход отменили
       state.heroes.push(m.heroId);
-      toast(`Соперник: ${m.pick ? "пик" : "бан"} ${m.name} (ход ${at + 1})`, false);
+      botLog.push(`${m.pick ? "пик" : "бан"} ${m.name} (ход ${at + 1})`);
+      botNew.add(at);
+      toast(`Соперник: ${botLog.join(" · ")}`, false);
       afterChange();
     } catch (e) { $("timing").textContent = "ход соперника не удался: " + e.message; }
   }
   /** Отмена: убираем ответы соперника после нашего последнего хода и сам этот ход. */
   function simUndo() {
+    botLog.length = 0;
+    botNew.clear();
     while (state.heroes.length && !isOurs(state.heroes.length - 1)) state.heroes.pop();
     if (state.heroes.length) state.heroes.pop();
     if (state.revealed) {
@@ -812,8 +843,9 @@
       const res = await fetch("/api/sim/plan", { method: "POST", headers: { "Content-Type": "application/json" }, body: simBody() });
       const plan = await res.json();
       if (!res.ok) throw new Error(plan.error || res.status);
-      plan.placements.forEach((p) => { state.assign[p.heroId] = p.player; });
-      Object.assign(state, { revealed: true, swaps: plan.swaps });
+      const botAssign = {};
+      plan.placements.forEach((p) => { state.assign[p.heroId] = p.player; botAssign[p.heroId] = p.player; });
+      Object.assign(state, { revealed: true, swaps: plan.swaps, botAssign });
       afterChange(true);
     } catch (e) { $("sim-result").innerHTML = `<p class="weak">Не удалось получить расстановку соперника: ${esc(e.message)}</p>`; }
   }

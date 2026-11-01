@@ -126,6 +126,27 @@
   // слово, набранное не в той раскладке: «ыефк» → «star», «вфя» → «daz»
   const RU = "йцукенгшщзхъфывапролджэячсмитьбю", EN = "qwertyuiop[]asdfghjkl;'zxcvbnm,.";
   const relayout = (q, from, to) => [...q].map((c) => { const i = from.indexOf(c); return i < 0 ? c : to[i]; }).join("");
+  // имя, набранное русскими буквами на слух: «дарк вил», «виндрейнджер», «фейслесс». Сравниваем «скелеты» из согласных:
+  // транслит → латиница, похожие звуки к одному виду (w/v, j/дж, c/к/с, ph/ф), гласные и удвоения убираем
+  const CYR = { а: "a", б: "b", в: "v", г: "g", д: "d", е: "e", ё: "e", ж: "zh", з: "z", и: "i", й: "i", к: "k", л: "l",
+    м: "m", н: "n", о: "o", п: "p", р: "r", с: "s", т: "t", у: "u", ф: "f", х: "h", ц: "ts", ч: "ch", ш: "sh", щ: "sh",
+    ъ: "", ы: "i", ь: "", э: "e", ю: "u", я: "a" };
+  const skeleton = (word) => word.toLowerCase().replace(/[а-яё]/g, (c) => CYR[c])
+    .replace(/dzh|zh|j/g, "g").replace(/ph/g, "f").replace(/th/g, "t").replace(/kh/g, "h").replace(/ck/g, "k")
+    .replace(/ch/g, "4").replace(/c(?=[eiy])/g, "s").replace(/c/g, "k").replace(/q/g, "k").replace(/x/g, "ks")
+    .replace(/w/g, "v").replace(/[aeiouy'\-]/g, "").replace(/(.)\1+/g, "$1");
+  /** Каждое слово запроса — начало слова имени (по скелетам, по порядку). */
+  const soundsLike = (q, name) => {
+    const qs = q.split(" ").map(skeleton).filter(Boolean);
+    const ns = name.split(/[\s-]+/).map(skeleton);
+    if (!qs.length || qs.join("").length < 2) return false;
+    let j = 0;
+    for (const w of qs) {
+      while (j < ns.length && !ns[j].startsWith(w)) j++;
+      if (j++ >= ns.length) return false;
+    }
+    return true;
+  };
 
   /**
    * Поиск героя по имени, началу имени, инициалам и сленгу. heroes — [{id, name}]. find(q, {exclude, boost}) →
@@ -168,6 +189,9 @@
         let found = scored(q, opts.exclude);
         if (!found.length && /[а-яё]/.test(q)) found = scored(relayout(q, RU, EN), opts.exclude);
         if (!found.length && /[a-z]/.test(q)) found = scored(relayout(q, EN, RU), opts.exclude);
+        if (!found.length && /[а-яё]/.test(q)) {
+          found = heroes.filter((h) => !(opts.exclude && opts.exclude.has(h.id)) && soundsLike(q, h.name)).map((h) => [2.5, h]);
+        }
         const boost = opts.boost || new Set();
         return found.sort((a, b) => a[0] - b[0] || (boost.has(b[1].id) - boost.has(a[1].id)) || a[1].name.localeCompare(b[1].name))
           .map((x) => x[1]);

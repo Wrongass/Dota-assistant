@@ -357,11 +357,16 @@ button.reason.more { border: 0; cursor: pointer; font: inherit; font-size: 11px;
 .ban-chip .ban-name { font-size: 9px; line-height: 1.1; color: var(--muted); text-align: center; overflow: hidden;
   text-overflow: ellipsis; white-space: nowrap; max-width: 52px; text-decoration: line-through; }
 .legend { position: relative; display: inline-block; }
-.legend summary { cursor: pointer; list-style: none; width: 22px; height: 22px; border-radius: 50%; text-align: center;
-  border: 1px solid var(--line); color: var(--muted); font-weight: 700; line-height: 20px; }
+.legend summary { cursor: pointer; list-style: none; padding: 1px 8px; border-radius: 11px; white-space: nowrap;
+  border: 1px solid var(--line); color: var(--muted); font-weight: 600; font-size: 12px; }
+.legend[open] summary { border-color: var(--accent); color: var(--accent); }
 .legend summary::-webkit-details-marker { display: none; }
-.legend-body { position: absolute; z-index: 40; right: 0; top: 28px; width: min(520px, 90vw); background: var(--panel);
-  border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4); }
+/* обозначения — окно по центру экрана: от кнопки «?» оно уходило за край, когда кнопка оказывалась слева */
+.legend-body { position: fixed; z-index: 70; left: 50%; top: 96px; transform: translateX(-50%);
+  width: min(640px, calc(100vw - 32px)); max-height: calc(100vh - 128px); overflow-y: auto; background: var(--panel);
+  border: 1px solid var(--line); border-radius: 8px; padding: 6px 14px 10px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); }
+.legend-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; position: sticky; top: -6px;
+  background: var(--panel); padding: 6px 0; border-bottom: 1px solid var(--line); }
 .legend-body p { margin: 6px 0; }
 .reload-note { position: fixed; right: 16px; top: 70px; z-index: 60; background: var(--panel); border: 1px solid var(--accent);
   border-radius: 8px; padding: 8px 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4); }
@@ -373,7 +378,9 @@ button.reason.more { border: 0; cursor: pointer; font: inherit; font-size: 11px;
 .maps { align-items: center; }
 .map-tab { padding: 3px 8px; }
 /* UX-06: поиск героя всегда на экране при прокрутке советов */
-.draft-main .center .search-panel { position: sticky; top: 6px; z-index: 25; }
+/* поиск закреплён под шапкой (раньше заезжал на неё); после конца драфта не закреплён — вводить нечего */
+.draft-main .center .search-panel { position: sticky; top: calc(var(--header-h, 0px) + 6px); z-index: 9; }
+#draft.finished .draft-main .center .search-panel { position: static; }
 #grid-box > summary { cursor: pointer; margin-bottom: 6px; }
 .counter-open { padding: 0; border: 0; background: none; cursor: zoom-in; }
 /* состав команды на драфте */
@@ -388,7 +395,13 @@ button.reason.more { border: 0; cursor: pointer; font: inherit; font-size: 11px;
 .advice-panel.collapsed #lane-box { display: none; }
 .advice-panel.collapsed { padding-top: 8px; padding-bottom: 8px; }
 .advice-panel.collapsed h3 { margin: 2px 0; cursor: pointer; }
-.advice-panel.collapsed h3::after { content: " ▸ показать"; font-size: 11px; font-weight: 400; color: var(--muted); }
+/* панели советов: свёрнутая — «показать ▾», раскрытая кликом (не текущая) — «скрыть ▴»; текущая на ходу не сворачивается */
+.advice-panel h3.toggle-h::after { margin-left: 8px; font-size: 11px; font-weight: 600; color: var(--accent);
+  border: 1px solid var(--accent); border-radius: 8px; padding: 0 6px; white-space: nowrap; }
+.advice-panel.collapsed h3.toggle-h::after { content: "показать ▾"; }
+.advice-panel:not(.collapsed):not(.focus) h3.toggle-h { cursor: pointer; }
+.advice-panel:not(.collapsed):not(.focus) h3.toggle-h::after { content: "скрыть ▴"; }
+.more-list .reason { outline: 1px dashed var(--accent); }
 .lineup-link { font-weight: 400; margin-left: 6px; }
 .turn-timer { min-width: 80px; }
 .turn-timer.late { color: var(--weak); font-weight: 700; }
@@ -401,3 +414,16 @@ button.reason.tourney { border: 0; cursor: pointer; font: inherit; font-size: 11
 table.sim-eval { width: 100%; margin-top: 8px; }
 table.sim-eval th { text-align: left; padding-top: 8px; }
 table.sim-eval td { vertical-align: top; padding: 4px 6px; }
+/* «ещё N ▾» / «скрыть ▴» у причин: видно, что это кнопка и что её можно нажать ещё раз */
+button.reason.more { color: var(--accent); background: transparent; border: 1px solid var(--accent); border-radius: 8px;
+  padding: 0 6px; cursor: pointer; font-weight: 600; }
+button.reason.more[aria-expanded="true"] { background: var(--chip); }
+.more-list { display: inline; }
+/* сворачиваемые блоки: явная подпись «показать / скрыть» у заголовка */
+details.panel > summary { cursor: pointer; }
+details.panel > summary::after { content: "показать ▾"; margin-left: 10px; font-size: 12px; font-weight: 600;
+  color: var(--accent); border: 1px solid var(--accent); border-radius: 8px; padding: 0 6px; white-space: nowrap; }
+details.panel[open] > summary::after { content: "скрыть ▴"; }
+/* ходы соперника после нашего последнего хода — подсвечены в ленте */
+.ribbon .slot.bot-new { box-shadow: 0 0 0 2px var(--accent); animation: bot-new 1.2s ease-out 2; }
+@keyframes bot-new { 0% { background: var(--chip); } 50% { background: transparent; } 100% { background: var(--chip); } }

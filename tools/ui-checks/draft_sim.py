@@ -159,8 +159,9 @@ try:
     time.sleep(2.5)
     after = js("document.querySelector('#sim-result table').innerText")
     check("правка позиции после драфта пересчитывает оценку", before != after)
-    fixed = js("(() => document.getElementById('their-slots').innerText.split('вручную').length - 1)()")
-    check("герои соперника поменялись местами, у каждого игрока по герою", fixed == 5, fixed)
+    labels = js("(() => [...document.querySelectorAll('#their-slots .slot-hero .small.muted')].map(e => e.textContent.trim()))()")
+    check("герои соперника поменялись местами: двое «вручную», остальные «расстановка соперника»",
+          labels.count("вручную") == 2 and labels.count("расстановка соперника") == 3, labels)
 
     # обновление страницы сохраняет симуляцию
     n = len(ids())
