@@ -115,6 +115,9 @@ public class WebApp {
         app.get("/img/{kind}/{file}", this::image);
         app.post("/api/draft", this::draftApi);
         app.post("/lineup", this::saveLineup);
+        app.post("/api/share", ctx -> shareDraft(ctx, SharedDrafts.newCode()));
+        app.post("/api/share/{code}", ctx -> shareDraft(ctx, ctx.pathParam("code")));
+        app.get("/api/share/{code}", this::sharedDraft);
         app.get("/method", ctx -> render(ctx, "method.jte", new Models.Method(page("Методика", "method"))));
         app.post("/reload", ctx -> {
             site.reload();
@@ -385,6 +388,32 @@ public class WebApp {
         } catch (IOException | RuntimeException e) {
             return "ВНИМАНИЕ: состав на игру не сохранится, нет записи в " + file.toAbsolutePath().getParent() + " (" + e + ")";
         }
+    }
+
+    // ---------------------------------------------------------------- общий драфт по ссылке (FEAT-14)
+
+    private void shareDraft(Context http, String code) throws IOException {
+        if (!site.sharedDrafts.enabled()) {
+            http.status(503).json(Map.of("error", "общий драфт недоступен: сайт запущен без папки состояния"));
+            return;
+        }
+        if (!SharedDrafts.validCode(code)) {
+            throw new NotFoundResponse("общий драфт «" + code + "»");
+        }
+        try {
+            com.fasterxml.jackson.databind.JsonNode saved = site.sharedDrafts.save(code, JSON.readTree(http.body()));
+            http.json(Map.of("code", code, "version", saved.path("version").asLong()));
+        } catch (IllegalArgumentException | com.fasterxml.jackson.core.JsonProcessingException e) {
+            http.status(400).json(Map.of("error", "неверный драфт: " + e.getMessage()));
+        }
+    }
+
+    private void sharedDraft(Context http) throws IOException {
+        var draft = site.sharedDrafts.read(http.pathParam("code"));
+        if (draft.isEmpty()) {
+            throw new NotFoundResponse("общий драфт «" + http.pathParam("code") + "»");
+        }
+        http.contentType("application/json; charset=utf-8").result(JSON.writeValueAsString(draft.get()));
     }
 
     // ---------------------------------------------------------------- драфт

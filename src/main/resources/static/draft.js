@@ -160,6 +160,7 @@
     renderSearch();
     renderBoard();
     requestAdvice();
+    schedulePush();
     $("search").focus();
   }
   $("undo").onclick = () => {
@@ -699,6 +700,69 @@
       action: "Сменить первый ход" }, () => { state.weFirst = weFirst; $("first").value = weFirst ? "us" : "them"; afterChange(); });
   };
 
+  // ------------------------------------------------------------ общий драфт по ссылке (FEAT-14)
+  // ?share=код: драфт хранится на сервере. Свои изменения отправляем, чужие подтягиваем раз в 2 секунды.
+  const CLIENT = Math.random().toString(36).slice(2, 10);
+  let shareCode = new URLSearchParams(location.search).get("share");
+  let shareVersion = 0, sharePushTimer = 0, applyingRemote = false;
+  const shareBody = () => JSON.stringify({ opponent: state.opponent, map: state.map, weFirst: state.weFirst,
+    heroes: state.heroes, assign: state.assign, client: CLIENT });
+  async function pushShared() {
+    if (!shareCode || applyingRemote) return;
+    try {
+      const res = await fetch(`/api/share/${shareCode}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: shareBody() });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || res.status);
+      shareVersion = data.version;
+      $("share-status").textContent = "общий драфт · синхронизирован";
+    } catch (e) { $("share-status").textContent = "общий драфт · не удалось сохранить: " + e.message; }
+  }
+  function schedulePush() {
+    if (!shareCode || applyingRemote) return;
+    clearTimeout(sharePushTimer);
+    sharePushTimer = setTimeout(pushShared, 150);
+  }
+  async function pullShared(first) {
+    if (!shareCode) return;
+    try {
+      const res = await fetch(`/api/share/${shareCode}`);
+      if (!res.ok) throw new Error(res.status === 404 ? "ссылка устарела" : res.status);
+      const d = await res.json();
+      if (d.version <= shareVersion || (!first && d.client === CLIENT)) { shareVersion = Math.max(shareVersion, d.version); return; }
+      shareVersion = d.version;
+      applyingRemote = true;
+      Object.assign(state, { opponent: d.opponent, map: d.map, weFirst: d.weFirst, heroes: d.heroes, assign: d.assign || {} });
+      $("opponent").value = state.opponent;
+      $("first").value = state.weFirst ? "us" : "them";
+      editIndex = null;
+      afterChange();
+      applyingRemote = false;
+      $("share-status").textContent = "общий драфт · обновлён";
+    } catch (e) {
+      applyingRemote = false;
+      $("share-status").textContent = "общий драфт · " + e.message;
+    }
+  }
+  $("share").onclick = async () => {
+    if (!shareCode) {
+      try {
+        const res = await fetch("/api/share", { method: "POST", headers: { "Content-Type": "application/json" }, body: shareBody() });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || res.status);
+        shareCode = data.code;
+        shareVersion = data.version;
+        const u = new URL(location.href);
+        u.searchParams.set("share", shareCode);
+        history.replaceState(null, "", u.pathname + u.search + location.hash);
+        setInterval(() => pullShared(false), 2000);
+      } catch (e) { $("share-status").textContent = "не удалось поделиться: " + e.message; return; }
+    }
+    const link = `${location.origin}/draft?share=${shareCode}`;
+    const ok = await copyText(link);
+    $("share-status").textContent = ok ? "ссылка скопирована — отправьте команде" : link;
+    toast(ok ? "Ссылка на общий драфт скопирована" : "Ссылка: " + link, false);
+  };
+
   // ------------------------------------------------------------ серия: карта 1 / 2 / 3
   /** Пики карты: [наши, их] по сохранённому драфту. */
   function picksOf(saved) {
@@ -760,6 +824,10 @@
     toast(`Соперник «${wanted}» не найден, открыт ${$("opponent").selectedOptions[0]?.textContent || state.opponent}`, false);
   }
   setOpponentInUrl();
+  if (shareCode) {
+    pullShared(true);
+    setInterval(() => pullShared(false), 2000);
+  }
   renderMaps();
   renderSearch();
   renderBoard();

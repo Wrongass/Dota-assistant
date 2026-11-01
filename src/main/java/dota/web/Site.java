@@ -32,6 +32,8 @@ final class Site {
     final Path analysisDir;
     /** Файл состава на игру (state/lineups.json) или null — состав только по конфигу. */
     final Path lineupsFile;
+    /** Общие драфты по ссылке — рядом с составом, в state/drafts. */
+    final SharedDrafts sharedDrafts;
     private volatile Lineups lineups = Lineups.none();
     private volatile AnalysisContext ctx;
     private volatile Status status;
@@ -52,6 +54,8 @@ final class Site {
         this.dataDir = dataDir;
         this.analysisDir = analysisDir;
         this.lineupsFile = lineupsFile;
+        this.sharedDrafts = new SharedDrafts(lineupsFile == null ? null
+                : lineupsFile.toAbsolutePath().getParent().resolve("drafts"));
     }
 
     synchronized void reload() throws IOException {
