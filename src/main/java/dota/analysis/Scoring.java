@@ -3,6 +3,14 @@ package dota.analysis;
 /** Формулы оценок. Все веса собраны здесь, чтобы их было легко крутить. */
 final class Scoring {
 
+    /**
+     * Веса итоговой оценки драфта в симуляции (docs/specs/draft-simulation.md, раздел 6): линии, преимущество по игре,
+     * мид-гейм, лейт, масс-файты, сплит-пуш, кайт. Сумма 1.
+     */
+    static final java.util.Map<String, Double> DRAFT_WEIGHTS = java.util.Map.of(
+            "lanes", 0.30, "game", 0.25, "mid", 0.15, "late", 0.15, "teamfight", 0.10, "split", 0.025, "kite", 0.025);
+
+
     /** Период полураспада веса матча: игра годичной давности весит вдвое меньше сегодняшней. */
     static final double HALF_LIFE_DAYS = 365;
 
