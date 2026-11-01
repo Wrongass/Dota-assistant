@@ -117,6 +117,11 @@ try:
     call("Page.navigate", url="http://127.0.0.1:8070/draft?opponent=sd_team")
     time.sleep(2.5)
     check("соперник без учёта регистра", js("document.getElementById('opponent').value") == "SD_Team")
+    href = js("(() => (document.querySelector('#their-title .lineup-link')||{}).getAttribute ? document.querySelector('#their-title .lineup-link').getAttribute('href') : '')()")
+    check("в драфте ссылка на состав соперника", href == "/opponent/SD_Team#lineup", href)
+    call("Page.navigate", url="http://127.0.0.1:8070" + href)
+    time.sleep(2)
+    check("ссылка открывает «Состав на игру»", js("document.getElementById('lineup').open") is True)
     print(f"{sum(1 for _, ok, _ in results if ok)}/{len(results)} проверок прошли")
 finally:
     proc.kill()

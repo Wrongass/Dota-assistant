@@ -409,7 +409,10 @@
     const theirs = { theirs: true, assignment: advice?.theirAssignment ?? [], remaining: advice?.theirRemaining ?? [], outlook: advice?.theirPlayers ?? [] };
     $("our-slots").innerHTML = (ROSTERS.ours || []).map((p) => playerSlot(p, ours, parts.ourPicks)).join("");
     $("their-slots").innerHTML = (ROSTERS[state.opponent] || []).map((p) => playerSlot(p, theirs, parts.theirPicks)).join("");
-    $("their-title").textContent = $("opponent").selectedOptions[0]?.textContent || "Они";
+    // UX-05: позиции или замена у соперника не те — правятся в «Состав на игру» на его странице
+    $("their-title").innerHTML = `${esc($("opponent").selectedOptions[0]?.textContent || "Они")}
+      <a class="small muted lineup-link" href="/opponent/${encodeURIComponent(state.opponent)}#lineup" target="_blank" rel="noopener"
+         title="Позиции или замена не те? Поправьте «Состав на игру» — драфт применит после перезагрузки">состав ✎</a>`;
     const taken = used();
     document.querySelectorAll("#grid .hero-tile").forEach((b) => {
       const id = Number(b.dataset.id);

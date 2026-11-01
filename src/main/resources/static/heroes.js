@@ -16,6 +16,9 @@
   document.addEventListener("click", (e) => menus().forEach((d) => { if (!d.contains(e.target) || e.target.closest(".dropdown a")) d.open = false; }));
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") menus().forEach((d) => { d.open = false; }); });
 
+  // ссылка вида /opponent/X#lineup открывает «Состав на игру»
+  if (location.hash === "#lineup") { const d = document.getElementById("lineup"); if (d) d.open = true; }
+
   // ------------------------------------------------------------ «Перечитать данные»: индикатор и сообщение после
   const reload = document.getElementById("reload-form");
   if (reload) {

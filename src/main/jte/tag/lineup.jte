@@ -2,7 +2,7 @@
 @param Lineup lineup
 @param String back
 @param String error
-<details class="panel lineup" open="${lineup.changed() || error != null}">
+<details class="panel lineup" id="lineup" open="${lineup.changed() || error != null}">
     <summary><b>Состав на игру</b>
         @if(lineup.changed())
             <span class="chip strong">изменён на сайте</span>
