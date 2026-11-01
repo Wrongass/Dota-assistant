@@ -14,7 +14,11 @@
 
   // ------------------------------------------------------------ состояние
   // map — карта серии (bo2/bo3): у каждой свой драфт; карта 1 хранится под старым ключом, сохранённые драфты не теряются
-  let state = { opponent: root.dataset.defaultOpponent, map: 1, weFirst: true, heroes: [], assign: {} };
+  // sim — симуляция против соперника (docs/specs/draft-simulation.md): за них ходит сайт; seed — зерно бота;
+  // revealed — план бота раскрыт после драфта, swaps — его свапы против прогноза
+  let state = { opponent: root.dataset.defaultOpponent, map: 1, weFirst: true, heroes: [], assign: {},
+    sim: false, seed: 0, revealed: false, swaps: [] };
+  const newSeed = () => Math.floor(Math.random() * 1e9);
   const MAPS = 3;
   let advice = null;
   let editIndex = null; // исправляемый ход (клик по ленте)
@@ -26,23 +30,28 @@
   let lockedUntil = 0;
   let awaiting = false;
   const keyOf = (opponent, map) => "draft:" + opponent + (map > 1 ? ":" + map : "");
-  const key = () => keyOf(state.opponent, state.map);
+  const key = () => keyOf(state.opponent, state.map) + (state.sim ? ":sim" : "");
   const readSaved = (opponent, map) => {
     try {
       return JSON.parse(localStorage.getItem(keyOf(opponent, map)) || "null");
     } catch (e) { return null; /* без localStorage просто начинаем заново */ }
   };
   const load = () => {
-    const saved = readSaved(state.opponent, state.map);
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(key()) || "null"); } catch (e) { /* без localStorage — заново */ }
     Object.assign(state, saved
-      ? { weFirst: saved.weFirst !== false, heroes: saved.heroes || [], assign: saved.assign || {} }
-      : { weFirst: true, heroes: [], assign: {} });
+      ? { weFirst: saved.weFirst !== false, heroes: saved.heroes || [], assign: saved.assign || {},
+          seed: saved.seed || newSeed(), revealed: !!saved.revealed, swaps: saved.swaps || [] }
+      : { weFirst: true, heroes: [], assign: {}, seed: newSeed(), revealed: false, swaps: [] });
   };
   const save = () => {
     try {
-      localStorage.setItem(key(), JSON.stringify({ weFirst: state.weFirst, heroes: state.heroes, assign: state.assign }));
+      localStorage.setItem(key(), JSON.stringify({ weFirst: state.weFirst, heroes: state.heroes, assign: state.assign,
+        seed: state.seed, revealed: state.revealed, swaps: state.swaps }));
     } catch (e) { /* ок */ }
   };
+  /** Симуляция, и сейчас ход соперника: ввод закрыт, ходит бот. */
+  const botTurn = () => state.sim && state.heroes.length < ORDER.length && !isOurs(state.heroes.length);
   const used = () => new Set(state.heroes.filter((h) => h > 0));
   const slot = (i) => ORDER[i];
   const isOurs = (i) => slot(i).firstTeam === state.weFirst;
@@ -76,6 +85,7 @@
   function apply(heroId) {
     const target = editIndex ?? state.heroes.length;
     if (target >= ORDER.length) return;
+    if (state.sim && !isOurs(target)) { toast("Сейчас ход соперника: его баны и пики делает сайт", false); return; }
     if (used().has(heroId) && state.heroes[target] !== heroId) return;
     const w = warning(target, heroId);
     if (w && pendingWarn !== heroId) {
@@ -164,7 +174,8 @@
     save();
     const assign = Object.entries(state.assign).map(([h, p]) => `${h}:${encodeURIComponent(p)}`).join(",");
     history.replaceState(null, "", `#first=${state.weFirst ? "us" : "them"}&heroes=${state.heroes.join(",")}`
-      + (assign ? `&assign=${assign}` : "") + (state.map > 1 ? `&map=${state.map}` : ""));
+      + (assign ? `&assign=${assign}` : "") + (state.map > 1 ? `&map=${state.map}` : "")
+      + (state.sim ? `&sim=${state.seed}` + (state.revealed ? "&rev=1" : "") : ""));
     renderMaps();
     $("search").value = "";
     selected = 0;
@@ -172,18 +183,21 @@
     renderBoard();
     requestAdvice();
     schedulePush();
+    simStep();
     $("search").focus();
   }
   const redo = []; // отменённые ходы: Ctrl+Shift+Z возвращает (FEAT-09)
   $("undo").onclick = () => {
     if (editIndex !== null) { editIndex = null; renderBoard(); return; }
     if (!state.heroes.length) return;
+    if (state.sim) { simUndo(); return; }
     const h = state.heroes.pop();
     redo.push(h);
     if (h > 0) delete state.assign[h];
     afterChange(true);
   };
   function redoMove() {
+    if (state.sim) return; // в симуляции ответы бота пересчитываются заново, возврат хода не нужен
     if (!redo.length || state.heroes.length >= ORDER.length) return;
     const h = redo.pop();
     if (h > 0 && used().has(h)) { redo.length = 0; return; }
@@ -199,7 +213,13 @@
       afterChange();
     }
   };
-  $("reset").onclick = () => { if (confirmReset()) { state.heroes = []; state.assign = {}; editIndex = null; afterChange(); } };
+  $("reset").onclick = () => {
+    if (confirmReset()) {
+      state.heroes = []; state.assign = {}; editIndex = null;
+      Object.assign(state, { seed: newSeed(), revealed: false, swaps: [] }); // новая симуляция — новое зерно
+      afterChange();
+    }
+  };
   // без браузерного confirm(): второй клик в течение 6 секунд подтверждает сброс, на кнопке обратный отсчёт
   const RESET_WINDOW = 6;
   let resetArmed = 0, resetTimer = 0;
@@ -299,11 +319,13 @@
     }).join("");
     $("ribbon-hint").textContent = editIndex !== null
       ? `Исправляете ход ${editIndex + 1} (${slot(editIndex).pick ? "пик" : "бан"} ${isOurs(editIndex) ? "наш" : "их"}): выберите героя. «Пропустить ход» — сделать пропуском, Esc — отмена.`
+      : state.sim ? "Симуляция: за соперника ходит сайт. «Отменить ход» откатывает ваш последний ход вместе с ответами соперника."
       : "Клик по сделанному ходу — исправить его.";
   }
   $("ribbon").addEventListener("click", (e) => {
     const b = e.target.closest(".slot");
     if (!b || b.disabled) return;
+    if (state.sim) { toast("В симуляции старые ходы не исправляются: «Отменить ход» откатывает и ответы соперника", false); return; }
     const i = Number(b.dataset.i);
     editIndex = editIndex === i ? null : i;
     pendingWarn = null;
@@ -316,10 +338,11 @@
     const step = state.heroes.length;
     const turn = $("turn");
     const done = step >= ORDER.length && editIndex === null;
-    $("search").disabled = done;
-    $("search").placeholder = done ? "Драфт завершён · клик по ходу в ленте, чтобы исправить"
+    $("search").disabled = done || botTurn();
+    $("search").placeholder = done ? (state.sim ? "Драфт завершён · позиции героев можно поправить, оценка ниже"
+        : "Драфт завершён · клик по ходу в ленте, чтобы исправить")
       : "Герой: имя, начало имени, WK, вк, кунк… ↑↓ и Enter — внести ход";
-    $("skip").disabled = done;
+    $("skip").disabled = done || botTurn();
     $("skip").textContent = editIndex !== null ? "Сделать пропуском" : "Пропустить ход";
     if (step >= ORDER.length) {
       turn.textContent = editIndex !== null ? `Исправление хода ${editIndex + 1}` : "Драфт завершён";
@@ -333,7 +356,8 @@
       return;
     }
     const s = slot(step), ours = isOurs(step);
-    turn.textContent = `Ход ${step + 1}/${ORDER.length}: ${s.pick ? "ПИК" : "БАН"} ${ours ? "НАШ" : "ИХ"}`;
+    turn.textContent = `Ход ${step + 1}/${ORDER.length}: ${s.pick ? "ПИК" : "БАН"} ${ours ? "НАШ" : "ИХ"}`
+      + (botTurn() ? " · соперник думает…" : "");
     turn.className = "turn " + (ours ? "ours-turn" : "their-turn");
   }
 
@@ -409,11 +433,18 @@
     const sel = e.target.closest(".slot-assign");
     if (!sel) return;
     const player = sel.dataset.player;
+    // кто сейчас на выбранном герое и какой герой сейчас у этого игрока (вручную или по прогнозу)
+    const all = [...(advice?.ourAssignment || []), ...(advice?.theirAssignment || [])];
+    const hero = Number(sel.value);
+    const prevOwner = all.find((x) => x.heroId === hero)?.player;
+    const prevHero = all.find((x) => x.player === player)?.heroId;
     // один игрок — один герой: снимаем ручные назначения этого игрока и героя
     Object.entries(state.assign).forEach(([h, p]) => { if (p === player) delete state.assign[h]; });
     if (sel.value) {
       delete state.assign[sel.value];
       state.assign[sel.value] = player;
+      // позиция занята — меняем героев местами: прежний герой игрока уходит к прежнему владельцу выбранного
+      if (prevOwner && prevHero && prevOwner !== player && prevHero !== hero) state.assign[prevHero] = prevOwner;
     }
     afterChange();
   });
@@ -443,7 +474,7 @@
     document.querySelectorAll("#grid .hero-tile").forEach((b) => {
       const id = Number(b.dataset.id);
       b.disabled = (taken.has(id) && !(editIndex !== null && state.heroes[editIndex] === id))
-        || (state.heroes.length >= ORDER.length && editIndex === null);
+        || (state.heroes.length >= ORDER.length && editIndex === null) || botTurn();
     });
     layoutPanels();
   }
@@ -538,6 +569,9 @@
 
   function renderSummary(a) {
     if (!a.finished) return;
+    $("lanes-box").hidden = state.sim;
+    $("overall").hidden = state.sim;
+    $("sim-result").hidden = !state.sim;
     // FEAT-12: общая оценка — среднее преимущество по линиям
     const lanesWithData = a.lanes.filter((l) => l.ours.length && l.theirs.length);
     const avg = lanesWithData.length ? lanesWithData.reduce((x, l) => x + l.advantage, 0) / lanesWithData.length : 0;
@@ -735,6 +769,100 @@
     }
   }
 
+  // ------------------------------------------------------------ симуляция против соперника
+  const simBody = () => JSON.stringify({ opponent: state.opponent, weFirst: state.weFirst, heroes: state.heroes,
+    assign: state.assign, seed: state.seed });
+  let botTimer = 0;
+  /** После каждого изменения: на ходу соперника — его ход через 0,7 с; в конце — раскрыть план бота и оценить. */
+  function simStep() {
+    clearTimeout(botTimer);
+    if (!state.sim) return;
+    if (botTurn()) {
+      const at = state.heroes.length;
+      botTimer = setTimeout(() => botMove(at), 700);
+    } else if (state.heroes.length >= ORDER.length) {
+      state.revealed ? requestEvaluation() : revealPlan();
+    }
+  }
+  async function botMove(at) {
+    try {
+      const res = await fetch("/api/sim/move", { method: "POST", headers: { "Content-Type": "application/json" }, body: simBody() });
+      const m = await res.json();
+      if (!res.ok) throw new Error(m.error || res.status);
+      if (!state.sim || state.heroes.length !== at) return; // пока думал, ход отменили
+      state.heroes.push(m.heroId);
+      toast(`Соперник: ${m.pick ? "пик" : "бан"} ${m.name} (ход ${at + 1})`, false);
+      afterChange();
+    } catch (e) { $("timing").textContent = "ход соперника не удался: " + e.message; }
+  }
+  /** Отмена: убираем ответы соперника после нашего последнего хода и сам этот ход. */
+  function simUndo() {
+    while (state.heroes.length && !isOurs(state.heroes.length - 1)) state.heroes.pop();
+    if (state.heroes.length) state.heroes.pop();
+    if (state.revealed) {
+      // план бота был раскрыт — его расстановку снимаем, драфт продолжается
+      state.heroes.forEach((h, i) => { if (h > 0 && !isOurs(i)) delete state.assign[h]; });
+      Object.assign(state, { revealed: false, swaps: [] });
+    }
+    afterChange(true);
+  }
+  /** Конец драфта: соперник раскрывает свою расстановку (в ней могут быть свапы против прогноза). */
+  async function revealPlan() {
+    try {
+      const res = await fetch("/api/sim/plan", { method: "POST", headers: { "Content-Type": "application/json" }, body: simBody() });
+      const plan = await res.json();
+      if (!res.ok) throw new Error(plan.error || res.status);
+      plan.placements.forEach((p) => { state.assign[p.heroId] = p.player; });
+      Object.assign(state, { revealed: true, swaps: plan.swaps });
+      afterChange(true);
+    } catch (e) { $("sim-result").innerHTML = `<p class="weak">Не удалось получить расстановку соперника: ${esc(e.message)}</p>`; }
+  }
+  let evalTimer = 0;
+  /** Оценка драфта по текущим позициям; правки позиций пересчитывают её через 150 мс. */
+  function requestEvaluation() {
+    clearTimeout(evalTimer);
+    evalTimer = setTimeout(async () => {
+      try {
+        const res = await fetch("/api/sim/evaluate", { method: "POST", headers: { "Content-Type": "application/json" }, body: simBody() });
+        const ev = await res.json();
+        if (!res.ok) throw new Error(ev.error || res.status);
+        renderEvaluation(ev);
+      } catch (e) { $("sim-result").innerHTML = `<p class="weak">Не удалось оценить драфт: ${esc(e.message)}</p>`; }
+    }, 150);
+  }
+  const side = (s) => Math.abs(s) < 0.15 ? "" : s > 0 ? "strong" : "weak";
+  function renderEvaluation(ev) {
+    const row = (s) => `<tr><td><b>${esc(s.title)}</b></td><td class="${side(s.score)}">${esc(s.verdict)}</td>
+      <td class="small">${s.reasons.map(esc).join("<br>")}</td></tr>`;
+    const swaps = state.swaps.length
+      ? `<div class="sim-swaps"><b>Соперник поменял позиции против прогноза:</b><ul>${state.swaps.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>`
+      : '<div class="small muted">Соперник сыграл расстановку по прогнозу.</div>';
+    $("sim-result").innerHTML = `
+      <div class="sim-total ${side(ev.total.score)}">${esc(ev.total.verdict)}</div>
+      ${ev.total.reasons.length ? `<div class="small">${ev.total.reasons.map(esc).join(" · ")}</div>` : ""}
+      ${swaps}
+      <div class="small muted">Позиции можно поправить у героев в колонках «Мы» и «Они»: оценка пересчитается сразу.</div>
+      <table class="sim-eval"><tr><th colspan="3">Линии</th></tr>${ev.lanes.map(row).join("")}
+        <tr><th colspan="3">Игра</th></tr>${ev.sections.map(row).join("")}</table>`;
+  }
+  $("mode").onchange = (e) => {
+    save();
+    state.sim = e.target.value === "sim";
+    $("hints-wrap").hidden = !state.sim;
+    root.classList.toggle("hide-hints", state.sim && $("no-hints").checked);
+    editIndex = null;
+    advice = null;
+    load(); // у симуляции свой драфт, ручной не теряется
+    $("first").value = state.weFirst ? "us" : "them";
+    toast(state.sim ? "Симуляция: вы ходите за нас, за соперника — сайт" : "Ручной режим: ходы обеих команд вносите вы", false);
+    afterChange();
+  };
+  try { $("no-hints").checked = localStorage.getItem("draft:no-hints") === "1"; } catch (e) { /* ок */ }
+  $("no-hints").onchange = () => {
+    root.classList.toggle("hide-hints", state.sim && $("no-hints").checked);
+    try { localStorage.setItem("draft:no-hints", $("no-hints").checked ? "1" : "0"); } catch (e) { /* ок */ }
+  };
+
   // сетка героев: свернуть/развернуть, выбор запоминается (UX-06)
   try { if (localStorage.getItem("draft:grid") === "closed") $("grid-box").open = false; } catch (e) { /* ок */ }
   $("grid-box").addEventListener("toggle", () => {
@@ -889,7 +1017,15 @@
   const hash = new URLSearchParams(location.hash.slice(1));
   const hashMap = Number(hash.get("map"));
   if (hashMap >= 1 && hashMap <= MAPS) state.map = hashMap;
+  state.sim = hash.has("sim");
   load();
+  if (state.sim) {
+    state.seed = Number(hash.get("sim")) || state.seed;
+    state.revealed = hash.get("rev") === "1" && state.revealed;
+  }
+  $("mode").value = state.sim ? "sim" : "manual";
+  $("hints-wrap").hidden = !state.sim;
+  root.classList.toggle("hide-hints", state.sim && $("no-hints").checked);
   if (hash.has("heroes")) {
     state.heroes = hash.get("heroes").split(",").filter((x) => x !== "").map(Number).slice(0, ORDER.length);
     state.weFirst = hash.get("first") !== "them";
@@ -914,4 +1050,5 @@
   renderSearch();
   renderBoard();
   requestAdvice();
+  simStep();
 })();

@@ -14,7 +14,8 @@
 - Проверки сайта в браузере (после правок JS/шаблонов, при запущенном сайте): `python tools/ui-checks/<скрипт>.py`
 
 Архитектура (ADR 0003): `AnalysisContext` грузит всё один раз → `Squad` считает view-модели (`Views`) →
-их показывают `MarkdownRenderer` и сайт. Live-драфт — `DraftEngine`. `GoldenReportTest` сверяет генератор с
+их показывают `MarkdownRenderer` и сайт. Live-драфт — `DraftEngine`, соперник в симуляции — `DraftBot`, оценка драфта — `DraftEvaluation`
+(свойства героев — `config/hero_traits.yaml`). `GoldenReportTest` сверяет генератор с
 закоммиченным `analysis/`: после изменения данных или расчётов перегенерируйте `analysis/` (`./gradlew analyze`).
 
 Нужен JDK 21: Gradle находит его через toolchain (в т.ч. в `~/.jdks`). Java в PATH может быть старше,

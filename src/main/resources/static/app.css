@@ -394,3 +394,10 @@ button.reason.more { border: 0; cursor: pointer; font: inherit; font-size: 11px;
 .turn-timer.late { color: var(--weak); font-weight: 700; }
 .overall { margin: 4px 0 8px; }
 button.reason.tourney { border: 0; cursor: pointer; font: inherit; font-size: 11px; text-decoration: underline dotted; }
+/* симуляция драфта */
+.hide-hints .advice-panel, .hide-hints .odds { display: none; }
+.sim-total { font-size: 1.25em; font-weight: 700; margin: 6px 0; }
+.sim-swaps ul { margin: 4px 0 8px 18px; padding: 0; }
+table.sim-eval { width: 100%; margin-top: 8px; }
+table.sim-eval th { text-align: left; padding-top: 8px; }
+table.sim-eval td { vertical-align: top; padding: 4px 6px; }

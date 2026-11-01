@@ -13,6 +13,13 @@
                     <option value="them">они</option>
                 </select>
             </label>
+            <label title="Симуляция: вы драфтите за нас, за соперника баны и пики делает сайт по игрокам этой команды">Режим
+                <select id="mode">
+                    <option value="manual">вручную</option>
+                    <option value="sim">симуляция против соперника</option>
+                </select>
+            </label>
+            <label id="hints-wrap" class="small" hidden title="Скрыть советы и потренироваться самому"><input type="checkbox" id="no-hints"> без подсказок</label>
             <span class="maps" id="maps" title="Серия bo2/bo3: у каждой карты свой драфт"></span>
             <span id="turn" class="turn"></span>
             <span class="muted small" id="timing"></span>
@@ -99,9 +106,12 @@
                 <div class="panel" id="summary" hidden>
                     <h3>Итог драфта <button id="copy" class="small-btn">Скопировать текстом</button> <button id="copy-chat" class="small-btn" title="Формат для Discord и Telegram: жирные заголовки, линии списком">Для чата</button> <span id="copied" class="muted small"></span></h3>
                     <div id="summary-warn"></div>
+                    <div id="sim-result" hidden></div>
                     <div id="overall" class="overall"></div>
-                    <div class="small muted">Линии по позициям расстановки; преимущество — среднее по встречным парам героев, справа — самая заметная пара</div>
-                    <table id="lanes"></table>
+                    <div id="lanes-box">
+                        <div class="small muted">Линии по позициям расстановки; преимущество — среднее по встречным парам героев, справа — самая заметная пара</div>
+                        <table id="lanes"></table>
+                    </div>
                     <div class="small muted">Их самые опасные герои</div>
                     <ol id="threats" class="advice"></ol>
                 </div>
