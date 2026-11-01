@@ -532,6 +532,7 @@
   // ------------------------------------------------------------ подсказки
   // причины этого драфта (контрит, связка, линия, пик-отказ) сервер ставит первыми — показываем три, остальные по клику
   const SHOWN = 3;
+  const POS_NAME = { 1: "керри", 2: "мид", 3: "оффлейн", 4: "четвёрка", 5: "пятёрка" };
   const CONTEXT = /^(контрит|связка|линия|пик-отказ)/;
   const chip = (x) => /^×\d+ в турнире/.test(x)
     ? `<button type="button" class="reason tourney" title="Показать карты турнира">${esc(x)}</button>`
@@ -567,6 +568,13 @@
     const topBan = Math.max(...a.banSuggestions.map((r) => r.score), 1e-9);
     $("bans").innerHTML = a.banSuggestions.map((r) => pickable(r,
       `<b class="ban-score" title="Важность бана: шанс их пика × вред для нас (угроза игрока на герое, контрпик наших, наш плохой винрейт против него). 100 — самый важный в списке">${Math.round(100 * r.score / topBan)}</b> ${ourMark(r)}`)).join("");
+    // баны по позициям: у каждого их игрока свои 3 бана; после его пика строка остаётся (свап)
+    const pb = a.positionBans || [];
+    $("pos-bans-box").hidden = pb.length === 0;
+    $("pos-bans").innerHTML = pb.map((p) => `<li><span class="pos-label"><b class="pos">${p.position}</b> ${POS_NAME[p.position] || ""} · ${esc(p.player)}${
+      p.picked ? `<span class="small muted picked-note">взял ${icon(p.picked)}${esc(p.pickedName)}, может свапнуть</span>` : ""}</span>
+      <span class="pos-heroes">${p.heroes.map((r) => `<span class="pos-hero"><button class="hero-pick" data-id="${r.heroId}" title="${esc(r.reasons.join(" · "))}">${icon(r.heroId)}${esc(r.name)}</button>
+        <span class="reason">${esc(r.reasons[0] || "")}</span>${ourMark(r)}</span>`).join("") || '<span class="muted small">нет свободных героев его пула</span>'}</span></li>`).join("");
     $("picks").innerHTML = a.pickSuggestions.map((r) =>
       pickable(r, `<span class="muted">${esc(r.player)}</span>`)).join("");
     const pp = a.pairPicks || [];
@@ -894,6 +902,11 @@
     root.classList.toggle("hide-hints", state.sim && $("no-hints").checked);
     try { localStorage.setItem("draft:no-hints", $("no-hints").checked ? "1" : "0"); } catch (e) { /* ок */ }
   };
+
+  try { if (localStorage.getItem("draft:posbans") === "closed") $("pos-bans-box").open = false; } catch (e) { /* ок */ }
+  $("pos-bans-box").addEventListener("toggle", () => {
+    try { localStorage.setItem("draft:posbans", $("pos-bans-box").open ? "open" : "closed"); } catch (e) { /* ок */ }
+  });
 
   // сетка героев: свернуть/развернуть, выбор запоминается (UX-06)
   try { if (localStorage.getItem("draft:grid") === "closed") $("grid-box").open = false; } catch (e) { /* ок */ }

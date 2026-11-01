@@ -421,9 +421,20 @@ button.reason.more[aria-expanded="true"] { background: var(--chip); }
 .more-list { display: inline; }
 /* сворачиваемые блоки: явная подпись «показать / скрыть» у заголовка */
 details.panel > summary { cursor: pointer; }
-details.panel > summary::after { content: "показать ▾"; margin-left: 10px; font-size: 12px; font-weight: 600;
+details.toggle-box > summary { cursor: pointer; margin-top: 8px; }
+details.panel > summary::after, details.toggle-box > summary::after { content: "показать ▾"; margin-left: 10px; font-size: 12px; font-weight: 600;
   color: var(--accent); border: 1px solid var(--accent); border-radius: 8px; padding: 0 6px; white-space: nowrap; }
-details.panel[open] > summary::after { content: "скрыть ▴"; }
+details.panel[open] > summary::after, details.toggle-box[open] > summary::after { content: "скрыть ▴"; }
 /* ходы соперника после нашего последнего хода — подсвечены в ленте */
 .ribbon .slot.bot-new { box-shadow: 0 0 0 2px var(--accent); animation: bot-new 1.2s ease-out 2; }
 @keyframes bot-new { 0% { background: var(--chip); } 50% { background: transparent; } 100% { background: var(--chip); } }
+/* баны по позициям */
+.advice-panel.collapsed #pos-bans-box { display: none; }
+.pos-bans { list-style: none; margin: 4px 0 0; padding: 0; }
+.pos-bans li { margin: 6px 0; display: grid; grid-template-columns: 190px 1fr; gap: 4px 10px; align-items: start; }
+.pos-bans .pos-label { line-height: 1.3; }
+.pos-bans .picked-note { display: block; }
+.pos-bans .pos-heroes { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+@media (max-width: 700px) { .pos-bans li { grid-template-columns: 1fr; } }
+.pos-bans .pos-hero { display: inline-flex; align-items: center; gap: 3px; }
+.pos-bans .picked-note img { width: 16px; height: 16px; vertical-align: middle; }

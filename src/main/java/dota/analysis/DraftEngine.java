@@ -105,7 +105,15 @@ public final class DraftEngine {
                          List<PlayerOutlook> theirPlayers, List<RosterLine> ourRoster, List<RosterLine> theirRoster,
                          int theirBansLeft, int theirPicksLeft, int ourBansLeft, int ourPicksLeft,
                          List<Lane> lanes, List<Reasoned> theirThreats, List<LaneOption> laneOptions,
-                         List<PairPick> pairPicks, long micros) {
+                         List<PairPick> pairPicks, List<PositionBans> positionBans, long micros) {
+    }
+
+    /**
+     * Баны по позиции соперника: лучшие баны против его игрока на этой позиции. Остаются и после его пика — герои
+     * могут свапнуться (керри отдаст героя в мид и возьмёт другого). picked — герой, которого игрок вероятнее всего
+     * уже взял (или null).
+     */
+    public record PositionBans(int position, String player, Integer picked, String pickedName, List<Reasoned> heroes) {
     }
 
     private final AnalysisContext ctx;
@@ -404,6 +412,7 @@ public final class DraftEngine {
                 theirBansLeft, theirPicksLeft, ourBansLeft, ourPicksLeft, lanes, threats,
                 finished ? List.of() : laneOptions(us, ourProb, used, theirLaners),
                 doublePickNow(step, weFirst) ? pairPicks(ourPickList) : List.of(),
+                finished ? List.of() : positionBans(them, us, ourPicks, used, theirDist, theirAssignment),
                 (System.nanoTime() - started) / 1000);
     }
 
@@ -891,29 +900,79 @@ public final class DraftEngine {
             if (used.contains(h) || ourWanted.contains(h)) {
                 continue;
             }
-            double threat = them.threat.getOrDefault(h, 0.0);
-            double counter = Math.max(0, avgCounter(h, ourPicks));
-            int[] hist = vs.get(h);
-            double nemesis = hist == null || hist[0] < 40 ? 0
-                    : Scoring.clamp01((avg - Scoring.shrink(hist[1], hist[0], avg, 30)) / 0.08);
-            double damage = 0.4 + threat + 6 * counter + 0.3 * nemesis;
+            double damage = banDamage(them, h, ourPicks, vs, avg);
             List<String> reasons = new ArrayList<>();
             reasons.add("возьмут: " + Md.pct(e.getValue()) + " (" + them.players.get(theirs.bestPlayer().get(h)).nick() + ")");
-            // угроза — та же, что на странице соперника (UX-04): показываем всегда, чтобы цифры сходились
-            if (threat > 0) {
-                reasons.add("угроза " + Md.dec(threat));
-            }
-            String cnt = bestPair(h, ourPicks, false);
-            if (cnt != null) {
-                reasons.add("контрит наш " + cnt);
-            }
-            if (nemesis > 0.3) {
-                reasons.add("нам неудобен: " + Md.pct(Scoring.shrink(hist[1], hist[0], avg, 30)));
-            }
+            reasons.addAll(banReasons(them, h, ourPicks, vs, avg));
             result.add(new Reasoned(h, meta.name(h), e.getValue() * damage, null, reasons));
         }
         result.sort(Comparator.comparingDouble(Reasoned::score).reversed());
         return result.stream().limit(8).toList();
+    }
+
+    /** Вред для нас, если они возьмут h: угроза игрока на герое, контрпик наших пиков, наша плохая история против него. */
+    private double banDamage(SquadModel them, int h, List<Integer> ourPicks, Map<Integer, int[]> vs, double avg) {
+        double threat = them.threat.getOrDefault(h, 0.0);
+        double counter = Math.max(0, avgCounter(h, ourPicks));
+        return 0.4 + threat + 6 * counter + 0.3 * nemesis(h, vs, avg);
+    }
+
+    private static double nemesis(int h, Map<Integer, int[]> vs, double avg) {
+        int[] hist = vs.get(h);
+        return hist == null || hist[0] < 40 ? 0 : Scoring.clamp01((avg - Scoring.shrink(hist[1], hist[0], avg, 30)) / 0.08);
+    }
+
+    /** Причины бана кроме «возьмут»: угроза, контрпик наших, нам неудобен. */
+    private List<String> banReasons(SquadModel them, int h, List<Integer> ourPicks, Map<Integer, int[]> vs, double avg) {
+        List<String> reasons = new ArrayList<>();
+        double threat = them.threat.getOrDefault(h, 0.0);
+        int[] hist = vs.get(h);
+        // угроза — та же, что на странице соперника (UX-04): показываем всегда, чтобы цифры сходились
+        if (threat > 0) {
+            reasons.add("угроза " + Md.dec(threat));
+        }
+        String cnt = bestPair(h, ourPicks, false);
+        if (cnt != null) {
+            reasons.add("контрит наш " + cnt);
+        }
+        if (nemesis(h, vs, avg) > 0.3) {
+            reasons.add("нам неудобен: " + Md.pct(Scoring.shrink(hist[1], hist[0], avg, 30)));
+        }
+        return reasons;
+    }
+
+    /**
+     * Баны по позициям (по запросу пользователя 1.11): для каждого игрока соперника — 3 героя с наибольшим «доля героя
+     * в его распределении × вред для нас». Распределение игрока не зависит от того, выбрал ли он уже героя, поэтому
+     * строка остаётся после его пика: на случай свапа.
+     */
+    private List<PositionBans> positionBans(SquadModel them, SquadModel us, List<Integer> ourPicks, Set<Integer> used,
+                                            Distribution theirs, List<Assignment> theirAssignment) {
+        Map<Integer, int[]> vs = us.squad.vsEnemies();
+        double avg = Squad.average(vs);
+        List<PositionBans> result = new ArrayList<>();
+        for (int p = 0; p < them.players.size(); p++) {
+            PlayerStats player = them.players.get(p);
+            final int idx = p;
+            List<Reasoned> heroes = new ArrayList<>();
+            for (var e : theirs.perPlayer().entrySet()) {
+                int h = e.getKey();
+                double share = e.getValue()[idx];
+                if (used.contains(h) || share < 0.01) {
+                    continue;
+                }
+                List<String> reasons = new ArrayList<>();
+                reasons.add("его выбор " + Md.pct(share)); // доля среди его ещё доступных героев
+                reasons.addAll(banReasons(them, h, ourPicks, vs, avg));
+                heroes.add(new Reasoned(h, meta.name(h), share * banDamage(them, h, ourPicks, vs, avg), player.nick(), reasons));
+            }
+            heroes.sort(Comparator.comparingDouble(Reasoned::score).reversed());
+            Assignment picked = theirAssignment.stream().filter(a -> a.player().equals(player.nick()) && (a.fixed() || a.probability() >= 0.5))
+                    .findFirst().orElse(null);
+            result.add(new PositionBans(them.squad.position(player), player.nick(), picked == null ? null : picked.heroId(),
+                    picked == null ? null : picked.name(), heroes.stream().limit(3).toList()));
+        }
+        return result;
     }
 
     // ---------------------------------------------------------------- итог драфта
