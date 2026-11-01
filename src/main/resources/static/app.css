@@ -383,3 +383,9 @@ button.reason.more { border: 0; cursor: pointer; font: inherit; font-size: 11px;
 .comp-chip.zero { opacity: 0.5; }
 .comp-warn { margin-top: 4px; color: var(--muted); }
 .comp-warn.ours { color: var(--weak); }
+/* свёрнутые панели советов: только заголовки, клик — закрепить раскрытой */
+.advice-panel.collapsed ol, .advice-panel.collapsed ul, .advice-panel.collapsed #pair-box,
+.advice-panel.collapsed #lane-box { display: none; }
+.advice-panel.collapsed { padding-top: 8px; padding-bottom: 8px; }
+.advice-panel.collapsed h3 { margin: 2px 0; cursor: pointer; }
+.advice-panel.collapsed h3::after { content: " ▸ показать"; font-size: 11px; font-weight: 400; color: var(--muted); }

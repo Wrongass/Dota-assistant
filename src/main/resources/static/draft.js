@@ -419,7 +419,18 @@
     layoutPanels();
   }
 
-  /** Нужная на этом ходу панель — первой и с рамкой; панели, ходы которых закончились, — прячем. */
+  // закреплённые раскрытыми панели (клик по заголовку свёрнутой панели), запоминаются в браузере
+  const pinned = new Set((() => { try { return JSON.parse(localStorage.getItem("draft:pinned") || "[]"); } catch (e) { return []; } })());
+  document.querySelectorAll(".advice-panel").forEach((panel) => panel.addEventListener("click", (e) => {
+    const h = e.target.closest("h3");
+    if (!h || e.target.closest("button, a")) return;
+    const id = panel.id;
+    if (panel.classList.contains("focus")) return;
+    pinned.has(id) ? pinned.delete(id) : pinned.add(id);
+    try { localStorage.setItem("draft:pinned", JSON.stringify([...pinned])); } catch (err) { /* ок */ }
+    layoutPanels();
+  }));
+  /** Нужная на этом ходу панель — с рамкой и раскрыта; остальные свёрнуты до заголовка; закончившиеся — прячем. */
   function layoutPanels() {
     const step = state.heroes.length;
     const finished = step >= ORDER.length;
@@ -435,7 +446,11 @@
     $("panel-picks").hidden = a.ourPicksLeft === 0;
     // панели не переставляем (иначе клик попадает не туда): нужная на этом ходу только подсвечивается
     const focus = ours ? (s.pick ? "panel-picks" : "panel-bans") : "panel-their";
-    ["panel-their", "panel-bans", "panel-picks"].forEach((p) => $(p).classList.toggle("focus", p === focus));
+    ["panel-their", "panel-bans", "panel-picks"].forEach((p) => {
+      $(p).classList.toggle("focus", p === focus);
+      // не нужные на этом ходу панели — только заголовок (порядок не меняется); закреплённые кликом — раскрыты
+      $(p).classList.toggle("collapsed", p !== focus && !pinned.has(p));
+    });
     $("their-next-box").classList.toggle("focus-box", !ours && s.pick);
     $("their-bans-box").classList.toggle("focus-box", !ours && !s.pick);
   }
@@ -466,6 +481,12 @@
       `<b class="ban-score" title="Важность бана: шанс их пика × вред для нас (угроза игрока на герое, контрпик наших, наш плохой винрейт против него). 100 — самый важный в списке">${Math.round(100 * r.score / topBan)}</b> ${ourMark(r)}`)).join("");
     $("picks").innerHTML = a.pickSuggestions.map((r) =>
       pickable(r, `<span class="muted">${esc(r.player)}</span>`)).join("");
+    const pp = a.pairPicks || [];
+    $("pair-box").hidden = pp.length === 0;
+    $("pair-picks").innerHTML = pp.map((p) => `<li>
+      <button class="hero-pick" data-id="${p.a}">${icon(p.a)}${esc(p.aName)}</button> <span class="muted small">${esc(p.aPlayer)}</span> +
+      <button class="hero-pick" data-id="${p.b}">${icon(p.b)}${esc(p.bName)}</button> <span class="muted small">${esc(p.bPlayer)}</span>
+      ${p.note ? `<span class="reason key">${esc(p.note)}</span>` : ""}</li>`).join("");
     const lo = a.laneOptions || [];
     $("lane-box").hidden = lo.length === 0;
     $("lane-options").innerHTML = lo.map((o) => {

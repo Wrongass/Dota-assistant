@@ -206,4 +206,30 @@ class DraftEngineTest {
         assertTrue(a.pickSuggestions().stream().anyMatch(r -> r.reasons().stream().anyMatch(x -> x.startsWith("линия"))),
                 "хоть один наш пик объяснён линией");
     }
+
+    @Test
+    void doublePicksAreTheTwoConsecutiveOwnPicks() {
+        // порядок CM: ходы 14–15 — пики первой команды, 16–17 — второй (нумерация с 1)
+        assertTrue(DraftEngine.doublePickNow(13, true));
+        assertFalse(DraftEngine.doublePickNow(14, true), "ход 15 — второй из пары, дальше их пик");
+        assertTrue(DraftEngine.doublePickNow(15, false));
+        assertFalse(DraftEngine.doublePickNow(7, true), "ход 8 — одиночный пик");
+    }
+
+    @Test
+    void pairPicksOnDoublePickGoToDifferentPlayers() throws Exception {
+        assumeTrue(Files.isDirectory(Path.of("data/raw")), "нет data/");
+        AnalysisContext ctx = AnalysisContext.load(Path.of("config/players.yaml"), Path.of("data"));
+        // 7 банов, наш пик 8 (WK), их 9 (Ember), баны 10–12, их пик 13 (Windranger) — ход 14 наш, двойной
+        List<Integer> heroes = new ArrayList<>(List.of(23, 22, 1, 2, 31, 32, 33, 42, 106, 74, 13, 17, 21));
+        DraftEngine.Advice a = new DraftEngine(ctx).advise(new DraftEngine.State("SD_Team", true, heroes));
+        assertFalse(a.pairPicks().isEmpty(), "на двойном пике есть пары");
+        for (DraftEngine.PairPick p : a.pairPicks()) {
+            assertNotEquals(p.aPlayer(), p.bPlayer(), "пара разным игрокам");
+        }
+        heroes.add(20);
+        assertTrue(new DraftEngine(ctx).advise(new DraftEngine.State("SD_Team", true, heroes)).pairPicks().isEmpty(),
+                "на втором пике пары уже не нужны");
+    }
 }
+

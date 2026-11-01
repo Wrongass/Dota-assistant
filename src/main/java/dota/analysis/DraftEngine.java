@@ -91,6 +91,11 @@ public final class DraftEngine {
     public record LaneOption(String player, int position, List<String> enemies, List<Reasoned> heroes) {
     }
 
+    /** Пара на двойной пик (два наших пика подряд): два героя разным игрокам, связка между ними. */
+    public record PairPick(int a, String aName, String aPlayer, int b, String bName, String bPlayer, double score,
+                           String note) {
+    }
+
     public record Advice(int step, boolean finished, boolean oursNext, boolean pickNext, List<Integer> ourPicks,
                          List<Integer> theirPicks, List<Integer> ourBans, List<Integer> theirBans,
                          List<Assignment> theirAssignment, List<Assignment> ourAssignment,
@@ -99,7 +104,8 @@ public final class DraftEngine {
                          List<Reasoned> pickSuggestions, List<Reasoned> theirLikelyBans,
                          List<PlayerOutlook> theirPlayers, List<RosterLine> ourRoster, List<RosterLine> theirRoster,
                          int theirBansLeft, int theirPicksLeft, int ourBansLeft, int ourPicksLeft,
-                         List<Lane> lanes, List<Reasoned> theirThreats, List<LaneOption> laneOptions, long micros) {
+                         List<Lane> lanes, List<Reasoned> theirThreats, List<LaneOption> laneOptions,
+                         List<PairPick> pairPicks, long micros) {
     }
 
     private final AnalysisContext ctx;
@@ -397,6 +403,7 @@ public final class DraftEngine {
                 outlook(them, theirDist), us.roster(), them.roster(),
                 theirBansLeft, theirPicksLeft, ourBansLeft, ourPicksLeft, lanes, threats,
                 finished ? List.of() : laneOptions(us, ourProb, used, theirLaners),
+                doublePickNow(step, weFirst) ? pairPicks(ourPickList) : List.of(),
                 (System.nanoTime() - started) / 1000);
     }
 
@@ -722,6 +729,10 @@ public final class DraftEngine {
             double score = bestFit + 4 * avgSynergy(h, ourPicks) + 4 * avgCounter(h, theirPicks) - 4 * vulnerability
                     + 0.5 * deny;
             List<String> reasons = pickReasons(us, bestPlayer, h, ourPicks, theirPicks, "их");
+            String flex = flexNote(us, h, free);
+            if (flex != null) {
+                reasons.add(flex);
+            }
             String laneNote = laneNote(h, us.squad.position(bestPlayer), theirLaners);
             if (laneNote != null) {
                 reasons.add(0, laneNote);
@@ -738,8 +749,57 @@ public final class DraftEngine {
         return result.stream().limit(10).toList();
     }
 
+    /** Сейчас наш пик и следующий ход тоже наш пик (в CM: ходы 14–15 или 16–17). */
+    static boolean doublePickNow(int step, boolean weFirst) {
+        return step + 1 < SLOTS.size() && SLOTS.get(step).pick() && SLOTS.get(step + 1).pick()
+                && SLOTS.get(step).firstTeam() == weFirst && SLOTS.get(step + 1).firstTeam() == weFirst;
+    }
+
+    /**
+     * Лучшие пары из 10 первых советов: разным игрокам, оценка — сумма оценок + связка пары (×400, как синергия в
+     * оценке пика). Связку видно в подсказке. Три пары.
+     */
+    private List<PairPick> pairPicks(List<Reasoned> picks) {
+        List<Reasoned> top = picks.stream().limit(10).toList();
+        List<PairPick> result = new ArrayList<>();
+        for (int i = 0; i < top.size(); i++) {
+            for (int j = i + 1; j < top.size(); j++) {
+                Reasoned x = top.get(i), y = top.get(j);
+                if (x.player() == null || x.player().equals(y.player())) {
+                    continue;
+                }
+                double lift = meta.synergyLift(x.heroId(), y.heroId(), Squad.MIN_PAIR_GAMES);
+                double syn = Double.isNaN(lift) ? 0 : lift;
+                String note = Double.isNaN(lift) ? null : "связка " + Md.signedPct(lift);
+                result.add(new PairPick(x.heroId(), x.name(), x.player(), y.heroId(), y.name(), y.player(),
+                        x.score() + y.score() + 400 * syn, note));
+            }
+        }
+        result.sort(Comparator.comparingDouble(PairPick::score).reversed());
+        return result.stream().limit(3).toList();
+    }
+
     /** Вес преимущества на линии в оценке нашего пика: линия +0,3 (выиграно на 30% линий больше) даёт +0,15. */
     static final double LANE_WEIGHT = 0.5;
+
+    /**
+     * Флекс-герой (FEAT-05): играется на 2+ позициях (≥ 25% матчей патча на каждой) и у двух наших свободных игроков
+     * этих позиций есть опыт на нём — можно взять раньше и решить позицию позже, соперник не угадает линию.
+     */
+    private String flexNote(SquadModel us, int h, double[] free) {
+        if (meta.posTotal(h) < 20) {
+            return null;
+        }
+        List<String> who = new ArrayList<>();
+        for (int p = 0; p < us.players.size(); p++) {
+            PlayerStats player = us.players.get(p);
+            int pos = us.squad.position(player);
+            if (free[p] >= 0.3 && meta.posShare(h, pos) >= 0.25 && plays(us, player, h)) {
+                who.add(player.nick());
+            }
+        }
+        return who.size() >= 2 ? "флекс: " + String.join(" / ", who) : null;
+    }
 
     /** Наш игрок реально играет героя: есть 3+ игры, или брал его в турнире, или играл за 60 дней. */
     private boolean plays(SquadModel model, PlayerStats p, int h) {
