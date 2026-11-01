@@ -23,6 +23,8 @@ public final class AnalysisContext {
     final League league;
     /** Линия и матчапы героев из STRATZ; пустые, если их не качали. */
     final LaneStats lanes;
+    /** Свойства героев из config/hero_traits.yaml (для симуляции драфта и оценки). */
+    public final HeroTraits traits;
     public final Squad ours;
     public final List<Squad> opponents;
     public final LocalDate date;
@@ -31,9 +33,10 @@ public final class AnalysisContext {
     /** Игроки из конфига, чьих данных ещё нет в data/ (новые игроки до первой выгрузки): их пропускаем. */
     private final List<String> missingData;
 
-    private AnalysisContext(PlayerConfig config, Meta meta, League league, LaneStats lanes, Squad ours,
+    private AnalysisContext(PlayerConfig config, Meta meta, League league, LaneStats lanes, HeroTraits traits, Squad ours,
                             List<Squad> opponents, LocalDate date, Path dataDir, List<String> missingData) {
         this.config = config;
+        this.traits = traits;
         this.meta = meta;
         this.league = league;
         this.lanes = lanes;
@@ -90,7 +93,9 @@ public final class AnalysisContext {
                         .forEach(s.manualMaps::add);
             }
         }
-        return new AnalysisContext(config, meta, league, LaneStats.load(dataDir), ours, opponents, date, dataDir, missing);
+        Path traitsFile = configPath.toAbsolutePath().getParent().resolve("hero_traits.yaml");
+        return new AnalysisContext(config, meta, league, LaneStats.load(dataDir), HeroTraits.load(traitsFile), ours,
+                opponents, date, dataDir, missing);
     }
 
     public static AnalysisContext load(Path configPath, Path dataDir) throws IOException {

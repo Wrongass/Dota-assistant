@@ -74,6 +74,8 @@ final class Meta {
     /** a против b; wins — победы a. */
     final Map<Pair, PairStats> counters = new HashMap<>();
     long proMatches;
+    /** Игры и победы героя: [0] все, [1] длинные (от 45 минут), по lane_roles.json OpenDota. */
+    final Map<Integer, long[]> durationGames = new HashMap<>();
     final long[] bracketMatches = new long[9];
 
     private Meta(String patch, Instant patchStart) {
@@ -128,7 +130,37 @@ final class Meta {
             m.counters.put(new Pair(r.get("h1").asInt(), r.get("h2").asInt()),
                     new PairStats(r.get("games").asLong(), r.get("wins").asLong()));
         }
+        Path laneRoles = dir.resolve("lane_roles.json");
+        if (java.nio.file.Files.exists(laneRoles)) {
+            for (JsonNode r : read(laneRoles)) {
+                long[] g = m.durationGames.computeIfAbsent(r.path("hero_id").asInt(), k -> new long[4]);
+                long games = r.path("games").asLong(), wins = r.path("wins").asLong();
+                g[0] += games;
+                g[1] += wins;
+                if (r.path("time").asInt() >= LONG_GAME_SECONDS) {
+                    g[2] += games;
+                    g[3] += wins;
+                }
+            }
+        }
         return m;
+    }
+
+    /** Корзины lane_roles: 900, 1800, 2700, 3600, 5400 секунд (верхние границы); «длинная игра» — корзины от 3600. */
+    static final int LONG_GAME_SECONDS = 3600;
+
+    /**
+     * Насколько винрейт героя на длинных играх (45+ минут) выше его среднего: сглажено к 0 на 200 играх. Для лейта в
+     * симуляции и оценке драфта.
+     */
+    double lateDelta(int heroId) {
+        long[] g = durationGames.get(heroId);
+        if (g == null || g[0] == 0 || g[2] == 0) {
+            return 0;
+        }
+        double all = (double) g[1] / g[0];
+        double longWr = (g[3] + 200 * all) / (g[2] + 200);
+        return longWr - all;
     }
 
     String name(int heroId) {
