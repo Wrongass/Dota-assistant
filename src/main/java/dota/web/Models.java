@@ -34,6 +34,14 @@ public final class Models {
     public record Method(Page page) {
     }
 
+    /** История драфтов: драфт, наши и их пики, реальная карта лиги с теми же пиками (или null). */
+    public record HistoryRow(String code, String updated, String opponent, int map, int moves, List<Integer> ourPicks,
+                             List<Integer> theirPicks, Long matchId, Boolean won, String matchDate, int overlap) {
+    }
+
+    public record HistoryPage(Page page, List<HistoryRow> rows, boolean enabled) {
+    }
+
     /** Страница ошибки в стиле сайта: 404 и 500 вместо служебного текста. */
     public record ErrorPage(Page page, String title, String message) {
     }

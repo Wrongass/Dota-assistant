@@ -128,6 +128,16 @@ try:
     call("Page.navigate", url=f"http://127.0.0.1:8070/draft?share={code}")
     time.sleep(3)
     check("ссылка открывает тот же драфт", ribbon() == ["Kunkka", "Zeus", "Anti-Mage"], ribbon())
+    # FEAT-02: история — реальная карта 24.10 против SD Team (пики из лиги) находится
+    real = "first=us&heroes=0,0,0,0,0,0,0,135,49,0,0,0,21,96,20,120,86,54,0,0,0,0,31,121"
+    call("Page.navigate", url="http://127.0.0.1:8070/draft?opponent=SD_Team#" + real)
+    time.sleep(3)
+    js("document.getElementById('save-history').click()")
+    time.sleep(1.5)
+    call("Page.navigate", url="http://127.0.0.1:8070/drafts")
+    time.sleep(2)
+    page = js("document.querySelector('main').innerText")
+    check("драфт в «Истории драфтов» и найдена реальная карта (победа 24.10)", "SD Team" in page and "открыть" in page and "победа" in page, page[:200])
     print(f"{sum(1 for _, ok, _ in results if ok)}/{len(results)} проверок прошли")
 finally:
     proc.kill()

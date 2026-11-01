@@ -48,6 +48,7 @@
         </details>
         <a href="/meta" class="${page.active().equals("meta") ? "active" : null}">Мета</a>
         <a href="/counters" class="${page.active().equals("counters") ? "active" : null}">Контрпики</a>
+        <a href="/drafts" class="${page.active().equals("drafts") ? "active" : null}">История</a>
         <a href="/method" class="${page.active().equals("method") ? "active" : null}">Методика</a>
         <a href="/draft" class="cta" title="Живой драфт: вносите ходы во время игры">Живой драфт ▶</a>
     </nav>

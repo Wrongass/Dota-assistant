@@ -108,6 +108,7 @@ public class WebApp {
         app.get("/group", this::group);
         app.get("/opponent/{slug}", this::opponent);
         app.get("/draft", this::draftPage);
+        app.get("/drafts", this::draftHistory);
         app.get("/counters", this::counters);
         app.get("/api/heroes", ctx -> ctx.json(site.ctx().heroList()));
         app.get("/api/player/{id}", this::playerApi);
@@ -406,6 +407,48 @@ public class WebApp {
         } catch (IllegalArgumentException | com.fasterxml.jackson.core.JsonProcessingException e) {
             http.status(400).json(Map.of("error", "неверный драфт: " + e.getMessage()));
         }
+    }
+
+    /**
+     * История драфтов (FEAT-02): сохранённые драфты и реальная карта нашей команды в лиге, если по пикам совпадает
+     * хотя бы 8 из 10 героев.
+     */
+    private void draftHistory(Context http) throws IOException {
+        AnalysisContext c = site.ctx();
+        List<Views.MatchView> maps = c.ours.hasTournamentData() ? c.ours.tournament().matches() : List.of();
+        List<Models.HistoryRow> rows = new ArrayList<>();
+        for (SharedDrafts.Entry e : site.sharedDrafts.list()) {
+            var d = e.draft();
+            boolean weFirst = d.path("weFirst").asBoolean(true);
+            List<Integer> ours = new ArrayList<>(), theirs = new ArrayList<>();
+            int moves = d.path("heroes").size();
+            for (int i = 0; i < moves && i < DraftEngine.SLOTS.size(); i++) {
+                int h = d.path("heroes").get(i).asInt(0);
+                if (h > 0 && DraftEngine.SLOTS.get(i).pick()) {
+                    (DraftEngine.SLOTS.get(i).firstTeam() == weFirst ? ours : theirs).add(h);
+                }
+            }
+            Views.MatchView best = null;
+            int bestOverlap = 0;
+            for (Views.MatchView m : maps) {
+                java.util.Set<Integer> real = new java.util.HashSet<>();
+                m.players().forEach(p -> real.add(p.heroId()));
+                m.enemies().forEach(p -> real.add(p.heroId()));
+                int overlap = (int) java.util.stream.Stream.concat(ours.stream(), theirs.stream()).filter(real::contains).count();
+                if (overlap > bestOverlap) {
+                    bestOverlap = overlap;
+                    best = m;
+                }
+            }
+            boolean matched = best != null && bestOverlap >= 8 && best.matchId() > 0;
+            Squad opp = c.opponent(d.path("opponent").asText(""));
+            rows.add(new Models.HistoryRow(e.code(), Site.TIME.format(e.updated()),
+                    opp == null ? d.path("opponent").asText("") : opp.teamName(), d.path("map").asInt(1), moves, ours,
+                    theirs, matched ? best.matchId() : null, matched ? best.won() : null, matched ? best.date() : null,
+                    bestOverlap));
+        }
+        render(http, "drafts.jte", new Models.HistoryPage(page("История драфтов", "drafts"), rows,
+                site.sharedDrafts.enabled()));
     }
 
     private void sharedDraft(Context http) throws IOException {

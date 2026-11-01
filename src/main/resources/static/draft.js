@@ -776,20 +776,27 @@
       $("share-status").textContent = "общий драфт · " + e.message;
     }
   }
+  /** Сохранить драфт на сервер (создать общий, если ещё нет): для «В историю» и «Поделиться». */
+  async function ensureShared() {
+    if (shareCode) { await pushShared(); return true; }
+    try {
+      const res = await fetch("/api/share", { method: "POST", headers: { "Content-Type": "application/json" }, body: shareBody() });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || res.status);
+      shareCode = data.code;
+      shareVersion = data.version;
+      const u = new URL(location.href);
+      u.searchParams.set("share", shareCode);
+      history.replaceState(null, "", u.pathname + u.search + location.hash);
+      setInterval(() => pullShared(false), 2000);
+      return true;
+    } catch (e) { $("share-status").textContent = "не удалось сохранить: " + e.message; return false; }
+  }
+  $("save-history").onclick = async () => {
+    if (await ensureShared()) toast("Драфт сохранён в «Историю драфтов»", false);
+  };
   $("share").onclick = async () => {
-    if (!shareCode) {
-      try {
-        const res = await fetch("/api/share", { method: "POST", headers: { "Content-Type": "application/json" }, body: shareBody() });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || res.status);
-        shareCode = data.code;
-        shareVersion = data.version;
-        const u = new URL(location.href);
-        u.searchParams.set("share", shareCode);
-        history.replaceState(null, "", u.pathname + u.search + location.hash);
-        setInterval(() => pullShared(false), 2000);
-      } catch (e) { $("share-status").textContent = "не удалось поделиться: " + e.message; return; }
-    }
+    if (!shareCode && !(await ensureShared())) return;
     const link = `${location.origin}/draft?share=${shareCode}`;
     const ok = await copyText(link);
     $("share-status").textContent = ok ? "ссылка скопирована — отправьте команде" : link;

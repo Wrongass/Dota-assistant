@@ -55,6 +55,30 @@ final class SharedDrafts {
         return Files.isRegularFile(file) ? Optional.of(JSON.readTree(file.toFile())) : Optional.empty();
     }
 
+    /** Сохранённый драфт и когда он менялся последний раз. */
+    record Entry(String code, java.time.Instant updated, JsonNode draft) {
+    }
+
+    /** Все сохранённые драфты, новые первыми. */
+    synchronized java.util.List<Entry> list() throws IOException {
+        if (!enabled() || !Files.isDirectory(dir)) {
+            return java.util.List.of();
+        }
+        java.util.List<Entry> result = new java.util.ArrayList<>();
+        try (var files = Files.list(dir)) {
+            for (Path f : (Iterable<Path>) files.filter(p -> p.getFileName().toString().matches("[a-z0-9]{8}\\.json"))::iterator) {
+                try {
+                    result.add(new Entry(f.getFileName().toString().substring(0, 8),
+                            Files.getLastModifiedTime(f).toInstant(), JSON.readTree(f.toFile())));
+                } catch (IOException e) {
+                    // битый файл пропускаем
+                }
+            }
+        }
+        result.sort(java.util.Comparator.comparing(Entry::updated).reversed());
+        return result;
+    }
+
     /**
      * Сохранить драфт: только известные поля, с проверкой размеров; версия = прошлая + 1. Возвращает сохранённое.
      * Неверные данные — IllegalArgumentException.

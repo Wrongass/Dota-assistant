@@ -39,6 +39,7 @@
             <button id="skip" title="Если в игре ход пропущен (таймаут)">Пропустить ход</button>
             <button id="undo" title="Ctrl+Z">Отменить ход</button>
             <button id="reset">Сбросить</button>
+            <button id="save-history" title="Сохранить драфт в «Историю драфтов» (на сервере)">В историю</button>
             <button id="share" title="Общий драфт: ссылка для команды, у всех по ссылке ходы видны в реальном времени">Поделиться</button>
             <span id="share-status" class="small muted"></span>
         </div>

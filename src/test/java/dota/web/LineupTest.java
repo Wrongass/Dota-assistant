@@ -150,5 +150,17 @@ class LineupTest {
         assertEquals(302, same.statusCode(), "свой сайт");
         site.saveLineup(site.ctx().ours.team().name(), null);
     }
+
+    @Test
+    void savedDraftAppearsInHistory() throws Exception {
+        String body = "{\"opponent\":\"SD_Team\",\"map\":1,\"weFirst\":true,\"heroes\":[23,22,1,2,31,32,33,42,106],\"assign\":{}}";
+        HttpResponse<String> saved = HTTP.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:" + app.port() + "/api/share"))
+                .header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(body)).build(),
+                HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, saved.statusCode(), saved.body());
+        String page = HTTP.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:" + app.port() + "/drafts")).build(),
+                HttpResponse.BodyHandlers.ofString()).body();
+        assertTrue(page.contains("SD Team") && page.contains("/draft?share="), "драфт в истории");
+    }
 }
 
