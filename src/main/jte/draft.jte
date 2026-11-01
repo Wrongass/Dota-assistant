@@ -16,6 +16,7 @@
             <span class="maps" id="maps" title="Серия bo2/bo3: у каждой карты свой драфт"></span>
             <span id="turn" class="turn"></span>
             <span class="muted small" id="timing"></span>
+            <span class="turn-timer small" id="turn-timer" title="Сколько идёт текущий ход. В CM на ход 30 секунд, дальше — резерв"></span>
             <details class="legend">
                 <summary title="Что значат подписи в советах">?</summary>
                 <div class="legend-body small">
@@ -97,7 +98,8 @@
                 <div class="panel" id="summary" hidden>
                     <h3>Итог драфта <button id="copy" class="small-btn">Скопировать текстом</button> <span id="copied" class="muted small"></span></h3>
                     <div id="summary-warn"></div>
-                    <div class="small muted">Линии по позициям расстановки; преимущество — по встречным парам героев</div>
+                    <div id="overall" class="overall"></div>
+                    <div class="small muted">Линии по позициям расстановки; преимущество — среднее по встречным парам героев, справа — самая заметная пара</div>
                     <table id="lanes"></table>
                     <div class="small muted">Их самые опасные герои</div>
                     <ol id="threats" class="advice"></ol>

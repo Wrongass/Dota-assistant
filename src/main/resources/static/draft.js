@@ -143,7 +143,18 @@
     }, Math.max(0, lockedUntil - Date.now()));
   }
   const adviceLocked = () => awaiting || Date.now() < lockedUntil;
-  function afterChange() {
+  // таймер хода (FEAT-10): сколько идёт текущий ход; после 25 с — подсветка (в CM на ход 30 с, дальше резерв)
+  let turnStarted = Date.now();
+  setInterval(() => {
+    const t = $("turn-timer");
+    if (state.heroes.length >= ORDER.length) { t.textContent = ""; return; }
+    const sec = Math.floor((Date.now() - turnStarted) / 1000);
+    t.textContent = `на ходу ${sec} с`;
+    t.classList.toggle("late", sec >= 25);
+  }, 1000);
+  function afterChange(keepRedo) {
+    if (!keepRedo) redo.length = 0; // новый ход — отменённые уже не вернуть
+    turnStarted = Date.now();
     pendingWarn = null;
     showWarn(null);
     markStale();
@@ -163,12 +174,23 @@
     schedulePush();
     $("search").focus();
   }
+  const redo = []; // отменённые ходы: Ctrl+Shift+Z возвращает (FEAT-09)
   $("undo").onclick = () => {
     if (editIndex !== null) { editIndex = null; renderBoard(); return; }
+    if (!state.heroes.length) return;
     const h = state.heroes.pop();
+    redo.push(h);
     if (h > 0) delete state.assign[h];
-    afterChange();
+    afterChange(true);
   };
+  function redoMove() {
+    if (!redo.length || state.heroes.length >= ORDER.length) return;
+    const h = redo.pop();
+    if (h > 0 && used().has(h)) { redo.length = 0; return; }
+    state.heroes.push(h);
+    toast(`Возвращён ход ${state.heroes.length}: ${h > 0 ? name(h) : "пропуск"}`, false);
+    afterChange(true);
+  }
   $("skip").onclick = () => {
     if (editIndex !== null) { state.heroes[editIndex] = 0; editIndex = null; afterChange(); return; }
     if (state.heroes.length < ORDER.length) {
@@ -196,7 +218,10 @@
     return false;
   }
   document.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === "z") { e.preventDefault(); redoMove(); return; }
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") { e.preventDefault(); $("undo").click(); }
+    // «/» — к поиску героя из любого места страницы (FEAT-09)
+    if (e.key === "/" && !e.target.closest("input, textarea, select")) { e.preventDefault(); $("search").focus(); }
     if (e.key === "Escape" && !$("drawer").hidden) closeDrawer();
   });
 
@@ -511,6 +536,14 @@
 
   function renderSummary(a) {
     if (!a.finished) return;
+    // FEAT-12: общая оценка — среднее преимущество по линиям
+    const lanesWithData = a.lanes.filter((l) => l.ours.length && l.theirs.length);
+    const avg = lanesWithData.length ? lanesWithData.reduce((x, l) => x + l.advantage, 0) / lanesWithData.length : 0;
+    const verdict = avg > 0.01 ? ["strong", "драфт в нашу пользу"] : avg < -0.01 ? ["weak", "драфт в их пользу"] : ["", "драфт ровный"];
+    const bestLane = lanesWithData.slice().sort((x, y) => y.advantage - x.advantage)[0];
+    const worstLane = lanesWithData.slice().sort((x, y) => x.advantage - y.advantage)[0];
+    $("overall").innerHTML = `<b class="${verdict[0]}">${verdict[1]}</b> <span class="muted small">(в среднем по линиям ${(avg >= 0 ? "+" : "") + (100 * avg).toFixed(1)}%)</span>`
+      + (bestLane && worstLane && bestLane !== worstLane ? `<div class="small">Сильнее всего: ${esc(bestLane.name)}. Слабее всего: ${esc(worstLane.name)} — там играть аккуратнее.</div>` : "");
     // E-23: пропущенный пик — в игре за него выдают случайного героя, итог без него неполный
     const skipped = state.heroes.map((h, i) => (h === 0 && ORDER[i].pick && isOurs(i) ? i + 1 : 0)).filter(Boolean);
     $("summary-warn").innerHTML = skipped.length

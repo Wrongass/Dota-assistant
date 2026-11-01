@@ -390,3 +390,6 @@ button.reason.more { border: 0; cursor: pointer; font: inherit; font-size: 11px;
 .advice-panel.collapsed h3 { margin: 2px 0; cursor: pointer; }
 .advice-panel.collapsed h3::after { content: " ▸ показать"; font-size: 11px; font-weight: 400; color: var(--muted); }
 .lineup-link { font-weight: 400; margin-left: 6px; }
+.turn-timer { min-width: 80px; }
+.turn-timer.late { color: var(--weak); font-weight: 700; }
+.overall { margin: 4px 0 8px; }
