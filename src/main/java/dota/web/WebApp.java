@@ -2,7 +2,9 @@ package dota.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dota.analysis.AnalysisContext;
+import dota.analysis.DraftBot;
 import dota.analysis.DraftEngine;
+import dota.analysis.DraftEvaluation;
 import dota.analysis.Fmt;
 import dota.analysis.Squad;
 import dota.analysis.Views;
@@ -116,6 +118,9 @@ public class WebApp {
         app.get("/api/hero-maps", this::heroMapsApi);
         app.get("/img/{kind}/{file}", this::image);
         app.post("/api/draft", this::draftApi);
+        app.post("/api/sim/move", this::simMove);
+        app.post("/api/sim/plan", this::simPlan);
+        app.post("/api/sim/evaluate", this::simEvaluate);
         app.post("/lineup", this::saveLineup);
         app.post("/api/share", ctx -> shareDraft(ctx, SharedDrafts.newCode()));
         app.post("/api/share/{code}", ctx -> shareDraft(ctx, ctx.pathParam("code")));
@@ -631,6 +636,86 @@ public class WebApp {
         List<Integer> heroes = req.heroes() == null ? List.of() : req.heroes();
         Map<Integer, String> assign = req.assign() == null ? Map.of() : req.assign();
         http.json(new DraftEngine(site.ctx()).advise(new DraftEngine.State(req.opponent(), req.weFirst(), heroes, assign)));
+    }
+
+    // ---------------------------------------------------------------- симуляция драфта (docs/specs/draft-simulation.md)
+
+    /** Тело запросов симуляции: как у /api/draft плюс зерно случайности бота. */
+    record SimRequest(String opponent, boolean weFirst, List<Integer> heroes, Map<Integer, String> assign, Long seed) {
+    }
+
+    /** Проверенный запрос: соперник известен, ходов не больше 24. null — ответ с ошибкой уже отправлен. */
+    private SimRequest simRequest(Context http) {
+        SimRequest req = http.bodyAsClass(SimRequest.class);
+        if (req.opponent() == null || site.ctx().opponent(req.opponent()) == null) {
+            http.status(400).json(Map.of("error", "неизвестный соперник: " + req.opponent()));
+            return null;
+        }
+        if (req.heroes() != null && req.heroes().size() > DraftEngine.SLOTS.size()) {
+            http.status(400).json(Map.of("error", "ходов больше 24"));
+            return null;
+        }
+        return req;
+    }
+
+    private static List<Integer> heroesOf(SimRequest req) {
+        return req.heroes() == null ? List.of() : req.heroes();
+    }
+
+    /** Ход соперника-бота на текущем шаге. */
+    private void simMove(Context http) {
+        SimRequest req = simRequest(http);
+        if (req == null) {
+            return;
+        }
+        AnalysisContext c = site.ctx();
+        try {
+            DraftBot.Move m = new DraftBot(c).next(c.ours, c.opponent(req.opponent()), req.weFirst(), heroesOf(req),
+                    req.seed() == null ? 0 : req.seed());
+            http.json(Map.of("step", m.step(), "heroId", m.heroId(), "name", m.name(), "pick", m.pick()));
+        } catch (IllegalStateException e) {
+            http.status(409).json(Map.of("error", e.getMessage()));
+        }
+    }
+
+    /** Итоговая расстановка бота (раскрывается в конце драфта) и его свапы. */
+    private void simPlan(Context http) {
+        SimRequest req = simRequest(http);
+        if (req == null) {
+            return;
+        }
+        AnalysisContext c = site.ctx();
+        http.json(new DraftBot(c).plan(c.ours, c.opponent(req.opponent()), req.weFirst(), heroesOf(req)));
+    }
+
+    /**
+     * Оценка законченного драфта по позициям: назначения «герой → игрок» (ручные правки обеих команд и раскрытый
+     * план бота) дают позиции через состав.
+     */
+    private void simEvaluate(Context http) {
+        SimRequest req = simRequest(http);
+        if (req == null) {
+            return;
+        }
+        AnalysisContext c = site.ctx();
+        List<Integer> heroes = heroesOf(req);
+        DraftEngine.Advice a = new DraftEngine(c).advise(new DraftEngine.State(req.opponent(), req.weFirst(), heroes,
+                req.assign() == null ? Map.of() : req.assign()));
+        if (!a.finished()) {
+            http.status(409).json(Map.of("error", "драфт ещё не закончен"));
+            return;
+        }
+        http.json(new DraftEvaluation(c).evaluate(positions(a.ourAssignment(), a.ourRoster()),
+                positions(a.theirAssignment(), a.theirRoster()), heroes, req.weFirst()));
+    }
+
+    private static Map<Integer, Integer> positions(List<DraftEngine.Assignment> assignment, List<DraftEngine.RosterLine> roster) {
+        Map<Integer, Integer> result = new java.util.LinkedHashMap<>();
+        for (DraftEngine.Assignment x : assignment) {
+            roster.stream().filter(r -> r.player().equals(x.player())).findFirst()
+                    .ifPresent(r -> result.put(x.heroId(), r.position()));
+        }
+        return result;
     }
 
     // ---------------------------------------------------------------- картинки
