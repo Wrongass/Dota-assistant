@@ -488,7 +488,9 @@
   // причины этого драфта (контрит, связка, линия, пик-отказ) сервер ставит первыми — показываем три, остальные по клику
   const SHOWN = 3;
   const CONTEXT = /^(контрит|связка|линия|пик-отказ)/;
-  const chip = (x) => `<span class="reason${CONTEXT.test(x) ? " key" : ""}">${esc(x)}</span>`;
+  const chip = (x) => /^×\d+ в турнире/.test(x)
+    ? `<button type="button" class="reason tourney" title="Показать карты турнира">${esc(x)}</button>`
+    : `<span class="reason${CONTEXT.test(x) ? " key" : ""}">${esc(x)}</span>`;
   const reasons = (r, n) => (r.reasons || []).slice(0, n).map(chip).join(" ");
   const more = (r, n) => (r.reasons || []).length > n
     ? `<button type="button" class="reason more" data-more="${esc(JSON.stringify(r.reasons.slice(n)))}" title="Показать остальные причины">+${r.reasons.length - n}</button>` : "";
@@ -556,6 +558,20 @@
     $("threats").innerHTML = a.theirThreats.slice(0, 3).map((t) =>
       `<li>${icon(t.heroId)}<b>${esc(t.name)}</b> <span class="muted">${esc(t.player)}</span> угроза ${t.score.toFixed(2)}</li>`).join("");
   }
+  // FEAT-11: итог для чата команды — жирные заголовки и список (Discord и Telegram понимают **…**)
+  $("copy-chat").onclick = async () => {
+    const a = advice;
+    if (!a || !a.finished) return;
+    const team = (list) => list.map((x) => `${x.name} (${x.player})`).join(", ");
+    const text = [
+      `**Драфт против ${$("opponent").selectedOptions[0].textContent}** — ${$("overall").innerText.split("\n")[0]}`,
+      `**Мы:** ${team(a.ourAssignment)}`,
+      `**Они:** ${team(a.theirAssignment)}`,
+      ...a.lanes.map((l) => `• **${l.name}:** ${l.ours.join(" + ") || "—"} vs ${l.theirs.join(" + ") || "—"}${l.note ? " — " + l.note : ""}`),
+      `**Опасные у них:** ${a.theirThreats.slice(0, 3).map((t) => `${t.name} (${t.player})`).join(", ")}`,
+    ].join("\n");
+    $("copied").textContent = (await copyText(text)) ? "скопировано для чата" : "не удалось — выделите текст ниже";
+  };
   $("copy").onclick = async () => {
     const a = advice;
     if (!a || !a.finished) return;
@@ -657,12 +673,38 @@
       $("drawer-body").innerHTML = `<p class="weak">Не удалось загрузить контрпики: ${esc(e.message)}</p>`;
     }
   }
+  async function openHeroMaps(nick, heroId) {
+    $("drawer").hidden = false;
+    $("drawer-body").innerHTML = '<p class="muted">Загрузка…</p>';
+    try {
+      const res = await fetch(`/api/hero-maps?nick=${encodeURIComponent(nick)}&hero=${heroId}`);
+      if (!res.ok) throw new Error(res.status);
+      const v = await res.json();
+      $("drawer-body").innerHTML = `<h3>${icon(heroId)}${esc(v.hero)} у ${esc(v.nick)} в турнире</h3>
+        ${v.maps.length ? `<table class="compact"><tr><th>Дата</th><th>Соперник</th><th></th><th>Мин</th><th></th></tr>
+        ${v.maps.map((m) => `<tr><td class="small">${esc(m.date)}</td><td>${esc(m.opponent)}</td>
+          <td class="${m.won ? "strong" : "weak"}">${m.won ? "W" : "L"}</td><td class="num">${m.minutes}</td>
+          <td><a href="https://www.opendota.com/matches/${m.matchId}" target="_blank" rel="noopener">OpenDota</a></td></tr>`).join("")}</table>`
+          : '<p class="muted">Карт не нашлось.</p>'}`;
+    } catch (e) {
+      $("drawer-body").innerHTML = `<p class="weak">Не удалось загрузить карты: ${esc(e.message)}</p>`;
+    }
+  }
   function closeDrawer() { $("drawer").hidden = true; }
   $("drawer-close").onclick = closeDrawer;
 
   root.addEventListener("click", (e) => {
     const nick = e.target.closest(".nick[data-account]");
     if (nick) { openDrawer(nick.dataset.account); return; }
+    // FEAT-17: «×2 в турнире» — карты лиги, где игрок брал героя
+    const tourney = e.target.closest(".reason.tourney");
+    if (tourney) {
+      const li = tourney.closest("li");
+      const heroId = Number(li?.querySelector(".hero-pick")?.dataset.id);
+      const player = li?.querySelector(".muted")?.textContent?.trim() || "";
+      if (heroId && player) openHeroMaps(player, heroId);
+      return;
+    }
     const counter = e.target.closest(".counter-open[data-hero]");
     if (counter) { openCounters(Number(counter.dataset.hero), Number(counter.dataset.pos)); return; }
     const b = e.target.closest(".hero-pick, #grid .hero-tile");

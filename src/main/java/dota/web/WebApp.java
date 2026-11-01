@@ -113,6 +113,7 @@ public class WebApp {
         app.get("/api/heroes", ctx -> ctx.json(site.ctx().heroList()));
         app.get("/api/player/{id}", this::playerApi);
         app.get("/api/counters", this::countersApi);
+        app.get("/api/hero-maps", this::heroMapsApi);
         app.get("/img/{kind}/{file}", this::image);
         app.post("/api/draft", this::draftApi);
         app.post("/lineup", this::saveLineup);
@@ -521,6 +522,35 @@ public class WebApp {
             return m;
         }).toList());
         http.json(result);
+    }
+
+    /**
+     * FEAT-17: карты лиги, где игрок (ник из конфига) брал героя: ?nick=…&hero=<id>. Для «×2 в турнире» в драфте.
+     */
+    private void heroMapsApi(Context http) {
+        AnalysisContext c = site.ctx();
+        long id = playerId(http.queryParam("nick"));
+        Integer hero = heroId(c, http.queryParamAsClass("hero", String.class).getOrDefault(""));
+        Squad squad = c.squadOf(id);
+        if (squad == null || hero == null || !squad.hasTournamentData()) {
+            throw new NotFoundResponse("карты игрока на герое");
+        }
+        String nick = c.config.players().stream().filter(p -> p.accountId() == id).map(dota.fetch.PlayerConfig.Player::nick)
+                .findFirst().orElse("");
+        List<Map<String, Object>> maps = new ArrayList<>();
+        for (Views.MatchView m : squad.tournament().matches()) {
+            boolean picked = m.players().stream().anyMatch(p -> p.heroId() == hero && p.nick().equals(nick));
+            if (picked) {
+                Map<String, Object> row = new java.util.LinkedHashMap<>();
+                row.put("matchId", m.matchId());
+                row.put("date", m.date());
+                row.put("opponent", m.opponent());
+                row.put("won", m.won());
+                row.put("minutes", m.minutes());
+                maps.add(row);
+            }
+        }
+        http.json(Map.of("nick", nick, "hero", c.heroName(hero), "maps", maps));
     }
 
     private void counters(Context http) {

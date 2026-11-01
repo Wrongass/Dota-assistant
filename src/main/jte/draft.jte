@@ -97,7 +97,7 @@
                 </div>
 
                 <div class="panel" id="summary" hidden>
-                    <h3>Итог драфта <button id="copy" class="small-btn">Скопировать текстом</button> <span id="copied" class="muted small"></span></h3>
+                    <h3>Итог драфта <button id="copy" class="small-btn">Скопировать текстом</button> <button id="copy-chat" class="small-btn" title="Формат для Discord и Telegram: жирные заголовки, линии списком">Для чата</button> <span id="copied" class="muted small"></span></h3>
                     <div id="summary-warn"></div>
                     <div id="overall" class="overall"></div>
                     <div class="small muted">Линии по позициям расстановки; преимущество — среднее по встречным парам героев, справа — самая заметная пара</div>
