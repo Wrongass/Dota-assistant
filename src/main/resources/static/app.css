@@ -438,3 +438,8 @@ details.panel[open] > summary::after, details.toggle-box[open] > summary::after 
 @media (max-width: 700px) { .pos-bans li { grid-template-columns: 1fr; } }
 .pos-bans .pos-hero { display: inline-flex; align-items: center; gap: 3px; }
 .pos-bans .picked-note img { width: 16px; height: 16px; vertical-align: middle; }
+.pos-bans .pos-hide { border: 0; background: transparent; color: var(--muted); cursor: pointer; padding: 0 4px; font-size: 12px; }
+.pos-bans .pos-hide:hover { color: var(--weak); }
+.pos-hidden { margin-top: 4px; }
+.pos-hidden button { font-size: 12px; padding: 0 8px; border: 1px solid var(--accent); color: var(--accent); background: transparent;
+  border-radius: 8px; cursor: pointer; }

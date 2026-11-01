@@ -41,13 +41,14 @@
     try { saved = JSON.parse(localStorage.getItem(key()) || "null"); } catch (e) { /* без localStorage — заново */ }
     Object.assign(state, saved
       ? { weFirst: saved.weFirst !== false, heroes: saved.heroes || [], assign: saved.assign || {},
-          seed: saved.seed || newSeed(), revealed: !!saved.revealed, swaps: saved.swaps || [], botAssign: saved.botAssign || {} }
-      : { weFirst: true, heroes: [], assign: {}, seed: newSeed(), revealed: false, swaps: [], botAssign: {} });
+          seed: saved.seed || newSeed(), revealed: !!saved.revealed, swaps: saved.swaps || [], botAssign: saved.botAssign || {},
+          hiddenPos: saved.hiddenPos || [] }
+      : { weFirst: true, heroes: [], assign: {}, seed: newSeed(), revealed: false, swaps: [], botAssign: {}, hiddenPos: [] });
   };
   const save = () => {
     try {
       localStorage.setItem(key(), JSON.stringify({ weFirst: state.weFirst, heroes: state.heroes, assign: state.assign,
-        seed: state.seed, revealed: state.revealed, swaps: state.swaps, botAssign: state.botAssign }));
+        seed: state.seed, revealed: state.revealed, swaps: state.swaps, botAssign: state.botAssign, hiddenPos: state.hiddenPos }));
     } catch (e) { /* ок */ }
   };
   /** Симуляция, и сейчас ход соперника: ввод закрыт, ходит бот. */
@@ -216,7 +217,7 @@
   };
   $("reset").onclick = () => {
     if (confirmReset()) {
-      state.heroes = []; state.assign = {}; editIndex = null;
+      state.heroes = []; state.assign = {}; state.hiddenPos = []; editIndex = null;
       Object.assign(state, { seed: newSeed(), revealed: false, swaps: [] }); // новая симуляция — новое зерно
       afterChange();
     }
@@ -560,6 +561,47 @@
     m.setAttribute("aria-expanded", String(!open));
   });
 
+  // ------------------------------------------------------------ баны по позициям
+  // у каждого их игрока до 10 банов (5 сразу, остальные по «ещё»); строка остаётся после его пика (свап).
+  // Позицию можно скрыть («уверен, что мид не поменяют»): скрытые хранятся с драфтом, «Сбросить» их возвращает.
+  const POS_SHOWN = 5;
+  const posExpanded = new Set();
+  let lastPosBans = [];
+  function renderPosBans(pb) {
+    lastPosBans = pb;
+    $("pos-bans-box").hidden = pb.length === 0;
+    const hidden = new Set(state.hiddenPos || []);
+    const hero = (r) => `<span class="pos-hero"><button class="hero-pick" data-id="${r.heroId}" title="${esc(r.reasons.join(" · "))}">${icon(r.heroId)}${esc(r.name)}</button>
+        <span class="reason">${esc(r.reasons[0] || "")}</span>${ourMark(r)}</span>`;
+    $("pos-bans").innerHTML = pb.filter((p) => !hidden.has(p.position)).map((p) => {
+      const open = posExpanded.has(p.position);
+      const list = open ? p.heroes : p.heroes.slice(0, POS_SHOWN);
+      const rest = p.heroes.length - POS_SHOWN;
+      const toggle = rest > 0 ? `<button type="button" class="reason more pos-more" data-pos="${p.position}" aria-expanded="${open}">${open ? "скрыть ▴" : `ещё ${rest} ▾`}</button>` : "";
+      return `<li data-pos="${p.position}"><span class="pos-label"><b class="pos">${p.position}</b> ${POS_NAME[p.position] || ""} · ${esc(p.player)}
+          <button type="button" class="pos-hide" data-pos="${p.position}" title="Скрыть эту позицию: уверены, что здесь свапа не будет">✕ скрыть</button>${
+        p.picked ? `<span class="small muted picked-note">взял ${icon(p.picked)}${esc(p.pickedName)}, может свапнуть</span>` : ""}</span>
+        <span class="pos-heroes">${list.map(hero).join("") || '<span class="muted small">нет свободных героев его пула</span>'}${toggle}</span></li>`;
+    }).join("");
+    const gone = pb.filter((p) => hidden.has(p.position));
+    $("pos-bans-hidden").innerHTML = gone.length ? `Скрыты: ${gone.map((p) =>
+      `<button type="button" class="pos-show" data-pos="${p.position}" title="Вернуть позицию">${p.position} ${POS_NAME[p.position] || ""} ↺</button>`).join(" ")}
+      <button type="button" class="pos-show-all">вернуть все</button>` : "";
+  }
+  $("pos-bans-box").addEventListener("click", (e) => {
+    const t = e.target.closest("button");
+    if (!t || t.classList.contains("hero-pick")) return;
+    const pos = Number(t.dataset.pos);
+    if (t.classList.contains("pos-more")) posExpanded.has(pos) ? posExpanded.delete(pos) : posExpanded.add(pos);
+    else if (t.classList.contains("pos-hide")) state.hiddenPos = [...new Set([...(state.hiddenPos || []), pos])];
+    else if (t.classList.contains("pos-show")) state.hiddenPos = (state.hiddenPos || []).filter((x) => x !== pos);
+    else if (t.classList.contains("pos-show-all")) state.hiddenPos = [];
+    else return;
+    e.stopPropagation(); // не путать с «ещё N» у общих причин
+    save();
+    renderPosBans(lastPosBans);
+  });
+
   function renderAdvice(a) {
     advice = a;
     $("their-next").innerHTML = a.theirNextPicks.map((r) =>
@@ -568,13 +610,7 @@
     const topBan = Math.max(...a.banSuggestions.map((r) => r.score), 1e-9);
     $("bans").innerHTML = a.banSuggestions.map((r) => pickable(r,
       `<b class="ban-score" title="Важность бана: шанс их пика × вред для нас (угроза игрока на герое, контрпик наших, наш плохой винрейт против него). 100 — самый важный в списке">${Math.round(100 * r.score / topBan)}</b> ${ourMark(r)}`)).join("");
-    // баны по позициям: у каждого их игрока свои 3 бана; после его пика строка остаётся (свап)
-    const pb = a.positionBans || [];
-    $("pos-bans-box").hidden = pb.length === 0;
-    $("pos-bans").innerHTML = pb.map((p) => `<li><span class="pos-label"><b class="pos">${p.position}</b> ${POS_NAME[p.position] || ""} · ${esc(p.player)}${
-      p.picked ? `<span class="small muted picked-note">взял ${icon(p.picked)}${esc(p.pickedName)}, может свапнуть</span>` : ""}</span>
-      <span class="pos-heroes">${p.heroes.map((r) => `<span class="pos-hero"><button class="hero-pick" data-id="${r.heroId}" title="${esc(r.reasons.join(" · "))}">${icon(r.heroId)}${esc(r.name)}</button>
-        <span class="reason">${esc(r.reasons[0] || "")}</span>${ourMark(r)}</span>`).join("") || '<span class="muted small">нет свободных героев его пула</span>'}</span></li>`).join("");
+    renderPosBans(a.positionBans || []);
     $("picks").innerHTML = a.pickSuggestions.map((r) =>
       pickable(r, `<span class="muted">${esc(r.player)}</span>`)).join("");
     const pp = a.pairPicks || [];

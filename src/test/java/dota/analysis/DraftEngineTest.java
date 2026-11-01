@@ -244,12 +244,13 @@ class DraftEngineTest {
         assertEquals(List.of(1, 2, 3, 4, 5), a.positionBans().stream().map(DraftEngine.PositionBans::position).toList());
         Set<Integer> used = new HashSet<>(heroes);
         for (DraftEngine.PositionBans pb : a.positionBans()) {
-            assertTrue(pb.heroes().size() <= 3);
+            assertTrue(pb.heroes().size() <= 10);
             pb.heroes().forEach(r -> assertFalse(used.contains(r.heroId()), "взятые и забаненные не предлагаются"));
         }
         DraftEngine.PositionBans withPick = a.positionBans().stream().filter(pb -> pb.picked() != null).findFirst().orElseThrow();
         assertEquals(25, withPick.picked(), "игрок, взявший Lina, отмечен");
         assertFalse(withPick.heroes().isEmpty(), "его строка остаётся: возможен свап");
+        assertTrue(a.positionBans().stream().anyMatch(pb -> pb.heroes().size() >= 5), "на позицию больше трёх героев");
         DraftEngine.Advice done = engine.advise(new DraftEngine.State("UPPO_TEAM", true,
                 new ArrayList<>(List.of(23, 22, 1, 2, 31, 32, 33, 42, 25, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17))));
         assertTrue(done.positionBans().isEmpty(), "после драфта не нужны");

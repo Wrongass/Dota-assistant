@@ -116,6 +116,9 @@ public final class DraftEngine {
     public record PositionBans(int position, String player, Integer picked, String pickedName, List<Reasoned> heroes) {
     }
 
+    /** Героев в строке позиции: сайт показывает 5, остальные по кнопке «ещё». */
+    static final int POSITION_BANS = 10;
+
     private final AnalysisContext ctx;
     private final Meta meta;
     private final Params params;
@@ -942,7 +945,7 @@ public final class DraftEngine {
     }
 
     /**
-     * Баны по позициям (по запросу пользователя 1.11): для каждого игрока соперника — 3 героя с наибольшим «доля героя
+     * Баны по позициям (по запросу пользователя 1.11): для каждого игрока соперника — до 10 героев с наибольшим «доля героя
      * в его распределении × вред для нас». Распределение игрока не зависит от того, выбрал ли он уже героя, поэтому
      * строка остаётся после его пика: на случай свапа.
      */
@@ -970,7 +973,7 @@ public final class DraftEngine {
             Assignment picked = theirAssignment.stream().filter(a -> a.player().equals(player.nick()) && (a.fixed() || a.probability() >= 0.5))
                     .findFirst().orElse(null);
             result.add(new PositionBans(them.squad.position(player), player.nick(), picked == null ? null : picked.heroId(),
-                    picked == null ? null : picked.name(), heroes.stream().limit(3).toList()));
+                    picked == null ? null : picked.name(), heroes.stream().limit(POSITION_BANS).toList()));
         }
         return result;
     }
