@@ -286,7 +286,7 @@ public final class DraftEngine {
         return w;
     }
 
-    private List<Assignment> assign(SquadModel model, List<Integer> picks, Map<Integer, String> fixed, double[][] probOut) {
+    List<Assignment> assign(SquadModel model, List<Integer> picks, Map<Integer, String> fixed, double[][] probOut) {
         int n = model.players.size();
         double[][] weight = new double[picks.size()][n];
         boolean[] isFixed = new boolean[picks.size()];
@@ -324,7 +324,7 @@ public final class DraftEngine {
     }
 
     /** Вероятность, что игрок ещё без героя: 1 − сумма его вероятностей по уже взятым героям. */
-    private static double[] freeProbability(double[][] prob, int players) {
+    static double[] freeProbability(double[][] prob, int players) {
         double[] free = new double[players];
         for (int p = 0; p < players; p++) {
             double taken = 0;
@@ -443,7 +443,7 @@ public final class DraftEngine {
         return n;
     }
 
-    private double avgSynergy(int h, List<Integer> team) {
+    double avgSynergy(int h, List<Integer> team) {
         double sum = 0;
         int n = 0;
         for (int x : team) {
@@ -457,7 +457,7 @@ public final class DraftEngine {
     }
 
     /** Среднее преимущество h против героев enemy (NaN-пары считаются нулём). */
-    private double avgCounter(int h, List<Integer> enemy) {
+    double avgCounter(int h, List<Integer> enemy) {
         double sum = 0;
         for (int x : enemy) {
             double adv = meta.counterAdvantage(h, x, Squad.MIN_PAIR_GAMES);
@@ -496,7 +496,7 @@ public final class DraftEngine {
      * на его ранге × контекст драфта, в степени sharpness), нормированное внутри игрока — иначе игрок с большой
      * турнирной историей «перекрикивает» остальных. Если остался только мидер — почти всё про героев мидера.
      */
-    private Distribution pickDistribution(SquadModel team, double[] free, List<Integer> allies, List<Integer> enemies,
+    Distribution pickDistribution(SquadModel team, double[] free, List<Integer> allies, List<Integer> enemies,
                                           Set<Integer> used) {
         int n = team.players.size();
         double freeTotal = 0;
@@ -802,14 +802,14 @@ public final class DraftEngine {
     }
 
     /** Наш игрок реально играет героя: есть 3+ игры, или брал его в турнире, или играл за 60 дней. */
-    private boolean plays(SquadModel model, PlayerStats p, int h) {
+    boolean plays(SquadModel model, PlayerStats p, int h) {
         PlayerStats.HeroLine line = p.heroes.get(h);
         return (line != null && line.games >= 3) || model.tourneyPicks(p, h) > 0
                 || model.recent.get(p).getOrDefault(h, NO_RECENT)[0] > 0;
     }
 
     /** Позиция → их герой, если его игрок известен (назначен вручную или вероятность ≥ 35%). */
-    private Map<Integer, Integer> knownPositions(SquadModel them, List<Assignment> theirs) {
+    Map<Integer, Integer> knownPositions(SquadModel them, List<Assignment> theirs) {
         Map<Integer, Integer> result = new HashMap<>();
         for (Assignment a : theirs) {
             if (!a.fixed() && a.probability() < 0.35) {
@@ -821,11 +821,11 @@ public final class DraftEngine {
         return result;
     }
 
-    private static List<Integer> laneEnemies(int ourPos, Map<Integer, Integer> theirLaners) {
+    static List<Integer> laneEnemies(int ourPos, Map<Integer, Integer> theirLaners) {
         return LaneStats.opposingPositions(ourPos).stream().filter(theirLaners::containsKey).map(theirLaners::get).toList();
     }
 
-    private LaneStats.Outcome laneVs(int h, int pos, Map<Integer, Integer> theirLaners) {
+    LaneStats.Outcome laneVs(int h, int pos, Map<Integer, Integer> theirLaners) {
         List<Integer> enemies = laneEnemies(pos, theirLaners);
         return enemies.isEmpty() ? null : ctx.lanes.lane(h, pos, enemies);
     }
