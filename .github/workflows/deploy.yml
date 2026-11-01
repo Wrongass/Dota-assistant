@@ -1,0 +1,87 @@
+name: Dota Assistant
+
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: Action
+        type: choice
+        options: [build, deploy, rollback]
+        default: build
+        required: true
+      ref:
+        description: Application branch to build
+        type: choice
+        options: [dev, main]
+        default: dev
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dota-production
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: inputs.operation != 'rollback'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      digest: ${{ steps.image.outputs.digest }}
+      commit: ${{ steps.image.outputs.commit }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+      - name: Build and publish image
+        id: image
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IMAGE: ghcr.io/wrongass/dota-assistant
+        shell: bash
+        run: |
+          set -euo pipefail
+          commit=$(git rev-parse HEAD)
+          printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+          trap 'docker logout ghcr.io >/dev/null 2>&1 || true' EXIT
+          docker buildx build --platform linux/amd64 --push --provenance=false \
+            --label "org.opencontainers.image.source=https://github.com/Wrongass/Dota-assistant" \
+            --label "org.opencontainers.image.revision=$commit" \
+            --tag "$IMAGE:$commit" \
+            --metadata-file "$RUNNER_TEMP/dota-image.json" .
+          digest=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["containerimage.digest"])' "$RUNNER_TEMP/dota-image.json")
+          [[ "$digest" =~ ^sha256:[0-9a-f]{64}$ && "$commit" =~ ^[0-9a-f]{40}$ ]]
+          printf 'digest=%s\ncommit=%s\n' "$digest" "$commit" >> "$GITHUB_OUTPUT"
+          printf 'Image: `%s@%s`\n\nCommit: `%s`\n' "$IMAGE" "$digest" "$commit" >> "$GITHUB_STEP_SUMMARY"
+          # The project's Dockerfile skips tests; this job does not claim to run them.
+
+  deploy:
+    needs: build
+    if: inputs.operation == 'deploy'
+    runs-on: [self-hosted, Linux, X64, dota-prod]
+    timeout-minutes: 30
+    permissions: {}
+    steps:
+      - name: Deploy the built release
+        env:
+          IMAGE_DIGEST: ${{ needs.build.outputs.digest }}
+          SOURCE_COMMIT: ${{ needs.build.outputs.commit }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo -n /usr/local/sbin/krbk-dota-deploy "$IMAGE_DIGEST" "$SOURCE_COMMIT"
+
+  rollback:
+    if: inputs.operation == 'rollback'
+    runs-on: [self-hosted, Linux, X64, dota-prod]
+    timeout-minutes: 15
+    permissions: {}
+    steps:
+      - name: Restore the previous release
+        run: sudo -n /usr/local/sbin/krbk-dota-rollback
