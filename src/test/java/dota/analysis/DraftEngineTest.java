@@ -206,4 +206,54 @@ class DraftEngineTest {
         assertTrue(a.pickSuggestions().stream().anyMatch(r -> r.reasons().stream().anyMatch(x -> x.startsWith("линия"))),
                 "хоть один наш пик объяснён линией");
     }
+
+    @Test
+    void doublePicksAreTheTwoConsecutiveOwnPicks() {
+        // порядок CM: ходы 14–15 — пики первой команды, 16–17 — второй (нумерация с 1)
+        assertTrue(DraftEngine.doublePickNow(13, true));
+        assertFalse(DraftEngine.doublePickNow(14, true), "ход 15 — второй из пары, дальше их пик");
+        assertTrue(DraftEngine.doublePickNow(15, false));
+        assertFalse(DraftEngine.doublePickNow(7, true), "ход 8 — одиночный пик");
+    }
+
+    @Test
+    void pairPicksOnDoublePickGoToDifferentPlayers() throws Exception {
+        assumeTrue(Files.isDirectory(Path.of("data/raw")), "нет data/");
+        AnalysisContext ctx = AnalysisContext.load(Path.of("config/players.yaml"), Path.of("data"));
+        // 7 банов, наш пик 8 (WK), их 9 (Ember), баны 10–12, их пик 13 (Windranger) — ход 14 наш, двойной
+        List<Integer> heroes = new ArrayList<>(List.of(23, 22, 1, 2, 31, 32, 33, 42, 106, 74, 13, 17, 21));
+        DraftEngine.Advice a = new DraftEngine(ctx).advise(new DraftEngine.State("SD_Team", true, heroes));
+        assertFalse(a.pairPicks().isEmpty(), "на двойном пике есть пары");
+        for (DraftEngine.PairPick p : a.pairPicks()) {
+            assertNotEquals(p.aPlayer(), p.bPlayer(), "пара разным игрокам");
+        }
+        heroes.add(20);
+        assertTrue(new DraftEngine(ctx).advise(new DraftEngine.State("SD_Team", true, heroes)).pairPicks().isEmpty(),
+                "на втором пике пары уже не нужны");
+    }
+
+    @Test
+    void positionBansStayAfterThePlayerPicked() throws Exception {
+        assumeTrue(Files.isDirectory(Path.of("data/raw")), "нет data/");
+        AnalysisContext ctx = AnalysisContext.load(Path.of("config/players.yaml"), Path.of("data"));
+        DraftEngine engine = new DraftEngine(ctx);
+        // 7 банов, наш пик Wraith King, их пик Lina
+        List<Integer> heroes = new ArrayList<>(List.of(23, 22, 1, 2, 31, 32, 33, 42, 25));
+        DraftEngine.Advice a = engine.advise(new DraftEngine.State("UPPO_TEAM", true, heroes));
+        assertEquals(5, a.positionBans().size(), "строка на каждую позицию");
+        assertEquals(List.of(1, 2, 3, 4, 5), a.positionBans().stream().map(DraftEngine.PositionBans::position).toList());
+        Set<Integer> used = new HashSet<>(heroes);
+        for (DraftEngine.PositionBans pb : a.positionBans()) {
+            assertTrue(pb.heroes().size() <= 10);
+            pb.heroes().forEach(r -> assertFalse(used.contains(r.heroId()), "взятые и забаненные не предлагаются"));
+        }
+        DraftEngine.PositionBans withPick = a.positionBans().stream().filter(pb -> pb.picked() != null).findFirst().orElseThrow();
+        assertEquals(25, withPick.picked(), "игрок, взявший Lina, отмечен");
+        assertFalse(withPick.heroes().isEmpty(), "его строка остаётся: возможен свап");
+        assertTrue(a.positionBans().stream().anyMatch(pb -> pb.heroes().size() >= 5), "на позицию больше трёх героев");
+        DraftEngine.Advice done = engine.advise(new DraftEngine.State("UPPO_TEAM", true,
+                new ArrayList<>(List.of(23, 22, 1, 2, 31, 32, 33, 42, 25, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17))));
+        assertTrue(done.positionBans().isEmpty(), "после драфта не нужны");
+    }
 }
+

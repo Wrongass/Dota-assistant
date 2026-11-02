@@ -23,6 +23,8 @@ public final class AnalysisContext {
     final League league;
     /** Линия и матчапы героев из STRATZ; пустые, если их не качали. */
     final LaneStats lanes;
+    /** Свойства героев из config/hero_traits.yaml (для симуляции драфта и оценки). */
+    public final HeroTraits traits;
     public final Squad ours;
     public final List<Squad> opponents;
     public final LocalDate date;
@@ -31,9 +33,10 @@ public final class AnalysisContext {
     /** Игроки из конфига, чьих данных ещё нет в data/ (новые игроки до первой выгрузки): их пропускаем. */
     private final List<String> missingData;
 
-    private AnalysisContext(PlayerConfig config, Meta meta, League league, LaneStats lanes, Squad ours,
+    private AnalysisContext(PlayerConfig config, Meta meta, League league, LaneStats lanes, HeroTraits traits, Squad ours,
                             List<Squad> opponents, LocalDate date, Path dataDir, List<String> missingData) {
         this.config = config;
+        this.traits = traits;
         this.meta = meta;
         this.league = league;
         this.lanes = lanes;
@@ -74,7 +77,25 @@ public final class AnalysisContext {
                 }
             }
         }
-        return new AnalysisContext(config, meta, league, LaneStats.load(dataDir), ours, opponents, date, dataDir, missing);
+        // имена для матчей лиги — из конфига: команды «SD Team (GGsel)» вместо «GGsel» из OpenDota, ники вместо Steam-ников
+        List<Squad> all = new ArrayList<>(opponents);
+        all.add(ours);
+        for (Squad s : all) {
+            for (Squad other : all) {
+                if (other.team != null && other.team.teamId() != null) {
+                    s.teamNames.put(other.team.teamId(), other.teamName());
+                }
+            }
+            config.players().forEach(p -> s.nicks.put(p.accountId(), p.nick()));
+            if (config.league() != null && s.team != null) {
+                config.league().manualMapsOrEmpty().stream()
+                        .filter(mm -> s.team.name().equals(mm.winner()) || s.team.name().equals(mm.loser()))
+                        .forEach(s.manualMaps::add);
+            }
+        }
+        Path traitsFile = configPath.toAbsolutePath().getParent().resolve("hero_traits.yaml");
+        return new AnalysisContext(config, meta, league, LaneStats.load(dataDir), HeroTraits.load(traitsFile), ours,
+                opponents, date, dataDir, missing);
     }
 
     public static AnalysisContext load(Path configPath, Path dataDir) throws IOException {
@@ -171,7 +192,9 @@ public final class AnalysisContext {
     }
 
     public Squad opponent(String slug) {
-        return opponents.stream().filter(s -> s.slug().equals(slug)).findFirst().orElse(null);
+        // адрес без учёта регистра: /opponent/bim_tim и /opponent/BIM_TIM — одна страница
+        return slug == null ? null
+                : opponents.stream().filter(s -> s.slug().equalsIgnoreCase(slug)).findFirst().orElse(null);
     }
 
     /** Команда, в которой играет account_id (в составе или запасным), или null. */
@@ -194,14 +217,14 @@ public final class AnalysisContext {
         return meta.name(heroId);
     }
 
-    /** Герой для сетки драфта: attr — str / agi / int / all. */
-    public record HeroInfo(int id, String name, String attr) {
+    /** Герой для сетки драфта: attr — str / agi / int / all; roles — роли из справочника OpenDota (Carry, Disabler…). */
+    public record HeroInfo(int id, String name, String attr, List<String> roles) {
     }
 
     public List<HeroInfo> heroList() {
         return meta.heroes.values().stream()
                 .sorted(java.util.Comparator.comparing(Meta.Hero::name))
-                .map(h -> new HeroInfo(h.id(), h.name(), h.attr()))
+                .map(h -> new HeroInfo(h.id(), h.name(), h.attr(), h.roles()))
                 .toList();
     }
 }

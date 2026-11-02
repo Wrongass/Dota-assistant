@@ -109,9 +109,14 @@ public final class Views {
     public record PairRow(int a, String aName, int b, String bName, double value, double winrate, long games) {
     }
 
+    /** Любой герой патча для поиска на «Мете», даже если его нет в топе позиций (E-15). */
+    public record AllRow(int heroId, String name, String positions, double winrate, double pickRate,
+                         int mainPos, double posWinrate, double strength, double proContest) {
+    }
+
     public record MetaView(String patch, String today, String rangeName, long proMatches,
                            List<PositionMeta> positions, List<ProRow> pro, List<PairRow> synergies,
-                           List<PairRow> counters) {
+                           List<PairRow> counters, List<AllRow> all) {
     }
 
     // ---------------------------------------------------------------- данные для драфта
@@ -147,12 +152,15 @@ public final class Views {
     public record Step(boolean pick, boolean ours, int heroId, String heroName) {
     }
 
+    /** matchId 0 — карта не попала в OpenDota (счёт с сайта турнира); note — пояснение («драфт не записан» и т.п.). */
     public record MatchView(long matchId, String date, String opponent, boolean won, boolean radiant, int minutes,
-                            List<MatchPlayer> players, List<MatchPlayer> enemies, List<Step> draft) {
+                            List<MatchPlayer> players, List<MatchPlayer> enemies, List<Step> draft, String note) {
     }
 
+    /** draftMaps — на скольких картах есть драфт (баны считаются только по ним). */
     public record Tournament(String teamName, long leagueId, long wins, boolean hadRemakes, List<MatchView> matches,
-                             List<Count> picks, List<Count> bans, List<Count> bansAgainst, List<Count> enemyPicks) {
+                             List<Count> picks, List<Count> bans, List<Count> bansAgainst, List<Count> enemyPicks,
+                             int draftMaps) {
     }
 
     // ---------------------------------------------------------------- соперник

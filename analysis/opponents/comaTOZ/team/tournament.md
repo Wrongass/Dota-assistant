@@ -2,7 +2,7 @@
 
 Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 11, побед: 5. Переигровки (пустая статистика) не учитываются.
 
-## 2026-10-10 09:48 UTC — против Эльбрус team: поражение
+## 2026-10-10 09:48 UTC — против Elbrus team (МЦСТ): поражение
 
 Dire, 38 мин, [OpenDota](https://www.opendota.com/matches/9037812347), [Dotabuff](https://ru.dotabuff.com/matches/9037812347)
 
@@ -14,13 +14,13 @@ Dire, 38 мин, [OpenDota](https://www.opendota.com/matches/9037812347), [Dotab
 | Nick_Abram | Viper | off | 296 | 1/7/5 |
 | Asmodeus | Spirit Breaker | off | 218 | 2/10/5 |
 
-Соперник: Silencer (Tort), Rubick (Sladenky), Tidehunter (MAjeRoK), Invoker (Блинолопатный гражданин), Lone Druid (zero excuses)
+Соперник: Silencer (Tort), Rubick (Sladenky), Tidehunter (MAjeRoK), Invoker (Блинолопатный), Lone Druid (zero_excuses)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 
 b Phantom Lancer → b Undying → **b Outworld Devourer** → **b Earth Spirit** → b Drow Ranger → **b Lich** → **b Lina** → P Lone Druid → **P Bane** → b Mirana → b Lifestealer → **b Dark Willow** → **P Spirit Breaker** → P Silencer → P Tidehunter → **P Viper** → **P Dragon Knight** → P Rubick → b Sven → **b Monkey King** → b Spectre → **b Ember Spirit** → P Invoker → **P Windranger**
 
-## 2026-10-10 10:55 UTC — против Эльбрус team: поражение
+## 2026-10-10 10:55 UTC — против Elbrus team (МЦСТ): поражение
 
 Radiant, 31 мин, [OpenDota](https://www.opendota.com/matches/9037898073), [Dotabuff](https://ru.dotabuff.com/matches/9037898073)
 
@@ -32,13 +32,13 @@ Radiant, 31 мин, [OpenDota](https://www.opendota.com/matches/9037898073), [Do
 | DrestoV1ch | Undying | safe | 224 | 3/9/7 |
 | Asmodeus | Hoodwink | off | 215 | 3/8/9 |
 
-Соперник: Meepo (Блинолопатный гражданин), Snapfire (Tort), Techies (Sladenky), Lifestealer (zero excuses), Underlord (MAjeRoK)
+Соперник: Meepo (Блинолопатный), Snapfire (Tort), Techies (Sladenky), Lifestealer (zero_excuses), Underlord (MAjeRoK)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 
 **b Lone Druid** → **b Outworld Devourer** → b Phantom Lancer → b Drow Ranger → **b Earth Spirit** → b Sven → b Juggernaut → **P Undying** → P Snapfire → **b Lina** → **b Invoker** → b Spectre → P Lifestealer → **P Ember Spirit** → **P Hoodwink** → P Techies → P Underlord → **P Slardar** → **b Necrophos** → b Terrorblade → **b Pangolier** → b Slark → **P Nature's Prophet** → P Meepo
 
-## 2026-10-25 16:04 UTC — против Zvezda: поражение
+## 2026-10-25 16:04 UTC — против SyberStar (НПП «Звезда»): поражение
 
 Dire, 41 мин, [OpenDota](https://www.opendota.com/matches/9061635631), [Dotabuff](https://ru.dotabuff.com/matches/9061635631)
 
@@ -50,13 +50,13 @@ Dire, 41 мин, [OpenDota](https://www.opendota.com/matches/9061635631), [Dotab
 | YOURSELF | Doom | off | 550 | 5/4/9 |
 | Asmodeus | Dark Willow | off | 233 | 1/10/11 |
 
-Соперник: Undying (kalibri), Slardar (SuperPoni), Windranger (死), Luna (Elsa), Techies (СГРЫЗ КАСТРЮЛЮ)
+Соперник: Undying (kalibri), Slardar (SuperPoni), Windranger (死), Luna (Elsa), Techies (СГРЫЗ_КАСТРЮЛЮ)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 
 **b Earth Spirit** → **b Hoodwink** → b Bane → b Spirit Breaker → **b Lina** → b Ember Spirit → b Phantom Lancer → **P Dragon Knight** → P Techies → **b Lifestealer** → **b Outworld Devourer** → b Sven → P Undying → **P Dark Willow** → **P Clockwerk** → P Windranger → P Slardar → **P Doom** → **b Storm Spirit** → b Spectre → **b Tinker** → b Nature's Prophet → **P Drow Ranger** → P Luna
 
-## 2026-10-25 17:15 UTC — против Zvezda: поражение
+## 2026-10-25 17:15 UTC — против SyberStar (НПП «Звезда»): поражение
 
 Radiant, 58 мин, [OpenDota](https://www.opendota.com/matches/9061760995), [Dotabuff](https://ru.dotabuff.com/matches/9061760995)
 
@@ -68,7 +68,7 @@ Radiant, 58 мин, [OpenDota](https://www.opendota.com/matches/9061760995), [Do
 | kezi | Earth Spirit | mid | 489 | 12/8/19 |
 | Asmodeus | Rubick | off | 281 | 5/14/24 |
 
-Соперник: Dragon Knight (死), Ogre Magi (kalibri), Drow Ranger (Elsa), Outworld Devourer (SuperPoni), Skywrath Mage (СГРЫЗ КАСТРЮЛЮ)
+Соперник: Dragon Knight (死), Ogre Magi (kalibri), Drow Ranger (Elsa), Outworld Devourer (SuperPoni), Skywrath Mage (СГРЫЗ_КАСТРЮЛЮ)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 
@@ -128,7 +128,7 @@ Radiant, 40 мин, [OpenDota](https://www.opendota.com/matches/9069549338), [Do
 
 **b Lone Druid** → **b Earth Spirit** → b Undying → b Invoker → **b Doom** → b Windranger → b Phantom Lancer → **P Lina** → P Lion → **b Dragon Knight** → **b Dark Willow** → b Lifestealer → P Jakiro → **P Hoodwink** → **P Techies** → P Axe → P Void Spirit → **P Centaur Warrunner** → **b Luna** → b Drow Ranger → **b Slark** → b Spectre → **P Anti-Mage** → P Phantom Assassin
 
-## 2026-10-31 08:21 UTC — против Team Visual: поражение
+## 2026-10-31 08:21 UTC — против Team Visual (Долг): поражение
 
 Dire, 34 мин, [OpenDota](https://www.opendota.com/matches/9069619079), [Dotabuff](https://ru.dotabuff.com/matches/9069619079)
 
@@ -140,7 +140,7 @@ Dire, 34 мин, [OpenDota](https://www.opendota.com/matches/9069619079), [Dotab
 | kezi | Lina | mid | 442 | 4/9/6 |
 | Asmodeus | Hoodwink | off | 221 | 0/8/7 |
 
-Соперник: Outworld Devourer (Wrongass), Enigma (Davajj), Warlock (Enaria), Wraith King (kren), Ogre Magi (BABAYKA)
+Соперник: Outworld Devourer (Wrongass), Enigma (Davajj), Warlock (Enaria), Wraith King (kren), Ogre Magi (Babayka)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 
@@ -204,7 +204,7 @@ Radiant, 39 мин, [OpenDota](https://www.opendota.com/matches/9069901208), [Do
 
 **Пики команды** (в скобках — победы): Hoodwink ×6 (3), Lina ×4 (3), Techies ×4 (4), Dragon Knight ×3 (1), Slardar ×3 (1), Anti-Mage ×2 (1), Bane ×2 (0), Centaur Warrunner ×2 (2), Dark Willow ×2 (0), Doom ×2 (0), Drow Ranger ×2 (1), Earth Spirit ×2 (0), Nature's Prophet ×2 (0), Spirit Breaker ×2 (1), Windranger ×2 (1), Clockwerk (0), Earthshaker (1), Ember Spirit (0), Invoker (1), Largo (1), Lifestealer (1), Muerta (0), Night Stalker (0), Oracle (1), Pudge (1), Rubick (0), Slark (1), Undying (0), Viper (0), Witch Doctor (0)
 
-**Баны команды:** Earth Spirit ×8, Lina ×6, Lone Druid ×6, Dark Willow ×4, Outworld Devourer ×4, Slark ×4, Doom ×3, Luna ×3, Phantom Lancer ×3, Dragon Knight ×2, Ember Spirit ×2, Enigma ×2, Hoodwink ×2, Lifestealer ×2, Storm Spirit ×2, Viper ×2, Anti-Mage, Bane, Faceless Void, Huskar, Invoker, Keeper of the Light, Lich, Meepo, Monkey King, Necrophos, Night Stalker, Pangolier, Puck, Rubick, Silencer, Slardar, Sven, Terrorblade, Timbersaw, Tinker, Undying, Ursa
+**Баны команды**: Earth Spirit ×8, Lina ×6, Lone Druid ×6, Dark Willow ×4, Outworld Devourer ×4, Slark ×4, Doom ×3, Luna ×3, Phantom Lancer ×3, Dragon Knight ×2, Ember Spirit ×2, Enigma ×2, Hoodwink ×2, Lifestealer ×2, Storm Spirit ×2, Viper ×2, Anti-Mage, Bane, Faceless Void, Huskar, Invoker, Keeper of the Light, Lich, Meepo, Monkey King, Necrophos, Night Stalker, Pangolier, Puck, Rubick, Silencer, Slardar, Sven, Terrorblade, Timbersaw, Tinker, Undying, Ursa
 
 **Банят против команды** (чего боятся соперники): Phantom Lancer ×7, Spectre ×6, Sven ×6, Lifestealer ×5, Invoker ×4, Disruptor ×3, Drow Ranger ×3, Earthshaker ×3, Undying ×3, Bane ×2, Bounty Hunter ×2, Dawnbreaker ×2, Dragon Knight ×2, Lich ×2, Phoenix ×2, Slark ×2, Spirit Breaker ×2, Techies ×2, Terrorblade ×2, Witch Doctor ×2, Anti-Mage, Axe, Centaur Warrunner, Dark Willow, Doom, Earth Spirit, Ember Spirit, Hoodwink, Juggernaut, Lone Druid, Mirana, Nature's Prophet, Ring Master, Ursa, Windranger
 

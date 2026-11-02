@@ -2,7 +2,9 @@ package dota.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dota.analysis.AnalysisContext;
+import dota.analysis.DraftBot;
 import dota.analysis.DraftEngine;
+import dota.analysis.DraftEvaluation;
 import dota.analysis.Fmt;
 import dota.analysis.Squad;
 import dota.analysis.Views;
@@ -90,6 +92,7 @@ public class WebApp {
                 sf.location = Location.CLASSPATH;
             });
         });
+        app.before(WebApp::rejectCrossSitePost);
         app.before(this::requireLogin);
         app.get("/health", ctx -> ctx.result("ok"));
         app.get("/login", this::loginPage);
@@ -107,23 +110,86 @@ public class WebApp {
         app.get("/group", this::group);
         app.get("/opponent/{slug}", this::opponent);
         app.get("/draft", this::draftPage);
+        app.get("/drafts", this::draftHistory);
         app.get("/counters", this::counters);
         app.get("/api/heroes", ctx -> ctx.json(site.ctx().heroList()));
         app.get("/api/player/{id}", this::playerApi);
+        app.get("/api/counters", this::countersApi);
+        app.get("/api/hero-maps", this::heroMapsApi);
         app.get("/img/{kind}/{file}", this::image);
         app.post("/api/draft", this::draftApi);
+        app.post("/api/sim/move", this::simMove);
+        app.post("/api/sim/plan", this::simPlan);
+        app.post("/api/sim/evaluate", this::simEvaluate);
         app.post("/lineup", this::saveLineup);
+        app.post("/api/share", ctx -> shareDraft(ctx, SharedDrafts.newCode()));
+        app.post("/api/share/{code}", ctx -> shareDraft(ctx, ctx.pathParam("code")));
+        app.get("/api/share/{code}", this::sharedDraft);
         app.get("/method", ctx -> render(ctx, "method.jte", new Models.Method(page("Методика", "method"))));
         app.post("/reload", ctx -> {
             site.reload();
             String back = ctx.header("Referer");
             ctx.redirect(back == null ? "/" : back);
         });
-        app.exception(NotFoundResponse.class, (e, ctx) -> ctx.status(404).result("Не найдено: " + e.getMessage()));
+        app.exception(NotFoundResponse.class, (e, ctx) -> notFound(ctx, e.getMessage()));
+        app.error(404, ctx -> {
+            if (ctx.result() == null || ctx.result().isEmpty() || ctx.result().startsWith("Endpoint ")) {
+                notFound(ctx, "такой страницы нет");
+            }
+        });
+        app.exception(Exception.class, (e, ctx) -> {
+            System.err.printf("Ошибка на %s: %s%n", ctx.path(), e);
+            e.printStackTrace();
+            ctx.status(500);
+            if (ctx.path().startsWith("/api/")) {
+                ctx.json(Map.of("error", "ошибка на сервере: " + e.getClass().getSimpleName()));
+            } else {
+                render(ctx, "error.jte", new Models.ErrorPage(page("Ошибка", ""), "Что-то сломалось",
+                        "Сайт не смог показать эту страницу (" + e.getClass().getSimpleName() + "). Попробуйте обновить "
+                                + "страницу; если не поможет — сообщите, что делали, и время."));
+            }
+        });
         return app;
     }
 
     // ---------------------------------------------------------------- вход
+
+    /**
+     * Защита от подделки запроса с чужого сайта (CSRF): POST, у которого Origin или Referer — другой сайт, отклоняется.
+     * Браузер присылает Origin со всеми POST-формами и fetch; cookie сессии и так SameSite=Lax, это второй рубеж.
+     * Без Origin и Referer (curl, тесты) пропускаем: подделать такой запрос из браузера нельзя.
+     */
+    static void rejectCrossSitePost(Context ctx) {
+        if (!"POST".equals(ctx.method().name())) {
+            return;
+        }
+        String source = ctx.header("Origin");
+        if (source == null || source.isBlank() || "null".equals(source)) {
+            source = ctx.header("Referer");
+        }
+        if (source == null || source.isBlank()) {
+            return;
+        }
+        String host = ctx.header("X-Forwarded-Host");
+        if (host == null || host.isBlank()) {
+            host = ctx.header("Host");
+        }
+        // прокси переписал Host на внутренний адрес — сравнить не с чем; не ломаем сайт, защищает SameSite=Lax
+        if (host == null || host.isBlank() || host.matches("(?i)(127\\.0\\.0\\.1|localhost|\\[::1]|web)(:\\d+)?")) {
+            return;
+        }
+        try {
+            java.net.URI uri = java.net.URI.create(source);
+            String from = uri.getHost() + (uri.getPort() > 0 ? ":" + uri.getPort() : "");
+            if (host != null && (from.equalsIgnoreCase(host) || uri.getHost().equalsIgnoreCase(host.split(":")[0]))) {
+                return;
+            }
+        } catch (IllegalArgumentException e) {
+            // кривой Origin — как чужой
+        }
+        ctx.status(403).result("Запрос с другого сайта отклонён");
+        ctx.skipRemainingHandlers();
+    }
 
     /** Всё, кроме входа, проверки здоровья и статики, — только после входа (если SITE_PASSWORD задан). */
     private void requireLogin(Context ctx) {
@@ -206,8 +272,29 @@ public class WebApp {
                 site.ctx().ours.lineup(), http.queryParam("lineupError")));
     }
 
+    /** 404 страницей сайта (или JSON для /api) с кодировкой UTF-8, а не служебным текстом фреймворка. */
+    private void notFound(Context ctx, String what) {
+        ctx.status(404);
+        if (ctx.path().startsWith("/api/")) {
+            ctx.json(Map.of("error", "не найдено: " + what));
+            return;
+        }
+        render(ctx, "error.jte", new Models.ErrorPage(page("Не найдено", ""), "Не найдено", "Не нашёл: " + what + "."));
+    }
+
+    /** id игрока из адреса: число (account_id) или ник из конфига без учёта регистра; иначе 404, а не 500. */
+    private long playerId(String raw) {
+        if (raw != null && raw.matches("\\d{1,18}")) {
+            return Long.parseLong(raw);
+        }
+        return site.ctx().config.players().stream()
+                .filter(p -> p.nick().equalsIgnoreCase(raw == null ? "" : raw.trim()))
+                .map(dota.fetch.PlayerConfig.Player::accountId).findFirst()
+                .orElseThrow(() -> new NotFoundResponse("игрок «" + raw + "»"));
+    }
+
     private void player(Context http) {
-        long id = Long.parseLong(http.pathParam("id"));
+        long id = playerId(http.pathParam("id"));
         AnalysisContext c = site.ctx();
         Squad squad = c.squadOf(id);
         if (squad == null) {
@@ -250,7 +337,11 @@ public class WebApp {
     private void opponent(Context http) {
         Squad opp = site.ctx().opponent(http.pathParam("slug"));
         if (opp == null) {
-            throw new NotFoundResponse("соперник " + http.pathParam("slug"));
+            throw new NotFoundResponse("соперник «" + http.pathParam("slug") + "» (все соперники — в меню «Соперники»)");
+        }
+        if (!opp.slug().equals(http.pathParam("slug"))) {
+            http.redirect("/opponent/" + opp.slug());
+            return;
         }
         String plan = site.planFile(opp).map(this::markdown).orElse(null);
         render(http, "opponent.jte", new Models.OpponentPage(page(opp.team().name(), "opponents"), opp.slug(),
@@ -306,6 +397,74 @@ public class WebApp {
         }
     }
 
+    // ---------------------------------------------------------------- общий драфт по ссылке (FEAT-14)
+
+    private void shareDraft(Context http, String code) throws IOException {
+        if (!site.sharedDrafts.enabled()) {
+            http.status(503).json(Map.of("error", "общий драфт недоступен: сайт запущен без папки состояния"));
+            return;
+        }
+        if (!SharedDrafts.validCode(code)) {
+            throw new NotFoundResponse("общий драфт «" + code + "»");
+        }
+        try {
+            com.fasterxml.jackson.databind.JsonNode saved = site.sharedDrafts.save(code, JSON.readTree(http.body()));
+            http.json(Map.of("code", code, "version", saved.path("version").asLong()));
+        } catch (IllegalArgumentException | com.fasterxml.jackson.core.JsonProcessingException e) {
+            http.status(400).json(Map.of("error", "неверный драфт: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * История драфтов (FEAT-02): сохранённые драфты и реальная карта нашей команды в лиге, если по пикам совпадает
+     * хотя бы 8 из 10 героев.
+     */
+    private void draftHistory(Context http) throws IOException {
+        AnalysisContext c = site.ctx();
+        List<Views.MatchView> maps = c.ours.hasTournamentData() ? c.ours.tournament().matches() : List.of();
+        List<Models.HistoryRow> rows = new ArrayList<>();
+        for (SharedDrafts.Entry e : site.sharedDrafts.list()) {
+            var d = e.draft();
+            boolean weFirst = d.path("weFirst").asBoolean(true);
+            List<Integer> ours = new ArrayList<>(), theirs = new ArrayList<>();
+            int moves = d.path("heroes").size();
+            for (int i = 0; i < moves && i < DraftEngine.SLOTS.size(); i++) {
+                int h = d.path("heroes").get(i).asInt(0);
+                if (h > 0 && DraftEngine.SLOTS.get(i).pick()) {
+                    (DraftEngine.SLOTS.get(i).firstTeam() == weFirst ? ours : theirs).add(h);
+                }
+            }
+            Views.MatchView best = null;
+            int bestOverlap = 0;
+            for (Views.MatchView m : maps) {
+                java.util.Set<Integer> real = new java.util.HashSet<>();
+                m.players().forEach(p -> real.add(p.heroId()));
+                m.enemies().forEach(p -> real.add(p.heroId()));
+                int overlap = (int) java.util.stream.Stream.concat(ours.stream(), theirs.stream()).filter(real::contains).count();
+                if (overlap > bestOverlap) {
+                    bestOverlap = overlap;
+                    best = m;
+                }
+            }
+            boolean matched = best != null && bestOverlap >= 8 && best.matchId() > 0;
+            Squad opp = c.opponent(d.path("opponent").asText(""));
+            rows.add(new Models.HistoryRow(e.code(), Site.TIME.format(e.updated()),
+                    opp == null ? d.path("opponent").asText("") : opp.teamName(), d.path("map").asInt(1), moves, ours,
+                    theirs, matched ? best.matchId() : null, matched ? best.won() : null, matched ? best.date() : null,
+                    bestOverlap));
+        }
+        render(http, "drafts.jte", new Models.HistoryPage(page("История драфтов", "drafts"), rows,
+                site.sharedDrafts.enabled()));
+    }
+
+    private void sharedDraft(Context http) throws IOException {
+        var draft = site.sharedDrafts.read(http.pathParam("code"));
+        if (draft.isEmpty()) {
+            throw new NotFoundResponse("общий драфт «" + http.pathParam("code") + "»");
+        }
+        http.contentType("application/json; charset=utf-8").result(JSON.writeValueAsString(draft.get()));
+    }
+
     // ---------------------------------------------------------------- драфт
 
     /**
@@ -319,7 +478,7 @@ public class WebApp {
         AnalysisContext c = site.ctx();
         Squad next = site.nextOpponent();
         String requested = http.queryParam("opponent");
-        String opponent = requested != null && c.opponent(requested) != null ? requested
+        String opponent = c.opponent(requested) != null ? c.opponent(requested).slug()
                 : next != null ? next.slug() : c.opponents.isEmpty() ? "" : c.opponents.get(0).slug();
         List<Models.Link> opponents = c.opponents.stream()
                 .map(o -> new Models.Link(o.slug(), o.teamName())).toList();
@@ -329,11 +488,85 @@ public class WebApp {
     }
 
     /** Контрпики: ?h=Viper&h2=Lina&pos=2 (имена или id героев; pos 0 или нет — позиция по первому герою). */
+    /**
+     * Контрпики для драфта (JSON): ?h=<id или имя>&pos=<наша позиция 1..5>. NaN (нет данных) → null, top — по 6 героев.
+     */
+    private void countersApi(Context http) {
+        AnalysisContext c = site.ctx();
+        Integer hero = heroId(c, http.queryParamAsClass("h", String.class).getOrDefault(""));
+        if (hero == null) {
+            throw new NotFoundResponse("герой «" + http.queryParam("h") + "»");
+        }
+        String rawPos = http.queryParam("pos");
+        int pos = rawPos != null && rawPos.matches("[1-5]") ? Integer.parseInt(rawPos) : 0;
+        dota.analysis.Counters.View v = dota.analysis.Counters.build(c, List.of(hero), pos);
+        java.util.function.Function<Double, Double> num = x -> x == null || x.isNaN() ? null : x;
+        java.util.function.Function<dota.analysis.Counters.Hero, Map<String, Object>> row = h -> {
+            Map<String, Object> m = new java.util.LinkedHashMap<>();
+            m.put("heroId", h.heroId());
+            m.put("name", h.name());
+            m.put("laneMatches", h.laneMatches());
+            m.put("laneWin", num.apply(h.laneWin()));
+            m.put("laneLoss", num.apply(h.laneLoss()));
+            m.put("laneAdv", num.apply(h.laneAdv()));
+            m.put("gameAdv", num.apply(h.gameAdv()));
+            return m;
+        };
+        Map<String, Object> result = new java.util.LinkedHashMap<>();
+        result.put("enemy", v.enemyNames().get(0));
+        result.put("position", v.position());
+        result.put("player", v.player());
+        result.put("hasLane", v.hasLane());
+        result.put("lane", v.lane().stream().limit(6).map(row).toList());
+        result.put("game", v.game().stream().limit(6).map(row).toList());
+        result.put("ours", v.ours().stream().limit(6).map(o -> {
+            Map<String, Object> m = row.apply(o.hero());
+            m.put("games", o.games());
+            m.put("winrate", num.apply(o.winrate()));
+            m.put("recent60", o.recent60());
+            return m;
+        }).toList());
+        http.json(result);
+    }
+
+    /**
+     * FEAT-17: карты лиги, где игрок (ник из конфига) брал героя: ?nick=…&hero=<id>. Для «×2 в турнире» в драфте.
+     */
+    private void heroMapsApi(Context http) {
+        AnalysisContext c = site.ctx();
+        long id = playerId(http.queryParam("nick"));
+        Integer hero = heroId(c, http.queryParamAsClass("hero", String.class).getOrDefault(""));
+        Squad squad = c.squadOf(id);
+        if (squad == null || hero == null || !squad.hasTournamentData()) {
+            throw new NotFoundResponse("карты игрока на герое");
+        }
+        String nick = c.config.players().stream().filter(p -> p.accountId() == id).map(dota.fetch.PlayerConfig.Player::nick)
+                .findFirst().orElse("");
+        List<Map<String, Object>> maps = new ArrayList<>();
+        for (Views.MatchView m : squad.tournament().matches()) {
+            boolean picked = m.players().stream().anyMatch(p -> p.heroId() == hero && p.nick().equals(nick));
+            if (picked) {
+                Map<String, Object> row = new java.util.LinkedHashMap<>();
+                row.put("matchId", m.matchId());
+                row.put("date", m.date());
+                row.put("opponent", m.opponent());
+                row.put("won", m.won());
+                row.put("minutes", m.minutes());
+                maps.add(row);
+            }
+        }
+        http.json(Map.of("nick", nick, "hero", c.heroName(hero), "maps", maps));
+    }
+
     private void counters(Context http) {
         AnalysisContext c = site.ctx();
         String first = http.queryParamAsClass("h", String.class).getOrDefault("").trim();
         String second = http.queryParamAsClass("h2", String.class).getOrDefault("").trim();
-        int pos = http.queryParamAsClass("pos", Integer.class).getOrDefault(0);
+        // pos: 1..5 или «авто»; мусор в адресе — «авто» с пояснением, а не JSON-ошибка
+        String rawPos = http.queryParam("pos");
+        int pos = rawPos != null && rawPos.matches("[0-5]") ? Integer.parseInt(rawPos) : 0;
+        String posError = rawPos == null || rawPos.isEmpty() || rawPos.matches("[0-5]") ? null
+                : "Позиция «" + rawPos + "» — такой нет, показываю «авто».";
         List<Integer> enemies = new ArrayList<>();
         List<String> unknown = new ArrayList<>();
         for (String name : List.of(first, second)) {
@@ -347,7 +580,8 @@ public class WebApp {
                 enemies.add(id);
             }
         }
-        String error = unknown.isEmpty() ? null : "Не нашёл героя: " + String.join(", ", unknown);
+        String error = unknown.isEmpty() ? posError
+                : "Не нашёл героя: " + String.join(", ", unknown) + (posError == null ? "" : " " + posError);
         render(http, "counters.jte", new Models.CountersPage(page("Контрпики", "counters"), c.heroList(), first, second,
                 pos < 1 || pos > 5, dota.analysis.Counters.build(c, enemies, pos), error));
     }
@@ -373,7 +607,7 @@ public class WebApp {
 
     /** Карточка игрока для боковой панели драфта: чем играет сейчас и топ «играет лучше всего». */
     private void playerApi(Context http) {
-        long id = Long.parseLong(http.pathParam("id"));
+        long id = playerId(http.pathParam("id"));
         Squad squad = site.ctx().squadOf(id);
         if (squad == null) {
             throw new NotFoundResponse("игрок " + id);
@@ -402,6 +636,86 @@ public class WebApp {
         List<Integer> heroes = req.heroes() == null ? List.of() : req.heroes();
         Map<Integer, String> assign = req.assign() == null ? Map.of() : req.assign();
         http.json(new DraftEngine(site.ctx()).advise(new DraftEngine.State(req.opponent(), req.weFirst(), heroes, assign)));
+    }
+
+    // ---------------------------------------------------------------- симуляция драфта (docs/specs/draft-simulation.md)
+
+    /** Тело запросов симуляции: как у /api/draft плюс зерно случайности бота. */
+    record SimRequest(String opponent, boolean weFirst, List<Integer> heroes, Map<Integer, String> assign, Long seed) {
+    }
+
+    /** Проверенный запрос: соперник известен, ходов не больше 24. null — ответ с ошибкой уже отправлен. */
+    private SimRequest simRequest(Context http) {
+        SimRequest req = http.bodyAsClass(SimRequest.class);
+        if (req.opponent() == null || site.ctx().opponent(req.opponent()) == null) {
+            http.status(400).json(Map.of("error", "неизвестный соперник: " + req.opponent()));
+            return null;
+        }
+        if (req.heroes() != null && req.heroes().size() > DraftEngine.SLOTS.size()) {
+            http.status(400).json(Map.of("error", "ходов больше 24"));
+            return null;
+        }
+        return req;
+    }
+
+    private static List<Integer> heroesOf(SimRequest req) {
+        return req.heroes() == null ? List.of() : req.heroes();
+    }
+
+    /** Ход соперника-бота на текущем шаге. */
+    private void simMove(Context http) {
+        SimRequest req = simRequest(http);
+        if (req == null) {
+            return;
+        }
+        AnalysisContext c = site.ctx();
+        try {
+            DraftBot.Move m = new DraftBot(c).next(c.ours, c.opponent(req.opponent()), req.weFirst(), heroesOf(req),
+                    req.seed() == null ? 0 : req.seed());
+            http.json(Map.of("step", m.step(), "heroId", m.heroId(), "name", m.name(), "pick", m.pick()));
+        } catch (IllegalStateException e) {
+            http.status(409).json(Map.of("error", e.getMessage()));
+        }
+    }
+
+    /** Итоговая расстановка бота (раскрывается в конце драфта) и его свапы. */
+    private void simPlan(Context http) {
+        SimRequest req = simRequest(http);
+        if (req == null) {
+            return;
+        }
+        AnalysisContext c = site.ctx();
+        http.json(new DraftBot(c).plan(c.ours, c.opponent(req.opponent()), req.weFirst(), heroesOf(req)));
+    }
+
+    /**
+     * Оценка законченного драфта по позициям: назначения «герой → игрок» (ручные правки обеих команд и раскрытый
+     * план бота) дают позиции через состав.
+     */
+    private void simEvaluate(Context http) {
+        SimRequest req = simRequest(http);
+        if (req == null) {
+            return;
+        }
+        AnalysisContext c = site.ctx();
+        List<Integer> heroes = heroesOf(req);
+        DraftEngine.Advice a = new DraftEngine(c).advise(new DraftEngine.State(req.opponent(), req.weFirst(), heroes,
+                req.assign() == null ? Map.of() : req.assign()));
+        if (!a.finished()) {
+            http.status(409).json(Map.of("error", "драфт ещё не закончен"));
+            return;
+        }
+        http.json(new DraftEvaluation(c).evaluate(positions(a.ourAssignment(), a.ourRoster()),
+                positions(a.theirAssignment(), a.theirRoster()), heroes, req.weFirst()));
+    }
+
+    private static Map<Integer, Integer> positions(List<DraftEngine.Assignment> assignment, List<DraftEngine.RosterLine> roster) {
+        Map<Integer, Integer> result = new java.util.LinkedHashMap<>();
+        for (DraftEngine.Assignment x : assignment) {
+            roster.stream().filter(r -> r.player().equals(x.player())).findFirst()
+                    .ifPresent(r -> result.put(x.heroId(), r.position()));
+        }
+        return result;
     }
 
     // ---------------------------------------------------------------- картинки
@@ -505,6 +819,7 @@ public class WebApp {
     void render(Context http, String template, Object model) {
         StringOutput out = new StringOutput();
         templates.render(template, model, out);
-        http.html(out.toString());
+        // кодировка явно: иначе браузер может показать русский текст кракозябрами (так было на 404)
+        http.contentType("text/html; charset=utf-8").result(out.toString());
     }
 }

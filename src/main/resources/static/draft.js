@@ -9,55 +9,17 @@
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
-  // Сокращения, которыми героев называют в игре (дополняются инициалами: WK, OD, PA…).
-  // Ищутся и по началу: «кунк» → Kunkka.
-  const SLANG = {
-    "вк": "Wraith King", "ам": "Anti-Mage", "пудж": "Pudge", "инвокер": "Invoker", "инвок": "Invoker",
-    "леш": "Leshrac", "лешрак": "Leshrac", "од": "Outworld Devourer", "лич": "Lich", "лион": "Lion",
-    "лина": "Lina", "вайпер": "Viper", "тини": "Tiny", "свен": "Sven", "сларк": "Slark",
-    "кунка": "Kunkka", "куннка": "Kunkka", "варлок": "Warlock", "ворлок": "Warlock", "рубик": "Rubick",
-    "энигма": "Enigma", "дб": "Dawnbreaker", "даунбрейкер": "Dawnbreaker", "огр": "Ogre Magi",
-    "кентавр": "Centaur Warrunner", "цм": "Crystal Maiden", "см": "Crystal Maiden", "вс": "Vengeful Spirit",
-    "венга": "Vengeful Spirit", "грим": "Grimstroke", "гримстрок": "Grimstroke", "дизраптор": "Disruptor",
-    "никс": "Nyx Assassin", "сб": "Spirit Breaker", "бара": "Spirit Breaker", "дк": "Dragon Knight",
-    "некр": "Necrophos", "некрофос": "Necrophos", "войд": "Faceless Void", "фв": "Faceless Void",
-    "пл": "Phantom Lancer", "па": "Phantom Assassin", "сф": "Shadow Fiend", "шторм": "Storm Spirit",
-    "эмбер": "Ember Spirit", "котл": "Keeper of the Light", "котел": "Keeper of the Light", "бх": "Bounty Hunter",
-    "ww": "Winter Wyvern", "вивер": "Winter Wyvern", "виверна": "Winter Wyvern", "андерлорд": "Underlord",
-    "андер": "Underlord", "дроу": "Drow Ranger", "джагер": "Juggernaut", "джаг": "Juggernaut",
-    "джагернаут": "Juggernaut", "ведьмак": "Witch Doctor", "вд": "Witch Doctor", "шаман": "Shadow Shaman",
-    "раста": "Shadow Shaman", "акс": "Axe", "мипо": "Meepo", "тид": "Tidehunter", "тайд": "Tidehunter",
-    "тайдхантер": "Tidehunter", "хускар": "Huskar", "луна": "Luna", "мирана": "Mirana", "уилоу": "Dark Willow",
-    "вилоу": "Dark Willow", "худ": "Hoodwink", "худвинк": "Hoodwink", "джакиро": "Jakiro", "абаддон": "Abaddon",
-    "аба": "Abaddon", "омни": "Omniknight", "клинкз": "Clinkz", "санд": "Sand King", "ск": "Sand King",
-    "легионка": "Legion Commander", "лц": "Legion Commander", "найт": "Night Stalker", "нс": "Night Stalker",
-    "спектра": "Spectre", "спектр": "Spectre", "вр": "Windranger", "виндра": "Windranger",
-    "виндрейнджер": "Windranger", "слардар": "Slardar", "разор": "Razor", "бист": "Beastmaster",
-    "бистмастер": "Beastmaster", "снайпер": "Sniper", "тимбер": "Timbersaw", "лайфстилер": "Lifestealer",
-    "гуль": "Lifestealer", "наикс": "Lifestealer", "силенсер": "Silencer", "сайленсер": "Silencer",
-    "текис": "Techies", "течис": "Techies", "квопа": "Queen of Pain", "квоп": "Queen of Pain",
-    "королева": "Queen of Pain", "рингмастер": "Ring Master", "феникс": "Phoenix", "веном": "Venomancer",
-    "веномансер": "Venomancer", "снапфаер": "Snapfire", "снеп": "Snapfire", "ларго": "Largo", "энча": "Enchantress",
-    "чен": "Chen", "зевс": "Zeus", "пак": "Puck", "пук": "Puck", "морф": "Morphling", "монки": "Monkey King",
-    "мк": "Monkey King", "урса": "Ursa", "медуза": "Medusa", "дарк сир": "Dark Seer", "дс": "Dark Seer",
-    "доом": "Doom", "дум": "Doom", "марс": "Mars", "брю": "Brewmaster",
-    "антимаг": "Anti-Mage", "эс": "Earth Spirit", "эшейкер": "Earthshaker", "шейкер": "Earthshaker",
-    "ио": "Io", "висп": "Io", "оракл": "Oracle", "дазл": "Dazzle", "бейн": "Bane", "варик": "Warlock",
-  };
-  const NAME_TO_ID = new Map(HEROES.map((h) => [h.name.toLowerCase(), h.id]));
-  const ALIASES = new Map();
-  for (const h of HEROES) {
-    const words = h.name.toLowerCase().replace(/'/g, "").split(/[\s-]+/);
-    if (words.length > 1) ALIASES.set(words.map((w) => w[0]).join(""), h.id);
-  }
-  for (const [alias, name] of Object.entries(SLANG)) {
-    const id = NAME_TO_ID.get(name.toLowerCase());
-    if (id) ALIASES.set(alias, id);
-  }
+  const SEARCH = heroSearch(HEROES); // общий поиск: имя, начало, инициалы, сленг, раскладка (heroes.js)
   const ROSTERS = JSON.parse(root.dataset.rosters); // {"ours": [...], "<slug>": [...]}
 
   // ------------------------------------------------------------ состояние
-  let state = { opponent: root.dataset.defaultOpponent, weFirst: true, heroes: [], assign: {} };
+  // map — карта серии (bo2/bo3): у каждой свой драфт; карта 1 хранится под старым ключом, сохранённые драфты не теряются
+  // sim — симуляция против соперника (docs/specs/draft-simulation.md): за них ходит сайт; seed — зерно бота;
+  // revealed — план бота раскрыт после драфта, swaps — его свапы против прогноза
+  let state = { opponent: root.dataset.defaultOpponent, map: 1, weFirst: true, heroes: [], assign: {},
+    sim: false, seed: 0, revealed: false, swaps: [] };
+  const newSeed = () => Math.floor(Math.random() * 1e9);
+  const MAPS = 3;
   let advice = null;
   let editIndex = null; // исправляемый ход (клик по ленте)
   let pendingWarn = null; // герой, для которого показано предупреждение: второй ввод — подтверждение
@@ -67,18 +29,30 @@
   const LOCK_MS = 400;
   let lockedUntil = 0;
   let awaiting = false;
-  const key = () => "draft:" + state.opponent;
-  const load = () => {
+  const keyOf = (opponent, map) => "draft:" + opponent + (map > 1 ? ":" + map : "");
+  const key = () => keyOf(state.opponent, state.map) + (state.sim ? ":sim" : "");
+  const readSaved = (opponent, map) => {
     try {
-      const saved = JSON.parse(localStorage.getItem(key()) || "null");
-      if (saved) Object.assign(state, { weFirst: saved.weFirst, heroes: saved.heroes || [], assign: saved.assign || {} });
-    } catch (e) { /* без localStorage просто начинаем заново */ }
+      return JSON.parse(localStorage.getItem(keyOf(opponent, map)) || "null");
+    } catch (e) { return null; /* без localStorage просто начинаем заново */ }
+  };
+  const load = () => {
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(key()) || "null"); } catch (e) { /* без localStorage — заново */ }
+    Object.assign(state, saved
+      ? { weFirst: saved.weFirst !== false, heroes: saved.heroes || [], assign: saved.assign || {},
+          seed: saved.seed || newSeed(), revealed: !!saved.revealed, swaps: saved.swaps || [], botAssign: saved.botAssign || {},
+          hiddenPos: saved.hiddenPos || [] }
+      : { weFirst: true, heroes: [], assign: {}, seed: newSeed(), revealed: false, swaps: [], botAssign: {}, hiddenPos: [] });
   };
   const save = () => {
     try {
-      localStorage.setItem(key(), JSON.stringify({ weFirst: state.weFirst, heroes: state.heroes, assign: state.assign }));
+      localStorage.setItem(key(), JSON.stringify({ weFirst: state.weFirst, heroes: state.heroes, assign: state.assign,
+        seed: state.seed, revealed: state.revealed, swaps: state.swaps, botAssign: state.botAssign, hiddenPos: state.hiddenPos }));
     } catch (e) { /* ок */ }
   };
+  /** Симуляция, и сейчас ход соперника: ввод закрыт, ходит бот. */
+  const botTurn = () => state.sim && state.heroes.length < ORDER.length && !isOurs(state.heroes.length);
   const used = () => new Set(state.heroes.filter((h) => h > 0));
   const slot = (i) => ORDER[i];
   const isOurs = (i) => slot(i).firstTeam === state.weFirst;
@@ -112,6 +86,8 @@
   function apply(heroId) {
     const target = editIndex ?? state.heroes.length;
     if (target >= ORDER.length) return;
+    if (state.sim && !isOurs(target)) { toast("Сейчас ход соперника: его баны и пики делает сайт", false); return; }
+    if (state.sim) { botLog.length = 0; botNew.clear(); }
     if (used().has(heroId) && state.heroes[target] !== heroId) return;
     const w = warning(target, heroId);
     if (w && pendingWarn !== heroId) {
@@ -134,17 +110,20 @@
     afterChange();
   }
   /** Предупреждение поверх списков (ничего не сдвигает) с кнопками «Забанить X» / «Отмена». */
-  function showWarn(w) {
+  let warnAction = null; // что сделать по кнопке подтверждения; null — внести героя из pendingWarn
+  function showWarn(w, action) {
+    warnAction = action || null;
     if (!w) { $("warn").hidden = true; $("warn").innerHTML = ""; return; }
     $("warn").innerHTML = `<span>${esc(w.text)}</span>
       <button type="button" class="primary" data-act="confirm">${esc(w.action)}</button>
       <button type="button" data-act="cancel">Отмена</button>
-      <span class="muted small">или ещё раз Enter</span>`;
+      ${action ? "" : '<span class="muted small">или ещё раз Enter</span>'}`;
     $("warn").hidden = false;
   }
   $("warn").addEventListener("click", (e) => {
     const act = e.target.closest("button")?.dataset.act;
-    if (act === "confirm" && pendingWarn) apply(pendingWarn);
+    if (act === "confirm" && warnAction) { const f = warnAction; showWarn(null); f(); }
+    else if (act === "confirm" && pendingWarn) apply(pendingWarn);
     if (act === "cancel") { pendingWarn = null; showWarn(null); }
     $("search").focus();
   });
@@ -176,7 +155,18 @@
     }, Math.max(0, lockedUntil - Date.now()));
   }
   const adviceLocked = () => awaiting || Date.now() < lockedUntil;
-  function afterChange() {
+  // таймер хода (FEAT-10): сколько идёт текущий ход; после 25 с — подсветка (в CM на ход 30 с, дальше резерв)
+  let turnStarted = Date.now();
+  setInterval(() => {
+    const t = $("turn-timer");
+    if (state.heroes.length >= ORDER.length) { t.textContent = ""; return; }
+    const sec = Math.floor((Date.now() - turnStarted) / 1000);
+    t.textContent = `на ходу ${sec} с`;
+    t.classList.toggle("late", sec >= 25);
+  }, 1000);
+  function afterChange(keepRedo) {
+    if (!keepRedo) redo.length = 0; // новый ход — отменённые уже не вернуть
+    turnStarted = Date.now();
     pendingWarn = null;
     showWarn(null);
     markStale();
@@ -186,20 +176,37 @@
     save();
     const assign = Object.entries(state.assign).map(([h, p]) => `${h}:${encodeURIComponent(p)}`).join(",");
     history.replaceState(null, "", `#first=${state.weFirst ? "us" : "them"}&heroes=${state.heroes.join(",")}`
-      + (assign ? `&assign=${assign}` : ""));
+      + (assign ? `&assign=${assign}` : "") + (state.map > 1 ? `&map=${state.map}` : "")
+      + (state.sim ? `&sim=${state.seed}` + (state.revealed ? "&rev=1" : "") : ""));
+    renderMaps();
     $("search").value = "";
     selected = 0;
     renderSearch();
     renderBoard();
     requestAdvice();
+    schedulePush();
+    simStep();
     $("search").focus();
   }
+  const redo = []; // отменённые ходы: Ctrl+Shift+Z возвращает (FEAT-09)
   $("undo").onclick = () => {
     if (editIndex !== null) { editIndex = null; renderBoard(); return; }
+    if (!state.heroes.length) return;
+    if (state.sim) { simUndo(); return; }
     const h = state.heroes.pop();
+    redo.push(h);
     if (h > 0) delete state.assign[h];
-    afterChange();
+    afterChange(true);
   };
+  function redoMove() {
+    if (state.sim) return; // в симуляции ответы бота пересчитываются заново, возврат хода не нужен
+    if (!redo.length || state.heroes.length >= ORDER.length) return;
+    const h = redo.pop();
+    if (h > 0 && used().has(h)) { redo.length = 0; return; }
+    state.heroes.push(h);
+    toast(`Возвращён ход ${state.heroes.length}: ${h > 0 ? name(h) : "пропуск"}`, false);
+    afterChange(true);
+  }
   $("skip").onclick = () => {
     if (editIndex !== null) { state.heroes[editIndex] = 0; editIndex = null; afterChange(); return; }
     if (state.heroes.length < ORDER.length) {
@@ -208,56 +215,79 @@
       afterChange();
     }
   };
-  $("reset").onclick = () => { if (confirmReset()) { state.heroes = []; state.assign = {}; editIndex = null; afterChange(); } };
-  // без браузерного confirm(): второй клик в течение 3 секунд подтверждает сброс
-  let resetArmed = 0;
+  $("reset").onclick = () => {
+    if (confirmReset()) {
+      state.heroes = []; state.assign = {}; state.hiddenPos = []; editIndex = null;
+      Object.assign(state, { seed: newSeed(), revealed: false, swaps: [] }); // новая симуляция — новое зерно
+      afterChange();
+    }
+  };
+  // без браузерного confirm(): второй клик в течение 6 секунд подтверждает сброс, на кнопке обратный отсчёт
+  const RESET_WINDOW = 6;
+  let resetArmed = 0, resetTimer = 0;
   function confirmReset() {
     const now = Date.now();
-    if (now - resetArmed < 3000) { resetArmed = 0; $("reset").textContent = "Сбросить"; return true; }
+    clearInterval(resetTimer);
+    if (now - resetArmed < RESET_WINDOW * 1000) { resetArmed = 0; $("reset").textContent = "Сбросить"; return true; }
     resetArmed = now;
-    $("reset").textContent = "Точно сбросить?";
-    setTimeout(() => { $("reset").textContent = "Сбросить"; }, 3000);
+    let left = RESET_WINDOW;
+    $("reset").textContent = `Точно сбросить? (${left})`;
+    resetTimer = setInterval(() => {
+      left--;
+      if (left <= 0) { clearInterval(resetTimer); resetArmed = 0; $("reset").textContent = "Сбросить"; }
+      else $("reset").textContent = `Точно сбросить? (${left})`;
+    }, 1000);
     return false;
   }
   document.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === "z") { e.preventDefault(); redoMove(); return; }
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") { e.preventDefault(); $("undo").click(); }
+    // «/» — к поиску героя из любого места страницы (FEAT-09)
+    if (e.key === "/" && !e.target.closest("input, textarea, select")) { e.preventDefault(); $("search").focus(); }
     if (e.key === "Escape" && !$("drawer").hidden) closeDrawer();
+    if (e.key === "Escape") document.querySelector(".legend")?.removeAttribute("open");
   });
 
+  const legend = document.querySelector(".legend");
+  legend.querySelector(".legend-close").addEventListener("click", () => legend.removeAttribute("open"));
+  document.addEventListener("click", (e) => { if (legend.open && !legend.contains(e.target)) legend.removeAttribute("open"); });
+
+  const headerHeight = () => document.documentElement.style.setProperty("--header-h",
+    (document.querySelector("header.top")?.offsetHeight || 0) + "px");
+  headerHeight();
+  window.addEventListener("resize", headerHeight);
+
   // ------------------------------------------------------------ поиск
+  /** Герои, которых сейчас советуют (на коротком вводе — выше в подсказке). */
+  function advised() {
+    const a = advice;
+    if (!a) return new Set();
+    return new Set([...a.pickSuggestions, ...a.banSuggestions, ...a.theirNextPicks].map((r) => r.heroId));
+  }
   function search(q) {
-    q = q.trim().toLowerCase().replace(/'/g, "");
-    if (!q) return [];
     const taken = used();
     const current = editIndex !== null ? state.heroes[editIndex] : -1;
-    const exact = ALIASES.get(q);
-    const prefixAliases = new Set();
-    if (q.length >= 2) {
-      for (const [alias, id] of ALIASES) if (alias.startsWith(q)) prefixAliases.add(id);
-    }
-    const scored = [];
-    for (const h of HEROES) {
-      if (taken.has(h.id) && h.id !== current) continue;
-      const n = h.name.toLowerCase().replace(/'/g, "");
-      let score = -1;
-      if (h.id === exact || n === q) score = 0;
-      else if (n.startsWith(q)) score = 1;
-      else if (prefixAliases.has(h.id)) score = 1.5;
-      else if (n.split(/[\s-]+/).some((w) => w.startsWith(q))) score = 2;
-      else if (n.includes(q)) score = 3;
-      if (score >= 0) scored.push([score, h]);
-    }
-    return scored.sort((a, b) => a[0] - b[0] || a[1].name.localeCompare(b[1].name)).map((x) => x[1]);
+    if (current > 0) taken.delete(current);
+    return SEARCH.find(q, { exclude: taken, boost: advised() });
+  }
+  /** Уже внесённые герои, подходящие под ввод: показываем серой строкой «уже взят (ход N)». */
+  function takenMatches(q) {
+    const taken = used();
+    return SEARCH.find(q).filter((h) => taken.has(h.id)).slice(0, 2);
   }
   function renderSearch() {
-    const found = search($("search").value).slice(0, 6);
+    const q = $("search").value;
+    const found = search(q).slice(0, 6);
     if (selected >= found.length) selected = 0;
+    const gone = q.trim() ? takenMatches(q) : [];
+    const note = (h) => { const i = state.heroes.indexOf(h.id); return `${slot(i).pick ? "взят" : "забанен"} (ход ${i + 1})`; };
     $("suggest").innerHTML = found.map((h, i) =>
       `<li class="${i === selected ? "sel" : ""}" data-id="${h.id}">${icon(h.id)} ${esc(h.name)}${freeOwners(h.id)
-        ? ` <span class="muted small">наш: ${esc(freeOwners(h.id).join(", "))}</span>` : ""}</li>`).join("");
-    const q = $("search").value.trim();
+        ? ` <span class="muted small">наш: ${esc(freeOwners(h.id).join(", "))}</span>` : ""}</li>`).join("")
+      + gone.map((h) => `<li class="taken">${icon(h.id)} ${esc(h.name)} <span class="small">уже ${note(h)}</span></li>`).join("")
+      + (q.trim() && !found.length && !gone.length ? `<li class="none">Не нашёл героя «${esc(q.trim())}»</li>` : "");
     document.querySelectorAll("#grid .hero-tile").forEach((b) => {
-      b.classList.toggle("match", q !== "" && found.some((h) => h.id === Number(b.dataset.id)));
+      b.classList.toggle("match", q.trim() !== "" && found.some((h) => h.id === Number(b.dataset.id)));
     });
   }
   // pendingWarn не сбрасываем: повторный ввод того же героя после предупреждения — тоже подтверждение
@@ -294,6 +324,7 @@
       if (i === step && editIndex === null) cls.push("current");
       if (i === editIndex) cls.push("editing");
       if (i > step) cls.push("future");
+      if (state.sim && botNew.has(i)) cls.push("bot-new");
       const label = h > 0 ? `${icon(h)}<span class="who">${esc(name(h))}</span>` : h === 0 ? '<span class="who muted">пропуск</span>' : "";
       return `<button class="${cls.join(" ")}" data-i="${i}" ${i >= step ? "disabled" : ""}
         title="Ход ${i + 1}: ${s.pick ? "пик" : "бан"} ${isOurs(i) ? "наш" : "их"}">
@@ -301,11 +332,13 @@
     }).join("");
     $("ribbon-hint").textContent = editIndex !== null
       ? `Исправляете ход ${editIndex + 1} (${slot(editIndex).pick ? "пик" : "бан"} ${isOurs(editIndex) ? "наш" : "их"}): выберите героя. «Пропустить ход» — сделать пропуском, Esc — отмена.`
+      : state.sim ? "Симуляция: за соперника ходит сайт. «Отменить ход» откатывает ваш последний ход вместе с ответами соперника."
       : "Клик по сделанному ходу — исправить его.";
   }
   $("ribbon").addEventListener("click", (e) => {
     const b = e.target.closest(".slot");
     if (!b || b.disabled) return;
+    if (state.sim) { toast("В симуляции старые ходы не исправляются: «Отменить ход» откатывает и ответы соперника", false); return; }
     const i = Number(b.dataset.i);
     editIndex = editIndex === i ? null : i;
     pendingWarn = null;
@@ -317,21 +350,56 @@
   function renderTurn() {
     const step = state.heroes.length;
     const turn = $("turn");
+    const done = step >= ORDER.length && editIndex === null;
+    root.classList.toggle("finished", done);
+    $("search").disabled = done || botTurn();
+    $("search").placeholder = done ? (state.sim ? "Драфт завершён · позиции героев можно поправить, оценка ниже"
+        : "Драфт завершён · клик по ходу в ленте, чтобы исправить")
+      : "Герой: имя, начало имени, WK, вк, кунк… ↑↓ и Enter — внести ход";
+    $("skip").disabled = done || botTurn();
+    $("skip").textContent = editIndex !== null ? "Сделать пропуском" : "Пропустить ход";
     if (step >= ORDER.length) {
-      turn.textContent = "Драфт завершён";
-      turn.className = "turn";
+      turn.textContent = editIndex !== null ? `Исправление хода ${editIndex + 1}` : "Драфт завершён";
+      turn.className = "turn" + (editIndex !== null ? " editing-turn" : "");
+      return;
+    }
+    if (editIndex !== null) {
+      // BUG-08: в режиме исправления крупный индикатор говорит, какой ход правим
+      turn.textContent = `Исправление хода ${editIndex + 1}: ${slot(editIndex).pick ? "ПИК" : "БАН"} ${isOurs(editIndex) ? "НАШ" : "ИХ"}`;
+      turn.className = "turn editing-turn";
       return;
     }
     const s = slot(step), ours = isOurs(step);
-    turn.textContent = `Ход ${step + 1}/${ORDER.length}: ${s.pick ? "ПИК" : "БАН"} ${ours ? "НАШ" : "ИХ"}`;
+    turn.textContent = `Ход ${step + 1}/${ORDER.length}: ${s.pick ? "ПИК" : "БАН"} ${ours ? "НАШ" : "ИХ"}`
+      + (botTurn() ? " · соперник думает…" : "");
     turn.className = "turn " + (ours ? "ours-turn" : "their-turn");
   }
 
   // ------------------------------------------------------------ слоты игроков
   /** Чем играет последние 14 дней: иконки с числом игр и пометками 🔥 (новый) и 👥 (с командой). */
   const recentLine = (p) => p.recent.length
-    ? p.recent.map((h) => `<span class="mini" title="${esc(h.name)}: ${h.g14} игр за 14 дней, ${h.g60} за 2 месяца${h.team ? `, ${h.team} с командой` : ""}">${icon(h.id)}${h.g14 || h.g60}${h.fresh ? "🔥" : ""}${h.team ? "👥" : ""}</span>`).join("")
+    ? p.recent.map((h) => `<span class="mini" title="${esc(h.name)}: ${h.g14} игр за 14 дней, ${h.g60} за 2 месяца${h.team ? `, ${h.team} с командой` : ""}">${icon(h.id)}${h.g60}${h.fresh ? "🔥" : ""}${h.team ? "👥" : ""}</span>`).join("")
     : '<span class="muted">нет игр</span>';
+
+  // ------------------------------------------------------------ состав команды (FEAT-03)
+  const ROLES = [["Disabler", "контроль"], ["Initiator", "инициация"], ["Durable", "плотные"], ["Nuker", "урон"],
+    ["Pusher", "пуш"], ["Carry", "керри"], ["Escape", "мобильные"]];
+  /** Сколько героев с каждой ролью и чего не хватает: после 3 пиков — нет контроля/инициации/плотного/керри. */
+  function composition(picks, ours) {
+    if (!picks.length) return "";
+    const roles = picks.map((h) => byId.get(h)?.roles || []);
+    const count = (r) => roles.filter((x) => x.includes(r)).length;
+    const chips = ROLES.map(([r, label]) => `<span class="comp-chip${count(r) ? "" : " zero"}" title="${label}: ${roles.length ? picks.filter((h, i) => roles[i].includes(r)).map(name).join(", ") || "нет" : ""}">${label} ${count(r)}</span>`).join("");
+    const missing = [];
+    if (picks.length >= 3) {
+      if (!count("Disabler")) missing.push("нет контроля");
+      if (!count("Initiator")) missing.push("нет инициации");
+      if (!count("Durable")) missing.push("нет плотного героя");
+      if (!count("Carry")) missing.push("нет керри");
+    }
+    const warn = missing.length ? `<div class="comp-warn${ours ? " ours" : ""}">⚠ ${missing.join(" · ")}</div>` : "";
+    return `<div class="muted">Состав</div><div class="comp-chips">${chips}</div>${warn}`;
+  }
 
   function playerSlot(p, side, picks) {
     const a = side.assignment.find((x) => x.player === p.nick);
@@ -340,10 +408,19 @@
     const hero = a ? a.heroId : null;
     const options = picks.map((h) =>
       `<option value="${h}" ${hero === h && a.fixed ? "selected" : ""}>${esc(name(h))}</option>`).join("");
+    // ручной выбор героя игрока — компактный список в строке героя, чтобы строка игрока не переносилась (UX-07)
+    const assign = picks.length
+      ? `<select class="slot-assign" data-player="${esc(p.nick)}" title="Кто на каком герое: выбрать вручную"><option value="">авто</option>${options}</select>` : "";
+    // их герой: клик по портрету — «Чем отвечать» для нашей позиции на этой линии (CNT-06)
+    const answerPos = { 1: 3, 2: 2, 3: 1, 4: 1, 5: 3 }[p.pos] || 0;
+    const portrait = hero && side.theirs
+      ? `<button class="counter-open link" data-hero="${hero}" data-pos="${answerPos}" title="Чем отвечать на ${esc(name(hero))}">${heroPortrait(hero, name(hero))}</button>`
+      : hero ? heroPortrait(hero, name(hero)) : "";
     const heroLine = hero
-      ? `<div class="slot-hero">${heroPortrait(hero, name(hero))}<div><b>${esc(name(hero))}</b>
-           <div class="small muted">${a.fixed ? "вручную" : pct(a.probability) + (a.alternative ? ` · или ${esc(a.alternative)} ${pct(a.alternativeProbability)}` : "")}</div></div></div>`
-      : `<div class="slot-hero empty"><span class="hero-portrait empty"></span><span class="muted small">${free && free.probability < 0.95 ? `свободен ${pct(free.probability)}` : "без героя"}</span></div>`;
+      ? `<div class="slot-hero">${portrait}<div><b>${esc(name(hero))}</b>
+           <div class="small muted">${a.fixed ? (side.theirs && state.sim && state.botAssign && state.botAssign[a.heroId] === a.player
+             ? "расстановка соперника" : "вручную") : pct(a.probability) + (a.alternative ? ` · или ${esc(a.alternative)} ${pct(a.alternativeProbability)}` : "")}</div></div>${assign}</div>`
+      : `<div class="slot-hero empty"><span class="hero-portrait empty"></span><span class="muted small">${free && free.probability < 0.95 ? `свободен ${pct(free.probability)}` : "без героя"}</span>${assign}</div>`;
     const odds = !hero && outlook && outlook.heroes.length
       ? `<div class="odds small">вероятно: ${outlook.heroes.slice(0, 3).map((h) =>
           `<button class="hero-pick link" data-id="${h.heroId}">${icon(h.heroId)}${esc(h.name)}</button> ${pct(h.probability)}`).join(" ")}</div>`
@@ -354,9 +431,8 @@
         <button class="nick link" data-account="${p.accountId}" title="Карточка игрока">${esc(p.nick)}</button>
         ${rankIcon(p.rankTier, p.rank)}
         ${profiles(p.accountId)}
-        ${picks.length ? `<select class="slot-assign" data-player="${esc(p.nick)}" title="Кто на каком герое: выбрать вручную"><option value="">авто</option>${options}</select>` : ""}
       </div>
-      <div class="recent small" title="Последние 14 дней (без Турбо)">14д: ${recentLine(p)}</div>
+      <div class="recent small" title="Игры за 2 месяца без Турбо (подробнее — наведите на героя)">2 мес: ${recentLine(p)}</div>
       ${odds}
     </div>`;
   }
@@ -372,11 +448,18 @@
     const sel = e.target.closest(".slot-assign");
     if (!sel) return;
     const player = sel.dataset.player;
+    // кто сейчас на выбранном герое и какой герой сейчас у этого игрока (вручную или по прогнозу)
+    const all = [...(advice?.ourAssignment || []), ...(advice?.theirAssignment || [])];
+    const hero = Number(sel.value);
+    const prevOwner = all.find((x) => x.heroId === hero)?.player;
+    const prevHero = all.find((x) => x.player === player)?.heroId;
     // один игрок — один герой: снимаем ручные назначения этого игрока и героя
     Object.entries(state.assign).forEach(([h, p]) => { if (p === player) delete state.assign[h]; });
     if (sel.value) {
       delete state.assign[sel.value];
       state.assign[sel.value] = player;
+      // позиция занята — меняем героев местами: прежний герой игрока уходит к прежнему владельцу выбранного
+      if (prevOwner && prevHero && prevOwner !== player && prevHero !== hero) state.assign[prevHero] = prevOwner;
     }
     afterChange();
   });
@@ -389,24 +472,40 @@
       if (h <= 0) return;
       parts[(isOurs(i) ? "our" : "their") + (slot(i).pick ? "Picks" : "Bans")].push(h);
     });
-    const banRow = (list) => list.map((h) => `<span class="ban-chip" title="${esc(name(h))}">${icon(h)}</span>`).join("") || '<span class="muted">—</span>';
+    const banRow = (list) => list.map((h) => `<span class="ban-chip" title="${esc(name(h))}">${icon(h)}<span class="ban-name">${esc(name(h))}</span></span>`).join("") || '<span class="muted">—</span>';
     $("our-bans").innerHTML = banRow(parts.ourBans);
     $("their-bans").innerHTML = banRow(parts.theirBans);
+    $("our-comp").innerHTML = composition(parts.ourPicks, true);
+    $("their-comp").innerHTML = composition(parts.theirPicks, false);
     const ours = { assignment: advice?.ourAssignment ?? [], remaining: advice?.ourRemaining ?? [], outlook: [] };
-    const theirs = { assignment: advice?.theirAssignment ?? [], remaining: advice?.theirRemaining ?? [], outlook: advice?.theirPlayers ?? [] };
+    const theirs = { theirs: true, assignment: advice?.theirAssignment ?? [], remaining: advice?.theirRemaining ?? [], outlook: advice?.theirPlayers ?? [] };
     $("our-slots").innerHTML = (ROSTERS.ours || []).map((p) => playerSlot(p, ours, parts.ourPicks)).join("");
     $("their-slots").innerHTML = (ROSTERS[state.opponent] || []).map((p) => playerSlot(p, theirs, parts.theirPicks)).join("");
-    $("their-title").textContent = $("opponent").selectedOptions[0]?.textContent || "Они";
+    // UX-05: позиции или замена у соперника не те — правятся в «Состав на игру» на его странице
+    $("their-title").innerHTML = `${esc($("opponent").selectedOptions[0]?.textContent || "Они")}
+      <a class="small muted lineup-link" href="/opponent/${encodeURIComponent(state.opponent)}#lineup" target="_blank" rel="noopener"
+         title="Позиции или замена не те? Поправьте «Состав на игру» — драфт применит после перезагрузки">состав ✎</a>`;
     const taken = used();
     document.querySelectorAll("#grid .hero-tile").forEach((b) => {
       const id = Number(b.dataset.id);
       b.disabled = (taken.has(id) && !(editIndex !== null && state.heroes[editIndex] === id))
-        || (state.heroes.length >= ORDER.length && editIndex === null);
+        || (state.heroes.length >= ORDER.length && editIndex === null) || botTurn();
     });
     layoutPanels();
   }
 
-  /** Нужная на этом ходу панель — первой и с рамкой; панели, ходы которых закончились, — прячем. */
+  // закреплённые раскрытыми панели (клик по заголовку свёрнутой панели), запоминаются в браузере
+  const pinned = new Set((() => { try { return JSON.parse(localStorage.getItem("draft:pinned") || "[]"); } catch (e) { return []; } })());
+  document.querySelectorAll(".advice-panel").forEach((panel) => panel.addEventListener("click", (e) => {
+    const h = e.target.closest("h3");
+    if (!h || e.target.closest("button, a")) return;
+    const id = panel.id;
+    if (panel.classList.contains("focus")) return;
+    pinned.has(id) ? pinned.delete(id) : pinned.add(id);
+    try { localStorage.setItem("draft:pinned", JSON.stringify([...pinned])); } catch (err) { /* ок */ }
+    layoutPanels();
+  }));
+  /** Нужная на этом ходу панель — с рамкой и раскрыта; остальные свёрнуты до заголовка; закончившиеся — прячем. */
   function layoutPanels() {
     const step = state.heroes.length;
     const finished = step >= ORDER.length;
@@ -422,7 +521,11 @@
     $("panel-picks").hidden = a.ourPicksLeft === 0;
     // панели не переставляем (иначе клик попадает не туда): нужная на этом ходу только подсвечивается
     const focus = ours ? (s.pick ? "panel-picks" : "panel-bans") : "panel-their";
-    ["panel-their", "panel-bans", "panel-picks"].forEach((p) => $(p).classList.toggle("focus", p === focus));
+    ["panel-their", "panel-bans", "panel-picks"].forEach((p) => {
+      $(p).classList.toggle("focus", p === focus);
+      // не нужные на этом ходу панели — только заголовок (порядок не меняется); закреплённые кликом — раскрыты
+      $(p).classList.toggle("collapsed", p !== focus && !pinned.has(p));
+    });
     $("their-next-box").classList.toggle("focus-box", !ours && s.pick);
     $("their-bans-box").classList.toggle("focus-box", !ours && !s.pick);
   }
@@ -430,26 +533,92 @@
   // ------------------------------------------------------------ подсказки
   // причины этого драфта (контрит, связка, линия, пик-отказ) сервер ставит первыми — показываем три, остальные по клику
   const SHOWN = 3;
+  const POS_NAME = { 1: "керри", 2: "мид", 3: "оффлейн", 4: "четвёрка", 5: "пятёрка" };
   const CONTEXT = /^(контрит|связка|линия|пик-отказ)/;
-  const chip = (x) => `<span class="reason${CONTEXT.test(x) ? " key" : ""}">${esc(x)}</span>`;
+  const chip = (x) => /^×\d+ в турнире/.test(x)
+    ? `<button type="button" class="reason tourney" title="Показать карты турнира">${esc(x)}</button>`
+    : `<span class="reason${CONTEXT.test(x) ? " key" : ""}">${esc(x)}</span>`;
   const reasons = (r, n) => (r.reasons || []).slice(0, n).map(chip).join(" ");
   const more = (r, n) => (r.reasons || []).length > n
-    ? `<button type="button" class="reason more" data-more="${esc(JSON.stringify(r.reasons.slice(n)))}" title="Показать остальные причины">+${r.reasons.length - n}</button>` : "";
+    ? `<button type="button" class="reason more" aria-expanded="false" data-n="${r.reasons.length - n}" data-more="${esc(JSON.stringify(r.reasons.slice(n)))}" title="Показать остальные причины">ещё ${r.reasons.length - n} ▾</button>` : "";
   const ourMark = (r) => { const o = freeOwners(r.heroId); return o ? `<span class="reason ours-mark" title="Герой наших: ${esc(o.join(", "))}">⚠ наш: ${esc(o.map((x) => x.split(" (")[0]).join(", "))}</span>` : ""; };
   const pickable = (r, extra) => `<li><button class="hero-pick" data-id="${r.heroId}">${icon(r.heroId)}${esc(r.name)}</button>
     ${extra} ${reasons(r, SHOWN)} ${more(r, SHOWN)}</li>`;
   root.addEventListener("click", (e) => {
     const m = e.target.closest(".reason.more[data-more]");
-    if (m) m.outerHTML = JSON.parse(m.dataset.more).map(chip).join(" ");
+    if (!m) return;
+    // раскрыть: причины встают после кнопки, кнопка становится «скрыть ▴»; второй клик сворачивает обратно
+    const open = m.getAttribute("aria-expanded") === "true";
+    if (open) {
+      m.previousElementSibling?.classList.contains("more-list") && m.previousElementSibling.remove();
+      m.textContent = `ещё ${m.dataset.n} ▾`;
+      m.title = "Показать остальные причины";
+    } else {
+      m.insertAdjacentHTML("beforebegin", `<span class="more-list">${JSON.parse(m.dataset.more).map(chip).join(" ")} </span>`);
+      m.textContent = "скрыть ▴";
+      m.title = "Скрыть дополнительные причины";
+    }
+    m.setAttribute("aria-expanded", String(!open));
+  });
+
+  // ------------------------------------------------------------ баны по позициям
+  // у каждого их игрока до 10 банов (5 сразу, остальные по «ещё»); строка остаётся после его пика (свап).
+  // Позицию можно скрыть («уверен, что мид не поменяют»): скрытые хранятся с драфтом, «Сбросить» их возвращает.
+  const POS_SHOWN = 5;
+  const posExpanded = new Set();
+  let lastPosBans = [];
+  function renderPosBans(pb) {
+    lastPosBans = pb;
+    $("pos-bans-box").hidden = pb.length === 0;
+    const hidden = new Set(state.hiddenPos || []);
+    const hero = (r) => `<span class="pos-hero"><button class="hero-pick" data-id="${r.heroId}" title="${esc(r.reasons.join(" · "))}">${icon(r.heroId)}${esc(r.name)}</button>
+        <span class="reason">${esc(r.reasons[0] || "")}</span>${ourMark(r)}</span>`;
+    $("pos-bans").innerHTML = pb.filter((p) => !hidden.has(p.position)).map((p) => {
+      const open = posExpanded.has(p.position);
+      const list = open ? p.heroes : p.heroes.slice(0, POS_SHOWN);
+      const rest = p.heroes.length - POS_SHOWN;
+      const toggle = rest > 0 ? `<button type="button" class="reason more pos-more" data-pos="${p.position}" aria-expanded="${open}">${open ? "скрыть ▴" : `ещё ${rest} ▾`}</button>` : "";
+      return `<li data-pos="${p.position}"><span class="pos-label"><b class="pos">${p.position}</b> ${POS_NAME[p.position] || ""} · ${esc(p.player)}
+          <button type="button" class="pos-hide" data-pos="${p.position}" title="Скрыть эту позицию: уверены, что здесь свапа не будет">✕ скрыть</button>${
+        p.picked ? `<span class="small muted picked-note">взял ${icon(p.picked)}${esc(p.pickedName)}, может свапнуть</span>` : ""}</span>
+        <span class="pos-heroes">${list.map(hero).join("") || '<span class="muted small">нет свободных героев его пула</span>'}${toggle}</span></li>`;
+    }).join("");
+    const gone = pb.filter((p) => hidden.has(p.position));
+    $("pos-bans-hidden").innerHTML = gone.length ? `Скрыты: ${gone.map((p) =>
+      `<button type="button" class="pos-show" data-pos="${p.position}" title="Вернуть позицию">${p.position} ${POS_NAME[p.position] || ""} ↺</button>`).join(" ")}
+      <button type="button" class="pos-show-all">вернуть все</button>` : "";
+  }
+  $("pos-bans-box").addEventListener("click", (e) => {
+    const t = e.target.closest("button");
+    if (!t || t.classList.contains("hero-pick")) return;
+    const pos = Number(t.dataset.pos);
+    if (t.classList.contains("pos-more")) posExpanded.has(pos) ? posExpanded.delete(pos) : posExpanded.add(pos);
+    else if (t.classList.contains("pos-hide")) state.hiddenPos = [...new Set([...(state.hiddenPos || []), pos])];
+    else if (t.classList.contains("pos-show")) state.hiddenPos = (state.hiddenPos || []).filter((x) => x !== pos);
+    else if (t.classList.contains("pos-show-all")) state.hiddenPos = [];
+    else return;
+    e.stopPropagation(); // не путать с «ещё N» у общих причин
+    save();
+    renderPosBans(lastPosBans);
   });
 
   function renderAdvice(a) {
     advice = a;
     $("their-next").innerHTML = a.theirNextPicks.map((r) =>
       pickable(r, `<b>${pct(r.score)}</b> <span class="muted">${esc(r.player)}</span>`)).join("");
-    $("bans").innerHTML = a.banSuggestions.map((r) => pickable(r, ourMark(r))).join("");
+    // важность бана 0–100 от лучшего в списке: вероятность их пика × вред для нас (UX-03)
+    const topBan = Math.max(...a.banSuggestions.map((r) => r.score), 1e-9);
+    $("bans").innerHTML = a.banSuggestions.map((r) => pickable(r,
+      `<b class="ban-score" title="Важность бана: шанс их пика × вред для нас (угроза игрока на герое, контрпик наших, наш плохой винрейт против него). 100 — самый важный в списке">${Math.round(100 * r.score / topBan)}</b> ${ourMark(r)}`)).join("");
+    renderPosBans(a.positionBans || []);
     $("picks").innerHTML = a.pickSuggestions.map((r) =>
       pickable(r, `<span class="muted">${esc(r.player)}</span>`)).join("");
+    const pp = a.pairPicks || [];
+    $("pair-box").hidden = pp.length === 0;
+    $("pair-picks").innerHTML = pp.map((p) => `<li>
+      <button class="hero-pick" data-id="${p.a}">${icon(p.a)}${esc(p.aName)}</button> <span class="muted small">${esc(p.aPlayer)}</span> +
+      <button class="hero-pick" data-id="${p.b}">${icon(p.b)}${esc(p.bName)}</button> <span class="muted small">${esc(p.bPlayer)}</span>
+      ${p.note ? `<span class="reason key">${esc(p.note)}</span>` : ""}</li>`).join("");
     const lo = a.laneOptions || [];
     $("lane-box").hidden = lo.length === 0;
     $("lane-options").innerHTML = lo.map((o) => {
@@ -470,6 +639,21 @@
 
   function renderSummary(a) {
     if (!a.finished) return;
+    $("lanes-box").hidden = state.sim;
+    $("overall").hidden = state.sim;
+    $("sim-result").hidden = !state.sim;
+    // FEAT-12: общая оценка — среднее преимущество по линиям
+    const lanesWithData = a.lanes.filter((l) => l.ours.length && l.theirs.length);
+    const avg = lanesWithData.length ? lanesWithData.reduce((x, l) => x + l.advantage, 0) / lanesWithData.length : 0;
+    const verdict = avg > 0.01 ? ["strong", "драфт в нашу пользу"] : avg < -0.01 ? ["weak", "драфт в их пользу"] : ["", "драфт ровный"];
+    const bestLane = lanesWithData.slice().sort((x, y) => y.advantage - x.advantage)[0];
+    const worstLane = lanesWithData.slice().sort((x, y) => x.advantage - y.advantage)[0];
+    $("overall").innerHTML = `<b class="${verdict[0]}">${verdict[1]}</b> <span class="muted small">(в среднем по линиям ${(avg >= 0 ? "+" : "") + (100 * avg).toFixed(1)}%)</span>`
+      + (bestLane && worstLane && bestLane !== worstLane ? `<div class="small">Сильнее всего: ${esc(bestLane.name)}. Слабее всего: ${esc(worstLane.name)} — там играть аккуратнее.</div>` : "");
+    // E-23: пропущенный пик — в игре за него выдают случайного героя, итог без него неполный
+    const skipped = state.heroes.map((h, i) => (h === 0 && ORDER[i].pick && isOurs(i) ? i + 1 : 0)).filter(Boolean);
+    $("summary-warn").innerHTML = skipped.length
+      ? `<p class="warn">Наш пик ${skipped.join(", ")} пропущен: в игре за него выдали случайного героя. Впишите его — клик по ходу ${skipped[0]} в ленте.</p>` : "";
     const heroes = (names) => names.map((n) => { const h = HEROES.find((x) => x.name === n); return h ? icon(h.id) + esc(n) : esc(n); }).join(", ");
     $("lanes").innerHTML = "<tr><th>Линия</th><th>Мы</th><th>Они</th><th>Преим.</th><th></th></tr>" + a.lanes.map((l) =>
       `<tr><td>${esc(l.name)}</td><td>${heroes(l.ours)}</td><td>${heroes(l.theirs)}</td>
@@ -478,6 +662,20 @@
     $("threats").innerHTML = a.theirThreats.slice(0, 3).map((t) =>
       `<li>${icon(t.heroId)}<b>${esc(t.name)}</b> <span class="muted">${esc(t.player)}</span> угроза ${t.score.toFixed(2)}</li>`).join("");
   }
+  // FEAT-11: итог для чата команды — жирные заголовки и список (Discord и Telegram понимают **…**)
+  $("copy-chat").onclick = async () => {
+    const a = advice;
+    if (!a || !a.finished) return;
+    const team = (list) => list.map((x) => `${x.name} (${x.player})`).join(", ");
+    const text = [
+      `**Драфт против ${$("opponent").selectedOptions[0].textContent}** — ${$("overall").innerText.split("\n")[0]}`,
+      `**Мы:** ${team(a.ourAssignment)}`,
+      `**Они:** ${team(a.theirAssignment)}`,
+      ...a.lanes.map((l) => `• **${l.name}:** ${l.ours.join(" + ") || "—"} vs ${l.theirs.join(" + ") || "—"}${l.note ? " — " + l.note : ""}`),
+      `**Опасные у них:** ${a.theirThreats.slice(0, 3).map((t) => `${t.name} (${t.player})`).join(", ")}`,
+    ].join("\n");
+    $("copied").textContent = (await copyText(text)) ? "скопировано для чата" : "не удалось — выделите текст ниже";
+  };
   $("copy").onclick = async () => {
     const a = advice;
     if (!a || !a.finished) return;
@@ -489,13 +687,34 @@
       ...a.lanes.map((l) => `${l.name}: ${l.ours.join(" + ")} vs ${l.theirs.join(" + ")} (${(l.advantage >= 0 ? "+" : "") + (100 * l.advantage).toFixed(1)}%)${l.note ? ", " + l.note : ""}`),
       `Опасные у них: ${a.theirThreats.slice(0, 3).map((t) => `${t.name} (${t.player})`).join(", ")}`,
     ].join("\n");
-    try {
-      await navigator.clipboard.writeText(text);
+    if (await copyText(text)) {
       $("copied").textContent = "скопировано";
-    } catch (e) {
-      $("copied").textContent = "не удалось скопировать";
+    } else {
+      // не вышло даже запасным способом: показываем текст выделенным, Ctrl+C скопирует
+      $("copied").innerHTML = `<textarea class="copy-box" rows="8" readonly>${esc(text)}</textarea>`;
+      const box = $("copied").querySelector("textarea");
+      box.focus();
+      box.select();
     }
   };
+
+  /** Буфер обмена: Clipboard API работает только по HTTPS, по HTTP — запасной путь через скрытый textarea. */
+  async function copyText(text) {
+    try {
+      if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); return true; }
+    } catch (e) { /* пробуем запасной путь */ }
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    ta.remove();
+    return ok;
+  }
 
   // ------------------------------------------------------------ карточка игрока (боковая панель)
   async function openDrawer(accountId) {
@@ -533,12 +752,65 @@
       $("drawer-body").innerHTML = `<p class="weak">Не удалось загрузить игрока: ${esc(e.message)}</p>`;
     }
   }
+  /** «Чем отвечать на X»: лучшие на линии, по игре и из наших героев для нашей позиции на этой линии. */
+  async function openCounters(heroId, pos) {
+    $("drawer").hidden = false;
+    $("drawer-body").innerHTML = '<p class="muted">Загрузка…</p>';
+    try {
+      const res = await fetch(`/api/counters?h=${heroId}&pos=${pos}`);
+      if (!res.ok) throw new Error(res.status);
+      const v = await res.json();
+      const sp = (x) => x == null ? "—" : (x >= 0 ? "+" : "") + (100 * x).toFixed(1) + "%";
+      const list = (rows, extra) => rows.length ? `<ol class="advice">${rows.map((r) => `<li><button class="hero-pick" data-id="${r.heroId}">${icon(r.heroId)}${esc(r.name)}</button>
+          ${extra(r)}</li>`).join("")}</ol>` : '<p class="muted small">нет данных</p>';
+      $("drawer-body").innerHTML = `
+        <h3>Чем отвечать на ${icon(heroId)}${esc(name(heroId))}</h3>
+        <p class="small muted">Наша позиция ${v.position}${v.player ? ` (${esc(v.player)})` : ""} на этой линии ·
+          <a href="/counters?h=${encodeURIComponent(name(heroId))}&pos=${v.position}" target="_blank" rel="noopener">все контрпики ↗</a></p>
+        <h4>Из наших героев <span class="hint">игрок на них играет</span></h4>
+        ${list(v.ours, (r) => `<span class="reason">линия ${sp(r.laneAdv)}</span> <span class="reason">по игре ${sp(r.gameAdv)}</span> <span class="muted small">${r.games} игр${r.winrate != null ? ", " + Math.round(100 * r.winrate) + "%" : ""}</span>`)}
+        ${v.hasLane ? `<h4>На линии</h4>${list(v.lane, (r) => `<span class="reason key">${sp(r.laneAdv)}</span> <span class="muted small">${r.laneMatches} линий</span>`)}` : '<p class="muted small">Данные о линиях пока не загружены.</p>'}
+        <h4>По игре</h4>
+        ${list(v.game, (r) => `<span class="reason key">${sp(r.gameAdv)}</span>`)}
+        <p class="small muted">Клик по герою — внести в текущий ход.</p>`;
+    } catch (e) {
+      $("drawer-body").innerHTML = `<p class="weak">Не удалось загрузить контрпики: ${esc(e.message)}</p>`;
+    }
+  }
+  async function openHeroMaps(nick, heroId) {
+    $("drawer").hidden = false;
+    $("drawer-body").innerHTML = '<p class="muted">Загрузка…</p>';
+    try {
+      const res = await fetch(`/api/hero-maps?nick=${encodeURIComponent(nick)}&hero=${heroId}`);
+      if (!res.ok) throw new Error(res.status);
+      const v = await res.json();
+      $("drawer-body").innerHTML = `<h3>${icon(heroId)}${esc(v.hero)} у ${esc(v.nick)} в турнире</h3>
+        ${v.maps.length ? `<table class="compact"><tr><th>Дата</th><th>Соперник</th><th></th><th>Мин</th><th></th></tr>
+        ${v.maps.map((m) => `<tr><td class="small">${esc(m.date)}</td><td>${esc(m.opponent)}</td>
+          <td class="${m.won ? "strong" : "weak"}">${m.won ? "W" : "L"}</td><td class="num">${m.minutes}</td>
+          <td><a href="https://www.opendota.com/matches/${m.matchId}" target="_blank" rel="noopener">OpenDota</a></td></tr>`).join("")}</table>`
+          : '<p class="muted">Карт не нашлось.</p>'}`;
+    } catch (e) {
+      $("drawer-body").innerHTML = `<p class="weak">Не удалось загрузить карты: ${esc(e.message)}</p>`;
+    }
+  }
   function closeDrawer() { $("drawer").hidden = true; }
   $("drawer-close").onclick = closeDrawer;
 
   root.addEventListener("click", (e) => {
     const nick = e.target.closest(".nick[data-account]");
     if (nick) { openDrawer(nick.dataset.account); return; }
+    // FEAT-17: «×2 в турнире» — карты лиги, где игрок брал героя
+    const tourney = e.target.closest(".reason.tourney");
+    if (tourney) {
+      const li = tourney.closest("li");
+      const heroId = Number(li?.querySelector(".hero-pick")?.dataset.id);
+      const player = li?.querySelector(".muted")?.textContent?.trim() || "";
+      if (heroId && player) openHeroMaps(player, heroId);
+      return;
+    }
+    const counter = e.target.closest(".counter-open[data-hero]");
+    if (counter) { openCounters(Number(counter.dataset.hero), Number(counter.dataset.pos)); return; }
     const b = e.target.closest(".hero-pick, #grid .hero-tile");
     if (b && b.closest(".advice-panel") && adviceLocked()) return; // список ещё не обновился после хода
     if (b && !b.disabled) apply(Number(b.dataset.id));
@@ -560,11 +832,123 @@
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || res.status);
       renderAdvice(data);
-      $("timing").textContent = `пересчёт ${Math.round(performance.now() - started)} мс`;
+      $("timing").textContent = "";
+      $("timing").title = `пересчёт ${Math.round(performance.now() - started)} мс`;
     } catch (e) {
       if (e.name !== "AbortError") { $("timing").textContent = "ошибка: " + e.message; unmarkStale(); }
     }
   }
+
+  // ------------------------------------------------------------ симуляция против соперника
+  const simBody = () => JSON.stringify({ opponent: state.opponent, weFirst: state.weFirst, heroes: state.heroes,
+    assign: state.assign, seed: state.seed });
+  let botTimer = 0;
+  const botLog = [], botNew = new Set(); // ходы соперника после нашего последнего хода: в сообщении и подсветкой в ленте
+  /** После каждого изменения: на ходу соперника — его ход через 0,7 с; в конце — раскрыть план бота и оценить. */
+  function simStep() {
+    clearTimeout(botTimer);
+    if (!state.sim) return;
+    if (botTurn()) {
+      const at = state.heroes.length;
+      botTimer = setTimeout(() => botMove(at), 700);
+    } else if (state.heroes.length >= ORDER.length) {
+      state.revealed ? requestEvaluation() : revealPlan();
+    }
+  }
+  async function botMove(at) {
+    try {
+      const res = await fetch("/api/sim/move", { method: "POST", headers: { "Content-Type": "application/json" }, body: simBody() });
+      const m = await res.json();
+      if (!res.ok) throw new Error(m.error || res.status);
+      if (!state.sim || state.heroes.length !== at) return; // пока думал, ход отменили
+      state.heroes.push(m.heroId);
+      botLog.push(`${m.pick ? "пик" : "бан"} ${m.name} (ход ${at + 1})`);
+      botNew.add(at);
+      toast(`Соперник: ${botLog.join(" · ")}`, false);
+      afterChange();
+    } catch (e) { $("timing").textContent = "ход соперника не удался: " + e.message; }
+  }
+  /** Отмена: убираем ответы соперника после нашего последнего хода и сам этот ход. */
+  function simUndo() {
+    botLog.length = 0;
+    botNew.clear();
+    while (state.heroes.length && !isOurs(state.heroes.length - 1)) state.heroes.pop();
+    if (state.heroes.length) state.heroes.pop();
+    if (state.revealed) {
+      // план бота был раскрыт — его расстановку снимаем, драфт продолжается
+      state.heroes.forEach((h, i) => { if (h > 0 && !isOurs(i)) delete state.assign[h]; });
+      Object.assign(state, { revealed: false, swaps: [] });
+    }
+    afterChange(true);
+  }
+  /** Конец драфта: соперник раскрывает свою расстановку (в ней могут быть свапы против прогноза). */
+  async function revealPlan() {
+    try {
+      const res = await fetch("/api/sim/plan", { method: "POST", headers: { "Content-Type": "application/json" }, body: simBody() });
+      const plan = await res.json();
+      if (!res.ok) throw new Error(plan.error || res.status);
+      const botAssign = {};
+      plan.placements.forEach((p) => { state.assign[p.heroId] = p.player; botAssign[p.heroId] = p.player; });
+      Object.assign(state, { revealed: true, swaps: plan.swaps, botAssign });
+      afterChange(true);
+    } catch (e) { $("sim-result").innerHTML = `<p class="weak">Не удалось получить расстановку соперника: ${esc(e.message)}</p>`; }
+  }
+  let evalTimer = 0;
+  /** Оценка драфта по текущим позициям; правки позиций пересчитывают её через 150 мс. */
+  function requestEvaluation() {
+    clearTimeout(evalTimer);
+    evalTimer = setTimeout(async () => {
+      try {
+        const res = await fetch("/api/sim/evaluate", { method: "POST", headers: { "Content-Type": "application/json" }, body: simBody() });
+        const ev = await res.json();
+        if (!res.ok) throw new Error(ev.error || res.status);
+        renderEvaluation(ev);
+      } catch (e) { $("sim-result").innerHTML = `<p class="weak">Не удалось оценить драфт: ${esc(e.message)}</p>`; }
+    }, 150);
+  }
+  const side = (s) => Math.abs(s) < 0.15 ? "" : s > 0 ? "strong" : "weak";
+  function renderEvaluation(ev) {
+    const row = (s) => `<tr><td><b>${esc(s.title)}</b></td><td class="${side(s.score)}">${esc(s.verdict)}</td>
+      <td class="small">${s.reasons.map(esc).join("<br>")}</td></tr>`;
+    const swaps = state.swaps.length
+      ? `<div class="sim-swaps"><b>Соперник поменял позиции против прогноза:</b><ul>${state.swaps.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>`
+      : '<div class="small muted">Соперник сыграл расстановку по прогнозу.</div>';
+    $("sim-result").innerHTML = `
+      <div class="sim-total ${side(ev.total.score)}">${esc(ev.total.verdict)}</div>
+      ${ev.total.reasons.length ? `<div class="small">${ev.total.reasons.map(esc).join(" · ")}</div>` : ""}
+      ${swaps}
+      <div class="small muted">Позиции можно поправить у героев в колонках «Мы» и «Они»: оценка пересчитается сразу.</div>
+      <table class="sim-eval"><tr><th colspan="3">Линии</th></tr>${ev.lanes.map(row).join("")}
+        <tr><th colspan="3">Игра</th></tr>${ev.sections.map(row).join("")}</table>`;
+  }
+  $("mode").onchange = (e) => {
+    save();
+    state.sim = e.target.value === "sim";
+    $("hints-wrap").hidden = !state.sim;
+    root.classList.toggle("hide-hints", state.sim && $("no-hints").checked);
+    editIndex = null;
+    advice = null;
+    load(); // у симуляции свой драфт, ручной не теряется
+    $("first").value = state.weFirst ? "us" : "them";
+    toast(state.sim ? "Симуляция: вы ходите за нас, за соперника — сайт" : "Ручной режим: ходы обеих команд вносите вы", false);
+    afterChange();
+  };
+  try { $("no-hints").checked = localStorage.getItem("draft:no-hints") === "1"; } catch (e) { /* ок */ }
+  $("no-hints").onchange = () => {
+    root.classList.toggle("hide-hints", state.sim && $("no-hints").checked);
+    try { localStorage.setItem("draft:no-hints", $("no-hints").checked ? "1" : "0"); } catch (e) { /* ок */ }
+  };
+
+  try { if (localStorage.getItem("draft:posbans") === "closed") $("pos-bans-box").open = false; } catch (e) { /* ок */ }
+  $("pos-bans-box").addEventListener("toggle", () => {
+    try { localStorage.setItem("draft:posbans", $("pos-bans-box").open ? "open" : "closed"); } catch (e) { /* ок */ }
+  });
+
+  // сетка героев: свернуть/развернуть, выбор запоминается (UX-06)
+  try { if (localStorage.getItem("draft:grid") === "closed") $("grid-box").open = false; } catch (e) { /* ок */ }
+  $("grid-box").addEventListener("toggle", () => {
+    try { localStorage.setItem("draft:grid", $("grid-box").open ? "open" : "closed"); } catch (e) { /* ок */ }
+  });
 
   // ------------------------------------------------------------ старт
   const ATTR = { str: "Сила", agi: "Ловкость", int: "Интеллект", all: "Универсальные" };
@@ -574,22 +958,155 @@
 
   $("opponent").innerHTML = OPPONENTS.map((o) => `<option value="${esc(o.href)}">${esc(o.label)}</option>`).join("");
   $("opponent").value = state.opponent;
+  /** Соперник — в адресе (?opponent=…): после F5 откроется тот же. */
+  const setOpponentInUrl = () => {
+    const u = new URL(location.href);
+    u.searchParams.set("opponent", state.opponent);
+    history.replaceState(null, "", u.pathname + u.search + location.hash);
+  };
   $("opponent").onchange = (e) => {
     state.opponent = e.target.value;
-    state.heroes = [];
-    state.assign = {};
-    state.weFirst = true;
+    setOpponentInUrl();
+    state.map = 1;
     editIndex = null;
     advice = null;
     load();
     $("first").value = state.weFirst ? "us" : "them";
     afterChange();
   };
-  $("first").onchange = (e) => { state.weFirst = e.target.value === "us"; afterChange(); };
+  $("first").onchange = (e) => {
+    const weFirst = e.target.value === "us";
+    const made = state.heroes.length;
+    if (made === 0) { state.weFirst = weFirst; afterChange(); return; }
+    // все внесённые ходы поменяют сторону: без подтверждения не меняем
+    $("first").value = state.weFirst ? "us" : "them";
+    showWarn({ text: `Сменить первый ход? Все внесённые ходы (${made}) поменяют сторону: наши станут их.`,
+      action: "Сменить первый ход" }, () => { state.weFirst = weFirst; $("first").value = weFirst ? "us" : "them"; afterChange(); });
+  };
 
-  load();
-  // Драфт из адреса: /draft?opponent=X#first=us&heroes=23,22,0,42&assign=42:kren (0 — пропущенный ход)
+  // ------------------------------------------------------------ общий драфт по ссылке (FEAT-14)
+  // ?share=код: драфт хранится на сервере. Свои изменения отправляем, чужие подтягиваем раз в 2 секунды.
+  const CLIENT = Math.random().toString(36).slice(2, 10);
+  let shareCode = new URLSearchParams(location.search).get("share");
+  let shareVersion = 0, sharePushTimer = 0, applyingRemote = false;
+  const shareBody = () => JSON.stringify({ opponent: state.opponent, map: state.map, weFirst: state.weFirst,
+    heroes: state.heroes, assign: state.assign, client: CLIENT });
+  async function pushShared() {
+    if (!shareCode || applyingRemote) return;
+    try {
+      const res = await fetch(`/api/share/${shareCode}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: shareBody() });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || res.status);
+      shareVersion = data.version;
+      $("share-status").textContent = "общий драфт · синхронизирован";
+    } catch (e) { $("share-status").textContent = "общий драфт · не удалось сохранить: " + e.message; }
+  }
+  function schedulePush() {
+    if (!shareCode || applyingRemote) return;
+    clearTimeout(sharePushTimer);
+    sharePushTimer = setTimeout(pushShared, 150);
+  }
+  async function pullShared(first) {
+    if (!shareCode) return;
+    try {
+      const res = await fetch(`/api/share/${shareCode}`);
+      if (!res.ok) throw new Error(res.status === 404 ? "ссылка устарела" : res.status);
+      const d = await res.json();
+      if (d.version <= shareVersion || (!first && d.client === CLIENT)) { shareVersion = Math.max(shareVersion, d.version); return; }
+      shareVersion = d.version;
+      applyingRemote = true;
+      Object.assign(state, { opponent: d.opponent, map: d.map, weFirst: d.weFirst, heroes: d.heroes, assign: d.assign || {} });
+      $("opponent").value = state.opponent;
+      $("first").value = state.weFirst ? "us" : "them";
+      editIndex = null;
+      afterChange();
+      applyingRemote = false;
+      $("share-status").textContent = "общий драфт · обновлён";
+    } catch (e) {
+      applyingRemote = false;
+      $("share-status").textContent = "общий драфт · " + e.message;
+    }
+  }
+  /** Сохранить драфт на сервер (создать общий, если ещё нет): для «В историю» и «Поделиться». */
+  async function ensureShared() {
+    if (shareCode) { await pushShared(); return true; }
+    try {
+      const res = await fetch("/api/share", { method: "POST", headers: { "Content-Type": "application/json" }, body: shareBody() });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || res.status);
+      shareCode = data.code;
+      shareVersion = data.version;
+      const u = new URL(location.href);
+      u.searchParams.set("share", shareCode);
+      history.replaceState(null, "", u.pathname + u.search + location.hash);
+      setInterval(() => pullShared(false), 2000);
+      return true;
+    } catch (e) { $("share-status").textContent = "не удалось сохранить: " + e.message; return false; }
+  }
+  $("save-history").onclick = async () => {
+    if (await ensureShared()) toast("Драфт сохранён в «Историю драфтов»", false);
+  };
+  $("share").onclick = async () => {
+    if (!shareCode && !(await ensureShared())) return;
+    const link = `${location.origin}/draft?share=${shareCode}`;
+    const ok = await copyText(link);
+    $("share-status").textContent = ok ? "ссылка скопирована — отправьте команде" : link;
+    toast(ok ? "Ссылка на общий драфт скопирована" : "Ссылка: " + link, false);
+  };
+
+  // ------------------------------------------------------------ серия: карта 1 / 2 / 3
+  /** Пики карты: [наши, их] по сохранённому драфту. */
+  function picksOf(saved) {
+    const ours = [], theirs = [];
+    (saved?.heroes || []).forEach((h, i) => {
+      if (h > 0 && i < ORDER.length && ORDER[i].pick) ((ORDER[i].firstTeam === (saved.weFirst !== false)) ? ours : theirs).push(h);
+    });
+    return [ours, theirs];
+  }
+  function renderMaps() {
+    const tabs = [];
+    const others = [];
+    for (let m = 1; m <= MAPS; m++) {
+      const saved = m === state.map ? state : readSaved(state.opponent, m);
+      const [ours, theirs] = picksOf(saved);
+      const moves = (saved?.heroes || []).length;
+      tabs.push(`<button type="button" class="map-tab${m === state.map ? " current" : ""}" data-map="${m}"
+        title="Карта ${m}: ${moves ? `ходов ${moves}/24` : "пусто"}">${m}${moves ? (moves >= ORDER.length ? " ✓" : ` · ${moves}`) : ""}</button>`);
+      if (m !== state.map && (ours.length || theirs.length)) {
+        others.push(`<span class="map-past"><b>Карта ${m}:</b> мы ${ours.map((h) => icon(h)).join("") || "—"}
+          · они ${theirs.map((h) => icon(h)).join("") || "—"}</span>`);
+      }
+    }
+    $("maps").innerHTML = '<span class="muted small">Карта</span>' + tabs.join("");
+    $("maps-past").innerHTML = others.join("");
+    $("maps-past").hidden = others.length === 0;
+  }
+  $("maps").addEventListener("click", (e) => {
+    const b = e.target.closest(".map-tab");
+    if (!b || Number(b.dataset.map) === state.map) return;
+    save();
+    state.map = Number(b.dataset.map);
+    editIndex = null;
+    advice = null;
+    load();
+    $("first").value = state.weFirst ? "us" : "them";
+    toast(`Карта ${state.map}: ${state.heroes.length ? "продолжаем драфт" : "новый драфт"}`, false);
+    afterChange();
+  });
+
+  // Драфт из адреса: /draft?opponent=X#first=us&heroes=23,22,0,42&assign=42:kren&map=2 (0 — пропущенный ход)
   const hash = new URLSearchParams(location.hash.slice(1));
+  const hashMap = Number(hash.get("map"));
+  if (hashMap >= 1 && hashMap <= MAPS) state.map = hashMap;
+  state.sim = hash.has("sim");
+  load();
+  if (state.sim) {
+    state.seed = Number(hash.get("sim")) || state.seed;
+    state.revealed = hash.get("rev") === "1" && state.revealed;
+  }
+  $("mode").value = state.sim ? "sim" : "manual";
+  $("hints-wrap").hidden = !state.sim;
+  root.classList.toggle("hide-hints", state.sim && $("no-hints").checked);
   if (hash.has("heroes")) {
     state.heroes = hash.get("heroes").split(",").filter((x) => x !== "").map(Number).slice(0, ORDER.length);
     state.weFirst = hash.get("first") !== "them";
@@ -601,7 +1118,18 @@
     save();
   }
   $("first").value = state.weFirst ? "us" : "them";
+  const wanted = new URLSearchParams(location.search).get("opponent");
+  if (wanted && wanted.toLowerCase() !== state.opponent.toLowerCase()) {
+    toast(`Соперник «${wanted}» не найден, открыт ${$("opponent").selectedOptions[0]?.textContent || state.opponent}`, false);
+  }
+  setOpponentInUrl();
+  if (shareCode) {
+    pullShared(true);
+    setInterval(() => pullShared(false), 2000);
+  }
+  renderMaps();
   renderSearch();
   renderBoard();
   requestAdvice();
+  simStep();
 })();

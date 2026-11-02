@@ -9,7 +9,9 @@ document.addEventListener("click", (e) => {
   table.querySelectorAll("th").forEach((h) => delete h.dataset.sort);
   th.dataset.sort = asc ? "asc" : "desc";
   const value = (row) => {
-    const text = row.children[index]?.innerText.trim() ?? "";
+    const cell = row.children[index];
+    if (cell?.dataset.sortValue !== undefined) return parseFloat(cell.dataset.sortValue); // ранг: по тиру и звёздам
+    const text = cell?.innerText.trim() ?? "";
     const n = parseFloat(text.replace(",", ".").replace("%", "").replace("+", ""));
     return Number.isNaN(n) || !/^[+\-]?\d/.test(text) ? text.toLowerCase() : n;
   };

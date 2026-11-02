@@ -131,4 +131,36 @@ class LineupTest {
         assertTrue(teamPage.contains("изменён на сайте"));
         site.saveLineup(team, null);
     }
+
+    @Test
+    void crossSiteFormPostIsRejected() throws Exception {
+        String team = java.net.URLEncoder.encode(site.ctx().ours.team().name(), java.nio.charset.StandardCharsets.UTF_8);
+        StringBuilder form = new StringBuilder("team=" + team + "&back=%2Fteam&action=save");
+        withDavajj().forEach((pos, id) -> form.append("&p").append(pos).append("=").append(id));
+        HttpRequest.Builder req = HttpRequest.newBuilder(URI.create("http://127.0.0.1:" + app.port() + "/lineup"))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .header("X-Forwarded-Host", "dota.example") // как за прокси с доменом
+                .POST(HttpRequest.BodyPublishers.ofString(form.toString()));
+        HttpResponse<String> evil = HTTP.send(req.copy().header("Origin", "https://evil.example").build(),
+                HttpResponse.BodyHandlers.ofString());
+        assertEquals(403, evil.statusCode(), "чужой сайт");
+        assertFalse(site.ctx().ours.lineup().changed(), "состав не изменился");
+        HttpResponse<String> same = HTTP.send(req.copy().header("Origin", "https://dota.example").build(),
+                HttpResponse.BodyHandlers.ofString());
+        assertEquals(302, same.statusCode(), "свой сайт");
+        site.saveLineup(site.ctx().ours.team().name(), null);
+    }
+
+    @Test
+    void savedDraftAppearsInHistory() throws Exception {
+        String body = "{\"opponent\":\"SD_Team\",\"map\":1,\"weFirst\":true,\"heroes\":[23,22,1,2,31,32,33,42,106],\"assign\":{}}";
+        HttpResponse<String> saved = HTTP.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:" + app.port() + "/api/share"))
+                .header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(body)).build(),
+                HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, saved.statusCode(), saved.body());
+        String page = HTTP.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:" + app.port() + "/drafts")).build(),
+                HttpResponse.BodyHandlers.ofString()).body();
+        assertTrue(page.contains("SD Team") && page.contains("/draft?share="), "драфт в истории");
+    }
 }
+

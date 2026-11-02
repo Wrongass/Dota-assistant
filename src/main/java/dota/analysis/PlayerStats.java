@@ -72,6 +72,11 @@ final class PlayerStats {
     /** Сколько матчей сыграно в одной команде с каждым из сокомандников (account_id → games). */
     final Map<Long, Integer> withTeammate = new HashMap<>();
     final Map<Long, Integer> winsWithTeammate = new HashMap<>();
+    /**
+     * Совместные матчи с каждым сокомандником: account_id → (match_id → победа). Для «Сыгранности»: пару считаем по
+     * объединению матчей обоих игроков — иначе матч, где второй игрок скрыт в профиле, виден только одному.
+     */
+    final Map<Long, Map<Long, Boolean>> matchesWithTeammate = new HashMap<>();
     /** Игры по линии в разобранных матчах за год: 1 safe, 2 mid, 3 off, 4 jungle. */
     final int[] yearLaneRole = new int[5];
     /** Недавние матчи, новые первыми. */
@@ -152,6 +157,7 @@ final class PlayerStats {
                 if (slotRadiant == radiant && acc != p.accountId() && teammates.contains(acc)) {
                     s.withTeammate.merge(acc, 1, Integer::sum);
                     s.winsWithTeammate.merge(acc, win ? 1 : 0, Integer::sum);
+                    s.matchesWithTeammate.computeIfAbsent(acc, k -> new HashMap<>()).put(m.get("match_id").asLong(), win);
                 }
             }
         }

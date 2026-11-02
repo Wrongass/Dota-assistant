@@ -7,7 +7,7 @@
         <thead><tr><th>Поз.</th><th>Игрок</th><th>Ранг</th><th>Кандидаты (пригодность; ▲ — сильный в патче)</th><th>В турнире</th></tr></thead>
         <tbody>
         @for(var p : t.pools())
-            <tr><td>${p.pos()}</td><td>${p.nick()}</td><td>${Fmt.rankShort(p.rankTier())}</td>
+            <tr><td>${p.pos()}</td><td><a href="/player/${java.net.URLEncoder.encode(p.nick(), java.nio.charset.StandardCharsets.UTF_8).replace("+", "%20")}">${p.nick()}</a></td><td>${Fmt.rankShort(p.rankTier())}</td>
                 <td>@template.tag.pool(heroes = p.heroes())</td>
                 <td>${p.tourney().isEmpty() ? "—" : Fmt.countList(p.tourney(), false)}</td></tr>
         @endfor
@@ -16,7 +16,7 @@
 </div>
 
 <h2>Самые опасные герои (кандидаты в баны)</h2>
-<p class="muted small">Угроза = 60% умение игрока на герое + 40% сила героя в мете на его ранге; +0.1, если герой уже был в турнире.</p>
+<p class="muted small">Угроза = (60% умение игрока на герое + 40% сила героя в мете на его ранге) × свежесть (100% при 10+ играх за год или пике в турнире, 60% без игр за год); +0.1, если герой уже был в турнире.</p>
 <div class="panel table-wrap">
     <table class="sortable">
         <thead><tr><th>#</th><th>Герой</th><th>Игрок</th><th class="num">Угроза</th><th class="num">Умение</th>
@@ -24,7 +24,7 @@
         <tbody>
         @for(int i = 0; i < t.threats().size(); i++)
             !{var r = t.threats().get(i);}
-            <tr><td>${i + 1}</td><td><b>${r.name()}</b></td><td>${r.nick()}</td><td class="num">${Fmt.dec(r.score())}</td>
+            <tr><td>${i + 1}</td><td><b>${r.name()}</b></td><td><a href="/player/${java.net.URLEncoder.encode(r.nick(), java.nio.charset.StandardCharsets.UTF_8).replace("+", "%20")}">${r.nick()}</a></td><td class="num">${Fmt.dec(r.score())}</td>
                 <td class="num">${Fmt.num(r.skill())}</td><td class="num">${Fmt.dec(r.meta())}</td>
                 <td>${r.games()} / ${r.yearGames()}</td><td class="num">${Fmt.ratio(r.yearWins(), r.yearGames())}</td>
                 <td>${r.tourneyPicks() == 0 ? "" : "×" + r.tourneyPicks()}</td><td>${r.positions()}</td></tr>
@@ -61,7 +61,7 @@
         <thead><tr><th>Их герой</th><th>Игрок</th><th>Наши ответы</th></tr></thead>
         <tbody>
         @for(var r : t.counters())
-            <tr><td><b>${r.name()}</b></td><td>${r.nick()}</td>
+            <tr><td><b>${r.name()}</b></td><td><a href="/player/${java.net.URLEncoder.encode(r.nick(), java.nio.charset.StandardCharsets.UTF_8).replace("+", "%20")}">${r.nick()}</a></td>
                 <td>
                     @if(r.answers().isEmpty())—@endif
                     @for(var a : r.answers())

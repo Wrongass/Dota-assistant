@@ -33,6 +33,11 @@ public final class Squad {
     final List<PlayerStats> bench = new ArrayList<>();
     /** Состав выбран на сайте, а не взят из конфига. */
     boolean lineupChanged;
+    /** Имена из конфига для матчей лиги: team_id → «SD Team (GGsel)», account_id → ник (заполняет AnalysisContext). */
+    final Map<Long, String> teamNames = new HashMap<>();
+    final Map<Long, String> nicks = new HashMap<>();
+    /** Карты команды, которых нет в OpenDota (счёт с сайта турнира). */
+    final List<PlayerConfig.ManualMap> manualMaps = new ArrayList<>();
 
     Squad(Meta meta, List<PlayerStats> players, PlayerConfig.TeamInfo team, boolean ours, League league, String today) {
         this.meta = meta;
@@ -320,9 +325,16 @@ public final class Squad {
         int[][] games = new int[n][n], wins = new int[n][n];
         for (int a = 0; a < n; a++) {
             for (int b = 0; b < n; b++) {
-                long id = ordered.get(b).config.accountId();
-                games[a][b] = a == b ? -1 : ordered.get(a).withTeammate.getOrDefault(id, 0);
-                wins[a][b] = a == b ? -1 : ordered.get(a).winsWithTeammate.getOrDefault(id, 0);
+                if (a == b) {
+                    games[a][b] = wins[a][b] = -1;
+                    continue;
+                }
+                // объединение матчей пары из истории обоих: матрица симметрична
+                PlayerStats pa = ordered.get(a), pb = ordered.get(b);
+                Map<Long, Boolean> together = new HashMap<>(pa.matchesWithTeammate.getOrDefault(pb.config.accountId(), Map.of()));
+                together.putAll(pb.matchesWithTeammate.getOrDefault(pa.config.accountId(), Map.of()));
+                games[a][b] = together.size();
+                wins[a][b] = (int) together.values().stream().filter(w -> w).count();
             }
         }
         return new Views.Roster(teamName(), today, meta.patch, rows, posInferred.containsValue(true), shares,
@@ -488,8 +500,17 @@ public final class Squad {
                 .limit(30)
                 .map(e -> pairRow(e.getKey().a(), e.getKey().b(), meta.counterAdvantage(e.getKey().a(), e.getKey().b(), 400), e.getValue()))
                 .toList();
+        List<Views.AllRow> all = meta.heroes.keySet().stream()
+                .sorted(Comparator.comparing(meta::name))
+                .map(h -> {
+                    int mp = meta.mainPos(h);
+                    return new Views.AllRow(h, meta.name(h), meta.positions(h), meta.winrate(h, teamFrom, teamTo),
+                            meta.pickRate(h, teamFrom, teamTo), mp, mp == 0 ? Double.NaN : meta.posWinrate(h, mp),
+                            mp == 0 ? Double.NaN : metaStrength(h, mp, teamFrom, teamTo), meta.proContest(h));
+                })
+                .toList();
         return new Views.MetaView(meta.patch, today, rangeName(teamFrom, teamTo), meta.proMatches, positions, pro,
-                synergies, counters);
+                synergies, counters, all);
     }
 
     private Views.PairRow pairRow(int a, int b, double value, Meta.PairStats s) {
@@ -581,7 +602,12 @@ public final class Squad {
                 avg, nemesis, bestAgainst, bans, threats);
     }
 
+    /** Ник из конфига (любой команды, и запасные тоже), иначе Steam-ник из матча. */
     private String nickOrPersona(League.Player p) {
+        String nick = nicks.get(p.accountId());
+        if (nick != null) {
+            return nick;
+        }
         return players.stream().filter(s -> s.config.accountId() == p.accountId()).findFirst()
                 .map(PlayerStats::nick).orElse(p.personaName().isEmpty() ? String.valueOf(p.accountId()) : p.personaName());
     }
@@ -604,7 +630,7 @@ public final class Squad {
             }
             List<Views.MatchPlayer> enemies = new ArrayList<>();
             for (League.Player p : m.side(!rad)) {
-                enemies.add(matchPlayer(p.personaName(), p));
+                enemies.add(matchPlayer(nickOrPersona(p), p));
                 enemyPicks.computeIfAbsent(p.heroId(), k -> new int[2])[0]++;
                 enemyPicks.get(p.heroId())[1] += won ? 0 : 1;
             }
@@ -615,11 +641,25 @@ public final class Squad {
                     (d.radiant() == rad ? ourBans : bansAgainst).merge(d.heroId(), 1, Integer::sum);
                 }
             }
-            views.add(new Views.MatchView(m.matchId(), m.date(), m.opponentName(id), won, rad, m.durationSec() / 60,
-                    ourSide, enemies, draft));
+            String opponent = teamNames.getOrDefault(m.opponentId(id), m.opponentName(id));
+            views.add(new Views.MatchView(m.matchId(), m.date(), opponent, won, rad, m.durationSec() / 60,
+                    ourSide, enemies, draft, draft.isEmpty() ? "драфт не записан в OpenDota: пики есть, банов нет" : null));
         }
-        return new Views.Tournament(teamName(), league.id, matches.stream().filter(m -> m.won(id)).count(),
-                league.remakes > 0, views, gameCounts(picks), timesCounts(ourBans), timesCounts(bansAgainst), gameCounts(enemyPicks));
+        int draftMaps = (int) views.stream().filter(v -> !v.draft().isEmpty()).count();
+        long wins = matches.stream().filter(m -> m.won(id)).count();
+        // карты без записи в OpenDota: только счёт, как на странице группы
+        for (PlayerConfig.ManualMap mm : manualMaps) {
+            boolean won = team.name().equals(mm.winner());
+            String other = won ? mm.loser() : mm.winner();
+            String opponent = teamNames.values().stream().filter(n -> n.equals(other) || n.startsWith(other + " (")).findFirst()
+                    .orElse(other);
+            views.add(new Views.MatchView(0, mm.date(), opponent, won, false, 0, List.of(), List.of(), List.of(),
+                    mm.note() == null ? "карта не попала в OpenDota, счёт с сайта турнира" : mm.note()));
+            wins += won ? 1 : 0;
+        }
+        views.sort(Comparator.comparing(Views.MatchView::date));
+        return new Views.Tournament(teamName(), league.id, wins, league.remakes > 0, views, gameCounts(picks),
+                timesCounts(ourBans), timesCounts(bansAgainst), gameCounts(enemyPicks), draftMaps);
     }
 
     private Views.MatchPlayer matchPlayer(String nick, League.Player p) {
@@ -672,7 +712,7 @@ public final class Squad {
     }
 
     /**
-     * Угроза = 60% умение игрока на герое + 40% сила героя в мете на его ранге; +0.1, если герой был в турнире.
+     * Угроза = (60% умение игрока на герое + 40% сила героя в мете на его ранге) × свежесть (100% при 10+ играх за год или пике в турнире, 60% без игр за год); +0.1, если герой уже был в турнире.
      * Герой может быть у нескольких игроков — остаётся самый опасный.
      */
     List<Threat> threatList(Map<Long, Map<Integer, Integer>> tourneyPicks) {
@@ -687,7 +727,10 @@ public final class Squad {
                 int mp = Math.max(1, meta.mainPos(h.heroId));
                 double ms = metaStrength(h.heroId, mp, r[0], r[1]);
                 int picksInTourney = tp.getOrDefault(h.heroId, 0);
-                double score = 0.6 * h.skill / 100 + 0.4 * ms + (picksInTourney > 0 ? 0.1 : 0);
+                // свежесть: герой, на котором за год не играли, — не угроза сейчас, даже с высоким рангом на герое
+                // за всё время. 10+ игр за год или пик в турнире — полный вес, 0 игр за год — 60%
+                double fresh = picksInTourney > 0 ? 1 : Math.min(1, h.yearGames / 10.0);
+                double score = (0.6 * h.skill / 100 + 0.4 * ms) * (0.6 + 0.4 * fresh) + (picksInTourney > 0 ? 0.1 : 0);
                 list.add(new Threat(p, h.heroId, score, h.skill, ms, picksInTourney));
             }
         }

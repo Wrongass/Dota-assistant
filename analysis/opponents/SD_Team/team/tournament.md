@@ -1,8 +1,8 @@
 # Турнир: SD Team (GGsel)
 
-Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 8, побед: 4. Переигровки (пустая статистика) не учитываются.
+Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 9, побед: 5. Переигровки (пустая статистика) не учитываются.
 
-## 2026-10-10 14:44 UTC — против UPPO: поражение
+## 2026-10-10 14:44 UTC — против UPPO TEAM (УППО): поражение
 
 Radiant, 61 мин, [OpenDota](https://www.opendota.com/matches/9038297492), [Dotabuff](https://ru.dotabuff.com/matches/9038297492)
 
@@ -20,7 +20,7 @@ Radiant, 61 мин, [OpenDota](https://www.opendota.com/matches/9038297492), [Do
 
 **b Necrophos** → **b Winter Wyvern** → b Bounty Hunter → b Huskar → **b Mirana** → b Ember Spirit → b Dragon Knight → **P Undying** → P Lina → **b Snapfire** → **b Lifestealer** → b Outworld Devourer → P Lion → **P Tidehunter** → **P Rubick** → P Slark → P Dark Willow → **P Sand King** → **b Timbersaw** → b Sven → **b Axe** → b Phantom Lancer → **P Clinkz** → P Kunkka
 
-## 2026-10-10 16:11 UTC — против UPPO: победа
+## 2026-10-10 16:11 UTC — против UPPO TEAM (УППО): победа
 
 Radiant, 43 мин, [OpenDota](https://www.opendota.com/matches/9038466126), [Dotabuff](https://ru.dotabuff.com/matches/9038466126)
 
@@ -38,7 +38,11 @@ Radiant, 43 мин, [OpenDota](https://www.opendota.com/matches/9038466126), [Do
 
 **b Winter Wyvern** → **b Necrophos** → b Bounty Hunter → b Huskar → **b Lina** → b Dragon Knight → b Tidehunter → **P Mirana** → P Rubick → **b Nature's Prophet** → **b Lifestealer** → b Outworld Devourer → P Lion → **P Ember Spirit** → **P Crystal Maiden** → P Viper → P Sven → **P Dawnbreaker** → **b Kunkka** → b Luna → **b Centaur Warrunner** → b Slark → **P Windranger** → P Underlord
 
-## 2026-10-17 11:58 UTC — против Team Polyus: поражение
+## 2026-10-17 — против Team Polyus (НИИ Полюс им. М.Ф. Стельмаха): победа
+
+BO2 закончился 1:1, вторая карта не попала в OpenDota (счёт с сайта турнира).
+
+## 2026-10-17 11:58 UTC — против Team Polyus (НИИ Полюс им. М.Ф. Стельмаха): поражение
 
 Radiant, 35 мин, [OpenDota](https://www.opendota.com/matches/9049021074), [Dotabuff](https://ru.dotabuff.com/matches/9049021074)
 
@@ -50,15 +54,17 @@ Radiant, 35 мин, [OpenDota](https://www.opendota.com/matches/9049021074), [Do
 | Caraxes | Huskar | mid | 451 | 5/11/9 |
 | Nynge | Dragon Knight | safe | 438 | 3/9/4 |
 
-Соперник: Tiny (Unlearnable), Necrophos (0123), Ring Master (Sladkiy_arbyzik), Ogre Magi (ГYYYYYСЬ), Queen of Pain (татарский стиль)
+Соперник: Tiny (Unlearnable), Necrophos (ryota), Ring Master (Sladkiy_arbyzik), Ogre Magi (ГYYYYYСЬ), Queen of Pain (татарский стиль)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 
 **b Techies** → **b Hoodwink** → b Rubick → b Outworld Devourer → **b Undying** → b Brewmaster → b Doom → **P Dragon Knight** → P Ogre Magi → **b Lina** → **b Sniper** → b Nyx Assassin → P Necrophos → **P Windranger** → **P Dark Willow** → P Ring Master → P Tiny → **P Huskar** → **b Viper** → b Muerta → **b Timbersaw** → b Wraith King → **P Slardar** → P Queen of Pain
 
-## 2026-10-24 07:22 UTC — против Team Visual: поражение
+## 2026-10-24 07:22 UTC — против Team Visual (Долг): поражение
 
 Dire, 58 мин, [OpenDota](https://www.opendota.com/matches/9059152056), [Dotabuff](https://ru.dotabuff.com/matches/9059152056)
+
+драфт не записан в OpenDota: пики есть, банов нет.
 
 | Игрок | Герой | Линия | GPM | K/D/A |
 |---|---|---|---|---|
@@ -68,13 +74,9 @@ Dire, 58 мин, [OpenDota](https://www.opendota.com/matches/9059152056), [Dotab
 | IRD | Rubick | off | 395 | 6/9/10 |
 | montekri | Grimstroke | safe | 301 | 3/12/6 |
 
-Соперник: Dawnbreaker (Wrongass), Centaur Warrunner (Большой Дима), Vengeful Spirit (BABAYKA), Lifestealer (kren), Lich (Enaria)
+Соперник: Dawnbreaker (Wrongass), Centaur Warrunner (Артист), Vengeful Spirit (Babayka), Lifestealer (kren), Lich (Enaria)
 
-Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
-
-
-
-## 2026-10-24 08:35 UTC — против Team Visual: победа
+## 2026-10-24 08:35 UTC — против Team Visual (Долг): победа
 
 Radiant, 40 мин, [OpenDota](https://www.opendota.com/matches/9059226622), [Dotabuff](https://ru.dotabuff.com/matches/9059226622)
 
@@ -86,7 +88,7 @@ Radiant, 40 мин, [OpenDota](https://www.opendota.com/matches/9059226622), [Do
 | XANDR | Dark Seer | off | 550 | 7/3/21 |
 | montekri | Warlock | safe | 430 | 4/3/28 |
 
-Соперник: Lina (Wrongass), Underlord (Большой Дима), Lifestealer (kren), Lich (Enaria), Vengeful Spirit (BABAYKA)
+Соперник: Lina (Wrongass), Underlord (Артист), Lifestealer (kren), Lich (Enaria), Vengeful Spirit (Babayka)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 
@@ -110,7 +112,7 @@ Dire, 39 мин, [OpenDota](https://www.opendota.com/matches/9069562149), [Dotab
 
 **b Grimstroke** → **b Disruptor** → b Pangolier → b Huskar → **b Beastmaster** → b Windranger → b Sand King → **P Dragon Knight** → P Spirit Breaker → **b Outworld Devourer** → **b Lifestealer** → b Witch Doctor → P Lich → **P Ring Master** → **P Dark Willow** → P Techies → P Death Prophet → **P Ember Spirit** → **b Spectre** → b Dark Seer → **b Sven** → b Doom → **P Dawnbreaker** → P Ursa
 
-## 2026-10-31 08:28 UTC — против Team Polyus: поражение
+## 2026-10-31 08:28 UTC — против Team Polyus (НИИ Полюс им. М.Ф. Стельмаха): поражение
 
 Dire, 65 мин, [OpenDota](https://www.opendota.com/matches/9069627947), [Dotabuff](https://ru.dotabuff.com/matches/9069627947)
 
@@ -122,7 +124,7 @@ Dire, 65 мин, [OpenDota](https://www.opendota.com/matches/9069627947), [Dotab
 | XANDR | Dark Seer | off | 683 | 12/6/33 |
 | IRD | Spirit Breaker | off | 446 | 6/13/36 |
 
-Соперник: Wraith King (Unlearnable), Queen of Pain (0123), Death Prophet (татарский стиль), Ring Master (Sladkiy_arbyzik), Ogre Magi (ГYYYYYСЬ)
+Соперник: Wraith King (Unlearnable), Queen of Pain (ryota), Death Prophet (татарский стиль), Ring Master (Sladkiy_arbyzik), Ogre Magi (ГYYYYYСЬ)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 
@@ -150,7 +152,7 @@ Radiant, 42 мин, [OpenDota](https://www.opendota.com/matches/9069818000), [Do
 
 **Пики команды** (в скобках — победы): Dark Willow ×4 (2), Dragon Knight ×4 (2), Windranger ×4 (2), Ember Spirit ×3 (2), Rubick ×3 (1), Dark Seer ×2 (1), Dawnbreaker ×2 (2), Sand King ×2 (1), Slardar ×2 (1), Clinkz (0), Crystal Maiden (1), Grimstroke (0), Huskar (0), Lifestealer (0), Mirana (1), Night Stalker (1), Pangolier (0), Pudge (1), Ring Master (1), Spirit Breaker (0), Tidehunter (0), Undying (0), Warlock (1)
 
-**Баны команды:** Necrophos ×5, Lina ×4, Lifestealer ×3, Outworld Devourer ×3, Viper ×3, Axe ×2, Centaur Warrunner ×2, Hoodwink ×2, Sniper ×2, Techies ×2, Timbersaw ×2, Winter Wyvern ×2, Witch Doctor ×2, Beastmaster, Dawnbreaker, Dazzle, Disruptor, Grimstroke, Kez, Kunkka, Mirana, Nature's Prophet, Ogre Magi, Snapfire, Spectre, Sven, Undying, Wraith King
+**Баны команды** (по 7 картам из 9: у остальных драфт не записан): Necrophos ×5, Lina ×4, Lifestealer ×3, Outworld Devourer ×3, Viper ×3, Axe ×2, Centaur Warrunner ×2, Hoodwink ×2, Sniper ×2, Techies ×2, Timbersaw ×2, Winter Wyvern ×2, Witch Doctor ×2, Beastmaster, Dawnbreaker, Dazzle, Disruptor, Grimstroke, Kez, Kunkka, Mirana, Nature's Prophet, Ogre Magi, Snapfire, Spectre, Sven, Undying, Wraith King
 
 **Банят против команды** (чего боятся соперники): Huskar ×5, Dragon Knight ×4, Outworld Devourer ×4, Ember Spirit ×3, Sven ×3, Windranger ×3, Bounty Hunter ×2, Dark Seer ×2, Doom ×2, Luna ×2, Pangolier ×2, Phantom Lancer ×2, Rubick ×2, Brewmaster, Dark Willow, Lifestealer, Mirana, Muerta, Nyx Assassin, Phoenix, Sand King, Slark, Spirit Breaker, Tidehunter, Witch Doctor, Wraith King
 

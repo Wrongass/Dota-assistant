@@ -32,6 +32,8 @@ final class Site {
     final Path analysisDir;
     /** Файл состава на игру (state/lineups.json) или null — состав только по конфигу. */
     final Path lineupsFile;
+    /** Общие драфты по ссылке — рядом с составом, в state/drafts. */
+    final SharedDrafts sharedDrafts;
     private volatile Lineups lineups = Lineups.none();
     private volatile AnalysisContext ctx;
     private volatile Status status;
@@ -52,6 +54,8 @@ final class Site {
         this.dataDir = dataDir;
         this.analysisDir = analysisDir;
         this.lineupsFile = lineupsFile;
+        this.sharedDrafts = new SharedDrafts(lineupsFile == null ? null
+                : lineupsFile.toAbsolutePath().getParent().resolve("drafts"));
     }
 
     synchronized void reload() throws IOException {
@@ -135,6 +139,19 @@ final class Site {
                 .findFirst().orElse(null);
     }
 
+    private static final java.util.regex.Pattern PLAN_DATE = java.util.regex.Pattern.compile("Данные на ([0-9]{4}-[0-9]{2}-[0-9]{2})");
+
+    /** «Данные на 2026-10-14» в тексте ручного плана — на какие данные он написан. */
+    private static Optional<Instant> planDate(Path plan) {
+        try {
+            var m = PLAN_DATE.matcher(Files.readString(plan));
+            return m.find() ? Optional.of(java.time.LocalDate.parse(m.group(1)).atStartOfDay(java.time.ZoneOffset.UTC).toInstant())
+                    : Optional.empty();
+        } catch (IOException | RuntimeException e) {
+            return Optional.empty();
+        }
+    }
+
     private Instant profileTime(AnalysisContext c, long accountId) {
         return c.config.players().stream().filter(p -> p.accountId() == accountId).findFirst()
                 .map(p -> modified(dataDir.resolve("raw").resolve(p.team().dir()).resolve(String.valueOf(accountId))
@@ -195,9 +212,12 @@ final class Site {
             Instant squadData = s.playerRefs().stream()
                     .map(r -> profileTime(c, r.accountId()))
                     .max(Instant::compareTo).orElse(Instant.EPOCH);
-            if (modified(plan.get()).isBefore(squadData)) {
-                warnings.add("План «" + analysisDir.relativize(plan.get()) + "» старше данных " + s.team().name()
-                        + " — перепроверьте");
+            // дата плана — из его текста («Данные на 2026-10-14»): дата файла на сервере меняется при каждом деплое
+            Instant planDate = planDate(plan.get()).orElse(modified(plan.get()));
+            if (planDate.plus(java.time.Duration.ofDays(1)).isBefore(squadData)) {
+                String what = s.ours() ? "План драфта нашей команды" : "План на игру с " + s.team().name();
+                warnings.add(what + " составлен " + TIME.format(planDate).substring(0, 5) + ", а данные игроков новее"
+                        + " — перепроверьте план");
             }
         }
 

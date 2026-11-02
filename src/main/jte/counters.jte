@@ -5,8 +5,8 @@
 @template.layout(page = model.page(), content = @`
     <h1>Контрпики</h1>
     <form class="panel counters-form" method="get" action="/counters">
-        <label>Их герой <input type="text" name="h" list="hero-names" value="${model.first()}" placeholder="Viper" autocomplete="off" autofocus></label>
-        <label>и второй на линии <input type="text" name="h2" list="hero-names" value="${model.second()}" placeholder="необязательно" autocomplete="off"></label>
+        <label>Их герой <span class="hero-input"><input type="text" name="h" value="${model.first()}" placeholder="например, Viper или вайпер" autocomplete="off" autofocus><ul class="suggest"></ul></span></label>
+        <label>и второй на линии <span class="hero-input"><input type="text" name="h2" value="${model.second()}" placeholder="необязательно" autocomplete="off"><ul class="suggest"></ul></span></label>
         <label>Наша позиция
             <select name="pos">
                 <option value="0" selected="${model.posAuto()}">авто</option>
@@ -16,9 +16,6 @@
             </select>
         </label>
         <button>Показать</button>
-        <datalist id="hero-names">
-            @for(var h : model.heroes())<option value="${h.name()}"></option>@endfor
-        </datalist>
         <p class="muted small">Кто стоит против этих героев на линии вашей позиции и кто сильнее их по игре. Два героя —
             например, их хард и саппорт: линия считается против обоих. «Авто» — позиция, которая обычно стоит против
             первого героя (мид против мида, наша сложная против их керри, наша лёгкая против их оффлейна).</p>
@@ -29,7 +26,8 @@
     @endif
 
     @if(!v.enemies().isEmpty())
-        <p>Против <b>${String.join(" + ", v.enemyNames())}</b> на позиции <b>${v.position()}</b>.
+        <p>Наша позиция <b>${v.position()}</b>@if(v.player() != null) (${v.player()})@endif против <b>${String.join(" + ", v.enemyNames())}</b>.
+            @if(model.posAuto())<span class="muted small">Позиция выбрана по тому, где этот герой чаще всего стоит в патче; поменять — список «Наша позиция».</span>@endif
             @if(v.hasLane())
                 <span class="muted small">Линия — ${v.sample()}: доля выигранных / ничейных / проигранных линий
                     (около 10-й минуты, по формуле STRATZ) и винрейт в этих играх.</span>
@@ -77,12 +75,12 @@
                     @if(v.player() != null)<span class="muted small">· <a href="/player/${v.accountId()}">${v.player()}</a>, позиция ${v.position()}</span>@endif
                 </h2>
                 <p class="muted small">Только герои, на которых игрок реально играет (5+ игр или 2+ за 2 месяца).
-                    Порядок: линия + по игре + немного за опыт на герое.</p>
+                    Порядок: линия + по игре + личный винрейт игрока на герое + немного за опыт. Герои с минусом и на линии, и по игре не показываются.</p>
                 @if(v.ours().isEmpty())
                     <p class="muted">Нет подходящих героев в его пуле.</p>
                 @else
                 <table class="sortable">
-                    <thead><tr><th>Герой</th><th class="num">Линия</th><th class="num">По игре</th><th class="num">Игр</th><th class="num">WR</th><th class="num">2 мес.</th></tr></thead>
+                    <thead><tr><th>Герой</th><th class="num">Линия</th><th class="num">По игре</th><th class="num" title="Все игры игрока на герое, без Турбо">Игр всего</th><th class="num" title="Винрейт игрока на герое за всё время">WR всего</th><th class="num" title="Игры за последние 2 месяца">За 2 мес.</th></tr></thead>
                     <tbody>
                     @for(var o : v.ours())
                         <tr><td>${o.hero().name()}</td>
@@ -90,7 +88,7 @@
                             <td class="num ${Double.isNaN(o.hero().gameAdv()) ? "muted" : o.hero().gameAdv() >= 0 ? "strong" : "weak"}">${Double.isNaN(o.hero().gameAdv()) ? "—" : Fmt.signedPct(o.hero().gameAdv())}</td>
                             <td class="num">${o.games()}${o.games() < 10 ? " · мало" : ""}</td>
                             <td class="num">${Double.isNaN(o.winrate()) ? "—" : Fmt.pct(o.winrate())}</td>
-                            <td class="num">${o.recent60() == 0 ? "" : String.valueOf(o.recent60())}</td></tr>
+                            <td class="num">${o.recent60()}</td></tr>
                     @endfor
                     </tbody>
                 </table>
@@ -98,4 +96,4 @@
             </div>
         </div>
     @endif
-`)
+`, scripts = "<script src=\"/static/counters.js\"></script>")

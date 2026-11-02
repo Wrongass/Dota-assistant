@@ -348,8 +348,15 @@ final class MarkdownRenderer {
                 v.wins(), v.hadRemakes() ? " Переигровки (пустая статистика) не учитываются." : "");
         for (Views.MatchView m : v.matches()) {
             md.h2(m.date() + " — против " + m.opponent() + ": " + (m.won() ? "победа" : "поражение"));
+            if (m.matchId() == 0) {
+                md.line("%s.", m.note());
+                continue;
+            }
             md.line("%s, %d мин, [OpenDota](https://www.opendota.com/matches/%d), [Dotabuff](https://ru.dotabuff.com/matches/%d)",
                     m.radiant() ? "Radiant" : "Dire", m.minutes(), m.matchId(), m.matchId());
+            if (m.note() != null) {
+                md.blank().line("%s.", m.note());
+            }
             Md.Table t = md.table("Игрок", "Герой", "Линия", "GPM", "K/D/A");
             for (Views.MatchPlayer p : m.players()) {
                 t.row(p.nick(), p.heroName(), lane(p.laneRole()), p.gpm(), p.kills() + "/" + p.deaths() + "/" + p.assists());
@@ -357,6 +364,9 @@ final class MarkdownRenderer {
             t.end();
             md.blank().line("Соперник: %s", m.enemies().stream()
                     .map(p -> p.heroName() + " (" + p.nick() + ")").collect(Collectors.joining(", ")));
+            if (m.draft().isEmpty()) {
+                continue;
+            }
             md.blank().line("Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):").blank();
             md.line(m.draft().stream().map(d -> {
                 String step = (d.pick() ? "P " : "b ") + d.heroName();
@@ -365,7 +375,9 @@ final class MarkdownRenderer {
         }
         md.h2("Сводка");
         md.line("**Пики команды** (в скобках — победы): %s", countList(v.picks(), true));
-        md.blank().line("**Баны команды:** %s", countList(v.bans(), false));
+        md.blank().line("**Баны команды**%s: %s", v.draftMaps() < v.matches().size()
+                ? " (по " + v.draftMaps() + " картам из " + v.matches().size() + ": у остальных драфт не записан)" : "",
+                countList(v.bans(), false));
         md.blank().line("**Банят против команды** (чего боятся соперники): %s", countList(v.bansAgainst(), false));
         md.blank().line("**Пики соперников** (в скобках — их победы): %s", countList(v.enemyPicks(), true));
         return md.toString();
@@ -403,7 +415,7 @@ final class MarkdownRenderer {
         pool.end();
 
         md.h2("Самые опасные герои (кандидаты в баны)");
-        md.line("Угроза = 60% умение игрока на герое + 40% сила героя в мете на его ранге; +0.1, если герой уже был в турнире.").blank();
+        md.line("Угроза = (60% умение игрока на герое + 40% сила героя в мете на его ранге) × свежесть (100% при 10+ играх за год или пике в турнире, 60% без игр за год); +0.1, если герой уже был в турнире.").blank();
         Md.Table th = md.table("#", "Герой", "Игрок", "Угроза", "Умение", "Сила в мете", "Игр всего / год", "WR за год", "В турнире", "Позиции героя");
         int i = 1;
         for (Views.ThreatRow t : v.threats()) {

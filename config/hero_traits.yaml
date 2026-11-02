@@ -1,0 +1,142 @@
+# Свойства героев для симуляции драфта и оценки (спецификация docs/specs/draft-simulation.md).
+# Заполнено вручную по знанию игры (патч 7.41), правьте смело. Ключ — id героя из constants/heroes.json.
+# Шкала 0–2 (нет / есть / сильная сторона героя), отсутствующий ключ = 0:
+#   push           — урон по башням, быстрый снос строений
+#   roshan         — рано и безопасно бьёт Рошана
+#   teamfight      — массовые ульты и контроль по площади
+#   split          — сплит-пуш: давит отдельную линию и уходит
+#   kite           — дальность, замедления, бой на расстоянии
+#   catch          — сближение и ловля: прыжки, контроль по цели (ответ на кайт и сплит)
+#   anti_illusion  — урон по площади и клив против иллюзий и призывов
+#   burst          — быстрый урон по одной цели
+#   illusions      — 1, если сила героя в иллюзиях, клонах или призывах
+# late: −2…+2 — насколько герой сильнее в длинной игре (поправка к статистике по длительности матчей).
+# awkward: каких ответов требует неудобный герой; если ни у кого из соперника их нет, герой «ломает» драфт.
+#   Значения — имена свойств выше (anti_illusion, catch, burst).
+1: {name: Anti-Mage, push: 1, split: 2, catch: 1, burst: 1, late: 2, awkward: [catch]}
+2: {name: Axe, teamfight: 2, catch: 2, anti_illusion: 2, roshan: 1, late: -1}
+3: {name: Bane, catch: 2, teamfight: 1}
+4: {name: Bloodseeker, catch: 2, roshan: 1, anti_illusion: 1, burst: 1, late: -1}
+5: {name: Crystal Maiden, teamfight: 2, anti_illusion: 1, kite: 1, catch: 1, late: -1}
+6: {name: Drow Ranger, push: 2, kite: 2, roshan: 1, late: 1}
+7: {name: Earthshaker, teamfight: 2, catch: 2, anti_illusion: 2, burst: 1}
+8: {name: Juggernaut, push: 1, split: 1, roshan: 1, burst: 1, late: 1}
+9: {name: Mirana, catch: 1, kite: 1, burst: 1}
+10: {name: Morphling, kite: 1, burst: 2, split: 1, late: 2}
+11: {name: Shadow Fiend, push: 1, teamfight: 1, burst: 2, anti_illusion: 1, late: 1}
+12: {name: Phantom Lancer, illusions: 1, split: 2, push: 1, late: 2, awkward: [anti_illusion]}
+13: {name: Puck, teamfight: 2, catch: 1, anti_illusion: 1, kite: 1}
+14: {name: Pudge, catch: 2, burst: 1}
+15: {name: Razor, kite: 1, push: 1, roshan: 1}
+16: {name: Sand King, teamfight: 2, catch: 1, anti_illusion: 2}
+17: {name: Storm Spirit, catch: 2, burst: 2, late: 1}
+18: {name: Sven, teamfight: 2, anti_illusion: 2, roshan: 2, burst: 2, late: 1}
+19: {name: Tiny, burst: 2, push: 2, roshan: 1, catch: 1}
+20: {name: Vengeful Spirit, catch: 1, push: 1, late: -1}
+21: {name: Windranger, kite: 2, catch: 1, roshan: 1, burst: 1}
+22: {name: Zeus, teamfight: 1, burst: 1, kite: 1}
+23: {name: Kunkka, teamfight: 2, anti_illusion: 2, catch: 1}
+25: {name: Lina, burst: 2, push: 1, kite: 1, anti_illusion: 1, roshan: 1}
+26: {name: Lion, catch: 2, burst: 2, late: -1}
+27: {name: Shadow Shaman, push: 2, catch: 2, late: -1}
+28: {name: Slardar, catch: 2, roshan: 1, burst: 1}
+29: {name: Tidehunter, teamfight: 2, anti_illusion: 2, catch: 1}
+30: {name: Witch Doctor, teamfight: 1, catch: 1, anti_illusion: 1}
+31: {name: Lich, teamfight: 1, kite: 1, late: -1}
+32: {name: Riki, catch: 1, burst: 1, split: 1}
+33: {name: Enigma, teamfight: 2, push: 1, catch: 2}
+34: {name: Tinker, push: 2, split: 2, kite: 1, anti_illusion: 2, awkward: [catch]}
+35: {name: Sniper, kite: 2, push: 1, late: 1}
+36: {name: Necrophos, teamfight: 1, kite: 1, late: 1}
+37: {name: Warlock, teamfight: 2}
+38: {name: Beastmaster, push: 2, roshan: 2, catch: 1}
+39: {name: Queen of Pain, burst: 2, anti_illusion: 1, catch: 1, teamfight: 1}
+40: {name: Venomancer, push: 2, kite: 1, teamfight: 1}
+41: {name: Faceless Void, teamfight: 2, catch: 2, roshan: 1, late: 2}
+42: {name: Wraith King, roshan: 2, anti_illusion: 1, late: 1}
+43: {name: Death Prophet, push: 2, roshan: 2, teamfight: 1}
+44: {name: Phantom Assassin, burst: 2, roshan: 1, anti_illusion: 1, late: 2}
+45: {name: Pugna, push: 2, kite: 1}
+46: {name: Templar Assassin, roshan: 2, push: 1, burst: 2, kite: 1}
+47: {name: Viper, kite: 1, push: 1, late: -1}
+48: {name: Luna, push: 2, anti_illusion: 2, teamfight: 1, roshan: 1, late: 2}
+49: {name: Dragon Knight, push: 2, roshan: 1, teamfight: 1, catch: 1, anti_illusion: 1, late: 1}
+50: {name: Dazzle, teamfight: 1}
+51: {name: Clockwerk, catch: 2}
+52: {name: Leshrac, push: 2, teamfight: 2, anti_illusion: 2}
+53: {name: Nature's Prophet, push: 2, split: 2, illusions: 1, awkward: [catch]}
+54: {name: Lifestealer, roshan: 2, catch: 1, late: 1}
+55: {name: Dark Seer, teamfight: 2, push: 1, anti_illusion: 1}
+56: {name: Clinkz, push: 1, kite: 1, burst: 2, split: 1}
+57: {name: Omniknight, teamfight: 1}
+58: {name: Enchantress, kite: 2, push: 1, roshan: 1}
+59: {name: Huskar, roshan: 1, late: -1, awkward: [burst, catch]}
+60: {name: Night Stalker, catch: 2, roshan: 1}
+61: {name: Broodmother, push: 2, split: 2, illusions: 1, awkward: [anti_illusion]}
+62: {name: Bounty Hunter, catch: 1}
+63: {name: Weaver, kite: 1, split: 1, late: 1}
+64: {name: Jakiro, push: 2, teamfight: 1, anti_illusion: 1}
+65: {name: Batrider, catch: 2, teamfight: 1, kite: 1}
+66: {name: Chen, push: 1, roshan: 1}
+67: {name: Spectre, teamfight: 1, split: 1, catch: 1, late: 2}
+68: {name: Ancient Apparition, teamfight: 1, kite: 1, burst: 1, late: 1}
+69: {name: Doom, catch: 2, roshan: 1}
+70: {name: Ursa, roshan: 2, burst: 2}
+71: {name: Spirit Breaker, catch: 2}
+72: {name: Gyrocopter, teamfight: 2, anti_illusion: 2, kite: 1, roshan: 1, late: 1}
+73: {name: Alchemist, push: 1, roshan: 1, late: 1}
+74: {name: Invoker, teamfight: 2, kite: 1, anti_illusion: 1, burst: 1, late: 1}
+75: {name: Silencer, teamfight: 2, kite: 1, late: 1}
+76: {name: Outworld Devourer, burst: 2, kite: 1, late: 1}
+77: {name: Lycan, push: 2, split: 2, roshan: 2, illusions: 1, awkward: [anti_illusion]}
+78: {name: Brewmaster, teamfight: 2, push: 1}
+79: {name: Shadow Demon, catch: 1, anti_illusion: 1}
+80: {name: Lone Druid, push: 2, split: 2, roshan: 2, illusions: 1, late: 1, awkward: [anti_illusion]}
+81: {name: Chaos Knight, illusions: 1, burst: 2, roshan: 1, late: 1, awkward: [anti_illusion]}
+82: {name: Meepo, illusions: 1, burst: 2, push: 1, split: 1, catch: 1, awkward: [anti_illusion]}
+83: {name: Treant Protector, teamfight: 1, push: 1}
+84: {name: Ogre Magi, catch: 1, burst: 1}
+85: {name: Undying, teamfight: 1, push: 1}
+86: {name: Rubick, teamfight: 1, catch: 1}
+87: {name: Disruptor, teamfight: 2, catch: 1}
+88: {name: Nyx Assassin, burst: 2, catch: 1}
+89: {name: Naga Siren, illusions: 1, push: 2, split: 2, late: 2, awkward: [anti_illusion]}
+90: {name: Keeper of the Light, push: 1, anti_illusion: 1, kite: 1}
+91: {name: Io, push: 1, roshan: 1}
+92: {name: Visage, push: 1, roshan: 1, burst: 1, illusions: 1}
+93: {name: Slark, catch: 1, burst: 1, late: 1}
+94: {name: Medusa, kite: 1, anti_illusion: 2, teamfight: 1, push: 1, late: 2}
+95: {name: Troll Warlord, roshan: 2, push: 1, late: 1}
+96: {name: Centaur Warrunner, teamfight: 2, catch: 1, anti_illusion: 1}
+97: {name: Magnus, teamfight: 2, catch: 1, anti_illusion: 2}
+98: {name: Timbersaw, anti_illusion: 2, kite: 1, teamfight: 1}
+99: {name: Bristleback, teamfight: 1, anti_illusion: 1, roshan: 1}
+100: {name: Tusk, catch: 2}
+101: {name: Skywrath Mage, burst: 2, kite: 1}
+102: {name: Abaddon, roshan: 1, late: 1}
+103: {name: Elder Titan, teamfight: 2, anti_illusion: 1, catch: 1}
+104: {name: Legion Commander, catch: 2, roshan: 1}
+105: {name: Techies, push: 1, kite: 1, burst: 2}
+106: {name: Ember Spirit, anti_illusion: 2, catch: 1, burst: 1, split: 1, late: 1}
+107: {name: Earth Spirit, catch: 2, teamfight: 1}
+108: {name: Underlord, teamfight: 2, anti_illusion: 2, push: 1}
+109: {name: Terrorblade, push: 2, split: 1, roshan: 1, kite: 1, illusions: 1, late: 2, awkward: [anti_illusion, burst]}
+110: {name: Phoenix, teamfight: 2, anti_illusion: 2}
+111: {name: Oracle}
+112: {name: Winter Wyvern, teamfight: 1, kite: 1}
+113: {name: Arc Warden, push: 2, split: 2, kite: 1, late: 1, awkward: [catch]}
+114: {name: Monkey King, teamfight: 2, anti_illusion: 2, roshan: 1}
+119: {name: Dark Willow, catch: 1, burst: 1}
+120: {name: Pangolier, teamfight: 2, catch: 1, kite: 1}
+121: {name: Grimstroke, catch: 1, teamfight: 1}
+123: {name: Hoodwink, kite: 1, catch: 1, burst: 1}
+126: {name: Void Spirit, catch: 1, burst: 2}
+128: {name: Snapfire, teamfight: 1, catch: 1, anti_illusion: 1, kite: 1}
+129: {name: Mars, teamfight: 2, catch: 1, anti_illusion: 1}
+131: {name: Ring Master, catch: 1, teamfight: 1}
+135: {name: Dawnbreaker, teamfight: 1, catch: 1, anti_illusion: 1, roshan: 1}
+136: {name: Marci, catch: 2, burst: 2}
+137: {name: Primal Beast, teamfight: 1, catch: 2, anti_illusion: 1}
+138: {name: Muerta, kite: 1, burst: 2, push: 1, late: 1}
+145: {name: Kez, catch: 1, burst: 2, split: 1}
+155: {name: Largo, teamfight: 1, kite: 1}

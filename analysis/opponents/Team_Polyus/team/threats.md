@@ -14,7 +14,7 @@
 
 ## Самые опасные герои (кандидаты в баны)
 
-Угроза = 60% умение игрока на герое + 40% сила героя в мете на его ранге; +0.1, если герой уже был в турнире.
+Угроза = (60% умение игрока на герое + 40% сила героя в мете на его ранге) × свежесть (100% при 10+ играх за год или пике в турнире, 60% без игр за год); +0.1, если герой уже был в турнире.
 
 | # | Герой | Игрок | Угроза | Умение | Сила в мете | Игр всего / год | WR за год | В турнире | Позиции героя |
 |---|---|---|---|---|---|---|---|---|---|
@@ -22,17 +22,17 @@
 | 2 | Io | ryota | 0.88 | 100 | 0.70 | 169 / 41 | 73.2% |  | 4/5 |
 | 3 | Wraith King | Unlearnable | 0.88 | 96 | 0.50 | 30 / 25 | 68.0% | ×1 | 1/3 |
 | 4 | Witch Doctor | ГYYYYYСЬ | 0.85 | 76 | 0.74 | 16 / 16 | 62.5% | ×1 | 4/5 |
-| 5 | Bounty Hunter | ryota | 0.84 | 74 | 0.99 | 58 / 4 | 25.0% |  | 4/5 |
-| 6 | Lion | ryota | 0.84 | 99 | 0.37 | 168 / 68 | 64.7% | ×1 | 4/5 |
-| 7 | Nyx Assassin | ryota | 0.83 | 90 | 0.73 | 75 / 11 | 54.5% |  | 4/5 |
-| 8 | Techies | Sladkiy_arbyzik | 0.83 | 80 | 0.63 | 182 / 29 | 48.3% | ×2 | 4/5 |
-| 9 | Vengeful Spirit | Unlearnable | 0.80 | 99 | 0.51 | 67 / 23 | 78.3% |  | 1/4/5 |
-| 10 | Lina | ryota | 0.79 | 95 | 0.28 | 61 / 22 | 68.2% | ×1 | 2 |
-| 11 | Abaddon | UshKO | 0.78 | 90 | 0.36 | 79 / 15 | 46.7% | ×1 | 1/3 |
-| 12 | Outworld Devourer | ryota | 0.78 | 80 | 0.76 | 41 / 5 | 60.0% |  | 2 |
-| 13 | Legion Commander | Unlearnable | 0.77 | 93 | 0.53 | 106 / 55 | 54.5% |  | 3 |
-| 14 | Axe | ryota | 0.77 | 100 | 0.42 | 104 / 52 | 63.5% |  | 3 |
-| 15 | Earthshaker | ryota | 0.76 | 94 | 0.50 | 86 / 8 | 87.5% |  | 2 |
+| 5 | Lion | ryota | 0.84 | 99 | 0.37 | 168 / 68 | 64.7% | ×1 | 4/5 |
+| 6 | Nyx Assassin | ryota | 0.83 | 90 | 0.73 | 75 / 11 | 54.5% |  | 4/5 |
+| 7 | Techies | Sladkiy_arbyzik | 0.83 | 80 | 0.63 | 182 / 29 | 48.3% | ×2 | 4/5 |
+| 8 | Vengeful Spirit | Unlearnable | 0.80 | 99 | 0.51 | 67 / 23 | 78.3% |  | 1/4/5 |
+| 9 | Lina | ryota | 0.79 | 95 | 0.28 | 61 / 22 | 68.2% | ×1 | 2 |
+| 10 | Abaddon | UshKO | 0.78 | 90 | 0.36 | 79 / 15 | 46.7% | ×1 | 1/3 |
+| 11 | Legion Commander | Unlearnable | 0.77 | 93 | 0.53 | 106 / 55 | 54.5% |  | 3 |
+| 12 | Axe | ryota | 0.77 | 100 | 0.42 | 104 / 52 | 63.5% |  | 3 |
+| 13 | Necrophos | ryota | 0.75 | 71 | 0.57 | 18 / 6 | 50.0% | ×1 | 1/2/3 |
+| 14 | Disruptor | UshKO | 0.74 | 92 | 0.47 | 72 / 10 | 80.0% |  | 4/5 |
+| 15 | Dawnbreaker | Unlearnable | 0.73 | 76 | 0.69 | 103 / 66 | 45.5% |  | 3 |
 
 ## Что они банят в турнире
 
@@ -50,10 +50,10 @@ Outworld Devourer ×6, Rubick ×4, Brewmaster ×3, Centaur Warrunner ×2, Dawnbr
 | Io | ryota | Outworld Devourer +6.9% (Wrongass), Ancient Apparition +5.9% (Enaria), Disruptor +3.2% (Babayka), Silencer +3.1% (Babayka/Enaria), Enigma +2.2% (Артист) |
 | Wraith King | Unlearnable | Phantom Lancer +5.8% (kren), Omniknight +2.4% (Артист) |
 | Witch Doctor | ГYYYYYСЬ | Wraith King +2.2% (kren/Артист) |
-| Bounty Hunter | ryota | Enigma +3.3% (Артист), Outworld Devourer +2.7% (Wrongass), Vengeful Spirit +2.6% (kren/Babayka/Enaria), Slark +2.3% (Wrongass) |
 | Lion | ryota | Omniknight +5.0% (Артист), Wraith King +4.7% (kren/Артист), Vengeful Spirit +4.0% (kren/Babayka/Enaria), Spectre +3.8% (kren), Sven +3.4% (kren), Dragon Knight +2.9% (kren/Wrongass) |
 | Nyx Assassin | ryota | Night Stalker +3.5% (Артист), Sven +3.2% (kren), Wraith King +3.0% (kren/Артист), Grimstroke +2.7% (Babayka/Enaria), Vengeful Spirit +2.4% (kren/Babayka/Enaria) |
 | Techies | Sladkiy_arbyzik | Leshrac +6.0% (Wrongass), Nyx Assassin +5.5% (Babayka), Omniknight +3.9% (Артист), Enigma +3.4% (Артист), Spectre +2.9% (kren), Lifestealer +2.6% (kren) |
+| Vengeful Spirit | Unlearnable | Phantom Lancer +6.0% (kren), Spectre +3.3% (kren) |
 
 ## Против кого они проигрывают
 
