@@ -18,6 +18,8 @@ import java.time.LocalDate;
  *   --no-stratz            не качать линию и матчапы героев из STRATZ (data/raw/stratz)
  *   --meta-window &lt;n&gt;     сколько последних match_id брать для синергий/контрпиков, по умолчанию 1000000
  *   --meta-min-rank &lt;n&gt;   минимальный средний rank_tier матча, по умолчанию 50 (Legend 0)
+ *   --league-players       ещё и игроки всех команд лиги не из конфига, облегчённо — для бэктеста драфта
+ *                          (data/backtest/players); по умолчанию выключено
  * </pre>
  * Необязательный ключ API берётся из переменной окружения OPENDOTA_API_KEY. Токен STRATZ — из STRATZ_TOKEN
  * (переменная окружения или строка в .env); без него STRATZ пропускается.
@@ -35,6 +37,7 @@ public class Main {
         Path configPath = Path.of("config/players.yaml");
         Path dataDir = Path.of("data");
         Long only = null;
+        boolean leaguePlayers = false;
 
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
@@ -48,6 +51,7 @@ public class Main {
                 case "--no-stratz" -> stratz = false;
                 case "--meta-window" -> metaWindow = Long.parseLong(value(args, ++i));
                 case "--meta-min-rank" -> metaMinRank = Integer.parseInt(value(args, ++i));
+                case "--league-players" -> leaguePlayers = true;
                 default -> {
                     System.err.println("Unknown argument: " + args[i]);
                     System.exit(2);
@@ -86,6 +90,11 @@ public class Main {
             new LeagueFetcher(client, fetcher, refresh).fetch(l.id(), since, raw.resolve("league").resolve(String.valueOf(l.id())));
         }
 
+        if (leaguePlayers && l != null && l.id() != null) {
+            fetchLeaguePlayers(config, fetcher, raw.resolve("league").resolve(String.valueOf(l.id())).resolve("matches"),
+                    dataDir.resolve("backtest").resolve("players"));
+        }
+
         if (meta) {
             fetchMeta(client, fetcher, constants.resolve("patch.json"), dataDir.resolve("meta"),
                     refresh, metaWindow, metaMinRank);
@@ -105,6 +114,31 @@ public class Main {
                 fetcher.downloaded(), fetcher.skipped(), fetcher.failed());
         if (fetcher.failed() > 0) {
             System.exit(1);
+        }
+    }
+
+    /** Игроки из скачанных матчей лиги, которых нет в конфиге: облегчённая выгрузка для бэктеста драфта. */
+    private static void fetchLeaguePlayers(PlayerConfig config, RawFetcher fetcher, Path matchesDir, Path outDir)
+            throws IOException, InterruptedException {
+        java.util.Set<Long> known = new java.util.HashSet<>();
+        config.players().forEach(p -> known.add(p.accountId()));
+        java.util.Set<Long> ids = new java.util.TreeSet<>();
+        com.fasterxml.jackson.databind.ObjectMapper json = new com.fasterxml.jackson.databind.ObjectMapper();
+        try (var files = java.nio.file.Files.list(matchesDir)) {
+            for (Path f : files.filter(p -> p.toString().endsWith(".json")).toList()) {
+                for (var p : json.readTree(f.toFile()).path("players")) {
+                    long id = p.path("account_id").asLong(0);
+                    if (id > 0 && !known.contains(id)) {
+                        ids.add(id);
+                    }
+                }
+            }
+        }
+        Log.info("== league players for backtest: %d -> %s", ids.size(), outDir);
+        for (long id : ids) {
+            for (Endpoints.Target t : Endpoints.backtestPlayer(id, outDir.resolve(String.valueOf(id)))) {
+                fetcher.fetch(t);
+            }
         }
     }
 

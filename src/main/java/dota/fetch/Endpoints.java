@@ -69,6 +69,24 @@ final class Endpoints {
         return targets;
     }
 
+    /** Поля облегчённой выгрузки матчей игроков лиги для бэктеста драфта (герой, время, режим, состав матча). */
+    static final List<String> BACKTEST_MATCH_FIELDS = List.of(
+            "start_time", "game_mode", "hero_id", "lane_role", "party_size", "heroes", "kills", "deaths", "assists",
+            "kda");
+
+    /**
+     * Игрок лиги не из конфига — только для бэктеста драфта (data/backtest/players/{id}): профиль (ранг), матчи с
+     * облегчённым набором полей, рейтинги на героях. Три запроса вместо девяти.
+     */
+    static List<Target> backtestPlayer(long accountId, Path dir) {
+        String base = "/players/" + accountId;
+        String fields = BACKTEST_MATCH_FIELDS.stream().map(f -> "project=" + f).collect(Collectors.joining("&"));
+        return List.of(
+                new Target(base, dir.resolve("profile.json")),
+                new Target(base + "/matches?significant=0&" + fields, dir.resolve("matches.json")),
+                new Target(base + "/rankings", dir.resolve("rankings.json")));
+    }
+
     static List<Target> constants(Path dir) {
         return CONSTANTS.stream()
                 .map(name -> new Target("/constants/" + name, dir.resolve(name + ".json")))

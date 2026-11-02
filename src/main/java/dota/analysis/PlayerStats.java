@@ -89,9 +89,25 @@ final class PlayerStats {
         this.computedMmr = computedMmr;
     }
 
+    /**
+     * Папка с данными игрока: data/raw/{our|opp}/{id}, а для игроков лиги не из основного конфига (бэктест драфта на всех
+     * командах лиги) — data/backtest/players/{id}.
+     */
+    static Path dir(Path dataDir, PlayerConfig.Player p) {
+        Path main = dataDir.resolve("raw").resolve(p.team().dir()).resolve(String.valueOf(p.accountId()));
+        Path backtest = dataDir.resolve("backtest").resolve("players").resolve(String.valueOf(p.accountId()));
+        return !java.nio.file.Files.isDirectory(main) && java.nio.file.Files.isDirectory(backtest) ? backtest : main;
+    }
+
     static PlayerStats load(Path dataDir, PlayerConfig.Player p, Set<Long> teammates, Instant patchStart,
                             Instant now) throws IOException {
-        Path dir = dataDir.resolve("raw").resolve(p.team().dir()).resolve(String.valueOf(p.accountId()));
+        return load(dataDir, p, teammates, patchStart, now, false);
+    }
+
+    /** strict — только матчи до now (честный бэктест: статистика игрока на дату карты, без будущих игр). */
+    static PlayerStats load(Path dataDir, PlayerConfig.Player p, Set<Long> teammates, Instant patchStart,
+                            Instant now, boolean strict) throws IOException {
+        Path dir = dir(dataDir, p);
         JsonNode profile = JSON.readTree(dir.resolve("profile.json").toFile());
         PlayerStats s = new PlayerStats(p, profile.path("profile").path("personaname").asText(p.nick()),
                 profile.path("rank_tier").asInt(0), profile.path("computed_mmr").asDouble(Double.NaN));
@@ -101,7 +117,7 @@ final class PlayerStats {
 
         long recentFrom = now.getEpochSecond() - RECENT_DAYS * 86400L;
         for (JsonNode m : JSON.readTree(dir.resolve("matches.json").toFile())) {
-            if (m.path("radiant_win").isNull()) {
+            if (m.path("radiant_win").isNull() || strict && m.path("start_time").asLong() >= now.getEpochSecond()) {
                 continue;
             }
             if (m.get("start_time").asLong() >= recentFrom && m.get("start_time").asLong() <= now.getEpochSecond() + 86400) {

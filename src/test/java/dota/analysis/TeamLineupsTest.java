@@ -47,8 +47,11 @@ class TeamLineupsTest {
         DraftEngine engine = new DraftEngine(ctx);
         List<Integer> bans = List.of(23, 22, 1, 2, 31, 32, 33);
         DraftEngine.Advice start = engine.advise(new DraftEngine.State("SyberStar", true, bans));
-        double first = start.theirLineups().get(0).weight();
-        start.theirLineups().forEach(o -> assertEquals(first, o.weight(), 1e-9, "до пиков веса равные"));
+        // до пиков — только свежесть: каждый следующий (более старый) состав вдвое реже
+        for (int i = 1; i < start.theirLineups().size(); i++) {
+            assertEquals(start.theirLineups().get(i - 1).weight() / 2, start.theirLineups().get(i).weight(), 1e-9,
+                    "до пиков свежий состав вероятнее");
+        }
         assertEquals(1.0, start.theirLineups().stream().mapToDouble(DraftEngine.LineupOdds::weight).sum(), 1e-9);
         // баны по позициям: мид — и SuperPoni, и Леонид Ильич
         List<String> mids = start.positionBans().stream().filter(pb -> pb.position() == 2).map(DraftEngine.PositionBans::player).toList();
