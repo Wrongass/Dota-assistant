@@ -100,15 +100,16 @@
                 </div>
                 <div class="panel advice-panel" id="panel-picks">
                     <div id="pair-box" hidden>
-                        <h3>Двойной пик <span class="hint">два хода подряд: пара разным игрокам, связка между ними</span></h3>
+                        <h3>Двойной пик <span class="hint">два хода подряд: пара разным игрокам · три разных варианта · почему пара — рядом (связка по играм с поправкой на выборку, общая линия, сочетание свойств)</span></h3>
                         <ul id="pair-picks" class="lane-options"></ul>
                     </div>
                     <div id="lane-box" hidden>
-                        <h3>На линию <span class="hint">их герои на линии известны · только герои, на которых игрок играет · подробности — наведите</span></h3>
+                        <h3>На линию <span class="hint">кого взять нашему игроку против их героев, уже стоящих на его линии · только его герои · «выиграна / проиграна» — как такие линии заканчиваются в патче (STRATZ), «шанс матча» — насколько герой чаще выигрывает игру против них</span></h3>
                         <ul id="lane-options" class="lane-options"></ul>
                     </div>
                     <h3 class="toggle-h">Нам брать</h3>
                     <ol id="picks" class="advice"></ol>
+                    <div id="never-list" class="small muted never-list"></div>
                 </div>
 
                 <div class="panel" id="summary" hidden>

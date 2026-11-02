@@ -456,3 +456,17 @@ details.panel[open] > summary::after, details.toggle-box[open] > summary::after 
 .lineups .lineup-w { color: var(--accent); }
 .pos-bans .pos-share { font-weight: 600; color: var(--accent); }
 .pos-bans li.maybe .pos-label { opacity: .95; }
+/* «не берём» */
+.never-btn { border: 0; background: transparent; color: var(--muted); cursor: pointer; padding: 0 3px; font-size: 11px; opacity: .6; }
+.never-btn:hover { color: var(--weak); opacity: 1; }
+.never-list { margin-top: 4px; }
+.never-list button { font-size: 12px; padding: 0 8px; border: 1px solid var(--accent); color: var(--accent); background: transparent;
+  border-radius: 8px; cursor: pointer; }
+/* двойной пик и «На линию» */
+.pair-why { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+#lane-options > li { flex-direction: column; align-items: flex-start; }
+.lane-options .lane-heroes { display: flex; flex-direction: column; gap: 3px; padding-left: 8px; }
+.lane-options .lane-hero { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
+.lane-options .lane-verdict { font-size: 12px; font-weight: 600; }
+.lane-options .lane-verdict.strong { color: var(--strong, #3fb950); }
+.lane-options .lane-verdict.weak { color: var(--weak); }

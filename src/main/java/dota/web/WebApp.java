@@ -472,7 +472,8 @@ public class WebApp {
      * «герой → ник игрока» (обе команды). lineup — выбранный состав соперника (key из theirLineups), null — все составы
      * из турнира с весами.
      */
-    record DraftRequest(String opponent, boolean weFirst, List<Integer> heroes, Map<Integer, String> assign, String lineup) {
+    record DraftRequest(String opponent, boolean weFirst, List<Integer> heroes, Map<Integer, String> assign, String lineup,
+                        List<Integer> never) {
     }
 
     private void draftPage(Context http) throws Exception {
@@ -639,7 +640,7 @@ public class WebApp {
         List<Integer> heroes = req.heroes() == null ? List.of() : req.heroes();
         Map<Integer, String> assign = req.assign() == null ? Map.of() : req.assign();
         http.json(new DraftEngine(site.ctx()).advise(new DraftEngine.State(req.opponent(), req.weFirst(), heroes, assign,
-                req.lineup())));
+                req.lineup(), req.never() == null ? java.util.Set.of() : java.util.Set.copyOf(req.never()))));
     }
 
     // ---------------------------------------------------------------- симуляция драфта (docs/specs/draft-simulation.md)

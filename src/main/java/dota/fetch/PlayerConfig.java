@@ -15,7 +15,12 @@ import java.util.Set;
 public record PlayerConfig(@JsonProperty("our_team") TeamInfo ourTeam, League league, List<Player> players) {
 
     /** Команда: название, организация и id команды в OpenDota (team_id из матчей лиги). */
-    public record TeamInfo(String name, String organization, @JsonProperty("team_id") Long teamId) {
+    public record TeamInfo(String name, String organization, @JsonProperty("team_id") Long teamId,
+                           @JsonProperty("never_pick") List<String> neverPick) {
+        /** Герои, которых команда точно не берёт (только для нашей команды): драфт их не предлагает. */
+        public List<String> neverPickOrEmpty() {
+            return neverPick == null ? List.of() : neverPick;
+        }
     }
 
     /**

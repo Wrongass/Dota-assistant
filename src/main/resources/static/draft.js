@@ -547,6 +547,28 @@
   const ourMark = (r) => { const o = freeOwners(r.heroId); return o ? `<span class="reason ours-mark" title="Герой наших: ${esc(o.join(", "))}">⚠ наш: ${esc(o.map((x) => x.split(" (")[0]).join(", "))}</span>` : ""; };
   const pickable = (r, extra) => `<li><button class="hero-pick" data-id="${r.heroId}">${icon(r.heroId)}${esc(r.name)}</button>
     ${extra} ${reasons(r, SHOWN)} ${more(r, SHOWN)}</li>`;
+
+  // ------------------------------------------------------------ «не берём»
+  // Героев, которых мы точно не возьмём, не предлагаем нам (в «Нам брать», двойном пике, «На линию»). Список общий для
+  // всех соперников, хранится в браузере; команда целиком задаётся в конфиге (never_pick), там уже Invoker.
+  const never = new Set((() => { try { return JSON.parse(localStorage.getItem("draft:never") || "[]"); } catch (e) { return []; } })());
+  const neverBtn = (id) => `<button type="button" class="never-btn" data-id="${id}" title="Не предлагать: мы этого героя не берём">✕</button>`;
+  function renderNever() {
+    $("never-list").innerHTML = never.size ? `Не предлагаем: ${[...never].map((id) =>
+      `<button type="button" class="never-back" data-id="${id}" title="Снова предлагать">${esc(name(id))} ↺</button>`).join(" ")}` : "";
+  }
+  function setNever(id, on) {
+    on ? never.add(id) : never.delete(id);
+    try { localStorage.setItem("draft:never", JSON.stringify([...never])); } catch (e) { /* ок */ }
+    renderNever();
+    requestAdvice();
+  }
+  root.addEventListener("click", (e) => {
+    const b = e.target.closest(".never-btn, .never-back");
+    if (!b) return;
+    e.stopPropagation();
+    setNever(Number(b.dataset.id), b.classList.contains("never-btn"));
+  });
   root.addEventListener("click", (e) => {
     const m = e.target.closest(".reason.more[data-more]");
     if (!m) return;
@@ -648,22 +670,37 @@
       `<b class="ban-score" title="Важность бана: шанс их пика × вред для нас (угроза игрока на герое, контрпик наших, наш плохой винрейт против него). 100 — самый важный в списке">${Math.round(100 * r.score / topBan)}</b> ${ourMark(r)}`)).join("");
     renderPosBans(a.positionBans || []);
     $("picks").innerHTML = a.pickSuggestions.map((r) =>
-      pickable(r, `<span class="muted">${esc(r.player)}</span>`)).join("");
+      pickable(r, `<span class="muted">${esc(r.player)}</span>${neverBtn(r.heroId)}`)).join("");
+    renderNever();
     const pp = a.pairPicks || [];
     $("pair-box").hidden = pp.length === 0;
     $("pair-picks").innerHTML = pp.map((p) => `<li>
-      <button class="hero-pick" data-id="${p.a}">${icon(p.a)}${esc(p.aName)}</button> <span class="muted small">${esc(p.aPlayer)}</span> +
-      <button class="hero-pick" data-id="${p.b}">${icon(p.b)}${esc(p.bName)}</button> <span class="muted small">${esc(p.bPlayer)}</span>
-      ${p.note ? `<span class="reason key">${esc(p.note)}</span>` : ""}</li>`).join("");
+      <button class="hero-pick" data-id="${p.a}">${icon(p.a)}${esc(p.aName)}</button> <span class="muted small">${esc(p.aPlayer)}</span>${neverBtn(p.a)} +
+      <button class="hero-pick" data-id="${p.b}">${icon(p.b)}${esc(p.bName)}</button> <span class="muted small">${esc(p.bPlayer)}</span>${neverBtn(p.b)}
+      <span class="pair-why">${(p.note || "").split(" · ").filter(Boolean).map((n) =>
+        `<span class="reason${n.startsWith("особой") ? "" : " key"}">${esc(n)}</span>`).join(" ")}</span></li>`).join("");
     const lo = a.laneOptions || [];
     $("lane-box").hidden = lo.length === 0;
     $("lane-options").innerHTML = lo.map((o) => {
       const ids = o.enemies.map((n) => (HEROES.find((x) => x.name === n) || {}).id).filter(Boolean);
       const href = `/counters?h=${encodeURIComponent(o.enemies[0])}&h2=${encodeURIComponent(o.enemies[1] || "")}&pos=${o.position}`;
-      const chips = o.heroes.map((r) => `<button class="hero-pick" data-id="${r.heroId}" title="${esc(r.reasons.join(" · "))}">${icon(r.heroId)}${esc(r.name)}</button>
-        <span class="reason">${esc(r.reasons.find((x) => x.startsWith("линия")) || r.reasons[0] || "")}</span>`).join(" ");
-      return `<li><span class="who"><b>${esc(o.player)}</b> (${o.position}) vs ${ids.map((id) => icon(id)).join("")}
-        <a href="${href}" target="_blank" rel="noopener" title="Все контрпики к ${esc(o.enemies.join(" + "))}">↗</a></span> ${chips}</li>`;
+      const chips = o.heroes.map((r) => {
+        const lane = r.reasons.find((x) => x.startsWith("линия ")) || "";
+        const m = lane.match(/([\d.]+)% \/ ([\d.]+)%/);
+        const win = m ? Number(m[1]) : NaN, loss = m ? Number(m[2]) : NaN;
+        const edge = win - loss;
+        const [cls, verdict] = !m ? ["", "по линии данных мало"]
+          : edge >= 25 ? ["strong", "сильно выигрывает линию"] : edge >= 10 ? ["strong", "выигрывает линию"]
+          : edge > -10 ? ["", "линия ровная"] : ["weak", "проигрывает линию"];
+        const game = r.reasons.find((x) => x.startsWith("по игре")) || "";
+        const exp = r.reasons[0] || "";
+        return `<span class="lane-hero"><button class="hero-pick" data-id="${r.heroId}" title="${esc(r.reasons.join(" · "))}">${icon(r.heroId)}${esc(r.name)}</button>${neverBtn(r.heroId)}
+          <span class="lane-verdict ${cls}">${verdict}${m ? `: выиграна ${win}%, проиграна ${loss}%` : ""}</span>
+          <span class="reason">у него ${esc(exp)}${game ? " · " + esc(game.replace("по игре", "шанс матча")) : ""}</span></span>`;
+      }).join("");
+      return `<li><span class="who"><b>${esc(o.player)}</b> · ${POS_NAME[o.position] || o.position} против ${ids.map((id) => icon(id)).join("")}${esc(o.enemies.join(" + "))}
+        <a href="${href}" target="_blank" rel="noopener" title="Все контрпики к ${esc(o.enemies.join(" + "))}">все варианты ↗</a></span>
+        <span class="lane-heroes">${chips}</span></li>`;
     }).join("");
     $("their-likely-bans").innerHTML = a.theirLikelyBans.map((r) =>
       pickable(r, `<b>${pct(r.score)}</b>`)).join("") || '<li class="muted">—</li>';
@@ -863,7 +900,7 @@
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ opponent: state.opponent, weFirst: state.weFirst, heroes: state.heroes, assign: state.assign,
-          lineup: lineupNow() }),
+          lineup: lineupNow(), never: [...never] }),
         signal: inflight.signal,
       });
       const data = await res.json();

@@ -53,7 +53,12 @@ public final class DraftEngine {
      * (капитан знает, кто на каком герое, лучше статистики), для обеих команд.
      */
     public record State(String opponentSlug, boolean weFirst, List<Integer> heroes, Map<Integer, String> assign,
-                        String lineup) {
+                        String lineup, Set<Integer> never) {
+        public State(String opponentSlug, boolean weFirst, List<Integer> heroes, Map<Integer, String> assign,
+                     String lineup) {
+            this(opponentSlug, weFirst, heroes, assign, lineup, Set.of());
+        }
+
         public State(String opponentSlug, boolean weFirst, List<Integer> heroes, Map<Integer, String> assign) {
             this(opponentSlug, weFirst, heroes, assign, null);
         }
@@ -378,9 +383,10 @@ public final class DraftEngine {
             throw new IllegalArgumentException("нет соперника " + state.opponentSlug());
         }
         Map<Integer, String> fixed = state.assign() == null ? Map.of() : state.assign();
+        Set<Integer> never = neverPick(state.never());
         List<AnalysisContext.TeamLineup> lineups = ctx.lineupsOf(oppSquad);
         if (lineups.isEmpty()) {
-            return advise(ctx.ours, oppSquad, state.weFirst(), state.heroes(), fixed, 0);
+            return advise(ctx.ours, oppSquad, state.weFirst(), state.heroes(), fixed, 0, never);
         }
         // несколько составов (замена, игроки меняются позициями): совет по каждому, баны — по всем сразу с весами
         long started = System.nanoTime();
@@ -390,7 +396,7 @@ public final class DraftEngine {
         List<LineupOdds> odds = new ArrayList<>();
         for (int i = 0; i < lineups.size(); i++) {
             AnalysisContext.TeamLineup l = lineups.get(i);
-            each.add(w[i] > 0 ? advise(ctx.ours, l.squad(), state.weFirst(), state.heroes(), fixed, 0) : null);
+            each.add(w[i] > 0 ? advise(ctx.ours, l.squad(), state.weFirst(), state.heroes(), fixed, 0, never) : null);
             odds.add(new LineupOdds(l.key(), l.label(), l.maps(), l.last(), w[i]));
             if (w[i] > w[best]) {
                 best = i;
@@ -562,6 +568,24 @@ public final class DraftEngine {
      */
     Advice advise(Squad usSquad, Squad themSquad, boolean weFirst, List<Integer> heroes, Map<Integer, String> fixed,
                   long excludeMatchId) {
+        return advise(usSquad, themSquad, weFirst, heroes, fixed, excludeMatchId, Set.of());
+    }
+
+    /** Герои «не берём»: из конфига (never_pick у нашей команды) и отмеченные на сайте. */
+    Set<Integer> neverPick(Set<Integer> fromSite) {
+        Set<Integer> result = new HashSet<>(fromSite == null ? Set.of() : fromSite);
+        if (ctx.config.ourTeam() != null) {
+            for (String name : ctx.config.ourTeam().neverPickOrEmpty()) {
+                meta.heroes.values().stream().filter(h -> h.name().equalsIgnoreCase(name.trim()))
+                        .forEach(h -> result.add(h.id()));
+            }
+        }
+        return result;
+    }
+
+    /** never — герои, которых мы не берём: их нет в «Нам брать», двойном пике и «На линию» (баны и их пики как раньше). */
+    Advice advise(Squad usSquad, Squad themSquad, boolean weFirst, List<Integer> heroes, Map<Integer, String> fixed,
+                  long excludeMatchId, Set<Integer> never) {
         long started = System.nanoTime();
         SquadModel us = new SquadModel(usSquad, excludeMatchId);
         SquadModel them = new SquadModel(themSquad, excludeMatchId);
@@ -595,7 +619,10 @@ public final class DraftEngine {
         Distribution theirDist = pickDistribution(them, theirFree, theirPicks, ourPicks, used);
         List<Reasoned> theirNext = predictPicks(them, theirDist, theirPicks, ourPicks);
         Map<Integer, Integer> theirLaners = knownPositions(them, theirAssignment);
-        List<Reasoned> ourPickList = suggestPicks(us, ourProb, ourPicks, theirPicks, used, theirDist, theirLaners);
+        List<Reasoned> ourPickList = suggestPicks(us, ourProb, ourPicks, theirPicks, used, theirDist, theirLaners).stream()
+                .filter(r -> !never.contains(r.heroId())).toList();
+        Set<Integer> notForUs = new HashSet<>(used);
+        notForUs.addAll(never);
         List<Reasoned> bans = suggestBans(them, us, ourPicks, used, theirDist,
                 ourPickList.stream().limit(3).map(Reasoned::heroId).toList());
         List<Reasoned> likelyBans = predictTheirBans(us, them, ourProb, ourPicks, theirPicks, used, theirBansLeft);
@@ -607,8 +634,8 @@ public final class DraftEngine {
                 theirNext.stream().limit(10).toList(), bans, ourPickList, likelyBans,
                 outlook(them, theirDist), us.roster(), them.roster(),
                 theirBansLeft, theirPicksLeft, ourBansLeft, ourPicksLeft, lanes, threats,
-                finished ? List.of() : laneOptions(us, ourProb, used, theirLaners),
-                doublePickNow(step, weFirst) ? pairPicks(ourPickList) : List.of(),
+                finished ? List.of() : laneOptions(us, ourProb, notForUs, theirLaners),
+                doublePickNow(step, weFirst) ? pairPicks(us, ourPickList) : List.of(),
                 finished ? List.of() : positionBans(them, us, ourPicks, used, theirDist, theirAssignment),
                 List.of(), null, (System.nanoTime() - started) / 1000);
     }
@@ -961,28 +988,98 @@ public final class DraftEngine {
                 && SLOTS.get(step).firstTeam() == weFirst && SLOTS.get(step + 1).firstTeam() == weFirst;
     }
 
+    /** Связка по винрейту пары засчитывается с весом n / (n + PAIR_PRIOR): на 300 играх — наполовину. */
+    static final double PAIR_PRIOR = 300;
+    /** Связка по винрейту меньше 1,5% (после поправки на выборку) — шум, в подсказке её нет. */
+    static final double PAIR_MIN_LIFT = 0.015;
+
     /**
-     * Лучшие пары из 10 первых советов: разным игрокам, оценка — сумма оценок + связка пары (×400, как синергия в
-     * оценке пика). Связку видно в подсказке. Три пары.
+     * Двойной пик: пары из 12 первых советов разным игрокам. Оценка — сумма оценок героев + связка: винрейт пары в
+     * патче с поправкой на число игр (×400), герои на одной линии (+12), сочетание по свойствам героев (+8 за каждое:
+     * контроль + урон, оба для драк, пуш вдвоём). Один герой — не больше чем в одной паре: три разных варианта.
+     * В подсказке видно, есть ли у пары настоящая связка или это просто два сильных пика.
      */
-    private List<PairPick> pairPicks(List<Reasoned> picks) {
-        List<Reasoned> top = picks.stream().limit(10).toList();
-        List<PairPick> result = new ArrayList<>();
+    private List<PairPick> pairPicks(SquadModel us, List<Reasoned> picks) {
+        List<Reasoned> top = picks.stream().limit(12).toList();
+        Map<String, Integer> posOf = new HashMap<>();
+        us.players.forEach(p -> posOf.put(p.nick(), us.squad.position(p)));
+        List<PairPick> all = new ArrayList<>();
         for (int i = 0; i < top.size(); i++) {
             for (int j = i + 1; j < top.size(); j++) {
                 Reasoned x = top.get(i), y = top.get(j);
-                if (x.player() == null || x.player().equals(y.player())) {
+                if (x.player() == null || y.player() == null || x.player().equals(y.player())) {
                     continue;
                 }
+                List<String> notes = new ArrayList<>();
+                double bonus = 0;
+                Meta.PairStats s = meta.synergyStats(x.heroId(), y.heroId());
                 double lift = meta.synergyLift(x.heroId(), y.heroId(), Squad.MIN_PAIR_GAMES);
-                double syn = Double.isNaN(lift) ? 0 : lift;
-                String note = Double.isNaN(lift) ? null : "связка " + Md.signedPct(lift);
-                result.add(new PairPick(x.heroId(), x.name(), x.player(), y.heroId(), y.name(), y.player(),
-                        x.score() + y.score() + 400 * syn, note));
+                if (!Double.isNaN(lift) && s != null) {
+                    double shrunk = lift * s.games() / (s.games() + PAIR_PRIOR);
+                    bonus += 400 * shrunk;
+                    if (shrunk >= PAIR_MIN_LIFT) {
+                        notes.add("вместе выигрывают чаще: " + Md.signedPct(lift) + " (" + s.games() + " игр)");
+                    }
+                }
+                String lane = laneDuo(posOf.getOrDefault(x.player(), 0), posOf.getOrDefault(y.player(), 0));
+                if (lane != null) {
+                    bonus += 12;
+                    notes.add(lane);
+                }
+                for (String combo : traitCombos(x.heroId(), y.heroId())) {
+                    bonus += 8;
+                    notes.add(combo);
+                }
+                if (notes.isEmpty()) {
+                    notes.add("особой связки нет: просто два сильных пика");
+                }
+                all.add(new PairPick(x.heroId(), x.name(), x.player(), y.heroId(), y.name(), y.player(),
+                        x.score() + y.score() + bonus, String.join(" · ", notes)));
             }
         }
-        result.sort(Comparator.comparingDouble(PairPick::score).reversed());
-        return result.stream().limit(3).toList();
+        all.sort(Comparator.comparingDouble(PairPick::score).reversed());
+        List<PairPick> result = new ArrayList<>();
+        Set<Integer> taken = new HashSet<>();
+        for (PairPick p : all) {
+            if (result.size() < 3 && !taken.contains(p.a()) && !taken.contains(p.b())) {
+                result.add(p);
+                taken.add(p.a());
+                taken.add(p.b());
+            }
+        }
+        return result;
+    }
+
+    /** Наши позиции стоят на одной линии: лёгкая 1+5, сложная 3+4. */
+    static String laneDuo(int a, int b) {
+        int lo = Math.min(a, b), hi = Math.max(a, b);
+        if (lo == 1 && hi == 5) {
+            return "вместе на лёгкой линии";
+        }
+        if (lo == 3 && hi == 4) {
+            return "вместе на сложной линии";
+        }
+        return null;
+    }
+
+    /** Сочетания по config/hero_traits.yaml: контроль одного + урон другого, оба для драк, оба пушат. */
+    List<String> traitCombos(int a, int b) {
+        HeroTraits t = ctx.traits;
+        if (!t.has(a) || !t.has(b)) {
+            return List.of();
+        }
+        HeroTraits.Traits x = t.of(a), y = t.of(b);
+        List<String> result = new ArrayList<>();
+        if ((x.get("catch") >= 2 && y.get("burst") >= 1) || (y.get("catch") >= 2 && x.get("burst") >= 1)) {
+            result.add("контроль + урон");
+        }
+        if (x.get("teamfight") >= 2 && y.get("teamfight") >= 2) {
+            result.add("оба сильны в драках");
+        }
+        if (x.get("push") >= 2 && y.get("push") >= 1 || y.get("push") >= 2 && x.get("push") >= 1) {
+            result.add("пушат вместе");
+        }
+        return result;
     }
 
     /** Вес преимущества на линии в оценке нашего пика: линия +0,3 (выиграно на 30% линий больше) даёт +0,15. */
