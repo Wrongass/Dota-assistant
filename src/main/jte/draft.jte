@@ -127,6 +127,7 @@
 
             <section class="panel side their-side">
                 <h3 class="theirs" id="their-title">Они</h3>
+                <div id="their-lineups" class="lineups small" hidden></div>
                 <div id="their-slots" class="slots"></div>
                 <div class="small muted">Их баны</div>
                 <div id="their-bans" class="ban-row"></div>

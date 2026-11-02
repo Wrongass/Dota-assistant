@@ -1,6 +1,6 @@
 # Угрозы: UPPO TEAM (УППО)
 
-Сгенерировано 2026-11-01, патч 7.41.
+Сгенерировано 2026-11-02, патч 7.41.
 
 ## Пулы по позициям (топ-6 по пригодности в патче)
 
@@ -8,7 +8,7 @@
 |---|---|---|---|---|
 | 1 | [Togo](../players/pos1_Togo.md) | Божество 4 (Divine) | Slark 72, Anti-Mage 72, Phantom Lancer 70 ▲, Dragon Knight 69 ▲, Luna 68, Sven 68 ▲ | Luna ×3, Lifestealer, Slark, Sven |
 | 2 | [Sacred](../players/pos2_Sacred.md) | Легенда 1 (Legend) | Outworld Devourer 79 ▲, Necrophos 71, Dragon Knight 70 ▲, Slark 66, Pudge 58, Sniper 54 | Lina ×4, Outworld Devourer, Viper |
-| 3 | [Odar.sp](../players/pos3_Odar.sp.md) | Божество 4 (Divine) | Dawnbreaker 78 ▲, Enigma 78 ▲, Legion Commander 73, Brewmaster 72, Kunkka 69, Beastmaster 64 | Kunkka ×2, Beastmaster, Dawnbreaker, Legion Commander, Underlord |
+| 3 | [Odar.sp](../players/pos3_Odar.sp.md) | Божество 4 (Divine) | Enigma 78 ▲, Dawnbreaker 78 ▲, Legion Commander 73, Brewmaster 72, Kunkka 69, Beastmaster 64 | Kunkka ×2, Beastmaster, Dawnbreaker, Legion Commander, Underlord |
 | 4 | [Kaiju](../players/pos4_Kaiju.md) | Легенда 5 (Legend) | Bounty Hunter 87 ▲, Keeper of the Light 81, Techies 73, Dazzle 72, Nyx Assassin 70 ▲, Hoodwink 70 | Dark Willow ×2, Largo, Mirana, Rubick, Shadow Demon |
 | 5 | [Nate](../players/pos5_Nate.md) | Властелин 1 (Ancient) | Dazzle 74, Winter Wyvern 73, Disruptor 70, Pugna 69, Warlock 68, Witch Doctor 67 | Hoodwink ×2, Lion ×2, Ancient Apparition, Disruptor |
 
@@ -28,7 +28,7 @@
 | 8 | Luna | Togo | 0.83 | 93 | 0.43 | 55 / 20 | 65.0% | ×3 | 1 |
 | 9 | Wraith King | Sacred | 0.82 | 99 | 0.55 | 146 / 27 | 63.0% |  | 1/3 |
 | 10 | Ancient Apparition | Nate | 0.82 | 92 | 0.41 | 103 / 36 | 55.6% | ×1 | 4/5 |
-| 11 | Invoker | Kaiju | 0.80 | 93 | 0.61 | 496 / 80 | 62.5% |  | 2 |
+| 11 | Invoker | Kaiju | 0.80 | 93 | 0.61 | 496 / 77 | 62.3% |  | 2 |
 | 12 | Dark Willow | Kaiju | 0.80 | 82 | 0.51 | 14 / 5 | 80.0% | ×2 | 4/5 |
 | 13 | Mirana | Kaiju | 0.80 | 70 | 0.68 | 15 / 2 | 100.0% | ×1 | 4/5 |
 | 14 | Kunkka | Odar.sp | 0.79 | 89 | 0.40 | 193 / 191 | 56.0% | ×2 | 2/3 |
@@ -57,13 +57,13 @@ Dragon Knight ×4, Sven ×4, Lifestealer ×3, Wraith King ×3, Bounty Hunter ×2
 
 ## Против кого они проигрывают
 
-Их матчи за 2 года (без турбо), сглажено к их среднему (50.3%) весом 30 игр; минимум 40 игр. ✔ — герой есть в наших пулах.
+Их матчи за 2 года (без турбо), сглажено к их среднему (50.2%) весом 30 игр; минимум 40 игр. ✔ — герой есть в наших пулах.
 
 | # | Герой | Их WR против | Игр | В наших пулах |
 |---|---|---|---|---|
 | 1 | Arc Warden | 41.5% | 69 |  |
 | 2 | Leshrac | 41.6% | 76 | ✔ |
-| 3 | Silencer | 43.0% | 210 | ✔ |
+| 3 | Silencer | 43.1% | 209 | ✔ |
 | 4 | Riki | 43.4% | 67 |  |
 | 5 | Io | 44.4% | 76 |  |
 | 6 | Bristleback | 44.4% | 103 |  |

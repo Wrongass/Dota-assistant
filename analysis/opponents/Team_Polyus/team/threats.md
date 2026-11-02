@@ -1,6 +1,6 @@
 # Угрозы: Team Polyus (НИИ Полюс им. М.Ф. Стельмаха)
 
-Сгенерировано 2026-11-01, патч 7.41.
+Сгенерировано 2026-11-02, патч 7.41.
 
 ## Пулы по позициям (топ-6 по пригодности в патче)
 
@@ -20,7 +20,7 @@
 |---|---|---|---|---|---|---|---|---|---|
 | 1 | Juggernaut | Unlearnable | 0.94 | 97 | 0.65 | 42 / 22 | 81.8% | ×1 | 1 |
 | 2 | Io | ryota | 0.88 | 100 | 0.70 | 169 / 41 | 73.2% |  | 4/5 |
-| 3 | Wraith King | Unlearnable | 0.88 | 96 | 0.50 | 30 / 25 | 68.0% | ×1 | 1/3 |
+| 3 | Wraith King | Unlearnable | 0.88 | 96 | 0.50 | 30 / 24 | 66.7% | ×1 | 1/3 |
 | 4 | Witch Doctor | ГYYYYYСЬ | 0.85 | 76 | 0.74 | 16 / 16 | 62.5% | ×1 | 4/5 |
 | 5 | Lion | ryota | 0.84 | 99 | 0.37 | 168 / 68 | 64.7% | ×1 | 4/5 |
 | 6 | Nyx Assassin | ryota | 0.83 | 90 | 0.73 | 75 / 11 | 54.5% |  | 4/5 |
@@ -28,7 +28,7 @@
 | 8 | Vengeful Spirit | Unlearnable | 0.80 | 99 | 0.51 | 67 / 23 | 78.3% |  | 1/4/5 |
 | 9 | Lina | ryota | 0.79 | 95 | 0.28 | 61 / 22 | 68.2% | ×1 | 2 |
 | 10 | Abaddon | UshKO | 0.78 | 90 | 0.36 | 79 / 15 | 46.7% | ×1 | 1/3 |
-| 11 | Legion Commander | Unlearnable | 0.77 | 93 | 0.53 | 106 / 55 | 54.5% |  | 3 |
+| 11 | Legion Commander | Unlearnable | 0.77 | 93 | 0.53 | 106 / 54 | 55.6% |  | 3 |
 | 12 | Axe | ryota | 0.77 | 100 | 0.42 | 104 / 52 | 63.5% |  | 3 |
 | 13 | Necrophos | ryota | 0.75 | 71 | 0.57 | 18 / 6 | 50.0% | ×1 | 1/2/3 |
 | 14 | Disruptor | UshKO | 0.74 | 92 | 0.47 | 72 / 10 | 80.0% |  | 4/5 |
@@ -62,7 +62,7 @@ Outworld Devourer ×6, Rubick ×4, Brewmaster ×3, Centaur Warrunner ×2, Dawnbr
 | # | Герой | Их WR против | Игр | В наших пулах |
 |---|---|---|---|---|
 | 1 | Wraith King | 39.5% | 151 | ✔ |
-| 2 | Sniper | 42.4% | 245 | ✔ |
+| 2 | Sniper | 42.3% | 245 | ✔ |
 | 3 | Winter Wyvern | 42.4% | 115 |  |
 | 4 | Spectre | 42.6% | 152 | ✔ |
 | 5 | Viper | 43.3% | 105 | ✔ |
@@ -70,6 +70,6 @@ Outworld Devourer ×6, Rubick ×4, Brewmaster ×3, Centaur Warrunner ×2, Dawnbr
 | 7 | Ember Spirit | 44.0% | 112 |  |
 | 8 | Largo | 44.5% | 43 |  |
 | 9 | Bane | 44.9% | 49 | ✔ |
-| 10 | Keeper of the Light | 45.6% | 74 |  |
-| 11 | Legion Commander | 46.0% | 273 |  |
+| 10 | Legion Commander | 45.8% | 272 |  |
+| 11 | Keeper of the Light | 46.1% | 73 |  |
 | 12 | Enigma | 46.2% | 64 | ✔ |

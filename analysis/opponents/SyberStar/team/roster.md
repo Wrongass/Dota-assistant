@@ -1,12 +1,12 @@
 # Состав: SyberStar (НПП «Звезда»)
 
-Данные на 2026-11-01, патч 7.41. Турбо не учитывается.
+Данные на 2026-11-02, патч 7.41. Турбо не учитывается.
 
 | Поз. | Игрок | Steam-ник | account_id | Ранг | MMR (оценка) | Матчей всего / год / патч | WR в патче | Captains Mode | Роль в команде |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | [死](../players/pos1_死.md) | 死 | 323776798 | Божество 4 (Divine) | 4450 | 3614 / 505 / 406 | 64.8% | 6 (66.7%) | В турнире Luna ×2, Windranger ×2, Phantom Assassin, Dragon Knight (лёгкая, 678 GPM). |
+| 1 | [死](../players/pos1_死.md) | 死 | 323776798 | Божество 4 (Divine) | 4450 | 3614 / 505 / 406 | 64.8% | 6 (66.7%) | В турнире Luna ×2, Windranger ×2, Phantom Assassin, Dragon Knight. 11.10 и 17.10 керри, 25.10 оффлейн (Elsa на керри). |
 | 2 | [SuperPoni](../players/pos2_SuperPoni.md) | SuperPoni | 302784953 | Властелин 2 (Ancient) | 4201 | 3613 / 100 / 100 | 59.0% | 57 (52.6%) | В турнире Dragon Knight ×2, Windranger, Outworld Devourer (мид), Centaur Warrunner, Slardar (оффлейн). |
-| 3 | [Elsa](../players/pos3_Elsa.md) | Elsa | 395555261 | Рыцарь 5 (Crusader) | 4201 | 3071 / 153 / 153 | 60.1% | 34 (61.8%) | В турнире Dawnbreaker, Phoenix, Luna, Drow Ranger. 4 карты из 6, линия меняется. |
+| 3 | [Elsa](../players/pos3_Elsa.md) | Elsa | 395555261 | Рыцарь 5 (Crusader) | 4201 | 3071 / 153 / 153 | 60.1% | 34 (61.8%) | В турнире Dawnbreaker, Phoenix, Luna, Drow Ranger. 4 карты из 6, 17.10 не играл. 11.10 оффлейн, 25.10 керри. |
 | 4 | [СГРЫЗ_КАСТРЮЛЮ](../players/pos4_СГРЫЗ_КАСТРЮЛЮ.md) | СГРЫЗ КАСТРЮЛЮ | 843021665 | Рыцарь 3 (Crusader) | 3972 | 1527 / 160 / 94 | 53.2% | 7 (57.1%) | Steam-ник «СГРЫЗ КАСТРЮЛЮ». В турнире Hoodwink ×3, Lion, Techies, Skywrath Mage (саппорт сложной линии). |
 | 5 | [kalibri](../players/pos5_kalibri.md) | kalibri | 141490608 | Легенда 1 (Legend) | 3996 | 323 / 323 / 227 | 47.6% | 6 (66.7%) | В турнире Ogre Magi ×2, Skywrath Mage, Jakiro, Vengeful Spirit, Undying (саппорт лёгкой линии). |
 

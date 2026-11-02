@@ -42,13 +42,15 @@
     Object.assign(state, saved
       ? { weFirst: saved.weFirst !== false, heroes: saved.heroes || [], assign: saved.assign || {},
           seed: saved.seed || newSeed(), revealed: !!saved.revealed, swaps: saved.swaps || [], botAssign: saved.botAssign || {},
-          hiddenPos: saved.hiddenPos || [] }
-      : { weFirst: true, heroes: [], assign: {}, seed: newSeed(), revealed: false, swaps: [], botAssign: {}, hiddenPos: [] });
+          hiddenPos: saved.hiddenPos || [], lineup: saved.lineup || null, botLineup: saved.botLineup || null }
+      : { weFirst: true, heroes: [], assign: {}, seed: newSeed(), revealed: false, swaps: [], botAssign: {}, hiddenPos: [],
+          lineup: null, botLineup: null });
   };
   const save = () => {
     try {
       localStorage.setItem(key(), JSON.stringify({ weFirst: state.weFirst, heroes: state.heroes, assign: state.assign,
-        seed: state.seed, revealed: state.revealed, swaps: state.swaps, botAssign: state.botAssign, hiddenPos: state.hiddenPos }));
+        seed: state.seed, revealed: state.revealed, swaps: state.swaps, botAssign: state.botAssign, hiddenPos: state.hiddenPos,
+        lineup: state.lineup, botLineup: state.botLineup }));
     } catch (e) { /* ок */ }
   };
   /** Симуляция, и сейчас ход соперника: ввод закрыт, ходит бот. */
@@ -218,7 +220,7 @@
   $("reset").onclick = () => {
     if (confirmReset()) {
       state.heroes = []; state.assign = {}; state.hiddenPos = []; editIndex = null;
-      Object.assign(state, { seed: newSeed(), revealed: false, swaps: [] }); // новая симуляция — новое зерно
+      Object.assign(state, { seed: newSeed(), revealed: false, swaps: [], botLineup: null }); // новая симуляция — новое зерно
       afterChange();
     }
   };
@@ -480,7 +482,8 @@
     const ours = { assignment: advice?.ourAssignment ?? [], remaining: advice?.ourRemaining ?? [], outlook: [] };
     const theirs = { theirs: true, assignment: advice?.theirAssignment ?? [], remaining: advice?.theirRemaining ?? [], outlook: advice?.theirPlayers ?? [] };
     $("our-slots").innerHTML = (ROSTERS.ours || []).map((p) => playerSlot(p, ours, parts.ourPicks)).join("");
-    $("their-slots").innerHTML = (ROSTERS[state.opponent] || []).map((p) => playerSlot(p, theirs, parts.theirPicks)).join("");
+    $("their-slots").innerHTML = theirRoster().map((p) => playerSlot(p, theirs, parts.theirPicks)).join("");
+    renderLineups();
     // UX-05: позиции или замена у соперника не те — правятся в «Состав на игру» на его странице
     $("their-title").innerHTML = `${esc($("opponent").selectedOptions[0]?.textContent || "Они")}
       <a class="small muted lineup-link" href="/opponent/${encodeURIComponent(state.opponent)}#lineup" target="_blank" rel="noopener"
@@ -574,16 +577,18 @@
     const hero = (r) => `<span class="pos-hero"><button class="hero-pick" data-id="${r.heroId}" title="${esc(r.reasons.join(" · "))}">${icon(r.heroId)}${esc(r.name)}</button>
         <span class="reason">${esc(r.reasons[0] || "")}</span>${ourMark(r)}</span>`;
     $("pos-bans").innerHTML = pb.filter((p) => !hidden.has(p.position)).map((p) => {
-      const open = posExpanded.has(p.position);
+      const rowKey = p.position + "|" + p.player;
+      const open = posExpanded.has(rowKey);
       const list = open ? p.heroes : p.heroes.slice(0, POS_SHOWN);
       const rest = p.heroes.length - POS_SHOWN;
-      const toggle = rest > 0 ? `<button type="button" class="reason more pos-more" data-pos="${p.position}" aria-expanded="${open}">${open ? "скрыть ▴" : `ещё ${rest} ▾`}</button>` : "";
-      return `<li data-pos="${p.position}"><span class="pos-label"><b class="pos">${p.position}</b> ${POS_NAME[p.position] || ""} · ${esc(p.player)}
+      const toggle = rest > 0 ? `<button type="button" class="reason more pos-more" data-row="${esc(rowKey)}" aria-expanded="${open}">${open ? "скрыть ▴" : `ещё ${rest} ▾`}</button>` : "";
+      const share = p.share < 0.995 ? ` <span class="pos-share" title="Вероятность, что на этой позиции он: по составам соперника из турнира и их пикам">${pct(p.share)}</span>` : "";
+      return `<li data-pos="${p.position}" class="${p.share < 0.995 ? "maybe" : ""}"><span class="pos-label"><b class="pos">${p.position}</b> ${POS_NAME[p.position] || ""} · ${esc(p.player)}${share}
           <button type="button" class="pos-hide" data-pos="${p.position}" title="Скрыть эту позицию: уверены, что здесь свапа не будет">✕ скрыть</button>${
         p.picked ? `<span class="small muted picked-note">взял ${icon(p.picked)}${esc(p.pickedName)}, может свапнуть</span>` : ""}</span>
         <span class="pos-heroes">${list.map(hero).join("") || '<span class="muted small">нет свободных героев его пула</span>'}${toggle}</span></li>`;
     }).join("");
-    const gone = pb.filter((p) => hidden.has(p.position));
+    const gone = [...new Map(pb.filter((p) => hidden.has(p.position)).map((p) => [p.position, p])).values()];
     $("pos-bans-hidden").innerHTML = gone.length ? `Скрыты: ${gone.map((p) =>
       `<button type="button" class="pos-show" data-pos="${p.position}" title="Вернуть позицию">${p.position} ${POS_NAME[p.position] || ""} ↺</button>`).join(" ")}
       <button type="button" class="pos-show-all">вернуть все</button>` : "";
@@ -592,7 +597,8 @@
     const t = e.target.closest("button");
     if (!t || t.classList.contains("hero-pick")) return;
     const pos = Number(t.dataset.pos);
-    if (t.classList.contains("pos-more")) posExpanded.has(pos) ? posExpanded.delete(pos) : posExpanded.add(pos);
+    const row = t.dataset.row;
+    if (t.classList.contains("pos-more")) posExpanded.has(row) ? posExpanded.delete(row) : posExpanded.add(row);
     else if (t.classList.contains("pos-hide")) state.hiddenPos = [...new Set([...(state.hiddenPos || []), pos])];
     else if (t.classList.contains("pos-show")) state.hiddenPos = (state.hiddenPos || []).filter((x) => x !== pos);
     else if (t.classList.contains("pos-show-all")) state.hiddenPos = [];
@@ -600,6 +606,36 @@
     e.stopPropagation(); // не путать с «ещё N» у общих причин
     save();
     renderPosBans(lastPosBans);
+  });
+
+  // ------------------------------------------------------------ состав соперника
+  // Состав до игры неизвестен (замена, игроки меняются позициями): «Все составы» — советы по всем составам из турнира
+  // с весами, веса меняются по их пикам; увидели лобби — выбираем состав, и советы только по нему.
+  /** Состав для запроса: выбранный, а в симуляции после раскрытия — тот, которым вышел соперник. */
+  const lineupNow = () => (state.sim && state.revealed && state.botLineup) || state.lineup || null;
+  const theirRoster = () => (advice?.theirLineup && ROSTERS[state.opponent + "|" + advice.theirLineup]) || ROSTERS[state.opponent] || [];
+  function renderLineups() {
+    const list = advice?.theirLineups || [];
+    const box = $("their-lineups");
+    box.hidden = list.length < 2;
+    if (box.hidden) { box.innerHTML = ""; return; }
+    const auto = !lineupNow();
+    const locked = state.sim && state.revealed;
+    const maps = (l) => l.maps ? `${l.maps} ${l.maps === 1 ? "карта" : l.maps < 5 ? "карты" : "карт"}, ${esc(l.last)}` : esc(l.last);
+    box.innerHTML = `<div class="lineups-head"><b>Состав</b>
+        <button type="button" class="lineup-pick${auto ? " active" : ""}" data-key="" ${locked ? "disabled" : ""}
+          title="Советы по всем составам из турнира сразу, вес состава меняется по их пикам">все составы</button>
+        <span class="hint">${auto ? "готовимся ко всем, вес по их пикам · увидели лобби — выберите состав" : "советы только по этому составу"}</span></div>
+      <ul>${list.map((l) => `<li><button type="button" class="lineup-pick${!auto && l.key === advice.theirLineup ? " active" : ""}${
+        auto && l.key === advice.theirLineup ? " likely" : ""}" data-key="${esc(l.key)}" ${locked ? "disabled" : ""}>
+        ${auto ? `<b class="lineup-w">${pct(l.weight)}</b> ` : ""}${esc(l.label)} <span class="muted">· ${maps(l)}</span></button></li>`).join("")}</ul>`;
+  }
+  $("their-lineups").addEventListener("click", (e) => {
+    const b = e.target.closest(".lineup-pick");
+    if (!b || b.disabled) return;
+    state.lineup = b.dataset.key || null;
+    save();
+    afterChange(true);
   });
 
   function renderAdvice(a) {
@@ -826,7 +862,8 @@
       const res = await fetch("/api/draft", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ opponent: state.opponent, weFirst: state.weFirst, heroes: state.heroes, assign: state.assign }),
+        body: JSON.stringify({ opponent: state.opponent, weFirst: state.weFirst, heroes: state.heroes, assign: state.assign,
+          lineup: lineupNow() }),
         signal: inflight.signal,
       });
       const data = await res.json();
@@ -841,7 +878,7 @@
 
   // ------------------------------------------------------------ симуляция против соперника
   const simBody = () => JSON.stringify({ opponent: state.opponent, weFirst: state.weFirst, heroes: state.heroes,
-    assign: state.assign, seed: state.seed });
+    assign: state.assign, seed: state.seed, lineup: lineupNow() });
   let botTimer = 0;
   const botLog = [], botNew = new Set(); // ходы соперника после нашего последнего хода: в сообщении и подсветкой в ленте
   /** После каждого изменения: на ходу соперника — его ход через 0,7 с; в конце — раскрыть план бота и оценить. */
@@ -889,7 +926,7 @@
       if (!res.ok) throw new Error(plan.error || res.status);
       const botAssign = {};
       plan.placements.forEach((p) => { state.assign[p.heroId] = p.player; botAssign[p.heroId] = p.player; });
-      Object.assign(state, { revealed: true, swaps: plan.swaps, botAssign });
+      Object.assign(state, { revealed: true, swaps: plan.swaps, botAssign, botLineup: plan.lineup || null });
       afterChange(true);
     } catch (e) { $("sim-result").innerHTML = `<p class="weak">Не удалось получить расстановку соперника: ${esc(e.message)}</p>`; }
   }

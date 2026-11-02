@@ -8,20 +8,20 @@
 
 ## Чем играет сейчас: 14 дней и 2 месяца
 
-На 2026-11-01: за 14 дней 20 игр, за 2 месяца 107 (из них с игроками своей команды — 32), Турбо за 2 месяца — 7 (в игры не входит). 🔥 — много игр за 14 дней, но не из топа; ★ — из топа «играет лучше всего»; 👥 — играл в пати со своими.
+На 2026-11-02: за 14 дней 20 игр, за 2 месяца 105 (из них с игроками своей команды — 32), Турбо за 2 месяца — 2 (в игры не входит). 🔥 — много игр за 14 дней, но не из топа; ★ — из топа «играет лучше всего»; 👥 — играл в пати со своими.
 
 | Герой | 14 дней | WR | 2 месяца | WR | Турбо | С командой | С кем | Последняя |
 |---|---|---|---|---|---|---|---|---|
-| Phantom Lancer ★ 👥 | 4 | 50.0% | 32 | 65.6% | 1 | 9 | YOURSELF, DrestoV1ch, kezi | 30.10 |
-| Windranger ★ 👥 | 4 | 50.0% | 11 | 54.5% | 1 | 3 | YOURSELF, Asmodeus, DrestoV1ch, kezi | 30.10 |
+| Phantom Lancer ★ 👥 | 4 | 50.0% | 31 | 67.7% | 1 | 9 | YOURSELF, DrestoV1ch, kezi | 30.10 |
+| Windranger ★ 👥 | 4 | 50.0% | 11 | 54.5% |  | 3 | YOURSELF, Asmodeus, DrestoV1ch, kezi | 30.10 |
 | Drow Ranger ★ 👥 | 2 | 50.0% | 10 | 50.0% |  | 5 | YOURSELF, Asmodeus, DrestoV1ch, kezi | 31.10 |
 | Spectre ★ | 2 | 50.0% | 8 | 87.5% |  |  |  | 30.10 |
-| Sven ★ 👥 | 1 | 100.0% | 6 | 50.0% | 1 | 3 | DrestoV1ch, kezi | 25.10 |
+| Sven ★ 👥 | 1 | 100.0% | 6 | 50.0% |  | 3 | DrestoV1ch, kezi | 25.10 |
 | Nature's Prophet 👥 | 1 | 0.0% | 6 | 16.7% |  | 3 | YOURSELF, Asmodeus, DrestoV1ch, kezi | 25.10 |
-| Lifestealer ★ 👥 | 1 | 100.0% | 6 | 83.3% |  | 1 | YOURSELF, Asmodeus, DrestoV1ch, kezi | 25.10 |
 | Anti-Mage ★ 👥 | 2 | 50.0% | 5 | 60.0% |  | 3 | YOURSELF, Asmodeus, DrestoV1ch, kezi | 31.10 |
 | Juggernaut ★ 👥 | 0 | — | 5 | 60.0% |  | 1 | YOURSELF | 21.09 |
-| Shadow Fiend 👥 | 0 | — | 4 | 25.0% | 1 | 1 | YOURSELF | 13.09 |
+| Lifestealer ★ 👥 | 1 | 100.0% | 5 | 80.0% |  | 1 | YOURSELF, Asmodeus, DrestoV1ch, kezi | 25.10 |
+| Shadow Fiend 👥 | 0 | — | 4 | 25.0% |  | 1 | YOURSELF | 13.09 |
 | Necrophos | 0 | — | 3 | 33.3% |  |  |  | 20.09 |
 | Muerta 👥 | 1 | 0.0% | 2 | 50.0% |  | 1 | YOURSELF, Asmodeus, DrestoV1ch, kezi | 31.10 |
 | Terrorblade | 0 | — | 2 | 0.0% |  |  |  | 07.10 |
