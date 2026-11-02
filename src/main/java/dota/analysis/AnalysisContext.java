@@ -232,12 +232,7 @@ public final class AnalysisContext {
         List<TeamLineup> result = new ArrayList<>();
         java.time.format.DateTimeFormatter day = java.time.format.DateTimeFormatter.ofPattern("dd.MM").withZone(ZoneOffset.UTC);
         for (TeamLineups.Seen s : TeamLineups.seen(league.of(team.team.teamId()), team.team.teamId(), known)) {
-            Squad sq = squad(dataDir, config, team.team.name(), team.team, false, meta, league,
-                    date.atStartOfDay(ZoneOffset.UTC).toInstant(), date.toString(), Lineups.of(team.team.name(), s.lineup()),
-                    new ArrayList<>());
-            sq.teamNames.putAll(team.teamNames);
-            sq.nicks.putAll(team.nicks);
-            sq.manualMaps.addAll(team.manualMaps);
+            Squad sq = withLineup(team, s.lineup());
             result.add(new TeamLineup(lineupKey(sq), lineupLabel(sq), s.maps(), day.format(Instant.ofEpochSecond(s.lastTime())), sq));
         }
         String current = lineupKey(team);
@@ -247,7 +242,19 @@ public final class AnalysisContext {
         return result.size() < 2 ? List.of() : List.copyOf(result);
     }
 
-    private static String lineupKey(Squad s) {
+    /** Команда team (наша или соперник) с другим составом «позиция → account_id»: составы из турнира, бэктест. */
+    Squad withLineup(Squad team, java.util.Map<Integer, Long> lineup) throws IOException {
+        boolean isOurs = team == ours;
+        Squad sq = squad(dataDir, config, isOurs ? null : team.team.name(), team.team, isOurs, meta, league,
+                date.atStartOfDay(ZoneOffset.UTC).toInstant(), date.toString(), Lineups.of(team.team.name(), lineup),
+                new ArrayList<>());
+        sq.teamNames.putAll(team.teamNames);
+        sq.nicks.putAll(team.nicks);
+        sq.manualMaps.addAll(team.manualMaps);
+        return sq;
+    }
+
+    static String lineupKey(Squad s) {
         return s.byPosition().stream().map(p -> String.valueOf(p.config.accountId())).collect(Collectors.joining("-"));
     }
 
