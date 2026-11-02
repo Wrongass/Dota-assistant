@@ -43,10 +43,16 @@ public final class DraftEngine {
      * @param shareCap    с какой доли игр вес перестаёт расти
      * @param recentWeight вес доли героя в играх за последние 60 дней (без Турбо) — «что тренирует сейчас»
      * @param teamWeight   вес доли героя в играх за 60 дней в пати с игроками своей команды
+     * @param orderWeight  насколько верить порядку позиций в пиках лиги (0 — следующий пик у любого свободного игрока
+     *                     поровну, 1 — точно как в лиге: первыми берут саппортов, последними керри и мид)
      */
-    public record Params(double sharpness, double shareWeight, double shareCap, double recentWeight, double teamWeight) {
-        public static final Params DEFAULT = new Params(1.25, 32, 0.25, 8, 4);
+    public record Params(double sharpness, double shareWeight, double shareCap, double recentWeight, double teamWeight,
+                         double orderWeight) {
+        public static final Params DEFAULT = new Params(1.25, 32, 0.25, 8, 4, ORDER_WEIGHT);
     }
+
+    /** Вес порядка позиций по умолчанию (подобран бэктестом 2.11). */
+    static final double ORDER_WEIGHT = 1.0;
 
     /**
      * heroes[i] — герой хода i (0 — ход пропущен). assign — ручное назначение «герой → ник игрока»
@@ -150,6 +156,8 @@ public final class DraftEngine {
     private final AnalysisContext ctx;
     private final Meta meta;
     private final Params params;
+    /** order[k][pos] — доля позиции pos среди (k+1)-х пиков команд в матчах лиги (позиции по линиям и золоту). */
+    private final double[][] order;
 
     public DraftEngine(AnalysisContext ctx) {
         this(ctx, Params.DEFAULT);
@@ -159,6 +167,54 @@ public final class DraftEngine {
         this.ctx = ctx;
         this.meta = ctx.meta;
         this.params = params;
+        this.order = pickOrder(ctx.league);
+    }
+
+    /**
+     * Какие позиции команды закрывают k-м пиком (по всем картам лиги со стандартным порядком). В лиге первые два пика
+     * в 65–72% саппорты, последний в 81% керри или мид. Сглажено к равномерному: 20 карт на каждый пик.
+     */
+    static double[][] pickOrder(League league) {
+        double[][] count = new double[5][6];
+        if (league != null) {
+            for (League.Match m : league.matches) {
+                for (boolean radiant : new boolean[]{true, false}) {
+                    Map<Integer, Long> lineup = TeamLineups.positions(m.side(radiant));
+                    if (lineup == null) {
+                        continue;
+                    }
+                    Map<Integer, Integer> posOfHero = new HashMap<>();
+                    for (League.Player p : m.side(radiant)) {
+                        lineup.forEach((pos, id) -> {
+                            if (id == p.accountId()) {
+                                posOfHero.put(p.heroId(), pos);
+                            }
+                        });
+                    }
+                    int k = 0;
+                    for (League.DraftStep s : m.draft()) {
+                        if (s.pick() && s.radiant() == radiant && k < 5) {
+                            Integer pos = posOfHero.get(s.heroId());
+                            if (pos != null) {
+                                count[k][pos]++;
+                            }
+                            k++;
+                        }
+                    }
+                }
+            }
+        }
+        double[][] result = new double[5][6];
+        for (int k = 0; k < 5; k++) {
+            double total = 0;
+            for (int pos = 1; pos <= 5; pos++) {
+                total += count[k][pos];
+            }
+            for (int pos = 1; pos <= 5; pos++) {
+                result[k][pos] = (count[k][pos] + 20 * 0.2) / (total + 20);
+            }
+        }
+        return result;
     }
 
     // ---------------------------------------------------------------- близость игрок—герой
@@ -420,10 +476,17 @@ public final class DraftEngine {
      */
     double[] lineupWeights(List<AnalysisContext.TeamLineup> lineups, String chosen, boolean weFirst, List<Integer> heroes,
                            Map<Integer, String> fixed) {
-        int n = lineups.size();
+        return lineupWeights(lineups.stream().map(AnalysisContext.TeamLineup::squad).toList(),
+                lineups.stream().map(AnalysisContext.TeamLineup::key).toList(), chosen, weFirst, heroes, fixed, 0);
+    }
+
+    /** То же для списка команд-составов; excludeMatchId — матч, которого нет в турнирной истории (бэктест). */
+    double[] lineupWeights(List<Squad> squads, List<String> keys, String chosen, boolean weFirst, List<Integer> heroes,
+                           Map<Integer, String> fixed, long excludeMatchId) {
+        int n = squads.size();
         double[] w = new double[n];
         for (int i = 0; i < n; i++) {
-            if (lineups.get(i).key().equals(chosen)) {
+            if (keys.get(i).equals(chosen)) {
                 w[i] = 1;
                 return w;
             }
@@ -437,11 +500,11 @@ public final class DraftEngine {
         }
         double total = 0;
         for (int i = 0; i < n; i++) {
-            Squad sq = lineups.get(i).squad();
+            Squad sq = squads.get(i);
             Set<String> nicks = new HashSet<>();
             sq.byPosition().forEach(p -> nicks.add(p.nick()));
             boolean fits = theirPicks.stream().map(fixed::get).filter(java.util.Objects::nonNull).allMatch(nicks::contains);
-            w[i] = fits ? Math.pow(pickLikelihood(new SquadModel(sq, 0), theirPicks), LINEUP_EVIDENCE) : 0;
+            w[i] = fits ? Math.pow(pickLikelihood(new SquadModel(sq, excludeMatchId), theirPicks), LINEUP_EVIDENCE) : 0;
             total += w[i];
         }
         if (!(total > 0)) {
@@ -755,22 +818,33 @@ public final class DraftEngine {
             }
             perPlayer.put(h, scores);
         }
+        // кто возьмёт следующий пик: свободный игрок × (порядок позиций в лиге)^orderWeight
+        int k = Math.min(allies.size(), 4);
+        double[] nextWeight = new double[n];
+        double nextTotal = 0;
+        for (int p = 0; p < n; p++) {
+            int pos = team.squad.position(team.players.get(p));
+            double prior = pos >= 1 && pos <= 5 ? order[k][pos] / 0.2 : 1;
+            nextWeight[p] = free[p] * Math.pow(prior, params.orderWeight());
+            nextTotal += nextWeight[p];
+        }
         Map<Integer, Double> next = new LinkedHashMap<>(), chance = new LinkedHashMap<>();
         Map<Integer, Integer> bestPlayer = new HashMap<>();
         for (var e : perPlayer.entrySet()) {
             double[] s = e.getValue();
-            double c = 0, best = -1;
+            double c = 0, nx = 0, best = -1;
             for (int p = 0; p < n; p++) {
                 s[p] = norm[p] == 0 ? 0 : s[p] / norm[p];
                 double w = free[p] * s[p];
                 c += w;
+                nx += nextWeight[p] * s[p];
                 if (w > best) {
                     best = w;
                     bestPlayer.put(e.getKey(), p);
                 }
             }
             chance.put(e.getKey(), Math.min(1, c));
-            next.put(e.getKey(), freeTotal == 0 ? 0 : c / freeTotal);
+            next.put(e.getKey(), nextTotal == 0 ? 0 : nx / nextTotal);
         }
         Map<Integer, Double> sortedNext = new LinkedHashMap<>();
         next.entrySet().stream().sorted(Map.Entry.<Integer, Double>comparingByValue().reversed())
