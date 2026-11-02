@@ -44,15 +44,35 @@ public final class DraftEngine {
      * @param recentWeight вес доли героя в играх за последние 60 дней (без Турбо) — «что тренирует сейчас»
      * @param teamWeight   вес доли героя в играх за 60 дней в пати с игроками своей команды
      * @param orderWeight  насколько верить порядку позиций в пиках лиги (0 — следующий пик у любого свободного игрока
-     *                     поровну, 1 — точно как в лиге: первыми берут саппортов, последними керри и мид)
+     *                     поровну, 1 — точно как в лиге: первыми берут саппортов, последними керри и мид, 1,5 — чуть острее)
+     * @param contextWeight насколько их пик зависит от связок со своими и контрпиков к нашим (exp(вес × lift))
+     * @param firstPickWeight вес привычки команды на первом пике (доля карт турнира, где она так начинала)
+     * @param banThreat    вес «угрозы наших героев» в прогнозе их банов (степень при числе оставшихся банов)
+     * @param banHabit     вес их привычки банить героя в турнире
+     * @param banLeague    вес частоты бана героя во всех драфтах лиги
+     * @param banPro       вес частоты бана в про-матчах
+     *
+     * Значения по умолчанию подобраны честным бэктестом на всех командах лиги (2.11, docs/research/draft-backtest.md).
      */
     public record Params(double sharpness, double shareWeight, double shareCap, double recentWeight, double teamWeight,
-                         double orderWeight) {
-        public static final Params DEFAULT = new Params(1.25, 32, 0.25, 8, 4, ORDER_WEIGHT);
+                         double orderWeight, double contextWeight, double firstPickWeight,
+                         double banThreat, double banHabit, double banLeague, double banPro) {
+        public static final Params DEFAULT = new Params(1.25, 32, 0.25, 8, 4, ORDER_WEIGHT, 2, 4, 0.5, 1, 2, 0);
+
+        /** Копия с одним изменённым параметром (для подбора в бэктесте). */
+        public Params with(String name, double v) {
+            return new Params(
+                    name.equals("sharpness") ? v : sharpness, name.equals("shareWeight") ? v : shareWeight,
+                    name.equals("shareCap") ? v : shareCap, name.equals("recentWeight") ? v : recentWeight,
+                    name.equals("teamWeight") ? v : teamWeight, name.equals("orderWeight") ? v : orderWeight,
+                    name.equals("contextWeight") ? v : contextWeight, name.equals("firstPickWeight") ? v : firstPickWeight,
+                    name.equals("banThreat") ? v : banThreat, name.equals("banHabit") ? v : banHabit,
+                    name.equals("banLeague") ? v : banLeague, name.equals("banPro") ? v : banPro);
+        }
     }
 
     /** Вес порядка позиций по умолчанию (подобран бэктестом 2.11). */
-    static final double ORDER_WEIGHT = 1.0;
+    static final double ORDER_WEIGHT = 1.5;
 
     /**
      * heroes[i] — герой хода i (0 — ход пропущен). assign — ручное назначение «герой → ник игрока»
@@ -227,6 +247,11 @@ public final class DraftEngine {
         final Map<Integer, Integer> bans;
         /** Сколько карт команда сыграла в турнире (без проверяемой в бэктесте). */
         final int maps;
+        /** Первые пики команды в турнире: герой → сколько раз. */
+        final Map<Integer, Integer> firstPicks;
+        /** Момент драфта: турнирная история и недавние игры — только до него (в бэктесте — время карты). */
+        final long asOf;
+        final long exclude;
         final Map<Integer, Double> threat = new HashMap<>();
         /** Доли героев за 60 дней до asOf: игрок → герой → {все игры, игры с командой}. */
         final Map<PlayerStats, Map<Integer, double[]>> recent = new HashMap<>();
@@ -234,15 +259,18 @@ public final class DraftEngine {
         SquadModel(Squad squad, long excludeMatchId) {
             this.squad = squad;
             this.players = squad.byPosition();
-            this.tourney = tourneyPicksOf(squad, excludeMatchId);
-            this.bans = tourneyBansOf(squad, excludeMatchId);
-            this.maps = mapsOf(squad, excludeMatchId);
+            this.exclude = excludeMatchId;
+            this.asOf = ctx.league == null ? Long.MAX_VALUE : ctx.league.matches.stream().filter(m -> m.matchId() == excludeMatchId)
+                    .mapToLong(League.Match::startTime).findFirst()
+                    .orElse(java.time.LocalDate.parse(squad.today).plusDays(1).atStartOfDay(java.time.ZoneOffset.UTC).toEpochSecond());
+            List<League.Match> history = tourneyMaps(squad, excludeMatchId, asOf);
+            this.tourney = tourneyPicksOf(squad, history);
+            this.bans = tourneyBansOf(squad, history);
+            this.maps = history.size();
+            this.firstPicks = firstPicksOf(squad, history);
             for (Squad.Threat t : squad.threatList(tourney)) {
                 threat.put(t.hero(), t.score());
             }
-            long asOf = ctx.league.matches.stream().filter(m -> m.matchId() == excludeMatchId)
-                    .mapToLong(League.Match::startTime).findFirst()
-                    .orElse(java.time.LocalDate.parse(squad.today).plusDays(1).atStartOfDay(java.time.ZoneOffset.UTC).toEpochSecond());
             for (PlayerStats p : players) {
                 recent.put(p, p.recentShares(asOf, 60));
             }
@@ -285,13 +313,28 @@ public final class DraftEngine {
         return 0.5 * yearShare + 0.5 * patchShare;
     }
 
-    private Map<Long, Map<Integer, Integer>> tourneyPicksOf(Squad s, long exclude) {
+    /** Карты команды в турнире до момента asOf, кроме exclude (в бэктесте — без проверяемой и будущих карт). */
+    private List<League.Match> tourneyMaps(Squad s, long exclude, long asOf) {
+        if (!s.hasTournament()) {
+            return List.of();
+        }
+        return ctx.league.of(s.team.teamId()).stream().filter(m -> m.matchId() != exclude && m.startTime() < asOf).toList();
+    }
+
+    private static Map<Integer, Integer> firstPicksOf(Squad s, List<League.Match> history) {
+        Map<Integer, Integer> result = new HashMap<>();
+        for (League.Match m : history) {
+            boolean rad = m.isRadiant(s.team.teamId());
+            m.draft().stream().filter(d -> d.pick() && d.radiant() == rad).findFirst()
+                    .ifPresent(d -> result.merge(d.heroId(), 1, Integer::sum));
+        }
+        return result;
+    }
+
+    private static Map<Long, Map<Integer, Integer>> tourneyPicksOf(Squad s, List<League.Match> history) {
         Map<Long, Map<Integer, Integer>> picks = new HashMap<>();
         if (s.hasTournament()) {
-            for (League.Match m : ctx.league.of(s.team.teamId())) {
-                if (m.matchId() == exclude) {
-                    continue;
-                }
+            for (League.Match m : history) {
                 boolean rad = m.isRadiant(s.team.teamId());
                 m.side(rad).forEach(p -> picks.computeIfAbsent(p.accountId(), k -> new HashMap<>())
                         .merge(p.heroId(), 1, Integer::sum));
@@ -300,13 +343,10 @@ public final class DraftEngine {
         return picks;
     }
 
-    private Map<Integer, Integer> tourneyBansOf(Squad s, long exclude) {
+    private static Map<Integer, Integer> tourneyBansOf(Squad s, List<League.Match> history) {
         Map<Integer, Integer> bans = new HashMap<>();
         if (s.hasTournament()) {
-            for (League.Match m : ctx.league.of(s.team.teamId())) {
-                if (m.matchId() == exclude) {
-                    continue;
-                }
+            for (League.Match m : history) {
                 boolean rad = m.isRadiant(s.team.teamId());
                 m.draft().stream().filter(d -> !d.pick() && d.radiant() == rad)
                         .forEach(d -> bans.merge(d.heroId(), 1, Integer::sum));
@@ -315,9 +355,25 @@ public final class DraftEngine {
         return bans;
     }
 
-    private int mapsOf(Squad s, long exclude) {
-        return !s.hasTournament() ? 0
-                : (int) ctx.league.of(s.team.teamId()).stream().filter(m -> m.matchId() != exclude).count();
+    /**
+     * Доля сторон в драфтах всей лиги (все дивизионы) до момента asOf, где банили героя h, кроме карты exclude:
+     * «что сейчас банят в лиге».
+     */
+    double leagueBanRate(int h, long exclude, long asOf) {
+        if (ctx.league == null) {
+            return 0;
+        }
+        int sides = 0, banned = 0;
+        for (League.Match m : ctx.league.matches) {
+            if (m.matchId() == exclude || m.startTime() >= asOf || m.draft().isEmpty()) {
+                continue;
+            }
+            sides += 2;
+            for (League.DraftStep d : m.draft()) {
+                banned += !d.pick() && d.heroId() == h ? 1 : 0;
+            }
+        }
+        return sides == 0 ? 0 : (double) banned / (sides + 10);
     }
 
     /**
@@ -442,7 +498,9 @@ public final class DraftEngine {
         Set<Integer> never = neverPick(state.never());
         List<AnalysisContext.TeamLineup> lineups = ctx.lineupsOf(oppSquad);
         if (lineups.isEmpty()) {
-            return advise(ctx.ours, oppSquad, state.weFirst(), state.heroes(), fixed, 0, never);
+            // один состав в турнире: позиции из карт турнира, а не из конфига (бэктест: «кто на герое» 82% → 88%)
+            Squad last = ctx.lastLineup(oppSquad);
+            return advise(ctx.ours, last == null ? oppSquad : last, state.weFirst(), state.heroes(), fixed, 0, never);
         }
         // несколько составов (замена, игроки меняются позициями): совет по каждому, баны — по всем сразу с весами
         long started = System.nanoTime();
@@ -477,12 +535,31 @@ public final class DraftEngine {
     double[] lineupWeights(List<AnalysisContext.TeamLineup> lineups, String chosen, boolean weFirst, List<Integer> heroes,
                            Map<Integer, String> fixed) {
         return lineupWeights(lineups.stream().map(AnalysisContext.TeamLineup::squad).toList(),
-                lineups.stream().map(AnalysisContext.TeamLineup::key).toList(), chosen, weFirst, heroes, fixed, 0);
+                lineups.stream().map(AnalysisContext.TeamLineup::key).toList(), chosen, weFirst, heroes, fixed, 0,
+                recencyPrior(lineups.size()));
+    }
+
+    /**
+     * Априорный вес составов, отсортированных от свежего: каждый следующий вдвое реже (1, 0,5, 0,25…). Бэктест: «кто на
+     * герое» 82% → 88% против «все поровну».
+     */
+    static double[] recencyPrior(int n) {
+        double[] prior = new double[n];
+        for (int i = 0; i < n; i++) {
+            prior[i] = Math.pow(0.5, i);
+        }
+        return prior;
     }
 
     /** То же для списка команд-составов; excludeMatchId — матч, которого нет в турнирной истории (бэктест). */
     double[] lineupWeights(List<Squad> squads, List<String> keys, String chosen, boolean weFirst, List<Integer> heroes,
                            Map<Integer, String> fixed, long excludeMatchId) {
+        return lineupWeights(squads, keys, chosen, weFirst, heroes, fixed, excludeMatchId, null);
+    }
+
+    /** prior — априорные веса составов (null — поровну), например «свежий состав вероятнее». */
+    double[] lineupWeights(List<Squad> squads, List<String> keys, String chosen, boolean weFirst, List<Integer> heroes,
+                           Map<Integer, String> fixed, long excludeMatchId, double[] prior) {
         int n = squads.size();
         double[] w = new double[n];
         for (int i = 0; i < n; i++) {
@@ -505,6 +582,7 @@ public final class DraftEngine {
             sq.byPosition().forEach(p -> nicks.add(p.nick()));
             boolean fits = theirPicks.stream().map(fixed::get).filter(java.util.Objects::nonNull).allMatch(nicks::contains);
             w[i] = fits ? Math.pow(pickLikelihood(new SquadModel(sq, excludeMatchId), theirPicks), LINEUP_EVIDENCE) : 0;
+            w[i] *= prior == null ? 1 : prior[i];
             total += w[i];
         }
         if (!(total > 0)) {
@@ -728,6 +806,44 @@ public final class DraftEngine {
         return pickDistribution(them, freeProbability(prob, them.players.size()), theirPicks, ourPicks, used).next();
     }
 
+    /** Для бэктеста: прогноз без остального совета — их следующие пики, распределение, кто на каком герое, их баны. */
+    record Forecast(List<Integer> next, Map<Integer, Double> distribution, List<Assignment> assignment,
+                    List<Integer> likelyBans) {
+    }
+
+    Forecast forecast(Squad usSquad, Squad themSquad, boolean weFirst, List<Integer> heroes, long excludeMatchId,
+                      boolean withBans) {
+        SquadModel them = new SquadModel(themSquad, excludeMatchId);
+        List<Integer> ourPicks = new ArrayList<>(), theirPicks = new ArrayList<>();
+        Set<Integer> used = new HashSet<>();
+        for (int i = 0; i < heroes.size() && i < SLOTS.size(); i++) {
+            int h = heroes.get(i) == null ? 0 : heroes.get(i);
+            if (h <= 0) {
+                continue;
+            }
+            Slot slot = SLOTS.get(i);
+            boolean ours = slot.firstTeam() == weFirst;
+            if (slot.pick()) {
+                (ours ? ourPicks : theirPicks).add(h);
+            }
+            used.add(h);
+        }
+        double[][] prob = new double[theirPicks.size()][them.players.size()];
+        List<Assignment> assignment = assign(them, theirPicks, Map.of(), prob);
+        Distribution d = pickDistribution(them, freeProbability(prob, them.players.size()), theirPicks, ourPicks, used);
+        List<Integer> next = predictPicks(them, d, theirPicks, ourPicks).stream().map(Reasoned::heroId).toList();
+        List<Integer> bans = List.of();
+        if (withBans) {
+            SquadModel us = new SquadModel(usSquad, excludeMatchId);
+            double[][] ourProb = new double[ourPicks.size()][us.players.size()];
+            assign(us, ourPicks, Map.of(), ourProb);
+            int step = Math.min(heroes.size(), SLOTS.size());
+            bans = predictTheirBans(us, them, ourProb, ourPicks, theirPicks, used, left(step, !weFirst, false)).stream()
+                    .map(Reasoned::heroId).toList();
+        }
+        return new Forecast(next, d.next(), assignment, bans);
+    }
+
     /** Сколько ходов (банов или пиков) осталось у команды начиная с хода step. */
     static int left(int step, boolean firstTeam, boolean pick) {
         int n = 0;
@@ -805,7 +921,11 @@ public final class DraftEngine {
             if (used.contains(h)) {
                 continue;
             }
-            double context = Math.exp(8 * (avgSynergy(h, allies) + avgCounter(h, enemies)));
+            double context = Math.exp(params.contextWeight() * (avgSynergy(h, allies) + avgCounter(h, enemies)));
+            if (allies.isEmpty() && params.firstPickWeight() > 0) {
+                // привычка команды на первом пике (SyberStar: Dragon Knight в 3 картах из 6)
+                context *= 1 + params.firstPickWeight() * team.firstPicks.getOrDefault(h, 0) / (team.maps + 1.0);
+            }
             double[] scores = new double[n];
             for (int p = 0; p < n; p++) {
                 PlayerStats player = team.players.get(p);
@@ -912,15 +1032,19 @@ public final class DraftEngine {
         for (var e : ours.next().entrySet()) {
             int h = e.getKey();
             double p = e.getValue();
-            if (p < 0.003) {
+            double league = params.banLeague() == 0 ? 0 : Math.min(1, params.banLeague() * leagueBanRate(h, them.exclude, them.asOf));
+            double pro = params.banPro() == 0 ? 0 : Math.min(1, params.banPro() * meta.proBanRate(h));
+            if (p < 0.003 && league < 0.1 && pro < 0.1) {
                 continue;
             }
-            double target = 1 - Math.pow(1 - p, bansLeft);
-            double habit = them.banRate(h) * (pool.containsKey(h) ? 1 : Math.min(1, p / 0.02));
-            double chance = 1 - (1 - target) * (1 - habit);
+            double target = 1 - Math.pow(1 - p, bansLeft * params.banThreat());
+            double habit = Math.min(1, params.banHabit() * them.banRate(h) * (pool.containsKey(h) ? 1 : Math.min(1, p / 0.02)));
+            double chance = 1 - (1 - target) * (1 - habit) * (1 - league) * (1 - pro);
             PlayerStats player = us.players.get(ours.bestPlayer().get(h));
             List<String> reasons = new ArrayList<>();
-            reasons.add("наш " + player.nick());
+            if (p >= 0.003 || pool.containsKey(h)) {
+                reasons.add("наш " + player.nick());
+            }
             int t = us.tourneyPicks(player, h);
             if (t > 0) {
                 reasons.add("×" + t + " у нас в турнире");
@@ -928,6 +1052,9 @@ public final class DraftEngine {
             int banned = them.bans.getOrDefault(h, 0);
             if (banned > 0) {
                 reasons.add("банили " + banned + " из " + them.maps);
+            }
+            if (league / params.banLeague() >= 0.1) {
+                reasons.add("часто банят в лиге: " + Md.pct(league / params.banLeague()) + " драфтов");
             }
             result.add(new Reasoned(h, meta.name(h), chance, player.nick(), reasons));
         }

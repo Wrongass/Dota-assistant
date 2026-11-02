@@ -126,7 +126,8 @@ try:
     check("у SyberStar три состава из турнира", len(ls) == 3, ls)
     auto = js("document.querySelector('#their-lineups .lineups-head .lineup-pick').classList.contains('active')")
     check("по умолчанию «все составы», у каждого вес", auto and all("%" in l["text"] for l in ls), [l["text"][:60] for l in ls])
-    check("до их пиков веса равные (33%)", all(l["text"].startswith("33%") for l in ls), [l["text"][:4] for l in ls])
+    check("до их пиков свежий состав вероятнее (57/29/14%)", [l["text"][:3] for l in ls] == ["57%", "29%", "14%"],
+          [l["text"][:4] for l in ls])
     rows = pos_rows()
     mids = [r["text"] for r in rows if r["pos"] == 2]
     check("баны по позициям: на мид и SuperPoni, и Леонид Ильич, с вероятностью",

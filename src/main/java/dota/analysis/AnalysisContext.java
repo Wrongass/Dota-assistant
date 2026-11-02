@@ -32,6 +32,8 @@ public final class AnalysisContext {
     public final Path dataDir;
     /** Игроки из конфига, чьих данных ещё нет в data/ (новые игроки до первой выгрузки): их пропускаем. */
     private final List<String> missingData;
+    /** Контекст «на дату» (бэктест): игры игроков только до даты. */
+    private boolean strict;
 
     /**
      * Состав соперника для драфта: key — account_id по позициям через «-», label — «1 ник · 2 ник …», maps — карт этим
@@ -69,6 +71,19 @@ public final class AnalysisContext {
 
     /** lineups — состав на игру, выбранный на сайте; {@link Lineups#none()} — по конфигу. */
     public static AnalysisContext load(Path configPath, Path dataDir, LocalDate date, Lineups lineups) throws IOException {
+        return load(configPath, dataDir, date, lineups, false);
+    }
+
+    /**
+     * Контекст «на дату» для честного бэктеста: игры игроков только до полуночи UTC даты date (strict). Рейтинги на
+     * героях (rankings) и мета патча — текущие: исторических OpenDota не отдаёт.
+     */
+    static AnalysisContext loadAsOf(Path configPath, Path dataDir, LocalDate date) throws IOException {
+        return load(configPath, dataDir, date, Lineups.none(), true);
+    }
+
+    private static AnalysisContext load(Path configPath, Path dataDir, LocalDate date, Lineups lineups, boolean strict)
+            throws IOException {
         PlayerConfig config = PlayerConfig.load(configPath);
         Meta meta = Meta.load(dataDir);
         League league = config.league() == null || config.league().id() == null ? null
@@ -78,11 +93,11 @@ public final class AnalysisContext {
         String today = date.toString();
 
         List<String> missing = new ArrayList<>();
-        Squad ours = squad(dataDir, config, null, config.ourTeam(), true, meta, league, now, today, lineups, missing);
+        Squad ours = squad(dataDir, config, null, config.ourTeam(), true, meta, league, now, today, lineups, missing, strict);
         List<Squad> opponents = new ArrayList<>();
         if (config.league() != null) {
             for (PlayerConfig.TeamInfo t : config.league().opponentsOrEmpty()) {
-                Squad s = squad(dataDir, config, t.name(), t, false, meta, league, now, today, lineups, missing);
+                Squad s = squad(dataDir, config, t.name(), t, false, meta, league, now, today, lineups, missing, strict);
                 if (!s.players.isEmpty()) {
                     opponents.add(s);
                 }
@@ -105,8 +120,10 @@ public final class AnalysisContext {
             }
         }
         Path traitsFile = configPath.toAbsolutePath().getParent().resolve("hero_traits.yaml");
-        return new AnalysisContext(config, meta, league, LaneStats.load(dataDir), HeroTraits.load(traitsFile), ours,
+        AnalysisContext ctx = new AnalysisContext(config, meta, league, LaneStats.load(dataDir), HeroTraits.load(traitsFile), ours,
                 opponents, date, dataDir, missing);
+        ctx.strict = strict;
+        return ctx;
     }
 
     public static AnalysisContext load(Path configPath, Path dataDir) throws IOException {
@@ -119,7 +136,7 @@ public final class AnalysisContext {
      */
     private static Squad squad(Path dataDir, PlayerConfig config, String teamName, PlayerConfig.TeamInfo team,
                                boolean ours, Meta meta, League league, Instant now, String today, Lineups lineups,
-                               List<String> missing) throws IOException {
+                               List<String> missing, boolean strict) throws IOException {
         // игрок есть в конфиге, а данных ещё нет (на сервере новый конфиг приходит с деплоем, данные — со следующей
         // выгрузкой): пропускаем его, иначе сайт не запустится
         List<PlayerConfig.Player> all = config.players().stream()
@@ -148,18 +165,18 @@ public final class AnalysisContext {
         }
         List<PlayerStats> players = new ArrayList<>();
         for (PlayerConfig.Player p : active) {
-            players.add(PlayerStats.load(dataDir, p, ids, meta.patchStart, now));
+            players.add(PlayerStats.load(dataDir, p, ids, meta.patchStart, now, strict));
         }
         Squad squad = new Squad(meta, players, team, ours, league, today);
         for (PlayerConfig.Player p : bench) {
-            squad.bench.add(PlayerStats.load(dataDir, p, ids, meta.patchStart, now));
+            squad.bench.add(PlayerStats.load(dataDir, p, ids, meta.patchStart, now, strict));
         }
         squad.lineupChanged = changed;
         return squad;
     }
 
     private static boolean hasData(Path dataDir, PlayerConfig.Player p, List<String> missing) {
-        Path dir = dataDir.resolve("raw").resolve(p.team().dir()).resolve(String.valueOf(p.accountId()));
+        Path dir = PlayerStats.dir(dataDir, p);
         boolean ok = java.nio.file.Files.isRegularFile(dir.resolve("profile.json"))
                 && java.nio.file.Files.isRegularFile(dir.resolve("matches.json"));
         if (!ok) {
@@ -242,12 +259,41 @@ public final class AnalysisContext {
         return result.size() < 2 ? List.of() : List.copyOf(result);
     }
 
+    private final java.util.concurrent.ConcurrentHashMap<String, java.util.Optional<Squad>> lastLineupCache =
+            new java.util.concurrent.ConcurrentHashMap<>();
+
+    /**
+     * Соперник с единственным составом из турнира, если он отличается от конфига (позиции по линиям и золоту в картах
+     * турнира точнее ручных), иначе null. Если состав выбран на сайте — null: выбор капитана главнее.
+     */
+    Squad lastLineup(Squad team) {
+        if (team == null || team == ours || team.lineupChanged || team.team == null || team.team.teamId() == null
+                || league == null) {
+            return null;
+        }
+        return lastLineupCache.computeIfAbsent(team.slug(), k -> {
+            Set<Long> known = new java.util.HashSet<>();
+            team.players.forEach(p -> known.add(p.config.accountId()));
+            team.bench.forEach(p -> known.add(p.config.accountId()));
+            List<TeamLineups.Seen> seen = TeamLineups.seen(league.of(team.team.teamId()), team.team.teamId(), known);
+            if (seen.isEmpty()) {
+                return java.util.Optional.empty();
+            }
+            try {
+                Squad sq = withLineup(team, seen.get(0).lineup());
+                return lineupKey(sq).equals(lineupKey(team)) ? java.util.Optional.empty() : java.util.Optional.of(sq);
+            } catch (IOException e) {
+                throw new java.io.UncheckedIOException(e);
+            }
+        }).orElse(null);
+    }
+
     /** Команда team (наша или соперник) с другим составом «позиция → account_id»: составы из турнира, бэктест. */
     Squad withLineup(Squad team, java.util.Map<Integer, Long> lineup) throws IOException {
         boolean isOurs = team == ours;
         Squad sq = squad(dataDir, config, isOurs ? null : team.team.name(), team.team, isOurs, meta, league,
                 date.atStartOfDay(ZoneOffset.UTC).toInstant(), date.toString(), Lineups.of(team.team.name(), lineup),
-                new ArrayList<>());
+                new ArrayList<>(), strict);
         sq.teamNames.putAll(team.teamNames);
         sq.nicks.putAll(team.nicks);
         sq.manualMaps.addAll(team.manualMaps);

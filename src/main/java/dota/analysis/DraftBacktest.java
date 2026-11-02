@@ -51,6 +51,10 @@ public final class DraftBacktest {
     }
 
     public static void main(String[] args) throws IOException {
+        if (args.length > 0 && (args[0].equals("--lab") || args[0].equals("--league-config"))) {
+            DraftBacktestLab.main(args[0].equals("--lab") ? java.util.Arrays.copyOfRange(args, 1, args.length) : args);
+            return;
+        }
         AnalysisContext ctx = AnalysisContext.load(Path.of("config/players.yaml"), Path.of("data"));
         if (args.length > 0 && args[0].equals("--report")) {
             DraftBacktestReport.run(ctx);
@@ -59,8 +63,7 @@ public final class DraftBacktest {
         if (args.length > 0 && args[0].equals("--order")) {
             DraftEngine.Params d = DraftEngine.Params.DEFAULT;
             for (double w : new double[]{0, 0.5, 1, 1.5}) {
-                DraftEngine.Params p = new DraftEngine.Params(d.sharpness(), d.shareWeight(), d.shareCap(), d.recentWeight(),
-                        d.teamWeight(), w);
+                DraftEngine.Params p = d.with("orderWeight", w);
                 System.out.println("orderWeight " + w + ": " + DraftBacktestReport.quick(ctx, p));
             }
             return;
@@ -77,8 +80,7 @@ public final class DraftBacktest {
         DraftEngine.Params d = DraftEngine.Params.DEFAULT;
         for (double recent : new double[]{0, 4, 8, 16, 32}) {
             for (double team : new double[]{0, 4, 8, 16}) {
-                DraftEngine.Params p = new DraftEngine.Params(d.sharpness(), d.shareWeight(), d.shareCap(), recent, team,
-                        d.orderWeight());
+                DraftEngine.Params p = d.with("recentWeight", recent).with("teamWeight", team);
                 Result r = run(ctx, p, false);
                 System.out.printf("recent %4.1f team %4.1f: топ-5 %d топ-10 %d log-loss %.3f, «кто на герое» %d/%d%n",
                         recent, team, r.top5(), r.top10(), r.logLoss(), r.assignedRight(), r.assigned());

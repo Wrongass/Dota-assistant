@@ -27,6 +27,7 @@
 ./gradlew run --args="--no-meta"                # без данных по патчу
 ./gradlew run --args="--no-league"              # без матчей лиги
 ./gradlew run --args="--no-stratz"              # без линии и матчапов из STRATZ
+./gradlew run --args="--no-meta --no-stratz --no-images --league-players"  # + игроки всей лиги для бэктеста (data/backtest)
 ./gradlew analyze                               # отчёты в analysis/ из data/
 ./gradlew analyze --args="--date 2026-10-14"    # отчёты на дату (давность матчей считается от неё)
 ./gradlew web                                   # сайт на http://127.0.0.1:8070 (--args="--port 8080")

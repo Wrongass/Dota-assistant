@@ -223,6 +223,12 @@ final class Meta {
         return Scoring.shrink(w[pos], g[pos], 0.5, 30);
     }
 
+    /** Доля про-матчей, где героя забанили. */
+    double proBanRate(int heroId) {
+        HeroStats s = stats.get(heroId);
+        return s == null || proMatches == 0 ? 0 : (double) s.proBan() / proMatches;
+    }
+
     /** Доля про-матчей, где героя взяли или забанили. */
     double proContest(int heroId) {
         HeroStats s = stats.get(heroId);
