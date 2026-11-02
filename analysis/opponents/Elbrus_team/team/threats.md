@@ -1,6 +1,6 @@
 # Угрозы: Elbrus team (МЦСТ)
 
-Сгенерировано 2026-11-01, патч 7.41.
+Сгенерировано 2026-11-02, патч 7.41.
 
 ## Пулы по позициям (топ-6 по пригодности в патче)
 
@@ -61,7 +61,7 @@ Phantom Lancer ×4, Drow Ranger ×3, Lifestealer ×3, Mirana ×3, Slark ×3, Daw
 
 | # | Герой | Их WR против | Игр | В наших пулах |
 |---|---|---|---|---|
-| 1 | Slardar | 42.1% | 76 |  |
+| 1 | Slardar | 42.2% | 76 |  |
 | 2 | Venomancer | 43.6% | 77 |  |
 | 3 | Shadow Shaman | 44.6% | 151 |  |
 | 4 | Pugna | 44.6% | 50 |  |
@@ -69,7 +69,7 @@ Phantom Lancer ×4, Drow Ranger ×3, Lifestealer ×3, Mirana ×3, Slark ×3, Daw
 | 6 | Invoker | 45.2% | 217 | ✔ |
 | 7 | Weaver | 46.2% | 84 |  |
 | 8 | Ancient Apparition | 46.4% | 90 | ✔ |
-| 9 | Faceless Void | 46.5% | 66 |  |
-| 10 | Vengeful Spirit | 46.6% | 113 | ✔ |
-| 11 | Winter Wyvern | 46.8% | 59 |  |
-| 12 | Medusa | 47.0% | 65 |  |
+| 9 | Faceless Void | 46.6% | 66 |  |
+| 10 | Winter Wyvern | 46.9% | 59 |  |
+| 11 | Vengeful Spirit | 47.0% | 112 | ✔ |
+| 12 | Medusa | 47.1% | 65 |  |

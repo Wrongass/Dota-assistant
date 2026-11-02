@@ -469,9 +469,10 @@ public class WebApp {
 
     /**
      * Тело POST /api/draft: соперник, кто ходит первым, герои по ходам (0 — ход пропущен) и ручное назначение
-     * «герой → ник игрока» (обе команды).
+     * «герой → ник игрока» (обе команды). lineup — выбранный состав соперника (key из theirLineups), null — все составы
+     * из турнира с весами.
      */
-    record DraftRequest(String opponent, boolean weFirst, List<Integer> heroes, Map<Integer, String> assign) {
+    record DraftRequest(String opponent, boolean weFirst, List<Integer> heroes, Map<Integer, String> assign, String lineup) {
     }
 
     private void draftPage(Context http) throws Exception {
@@ -602,6 +603,8 @@ public class WebApp {
         Map<String, Object> result = new java.util.LinkedHashMap<>();
         result.put("ours", c.ours.draftRoster());
         c.opponents.forEach(o -> result.put(o.slug(), o.draftRoster()));
+        // составы соперника из турнира: «slug|key» — игроки этого состава на своих позициях
+        c.opponents.forEach(o -> c.lineupsOf(o).forEach(l -> result.put(o.slug() + "|" + l.key(), l.squad().draftRoster())));
         return result;
     }
 
@@ -635,13 +638,34 @@ public class WebApp {
         }
         List<Integer> heroes = req.heroes() == null ? List.of() : req.heroes();
         Map<Integer, String> assign = req.assign() == null ? Map.of() : req.assign();
-        http.json(new DraftEngine(site.ctx()).advise(new DraftEngine.State(req.opponent(), req.weFirst(), heroes, assign)));
+        http.json(new DraftEngine(site.ctx()).advise(new DraftEngine.State(req.opponent(), req.weFirst(), heroes, assign,
+                req.lineup())));
     }
 
     // ---------------------------------------------------------------- симуляция драфта (docs/specs/draft-simulation.md)
 
-    /** Тело запросов симуляции: как у /api/draft плюс зерно случайности бота. */
-    record SimRequest(String opponent, boolean weFirst, List<Integer> heroes, Map<Integer, String> assign, Long seed) {
+    /**
+     * Тело запросов симуляции: как у /api/draft плюс зерно случайности бота. lineup — состав соперника; null — бот
+     * выходит одним из составов турнира по зерну (раскрывается в конце, как в настоящей игре).
+     */
+    record SimRequest(String opponent, boolean weFirst, List<Integer> heroes, Map<Integer, String> assign, Long seed,
+                      String lineup) {
+    }
+
+    /** Состав бота в симуляции или null — у соперника один состав. */
+    private static AnalysisContext.TeamLineup simLineup(AnalysisContext c, SimRequest req) {
+        List<AnalysisContext.TeamLineup> lineups = c.lineupsOf(c.opponent(req.opponent()));
+        if (lineups.isEmpty()) {
+            return null;
+        }
+        return lineups.stream().filter(l -> l.key().equals(req.lineup())).findFirst()
+                .orElseGet(() -> lineups.get(Math.floorMod(new java.util.SplittableRandom(
+                        (req.seed() == null ? 0 : req.seed()) ^ 0x5DEECE66DL).nextLong(), lineups.size())));
+    }
+
+    private static Squad simSquad(AnalysisContext c, SimRequest req) {
+        AnalysisContext.TeamLineup l = simLineup(c, req);
+        return l == null ? c.opponent(req.opponent()) : l.squad();
     }
 
     /** Проверенный запрос: соперник известен, ходов не больше 24. null — ответ с ошибкой уже отправлен. */
@@ -670,7 +694,7 @@ public class WebApp {
         }
         AnalysisContext c = site.ctx();
         try {
-            DraftBot.Move m = new DraftBot(c).next(c.ours, c.opponent(req.opponent()), req.weFirst(), heroesOf(req),
+            DraftBot.Move m = new DraftBot(c).next(c.ours, simSquad(c, req), req.weFirst(), heroesOf(req),
                     req.seed() == null ? 0 : req.seed());
             http.json(Map.of("step", m.step(), "heroId", m.heroId(), "name", m.name(), "pick", m.pick()));
         } catch (IllegalStateException e) {
@@ -685,7 +709,19 @@ public class WebApp {
             return;
         }
         AnalysisContext c = site.ctx();
-        http.json(new DraftBot(c).plan(c.ours, c.opponent(req.opponent()), req.weFirst(), heroesOf(req)));
+        AnalysisContext.TeamLineup l = simLineup(c, req);
+        DraftBot.Plan plan = new DraftBot(c).plan(c.ours, l == null ? c.opponent(req.opponent()) : l.squad(), req.weFirst(),
+                heroesOf(req));
+        Map<String, Object> result = new java.util.LinkedHashMap<>();
+        result.put("placements", plan.placements());
+        List<String> swaps = new java.util.ArrayList<>();
+        if (l != null && req.lineup() == null) {
+            swaps.add("Соперник вышел составом: " + l.label());
+        }
+        swaps.addAll(plan.swaps());
+        result.put("swaps", swaps);
+        result.put("lineup", l == null ? null : l.key());
+        http.json(result);
     }
 
     /**
@@ -699,8 +735,9 @@ public class WebApp {
         }
         AnalysisContext c = site.ctx();
         List<Integer> heroes = heroesOf(req);
+        AnalysisContext.TeamLineup l = simLineup(c, req);
         DraftEngine.Advice a = new DraftEngine(c).advise(new DraftEngine.State(req.opponent(), req.weFirst(), heroes,
-                req.assign() == null ? Map.of() : req.assign()));
+                req.assign() == null ? Map.of() : req.assign(), l == null ? null : l.key()));
         if (!a.finished()) {
             http.status(409).json(Map.of("error", "драфт ещё не закончен"));
             return;

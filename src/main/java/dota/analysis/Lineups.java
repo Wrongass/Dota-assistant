@@ -33,6 +33,11 @@ public final class Lineups {
         return new Lineups(null, Map.of());
     }
 
+    /** Только в памяти: состав одной команды (составы соперника из турнира для драфта). */
+    static Lineups of(String team, Map<Integer, Long> lineup) {
+        return new Lineups(null, Map.of(team, lineup));
+    }
+
     public static Lineups load(Path file) throws IOException {
         if (!Files.isRegularFile(file)) {
             return new Lineups(file, new TreeMap<>());

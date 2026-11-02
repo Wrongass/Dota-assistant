@@ -33,6 +33,17 @@ public final class AnalysisContext {
     /** Игроки из конфига, чьих данных ещё нет в data/ (новые игроки до первой выгрузки): их пропускаем. */
     private final List<String> missingData;
 
+    /**
+     * Состав соперника для драфта: key — account_id по позициям через «-», label — «1 ник · 2 ник …», maps — карт этим
+     * составом в турнире (0 — выбран на сайте), last — дата последней карты, squad — команда с этим составом.
+     */
+    public record TeamLineup(String key, String label, int maps, String last, Squad squad) {
+    }
+
+    /** Составы соперников строятся при первом запросе драфта: на запуск сайта не влияют. */
+    private final java.util.concurrent.ConcurrentHashMap<String, List<TeamLineup>> lineupCache =
+            new java.util.concurrent.ConcurrentHashMap<>();
+
     private AnalysisContext(PlayerConfig config, Meta meta, League league, LaneStats lanes, HeroTraits traits, Squad ours,
                             List<Squad> opponents, LocalDate date, Path dataDir, List<String> missingData) {
         this.config = config;
@@ -195,6 +206,53 @@ public final class AnalysisContext {
         // адрес без учёта регистра: /opponent/bim_tim и /opponent/BIM_TIM — одна страница
         return slug == null ? null
                 : opponents.stream().filter(s -> s.slug().equalsIgnoreCase(slug)).findFirst().orElse(null);
+    }
+
+    /**
+     * Составы, которыми соперник выходил в турнире (сначала свежий), и состав, выбранный на сайте, если его нет среди
+     * них. Пусто, если состав был один: тогда драфт работает с командой как есть.
+     */
+    public List<TeamLineup> lineupsOf(Squad team) {
+        if (team == null || team == ours || team.team == null || team.team.teamId() == null || league == null) {
+            return List.of();
+        }
+        return lineupCache.computeIfAbsent(team.slug(), k -> {
+            try {
+                return buildLineups(team);
+            } catch (IOException e) {
+                throw new java.io.UncheckedIOException(e);
+            }
+        });
+    }
+
+    private List<TeamLineup> buildLineups(Squad team) throws IOException {
+        Set<Long> known = new java.util.HashSet<>();
+        team.players.forEach(p -> known.add(p.config.accountId()));
+        team.bench.forEach(p -> known.add(p.config.accountId()));
+        List<TeamLineup> result = new ArrayList<>();
+        java.time.format.DateTimeFormatter day = java.time.format.DateTimeFormatter.ofPattern("dd.MM").withZone(ZoneOffset.UTC);
+        for (TeamLineups.Seen s : TeamLineups.seen(league.of(team.team.teamId()), team.team.teamId(), known)) {
+            Squad sq = squad(dataDir, config, team.team.name(), team.team, false, meta, league,
+                    date.atStartOfDay(ZoneOffset.UTC).toInstant(), date.toString(), Lineups.of(team.team.name(), s.lineup()),
+                    new ArrayList<>());
+            sq.teamNames.putAll(team.teamNames);
+            sq.nicks.putAll(team.nicks);
+            sq.manualMaps.addAll(team.manualMaps);
+            result.add(new TeamLineup(lineupKey(sq), lineupLabel(sq), s.maps(), day.format(Instant.ofEpochSecond(s.lastTime())), sq));
+        }
+        String current = lineupKey(team);
+        if (team.lineupChanged && result.stream().noneMatch(l -> l.key().equals(current))) {
+            result.add(0, new TeamLineup(current, lineupLabel(team), 0, "выбран на сайте", team));
+        }
+        return result.size() < 2 ? List.of() : List.copyOf(result);
+    }
+
+    private static String lineupKey(Squad s) {
+        return s.byPosition().stream().map(p -> String.valueOf(p.config.accountId())).collect(Collectors.joining("-"));
+    }
+
+    private static String lineupLabel(Squad s) {
+        return s.byPosition().stream().map(p -> s.position(p) + " " + p.nick()).collect(Collectors.joining(" · "));
     }
 
     /** Команда, в которой играет account_id (в составе или запасным), или null. */

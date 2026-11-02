@@ -443,3 +443,16 @@ details.panel[open] > summary::after, details.toggle-box[open] > summary::after 
 .pos-hidden { margin-top: 4px; }
 .pos-hidden button { font-size: 12px; padding: 0 8px; border: 1px solid var(--accent); color: var(--accent); background: transparent;
   border-radius: 8px; cursor: pointer; }
+/* состав соперника: все составы из турнира или выбранный */
+.lineups { margin: 4px 0 8px; }
+.lineups .lineups-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.lineups ul { list-style: none; margin: 4px 0 0; padding: 0; }
+.lineups li { margin: 2px 0; }
+.lineups .lineup-pick { font-size: 12px; text-align: left; border: 1px solid var(--border, #8884); background: transparent;
+  color: inherit; border-radius: 8px; padding: 2px 8px; cursor: pointer; }
+.lineups .lineup-pick.active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.lineups .lineup-pick.likely { border-color: var(--accent); }
+.lineups .lineup-pick:disabled { cursor: default; opacity: .8; }
+.lineups .lineup-w { color: var(--accent); }
+.pos-bans .pos-share { font-weight: 600; color: var(--accent); }
+.pos-bans li.maybe .pos-label { opacity: .95; }

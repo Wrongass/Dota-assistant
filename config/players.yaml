@@ -15,8 +15,9 @@ league:
   since: 2026-10-01
   # Группа закончилась 25.10: 2-е место (1 победа, 1 ничья, 1 поражение; карты 3–3), прямого выхода нет — плей-ин.
   # Плей-ин закончился 1.11: мы прошли в плей-офф.
-  stage: "Плей-офф, 8 команд. Из групп: УППО, МЦСТ (Elbrus team), НПП «Звезда» (SyberStar), НИИЭП (Team Future). Из плей-ина: Долг (мы), GGsel (SD Team), НИИ Полюс, ИТОЗ. Следующий соперник пока неизвестен."
-  # next_opponent: <имя команды>   # следующая игра — первая на главной, соперник по умолчанию в драфте; пока неизвестна
+  stage: "Плей-офф, 8 команд. Из групп: УППО, МЦСТ (Elbrus team), НПП «Звезда» (SyberStar), НИИЭП (Team Future). Из плей-ина: Долг (мы), GGsel (SD Team), НИИ Полюс, ИТОЗ. Следующий соперник — НПП «Звезда» (SyberStar)."
+  # следующая игра — первая на главной, соперник по умолчанию в драфте
+  next_opponent: SyberStar
   # Карты, которых нет в OpenDota, но результат известен с сайта турнира: идут только в счёт группы.
   manual_maps:
     - date: 2026-10-17
@@ -265,13 +266,17 @@ players:
     reserve: true
     note: Steam-ник «Участковый разберётся». Играл 4 карты (Templar Assassin, Shadow Fiend на миде, Lifestealer, Phoenix).
 
-  # SyberStar (НПП «Звезда»), группа A: 2–0–1, карты 4–2. Без Леонида Ильича SuperPoni на миде, с ним — в оффлейне.
+  # SyberStar (НПП «Звезда»), группа A: 2–0–1, карты 4–2. Три состава по 2 карты (позиции по линиям и золоту):
+  #   11.10: 死 1, SuperPoni 2, Elsa 3, kalibri 4, СГРЫЗ 5;
+  #   17.10: 死 1, Леонид Ильич 2, SuperPoni 3, СГРЫЗ 4, kalibri 5 (Elsa не играла);
+  #   25.10: Elsa 1, SuperPoni 2, 死 3, СГРЫЗ 4, kalibri 5.
+  # Позиции ниже — состав по умолчанию на сайте; драфт сам учитывает все три состава (TeamLineups).
   - account_id: 323776798
     nick: 死
     team: opp
     team_name: SyberStar
     position: 1
-    note: В турнире Luna ×2, Windranger ×2, Phantom Assassin, Dragon Knight (лёгкая, 678 GPM).
+    note: В турнире Luna ×2, Windranger ×2, Phantom Assassin, Dragon Knight. 11.10 и 17.10 керри, 25.10 оффлейн (Elsa на керри).
   - account_id: 302784953
     nick: SuperPoni
     team: opp
@@ -283,7 +288,7 @@ players:
     team: opp
     team_name: SyberStar
     position: 3
-    note: В турнире Dawnbreaker, Phoenix, Luna, Drow Ranger. 4 карты из 6, линия меняется.
+    note: В турнире Dawnbreaker, Phoenix, Luna, Drow Ranger. 4 карты из 6, 17.10 не играл. 11.10 оффлейн, 25.10 керри.
   - account_id: 843021665
     nick: СГРЫЗ_КАСТРЮЛЮ
     team: opp
@@ -302,7 +307,7 @@ players:
     team_name: SyberStar
     position: 2
     reserve: true
-    note: Играл 2 карты на миде (Lina, Leshrac).
+    note: Играл 2 карты на миде 17.10 против Elbrus team (Lina, Leshrac), тогда SuperPoni ушёл в оффлейн, Elsa не играла.
 
   # Team Future (НИИЭП), группа C: 3–0, карты 6–0. Один и тот же состав и линии во всех картах.
   - account_id: 213246942

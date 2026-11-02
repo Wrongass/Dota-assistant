@@ -52,10 +52,22 @@ public final class DraftEngine {
      * heroes[i] — герой хода i (0 — ход пропущен). assign — ручное назначение «герой → ник игрока»
      * (капитан знает, кто на каком герое, лучше статистики), для обеих команд.
      */
-    public record State(String opponentSlug, boolean weFirst, List<Integer> heroes, Map<Integer, String> assign) {
-        public State(String opponentSlug, boolean weFirst, List<Integer> heroes) {
-            this(opponentSlug, weFirst, heroes, Map.of());
+    public record State(String opponentSlug, boolean weFirst, List<Integer> heroes, Map<Integer, String> assign,
+                        String lineup) {
+        public State(String opponentSlug, boolean weFirst, List<Integer> heroes, Map<Integer, String> assign) {
+            this(opponentSlug, weFirst, heroes, assign, null);
         }
+
+        public State(String opponentSlug, boolean weFirst, List<Integer> heroes) {
+            this(opponentSlug, weFirst, heroes, Map.of(), null);
+        }
+    }
+
+    /**
+     * Состав соперника из турнира и его вес сейчас: равные до их пиков, дальше по тому, насколько их пики похожи на
+     * героев этого состава. Выбранный вручную состав — вес 1.
+     */
+    public record LineupOdds(String key, String label, int maps, String last, double weight) {
     }
 
     public record Reasoned(int heroId, String name, double score, String player, List<String> reasons) {
@@ -105,15 +117,26 @@ public final class DraftEngine {
                          List<PlayerOutlook> theirPlayers, List<RosterLine> ourRoster, List<RosterLine> theirRoster,
                          int theirBansLeft, int theirPicksLeft, int ourBansLeft, int ourPicksLeft,
                          List<Lane> lanes, List<Reasoned> theirThreats, List<LaneOption> laneOptions,
-                         List<PairPick> pairPicks, List<PositionBans> positionBans, long micros) {
+                         List<PairPick> pairPicks, List<PositionBans> positionBans,
+                         List<LineupOdds> theirLineups, String theirLineup, long micros) {
+
+        /** Тот же совет, но баны, прогноз пиков и баны по позициям — по всем составам соперника сразу. */
+        Advice merged(List<Reasoned> bans, List<Reasoned> next, List<PositionBans> positions, List<LineupOdds> lineups,
+                      String lineup, long micros) {
+            return new Advice(step, finished, oursNext, pickNext, ourPicks, theirPicks, ourBans, theirBans,
+                    theirAssignment, ourAssignment, theirRemaining, ourRemaining, next, bans, pickSuggestions,
+                    theirLikelyBans, theirPlayers, ourRoster, theirRoster, theirBansLeft, theirPicksLeft, ourBansLeft,
+                    ourPicksLeft, lanes, theirThreats, laneOptions, pairPicks, positions, lineups, lineup, micros);
+        }
     }
 
     /**
      * Баны по позиции соперника: лучшие баны против его игрока на этой позиции. Остаются и после его пика — герои
      * могут свапнуться (керри отдаст героя в мид и возьмёт другого). picked — герой, которого игрок вероятнее всего
-     * уже взял (или null).
+     * уже взял (или null). share — вероятность, что на позиции именно он (несколько составов соперника), иначе 1.
      */
-    public record PositionBans(int position, String player, Integer picked, String pickedName, List<Reasoned> heroes) {
+    public record PositionBans(int position, String player, Integer picked, String pickedName, List<Reasoned> heroes,
+                               double share) {
     }
 
     /** Героев в строке позиции: сайт показывает 5, остальные по кнопке «ещё». */
@@ -354,8 +377,179 @@ public final class DraftEngine {
         if (oppSquad == null) {
             throw new IllegalArgumentException("нет соперника " + state.opponentSlug());
         }
-        return advise(ctx.ours, oppSquad, state.weFirst(), state.heroes(),
-                state.assign() == null ? Map.of() : state.assign(), 0);
+        Map<Integer, String> fixed = state.assign() == null ? Map.of() : state.assign();
+        List<AnalysisContext.TeamLineup> lineups = ctx.lineupsOf(oppSquad);
+        if (lineups.isEmpty()) {
+            return advise(ctx.ours, oppSquad, state.weFirst(), state.heroes(), fixed, 0);
+        }
+        // несколько составов (замена, игроки меняются позициями): совет по каждому, баны — по всем сразу с весами
+        long started = System.nanoTime();
+        double[] w = lineupWeights(lineups, state.lineup(), state.weFirst(), state.heroes(), fixed);
+        int best = 0;
+        List<Advice> each = new ArrayList<>();
+        List<LineupOdds> odds = new ArrayList<>();
+        for (int i = 0; i < lineups.size(); i++) {
+            AnalysisContext.TeamLineup l = lineups.get(i);
+            each.add(w[i] > 0 ? advise(ctx.ours, l.squad(), state.weFirst(), state.heroes(), fixed, 0) : null);
+            odds.add(new LineupOdds(l.key(), l.label(), l.maps(), l.last(), w[i]));
+            if (w[i] > w[best]) {
+                best = i;
+            }
+        }
+        Advice primary = each.get(best);
+        return primary.merged(mergeReasoned(each, w, Advice::banSuggestions, primary.banSuggestions().size()),
+                mergeReasoned(each, w, Advice::theirNextPicks, primary.theirNextPicks().size()),
+                mergePositionBans(each, w), odds, lineups.get(best).key(), (System.nanoTime() - started) / 1000);
+    }
+
+    /** Насколько уверенно пики сдвигают вес составов: 0,5 — мягко (одного пика мало, чтобы отбросить состав). */
+    static final double LINEUP_EVIDENCE = 0.5;
+    /** Вес состава не ниже 5%: пока лобби не видно, к нему всё равно готовимся. */
+    static final double LINEUP_FLOOR = 0.05;
+
+    /**
+     * Веса составов. Выбран вручную (key) — только он. Иначе: составы без игрока, которому капитан вручную отдал их
+     * героя, отпадают; остальные — по правдоподобию их пиков (насколько герои похожи на игроков этого состава на
+     * этих позициях) в степени LINEUP_EVIDENCE, не ниже LINEUP_FLOOR.
+     */
+    double[] lineupWeights(List<AnalysisContext.TeamLineup> lineups, String chosen, boolean weFirst, List<Integer> heroes,
+                           Map<Integer, String> fixed) {
+        int n = lineups.size();
+        double[] w = new double[n];
+        for (int i = 0; i < n; i++) {
+            if (lineups.get(i).key().equals(chosen)) {
+                w[i] = 1;
+                return w;
+            }
+        }
+        List<Integer> theirPicks = new ArrayList<>();
+        for (int i = 0; i < heroes.size() && i < SLOTS.size(); i++) {
+            Integer h = heroes.get(i);
+            if (h != null && h > 0 && SLOTS.get(i).pick() && SLOTS.get(i).firstTeam() != weFirst) {
+                theirPicks.add(h);
+            }
+        }
+        double total = 0;
+        for (int i = 0; i < n; i++) {
+            Squad sq = lineups.get(i).squad();
+            Set<String> nicks = new HashSet<>();
+            sq.byPosition().forEach(p -> nicks.add(p.nick()));
+            boolean fits = theirPicks.stream().map(fixed::get).filter(java.util.Objects::nonNull).allMatch(nicks::contains);
+            w[i] = fits ? Math.pow(pickLikelihood(new SquadModel(sq, 0), theirPicks), LINEUP_EVIDENCE) : 0;
+            total += w[i];
+        }
+        if (!(total > 0)) {
+            java.util.Arrays.fill(w, 1);
+            total = n;
+        }
+        double sum = 0;
+        for (int i = 0; i < n; i++) {
+            w[i] = w[i] == 0 ? 0 : Math.max(LINEUP_FLOOR, w[i] / total);
+            sum += w[i];
+        }
+        for (int i = 0; i < n; i++) {
+            w[i] /= sum;
+        }
+        return w;
+    }
+
+    /**
+     * Правдоподобие пиков для состава: сумма по расстановкам «герой → свой игрок» произведений долей «игрок берёт этого
+     * героя» (близость героя к игроку на его позиции, нормированная по всем героям).
+     */
+    double pickLikelihood(SquadModel m, List<Integer> picks) {
+        if (picks.isEmpty()) {
+            return 1;
+        }
+        int n = m.players.size();
+        double[][] share = new double[picks.size()][n];
+        for (int p = 0; p < n; p++) {
+            PlayerStats player = m.players.get(p);
+            double total = 0;
+            for (int h : meta.heroes.keySet()) {
+                total += m.affinity(player, h);
+            }
+            for (int i = 0; i < picks.size(); i++) {
+                share[i][p] = total > 0 ? m.affinity(player, picks.get(i)) / total : 0;
+            }
+        }
+        double sum = 0;
+        for (int[] perm : Squad.permutations(indices(n), Math.min(picks.size(), n))) {
+            double prod = 1;
+            for (int i = 0; i < perm.length; i++) {
+                prod *= share[i][perm[i]];
+            }
+            sum += prod;
+        }
+        return sum;
+    }
+
+    /**
+     * Список по всем составам: очки героя — сумма «вес состава × очки в его совете», причины — из совета, где вклад
+     * больше. Если герой важен не при всех составах, это видно в причинах.
+     */
+    static List<Reasoned> mergeReasoned(List<Advice> each, double[] w,
+                                        java.util.function.Function<Advice, List<Reasoned>> list, int limit) {
+        Map<Integer, Double> score = new HashMap<>(), weight = new HashMap<>(), top = new HashMap<>();
+        Map<Integer, Reasoned> best = new HashMap<>();
+        for (int i = 0; i < each.size(); i++) {
+            if (each.get(i) == null) {
+                continue;
+            }
+            for (Reasoned r : list.apply(each.get(i))) {
+                double c = w[i] * r.score();
+                score.merge(r.heroId(), c, Double::sum);
+                weight.merge(r.heroId(), w[i], Double::sum);
+                if (c >= top.getOrDefault(r.heroId(), Double.NEGATIVE_INFINITY)) {
+                    top.put(r.heroId(), c);
+                    best.put(r.heroId(), r);
+                }
+            }
+        }
+        return score.entrySet().stream()
+                .sorted(Map.Entry.<Integer, Double>comparingByValue().reversed())
+                .limit(limit)
+                .map(e -> {
+                    Reasoned r = best.get(e.getKey());
+                    List<String> reasons = new ArrayList<>(r.reasons());
+                    double share = weight.get(e.getKey());
+                    if (share < 0.75) {
+                        reasons.add("не при всех составах: " + Md.pct(share));
+                    }
+                    return new Reasoned(r.heroId(), r.name(), e.getValue(), r.player(), reasons);
+                })
+                .toList();
+    }
+
+    /**
+     * Баны по позициям по всем составам: строка на каждую пару «позиция — игрок» с вероятностью, что на позиции он
+     * (сумма весов составов, где он там). Герои строки — из самого вероятного такого состава.
+     */
+    static List<PositionBans> mergePositionBans(List<Advice> each, double[] w) {
+        Map<String, PositionBans> rows = new LinkedHashMap<>();
+        Map<String, Double> share = new HashMap<>(), top = new HashMap<>();
+        for (int i = 0; i < each.size(); i++) {
+            if (each.get(i) == null) {
+                continue;
+            }
+            for (PositionBans pb : each.get(i).positionBans()) {
+                String k = pb.position() + "|" + pb.player();
+                share.merge(k, w[i], Double::sum);
+                if (w[i] > top.getOrDefault(k, -1.0)) {
+                    top.put(k, w[i]);
+                    rows.put(k, pb);
+                }
+            }
+        }
+        return rows.entrySet().stream()
+                .map(e -> {
+                    PositionBans pb = e.getValue();
+                    return new PositionBans(pb.position(), pb.player(), pb.picked(), pb.pickedName(), pb.heroes(),
+                            Math.min(1, share.get(e.getKey())));
+                })
+                .sorted(Comparator.comparingInt(PositionBans::position)
+                        .thenComparing(Comparator.comparingDouble(PositionBans::share).reversed()))
+                .toList();
     }
 
     Advice advise(Squad usSquad, Squad themSquad, boolean weFirst, List<Integer> heroes, long excludeMatchId) {
@@ -416,7 +610,7 @@ public final class DraftEngine {
                 finished ? List.of() : laneOptions(us, ourProb, used, theirLaners),
                 doublePickNow(step, weFirst) ? pairPicks(ourPickList) : List.of(),
                 finished ? List.of() : positionBans(them, us, ourPicks, used, theirDist, theirAssignment),
-                (System.nanoTime() - started) / 1000);
+                List.of(), null, (System.nanoTime() - started) / 1000);
     }
 
     /**
@@ -973,7 +1167,7 @@ public final class DraftEngine {
             Assignment picked = theirAssignment.stream().filter(a -> a.player().equals(player.nick()) && (a.fixed() || a.probability() >= 0.5))
                     .findFirst().orElse(null);
             result.add(new PositionBans(them.squad.position(player), player.nick(), picked == null ? null : picked.heroId(),
-                    picked == null ? null : picked.name(), heroes.stream().limit(POSITION_BANS).toList()));
+                    picked == null ? null : picked.name(), heroes.stream().limit(POSITION_BANS).toList(), 1.0));
         }
         return result;
     }

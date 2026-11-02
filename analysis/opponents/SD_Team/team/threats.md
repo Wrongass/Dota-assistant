@@ -1,6 +1,6 @@
 # Угрозы: SD Team (GGsel)
 
-Сгенерировано 2026-11-01, патч 7.41.
+Сгенерировано 2026-11-02, патч 7.41.
 
 ## Пулы по позициям (топ-6 по пригодности в патче)
 
@@ -62,14 +62,14 @@ Necrophos ×5, Lina ×4, Lifestealer ×3, Outworld Devourer ×3, Viper ×3, Axe 
 | # | Герой | Их WR против | Игр | В наших пулах |
 |---|---|---|---|---|
 | 1 | Medusa | 42.7% | 146 |  |
-| 2 | Wraith King | 43.7% | 284 | ✔ |
+| 2 | Wraith King | 43.8% | 283 | ✔ |
 | 3 | Io | 44.0% | 109 |  |
 | 4 | Leshrac | 44.0% | 84 | ✔ |
 | 5 | Lone Druid | 44.1% | 52 |  |
 | 6 | Warlock | 44.8% | 167 |  |
-| 7 | Legion Commander | 45.3% | 315 |  |
+| 7 | Legion Commander | 45.4% | 314 |  |
 | 8 | Skywrath Mage | 45.6% | 225 |  |
-| 9 | Spectre | 45.6% | 203 | ✔ |
-| 10 | Silencer | 45.7% | 242 | ✔ |
-| 11 | Keeper of the Light | 45.7% | 93 |  |
-| 12 | Night Stalker | 45.7% | 152 | ✔ |
+| 9 | Silencer | 45.7% | 242 | ✔ |
+| 10 | Keeper of the Light | 45.7% | 93 |  |
+| 11 | Night Stalker | 45.7% | 152 | ✔ |
+| 12 | Spectre | 45.8% | 202 | ✔ |
