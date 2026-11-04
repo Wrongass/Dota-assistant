@@ -13,6 +13,8 @@
 - Бэктест драфта: `./gradlew draftBacktest` (`--args="--report"` — подробно; эксперименты на всей лиге в честном
   режиме — `--args="--lab --config data/backtest/league.yaml --honest"`, данные — `--league-players` у выгрузки и
   `--args="--league-config"`, см. `docs/research/draft-backtest.md`)
+- Прогноз плей-офф (страница `/forecast`): `python tools/forecast/fetch.py` (STRATZ → `data/forecast`), затем
+  `python tools/forecast/forecast.py` → `analysis/forecast/playoff.md`; модели и проверка — `docs/research/playoff-forecast.md`
 - Проверки сайта в браузере (после правок JS/шаблонов, при запущенном сайте): `python tools/ui-checks/<скрипт>.py`
 
 Архитектура (ADR 0003): `AnalysisContext` грузит всё один раз → `Squad` считает view-модели (`Views`) →

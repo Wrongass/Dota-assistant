@@ -470,3 +470,9 @@ details.panel[open] > summary::after, details.toggle-box[open] > summary::after 
 .lane-options .lane-verdict { font-size: 12px; font-weight: 600; }
 .lane-options .lane-verdict.strong { color: var(--strong, #3fb950); }
 .lane-options .lane-verdict.weak { color: var(--weak); }
+
+/* Прогноз плей-офф: широкие таблицы прокручиваются внутри панели */
+.panel.forecast { overflow-x: auto; }
+.panel.forecast table { font-size: 13px; }
+.panel.forecast td, .panel.forecast th { white-space: nowrap; }
+details.panel.forecast > summary { font-size: 16px; }

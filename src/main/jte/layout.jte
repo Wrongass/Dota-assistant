@@ -38,6 +38,7 @@
         <a href="/draft-data" class="${page.active().equals("draft-data") ? "active" : null}" title="Ручной план драфта и наши пулы">План драфта</a>
         <a href="/tournament" class="${page.active().equals("tournament") ? "active" : null}">Турнир</a>
         <a href="/group" class="${page.active().equals("group") ? "active" : null}">Группа</a>
+        <a href="/forecast" class="${page.active().equals("forecast") ? "active" : null}" title="Шансы команд и вероятная сетка плей-офф">Прогноз</a>
         <details>
             <summary class="${page.active().equals("opponents") ? "active" : null}">Соперники ▾</summary>
             <div class="dropdown">

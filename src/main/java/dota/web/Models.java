@@ -34,6 +34,13 @@ public final class Models {
     public record Method(Page page) {
     }
 
+    /** Прогноз плей-офф: вступление открыто, каждый раздел «## …» файла — под спойлером. null — файла нет. */
+    public record ForecastPage(Page page, String introHtml, List<Section> sections) {
+    }
+
+    public record Section(String title, String html) {
+    }
+
     /** История драфтов: драфт, наши и их пики, реальная карта лиги с теми же пиками (или null). */
     public record HistoryRow(String code, String updated, String opponent, int map, int moves, List<Integer> ourPicks,
                              List<Integer> theirPicks, Long matchId, Boolean won, String matchDate, int overlap) {
