@@ -117,7 +117,11 @@ def load_maps():
     for f in glob.glob(os.path.join(DATA, 'raw', 'league', '*', 'matches', '*.json')):
         m = json.load(open(f, encoding='utf-8'))
         a, b = m.get('radiant_team_id'), m.get('dire_team_id')
-        if not a or not b or m.get('game_mode') != 2:
+        # CM и All Pick (переигровки после технических проблем бывают в AP); 1x1 и технические карты без игры —
+        # все на 1 уровне и без убийств (сервер упал, лобби пересоздали) — не считаются
+        if not a or not b or m.get('game_mode') not in (1, 2, 22):
+            continue
+        if sum(p['kills'] for p in m['players']) == 0 or max(p['level'] for p in m['players']) <= 2:
             continue
         side = {True: [], False: []}
         for p in m['players']:
