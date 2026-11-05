@@ -112,17 +112,25 @@ def pub_stats(acc):
 
 
 # ---------------------------------------------------------------- карты лиги
-def load_maps():
-    maps = []
-    for f in glob.glob(os.path.join(DATA, 'raw', 'league', '*', 'matches', '*.json')):
-        m = json.load(open(f, encoding='utf-8'))
+def load_maps(extra=None, report=None):
+    """Карты лиги (+ extra — сырые карты в формате OpenDota, для теста на противоречивых данных). Невозможные и
+    неправдоподобные карты отбрасываются (map_problem); report — словарь «причина: сколько карт»."""
+    raws = [json.load(open(f, encoding='utf-8')) for f in sorted(glob.glob(os.path.join(DATA, 'raw', 'league', '*', 'matches', '*.json')))]
+    maps, seen = [], set()
+    report = {} if report is None else report
+    for m in raws + list(extra or []):
         a, b = m.get('radiant_team_id'), m.get('dire_team_id')
         # CM и All Pick (переигровки после технических проблем бывают в AP); 1x1 и технические карты без игры —
         # все на 1 уровне и без убийств (сервер упал, лобби пересоздали) — не считаются
-        if not a or not b or m.get('game_mode') not in (1, 2, 22):
+        if not a or not b or m.get('game_mode') not in (1, 2, 22) or not m.get('players'):
             continue
         if sum(p['kills'] for p in m['players']) == 0 or max(p['level'] for p in m['players']) <= 2:
             continue
+        why = map_problem(m, seen)
+        if why:
+            report[why] = report.get(why, 0) + 1
+            continue
+        seen.add(m['match_id'])
         side = {True: [], False: []}
         for p in m['players']:
             side[p['isRadiant']].append((p.get('account_id'), p.get('position_est') or 0, p.get('rank_tier')))
@@ -132,6 +140,65 @@ def load_maps():
                          nb=(m.get('dire_team') or {}).get('name') or str(b)))
     maps.sort(key=lambda m: m['t'])
     return maps
+
+
+_HEROES, _POOLS = None, {}
+POOL_GAMES, OFF_POOL_LIMIT = 3, 3
+
+
+def map_problem(m, seen):
+    """Почему карта не может быть настоящей или неправдоподобна, иначе None (как LeagueCheck в Java,
+    docs/research/contradictory-data.md)."""
+    global _HEROES
+    if _HEROES is None:
+        _HEROES = {int(k) for k in load_json(os.path.join(DATA, 'raw', 'constants', 'heroes.json'), {})}
+    ps = m['players']
+    if m['match_id'] in seen:
+        return 'дубль match_id'
+    if len(ps) != 10 or sum(1 for p in ps if p['isRadiant']) != 5:
+        return 'не 5 на 5'
+    if m['radiant_team_id'] == m['dire_team_id']:
+        return 'команда против самой себя'
+    if m['start_time'] > time.time() + 86400:
+        return 'дата в будущем'
+    if (m.get('duration') or 0) <= 0:
+        return 'длительность не больше нуля'
+    heroes = [p['hero_id'] for p in ps]
+    if any(h not in _HEROES for h in heroes):
+        return 'неизвестный герой'
+    if len(set(heroes)) != 10:
+        return 'герой дважды'
+    accs = [p['account_id'] for p in ps if p.get('account_id')]
+    if len(set(accs)) != len(accs):
+        return 'игрок за обе стороны'
+    drafted = [s['hero_id'] for s in m.get('picks_bans') or []]
+    if len(set(drafted)) != len(drafted):
+        return 'герой в драфте дважды (бан и пик)'
+    for radiant in (True, False):
+        known = off = 0
+        for p in ps:
+            if p['isRadiant'] != radiant:
+                continue
+            pool = hero_pool(p.get('account_id'))
+            if pool is None:
+                continue
+            known += 1
+            off += pool.get(p['hero_id'], 0) < POOL_GAMES
+        if known >= OFF_POOL_LIMIT and off >= OFF_POOL_LIMIT:
+            return '3+ игрока на чужих героях'
+    return None
+
+
+def hero_pool(acc):
+    """Игры игрока на героях в пабах (data/raw/our|opp/{id}/heroes.json) или None, если его нет в выгрузке."""
+    if acc not in _POOLS:
+        _POOLS[acc] = None
+        for d in ('our', 'opp'):
+            hs = load_json(os.path.join(DATA, 'raw', d, str(acc), 'heroes.json'))
+            if hs:
+                _POOLS[acc] = {h['hero_id']: h['games'] for h in hs}
+                break
+    return _POOLS[acc]
 
 
 def load_lineups():

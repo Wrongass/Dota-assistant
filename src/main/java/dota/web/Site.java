@@ -201,6 +201,7 @@ final class Site {
         if (group != null && group.remakes() > 0) {
             warnings.add("Переигровок в лиге отброшено: " + group.remakes());
         }
+        warnings.addAll(c.leagueWarnings());
         List<Squad> squads = new ArrayList<>(c.opponents);
         squads.add(0, c.ours);
         for (Squad s : squads) {
