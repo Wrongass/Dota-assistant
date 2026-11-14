@@ -8,8 +8,8 @@
 |---|---|---|---|
 | Team Visual | 6 | 3 | 3 |
 | SD Team | 7 | 3 | 4 |
-| UPPO TEAM | 6 | 5 | 1 |
-| Team Polyus | 7 | 2 | 5 |
+| UPPO TEAM | 9 | 6 | 3 |
+| Team Polyus | 10 | 4 | 6 |
 
 ## Матчи
 
@@ -28,3 +28,6 @@
 | 2026-10-24 07:22 UTC | Team Visual | SD Team | Team Visual | 58 | Dawnbreaker, Centaur Warrunner, Vengeful Spirit, Lifestealer, Lich | Dragon Knight, Windranger, Pangolier, Rubick, Grimstroke | [9059152056](https://www.opendota.com/matches/9059152056) |
 | 2026-10-24 08:35 UTC | SD Team | Team Visual | SD Team | 40 | Slardar, Windranger, Dragon Knight, Dark Seer, Warlock | Lina, Underlord, Lifestealer, Lich, Vengeful Spirit | [9059226622](https://www.opendota.com/matches/9059226622) |
 | 2026-10-31 08:28 UTC | Team Polyus | SD Team | Team Polyus | 65 | Wraith King, Queen of Pain, Death Prophet, Ring Master, Ogre Magi | Lifestealer, Ember Spirit, Dark Willow, Dark Seer, Spirit Breaker | [9069627947](https://www.opendota.com/matches/9069627947) |
+| 2026-11-07 07:39 UTC | Team Polyus | UPPO TEAM | Team Polyus | 54 | Sven, Sniper, Death Prophet, Techies, Lich | Lina, Disruptor, Doom, Witch Doctor, Windranger | [9079625097](https://www.opendota.com/matches/9079625097) |
+| 2026-11-07 09:00 UTC | UPPO TEAM | Team Polyus | UPPO TEAM | 32 | Undying, Lina, Kunkka, Phantom Assassin, Hoodwink | Wraith King, Alchemist, Underlord, Dark Willow, Ogre Magi | [9079701697](https://www.opendota.com/matches/9079701697) |
+| 2026-11-07 09:53 UTC | UPPO TEAM | Team Polyus | Team Polyus | 29 | Dark Willow, Axe, Lina, Dazzle, Phantom Lancer | Windranger, Earthshaker, Centaur Warrunner, Hoodwink, Lich | [9079755743](https://www.opendota.com/matches/9079755743) |

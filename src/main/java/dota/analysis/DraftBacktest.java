@@ -51,6 +51,10 @@ public final class DraftBacktest {
     }
 
     public static void main(String[] args) throws IOException {
+        if (args.length > 0 && args[0].equals("--contradict")) {
+            ContradictoryDataCheck.main(args);
+            return;
+        }
         if (args.length > 0 && (args[0].equals("--lab") || args[0].equals("--league-config"))) {
             DraftBacktestLab.main(args[0].equals("--lab") ? java.util.Arrays.copyOfRange(args, 1, args.length) : args);
             return;

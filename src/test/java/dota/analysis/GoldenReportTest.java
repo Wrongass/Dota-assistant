@@ -39,6 +39,8 @@ class GoldenReportTest {
         try (Stream<Path> files = Files.walk(ANALYSIS)) {
             expected = files.filter(Files::isRegularFile)
                     .filter(f -> !f.getFileName().toString().endsWith("_plan.md"))
+                    // прогноз плей-офф генерирует отдельный скрипт (tools/forecast), не Analyze
+                    .filter(f -> !f.startsWith(ANALYSIS.resolve("forecast")))
                     .toList();
         }
         assertFalse(expected.isEmpty());

@@ -1,6 +1,6 @@
 # Турнир: comaTOZ (ИТОЗ)
 
-Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 11, побед: 5. Переигровки (пустая статистика) не учитываются.
+Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 13, побед: 5. Переигровки (пустая статистика) не учитываются.
 
 ## 2026-10-10 09:48 UTC — против Elbrus team (МЦСТ): поражение
 
@@ -200,12 +200,48 @@ Radiant, 39 мин, [OpenDota](https://www.opendota.com/matches/9069901208), [Do
 
 **b Anti-Mage** → **b Lone Druid** → b Disruptor → b Doom → **b Phantom Lancer** → b Earth Spirit → b Earthshaker → **P Lina** → P Dragon Knight → **b Luna** → **b Lifestealer** → b Witch Doctor → P Jakiro → **P Techies** → **P Centaur Warrunner** → P Grimstroke → P Invoker → **P Hoodwink** → **b Slark** → b Sven → **b Faceless Void** → b Spectre → **P Drow Ranger** → P Juggernaut
 
+## 2026-11-07 07:02 UTC — против Team Future (НИИЭП): поражение
+
+Dire, 34 мин, [OpenDota](https://www.opendota.com/matches/9079592473), [Dotabuff](https://ru.dotabuff.com/matches/9079592473)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| DrestoV1ch | Techies | safe | 243 | 1/16/8 |
+| kezi | Sand King | mid | 391 | 3/12/8 |
+| YOURSELF | Slardar | off | 349 | 3/6/7 |
+| britishboi | Lifestealer | safe | 547 | 8/9/2 |
+| Asmodeus | Dark Willow | off | 239 | 2/10/8 |
+
+Соперник: Viper (Saja), Lich (R3N), Dragon Knight (めつきすてみ), Spectre (twilight), Mirana (Furs)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+**b Tusk** → **b Rubick** → b Invoker → b Arc Warden → **b Witch Doctor** → b Hoodwink → b Earth Spirit → **P Techies** → P Dragon Knight → **b Outworld Devourer** → **b Grimstroke** → b Slark → P Mirana → **P Slardar** → **P Dark Willow** → P Lich → P Spectre → **P Lifestealer** → **b Tinker** → b Ember Spirit → **b Lina** → b Necrophos → **P Sand King** → P Viper
+
+## 2026-11-07 08:06 UTC — против Team Future (НИИЭП): поражение
+
+Radiant, 37 мин, [OpenDota](https://www.opendota.com/matches/9079649974), [Dotabuff](https://ru.dotabuff.com/matches/9079649974)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| DrestoV1ch | Bane | safe | 251 | 6/11/12 |
+| britishboi | Spectre | safe | 522 | 6/11/15 |
+| YOURSELF | Timbersaw | off | 486 | 3/8/8 |
+| kezi | Lina | mid | 473 | 10/8/7 |
+| Asmodeus | Dark Willow | off | 227 | 0/10/10 |
+
+Соперник: Tinker (Saja), Anti-Mage (twilight), Ring Master (Furs), Techies (R3N), Dragon Knight (めつきすてみ)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+**b Mirana** → **b Witch Doctor** → b Invoker → b Arc Warden → **b Tusk** → b Hoodwink → b Earth Spirit → **P Lina** → P Dragon Knight → **b Rubick** → **b Outworld Devourer** → b Slark → P Techies → **P Bane** → **P Dark Willow** → P Ring Master → P Tinker → **P Spectre** → **b Viper** → b Doom → **b Ursa** → b Night Stalker → **P Timbersaw** → P Anti-Mage
+
 ## Сводка
 
-**Пики команды** (в скобках — победы): Hoodwink ×6 (3), Lina ×4 (3), Techies ×4 (4), Dragon Knight ×3 (1), Slardar ×3 (1), Anti-Mage ×2 (1), Bane ×2 (0), Centaur Warrunner ×2 (2), Dark Willow ×2 (0), Doom ×2 (0), Drow Ranger ×2 (1), Earth Spirit ×2 (0), Nature's Prophet ×2 (0), Spirit Breaker ×2 (1), Windranger ×2 (1), Clockwerk (0), Earthshaker (1), Ember Spirit (0), Invoker (1), Largo (1), Lifestealer (1), Muerta (0), Night Stalker (0), Oracle (1), Pudge (1), Rubick (0), Slark (1), Undying (0), Viper (0), Witch Doctor (0)
+**Пики команды** (в скобках — победы): Hoodwink ×6 (3), Lina ×5 (3), Techies ×5 (4), Dark Willow ×4 (0), Slardar ×4 (1), Bane ×3 (0), Dragon Knight ×3 (1), Anti-Mage ×2 (1), Centaur Warrunner ×2 (2), Doom ×2 (0), Drow Ranger ×2 (1), Earth Spirit ×2 (0), Lifestealer ×2 (1), Nature's Prophet ×2 (0), Spirit Breaker ×2 (1), Windranger ×2 (1), Clockwerk (0), Earthshaker (1), Ember Spirit (0), Invoker (1), Largo (1), Muerta (0), Night Stalker (0), Oracle (1), Pudge (1), Rubick (0), Sand King (0), Slark (1), Spectre (0), Timbersaw (0), Undying (0), Viper (0), Witch Doctor (0)
 
-**Баны команды**: Earth Spirit ×8, Lina ×6, Lone Druid ×6, Dark Willow ×4, Outworld Devourer ×4, Slark ×4, Doom ×3, Luna ×3, Phantom Lancer ×3, Dragon Knight ×2, Ember Spirit ×2, Enigma ×2, Hoodwink ×2, Lifestealer ×2, Storm Spirit ×2, Viper ×2, Anti-Mage, Bane, Faceless Void, Huskar, Invoker, Keeper of the Light, Lich, Meepo, Monkey King, Necrophos, Night Stalker, Pangolier, Puck, Rubick, Silencer, Slardar, Sven, Terrorblade, Timbersaw, Tinker, Undying, Ursa
+**Баны команды**: Earth Spirit ×8, Lina ×7, Lone Druid ×6, Outworld Devourer ×6, Dark Willow ×4, Slark ×4, Doom ×3, Luna ×3, Phantom Lancer ×3, Rubick ×3, Viper ×3, Dragon Knight ×2, Ember Spirit ×2, Enigma ×2, Hoodwink ×2, Lifestealer ×2, Storm Spirit ×2, Tinker ×2, Tusk ×2, Ursa ×2, Witch Doctor ×2, Anti-Mage, Bane, Faceless Void, Grimstroke, Huskar, Invoker, Keeper of the Light, Lich, Meepo, Mirana, Monkey King, Necrophos, Night Stalker, Pangolier, Puck, Silencer, Slardar, Sven, Terrorblade, Timbersaw, Undying
 
-**Банят против команды** (чего боятся соперники): Phantom Lancer ×7, Spectre ×6, Sven ×6, Lifestealer ×5, Invoker ×4, Disruptor ×3, Drow Ranger ×3, Earthshaker ×3, Undying ×3, Bane ×2, Bounty Hunter ×2, Dawnbreaker ×2, Dragon Knight ×2, Lich ×2, Phoenix ×2, Slark ×2, Spirit Breaker ×2, Techies ×2, Terrorblade ×2, Witch Doctor ×2, Anti-Mage, Axe, Centaur Warrunner, Dark Willow, Doom, Earth Spirit, Ember Spirit, Hoodwink, Juggernaut, Lone Druid, Mirana, Nature's Prophet, Ring Master, Ursa, Windranger
+**Банят против команды** (чего боятся соперники): Phantom Lancer ×7, Invoker ×6, Spectre ×6, Sven ×6, Lifestealer ×5, Slark ×4, Disruptor ×3, Drow Ranger ×3, Earth Spirit ×3, Earthshaker ×3, Hoodwink ×3, Undying ×3, Arc Warden ×2, Bane ×2, Bounty Hunter ×2, Dawnbreaker ×2, Doom ×2, Dragon Knight ×2, Ember Spirit ×2, Lich ×2, Phoenix ×2, Spirit Breaker ×2, Techies ×2, Terrorblade ×2, Witch Doctor ×2, Anti-Mage, Axe, Centaur Warrunner, Dark Willow, Juggernaut, Lone Druid, Mirana, Nature's Prophet, Necrophos, Night Stalker, Ring Master, Ursa, Windranger
 
-**Пики соперников** (в скобках — их победы): Dragon Knight ×3 (2), Jakiro ×3 (1), Lion ×3 (0), Outworld Devourer ×3 (2), Techies ×3 (3), Anti-Mage ×2 (1), Axe ×2 (0), Drow Ranger ×2 (1), Invoker ×2 (1), Ogre Magi ×2 (2), Skywrath Mage ×2 (1), Bloodseeker (0), Bristleback (0), Chaos Knight (0), Enigma (1), Grimstroke (0), Juggernaut (0), Lich (0), Lifestealer (1), Lone Druid (1), Luna (1), Magnus (0), Meepo (1), Mirana (0), Necrophos (1), Phantom Assassin (0), Phantom Lancer (0), Rubick (1), Silencer (1), Slardar (1), Snapfire (1), Spirit Breaker (0), Tidehunter (1), Underlord (1), Undying (1), Void Spirit (0), Warlock (1), Windranger (1), Wraith King (1)
+**Пики соперников** (в скобках — их победы): Dragon Knight ×5 (4), Techies ×4 (4), Anti-Mage ×3 (2), Jakiro ×3 (1), Lion ×3 (0), Outworld Devourer ×3 (2), Axe ×2 (0), Drow Ranger ×2 (1), Invoker ×2 (1), Lich ×2 (1), Mirana ×2 (1), Ogre Magi ×2 (2), Skywrath Mage ×2 (1), Bloodseeker (0), Bristleback (0), Chaos Knight (0), Enigma (1), Grimstroke (0), Juggernaut (0), Lifestealer (1), Lone Druid (1), Luna (1), Magnus (0), Meepo (1), Necrophos (1), Phantom Assassin (0), Phantom Lancer (0), Ring Master (1), Rubick (1), Silencer (1), Slardar (1), Snapfire (1), Spectre (1), Spirit Breaker (0), Tidehunter (1), Tinker (1), Underlord (1), Undying (1), Viper (1), Void Spirit (0), Warlock (1), Windranger (1), Wraith King (1)

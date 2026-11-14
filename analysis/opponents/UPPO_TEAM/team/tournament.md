@@ -1,6 +1,6 @@
 # Турнир: UPPO TEAM (УППО)
 
-Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 6, побед: 5. Переигровки (пустая статистика) не учитываются.
+Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 9, побед: 6. Переигровки (пустая статистика) не учитываются.
 
 ## 2026-10-10 14:44 UTC — против SD Team (GGsel): победа
 
@@ -110,12 +110,66 @@ Radiant, 47 мин, [OpenDota](https://www.opendota.com/matches/9058372468), [Do
 
 **b Necrophos** → **b Doom** → b Outworld Devourer → b Brewmaster → **b Wraith King** → b Rubick → b Dragon Knight → **P Luna** → P Lion → **b Juggernaut** → **b Jakiro** → b Undying → P Techies → **P Hoodwink** → **P Lina** → P Witch Doctor → P Axe → **P Shadow Demon** → **b Lifestealer** → b Centaur Warrunner → **b Sven** → b Legion Commander → **P Kunkka** → P Phantom Assassin
 
+## 2026-11-07 07:39 UTC — против Team Polyus (НИИ Полюс им. М.Ф. Стельмаха): поражение
+
+Dire, 54 мин, [OpenDota](https://www.opendota.com/matches/9079625097), [Dotabuff](https://ru.dotabuff.com/matches/9079625097)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| Sacred | Lina | mid | 650 | 9/7/8 |
+| Nate | Disruptor | safe | 324 | 2/11/23 |
+| Odar.sp | Doom | off | 634 | 7/9/24 |
+| Kaiju | Witch Doctor | off | 362 | 10/18/14 |
+| Togo | Windranger | safe | 612 | 7/7/13 |
+
+Соперник: Sven (Unlearnable), Sniper (ryota), Death Prophet (татарский стиль), Techies (Sladkiy_arbyzik), Lich (ГYYYYYСЬ)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+**b Wraith King** → **b Juggernaut** → b Brewmaster → b Luna → **b Ember Spirit** → b Outworld Devourer → b Shadow Demon → **P Lina** → P Death Prophet → **b Necrophos** → **b Queen of Pain** → b Lifestealer → P Lich → **P Disruptor** → **P Witch Doctor** → P Techies → P Sven → **P Doom** → **b Pangolier** → b Slark → **b Dragon Knight** → b Anti-Mage → **P Windranger** → P Sniper
+
+## 2026-11-07 09:00 UTC — против Team Polyus (НИИ Полюс им. М.Ф. Стельмаха): победа
+
+Radiant, 32 мин, [OpenDota](https://www.opendota.com/matches/9079701697), [Dotabuff](https://ru.dotabuff.com/matches/9079701697)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| Kaiju | Undying | off | 339 | 2/7/21 |
+| Sacred | Lina | mid | 600 | 7/2/11 |
+| Odar.sp | Kunkka | off | 553 | 8/4/19 |
+| Togo | Phantom Assassin | safe | 789 | 15/0/11 |
+| Nate | Hoodwink | safe | 326 | 3/4/20 |
+
+Соперник: Wraith King (Unlearnable), Alchemist (ryota), Underlord (татарский стиль), Dark Willow (Sladkiy_arbyzik), Ogre Magi (ГYYYYYСЬ)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+b Brewmaster → b Luna → **b Death Prophet** → **b Techies** → b Outworld Devourer → **b Queen of Pain** → **b Ember Spirit** → P Wraith King → **P Lina** → b Lifestealer → b Shadow Demon → **b Sniper** → **P Hoodwink** → P Ogre Magi → P Dark Willow → **P Undying** → **P Kunkka** → P Underlord → b Slark → **b Necrophos** → b Anti-Mage → **b Razor** → P Alchemist → **P Phantom Assassin**
+
+## 2026-11-07 09:53 UTC — против Team Polyus (НИИ Полюс им. М.Ф. Стельмаха): поражение
+
+Radiant, 29 мин, [OpenDota](https://www.opendota.com/matches/9079755743), [Dotabuff](https://ru.dotabuff.com/matches/9079755743)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| Kaiju | Dark Willow | off | 234 | 2/13/9 |
+| Odar.sp | Axe | off | 421 | 5/7/3 |
+| Sacred | Lina | mid | 488 | 5/6/2 |
+| Nate | Dazzle | safe | 230 | 0/9/9 |
+| Togo | Phantom Lancer | safe | 440 | 0/5/3 |
+
+Соперник: Windranger (Unlearnable), Earthshaker (ryota), Centaur Warrunner (татарский стиль), Hoodwink (Sladkiy_arbyzik), Lich (ГYYYYYСЬ)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+**b Death Prophet** → **b Techies** → b Brewmaster → b Luna → **b Queen of Pain** → b Outworld Devourer → b Undying → **P Lina** → P Hoodwink → **b Necrophos** → **b Sniper** → b Lifestealer → P Lich → **P Axe** → **P Dazzle** → P Centaur Warrunner → P Windranger → **P Dark Willow** → **b Ursa** → b Slark → **b Ember Spirit** → b Juggernaut → **P Phantom Lancer** → P Earthshaker
+
 ## Сводка
 
-**Пики команды** (в скобках — победы): Lina ×4 (4), Luna ×3 (3), Dark Willow ×2 (2), Hoodwink ×2 (2), Kunkka ×2 (2), Lion ×2 (1), Ancient Apparition (1), Beastmaster (1), Dawnbreaker (1), Disruptor (1), Largo (1), Legion Commander (1), Lifestealer (1), Mirana (1), Outworld Devourer (1), Rubick (0), Shadow Demon (1), Slark (1), Sven (0), Underlord (0), Viper (0)
+**Пики команды** (в скобках — победы): Lina ×7 (5), Dark Willow ×3 (2), Hoodwink ×3 (3), Kunkka ×3 (3), Luna ×3 (3), Disruptor ×2 (1), Lion ×2 (1), Ancient Apparition (1), Axe (0), Beastmaster (1), Dawnbreaker (1), Dazzle (0), Doom (0), Largo (1), Legion Commander (1), Lifestealer (1), Mirana (1), Outworld Devourer (1), Phantom Assassin (1), Phantom Lancer (0), Rubick (0), Shadow Demon (1), Slark (1), Sven (0), Underlord (0), Undying (1), Viper (0), Windranger (0), Witch Doctor (0)
 
-**Баны команды**: Dragon Knight ×4, Sven ×4, Lifestealer ×3, Wraith King ×3, Bounty Hunter ×2, Huskar ×2, Jakiro ×2, Juggernaut ×2, Lich ×2, Necrophos ×2, Outworld Devourer ×2, Silencer ×2, Tidehunter ×2, Axe, Dawnbreaker, Doom, Ember Spirit, Lina, Luna, Night Stalker, Phantom Lancer, Slark, Sniper
+**Баны команды**: Dragon Knight ×5, Necrophos ×5, Ember Spirit ×4, Sven ×4, Wraith King ×4, Juggernaut ×3, Lifestealer ×3, Queen of Pain ×3, Sniper ×3, Bounty Hunter ×2, Death Prophet ×2, Huskar ×2, Jakiro ×2, Lich ×2, Outworld Devourer ×2, Silencer ×2, Techies ×2, Tidehunter ×2, Axe, Dawnbreaker, Doom, Lina, Luna, Night Stalker, Pangolier, Phantom Lancer, Razor, Slark, Ursa
 
-**Банят против команды** (чего боятся соперники): Kunkka ×3, Brewmaster ×2, Centaur Warrunner ×2, Lifestealer ×2, Necrophos ×2, Outworld Devourer ×2, Rubick ×2, Slark ×2, Sniper ×2, Timbersaw ×2, Winter Wyvern ×2, Anti-Mage, Axe, Beastmaster, Dark Willow, Dawnbreaker, Dragon Knight, Faceless Void, Hoodwink, Legion Commander, Lina, Luna, Mirana, Morphling, Nature's Prophet, Nyx Assassin, Phantom Lancer, Snapfire, Underlord, Undying
+**Банят против команды** (чего боятся соперники): Brewmaster ×5, Lifestealer ×5, Outworld Devourer ×5, Slark ×5, Luna ×4, Anti-Mage ×3, Kunkka ×3, Centaur Warrunner ×2, Necrophos ×2, Rubick ×2, Shadow Demon ×2, Sniper ×2, Timbersaw ×2, Undying ×2, Winter Wyvern ×2, Axe, Beastmaster, Dark Willow, Dawnbreaker, Dragon Knight, Faceless Void, Hoodwink, Juggernaut, Legion Commander, Lina, Mirana, Morphling, Nature's Prophet, Nyx Assassin, Phantom Lancer, Snapfire, Underlord
 
-**Пики соперников** (в скобках — их победы): Lion ×3 (0), Ogre Magi ×2 (0), Techies ×2 (0), Axe (0), Clinkz (0), Crystal Maiden (1), Dawnbreaker (1), Death Prophet (0), Disruptor (0), Doom (0), Drow Ranger (0), Ember Spirit (1), Mirana (1), Night Stalker (0), Outworld Devourer (0), Phantom Assassin (0), Razor (0), Rubick (0), Sand King (0), Tidehunter (0), Undying (0), Ursa (0), Vengeful Spirit (0), Windranger (1), Witch Doctor (0), Wraith King (0)
+**Пики соперников** (в скобках — их победы): Lion ×3 (0), Ogre Magi ×3 (0), Techies ×3 (1), Death Prophet ×2 (1), Lich ×2 (2), Windranger ×2 (2), Wraith King ×2 (0), Alchemist (0), Axe (0), Centaur Warrunner (1), Clinkz (0), Crystal Maiden (1), Dark Willow (0), Dawnbreaker (1), Disruptor (0), Doom (0), Drow Ranger (0), Earthshaker (1), Ember Spirit (1), Hoodwink (1), Mirana (1), Night Stalker (0), Outworld Devourer (0), Phantom Assassin (0), Razor (0), Rubick (0), Sand King (0), Sniper (1), Sven (1), Tidehunter (0), Underlord (0), Undying (0), Ursa (0), Vengeful Spirit (0), Witch Doctor (0)

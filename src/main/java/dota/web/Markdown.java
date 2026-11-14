@@ -62,6 +62,27 @@ final class Markdown {
         return RENDERER.render(doc);
     }
 
+    /**
+     * Делит Markdown по заголовкам второго уровня: [0] — текст до первого «## » (заголовок пустой),
+     * дальше пары {заголовок, тело раздела}. Строки внутри блоков кода не проверяются: в прогнозе их нет.
+     */
+    static List<String[]> sections(String markdown) {
+        List<String[]> out = new ArrayList<>();
+        String title = "";
+        StringBuilder body = new StringBuilder();
+        for (String line : markdown.replace("\r\n", "\n").split("\n", -1)) {
+            if (line.startsWith("## ")) {
+                out.add(new String[]{title, body.toString()});
+                title = line.substring(3).trim();
+                body.setLength(0);
+            } else {
+                body.append(line).append('\n');
+            }
+        }
+        out.add(new String[]{title, body.toString()});
+        return out;
+    }
+
     static String fileToHtml(Path file, UnaryOperator<String> linkResolver) throws IOException {
         return toHtml(Files.readString(file, StandardCharsets.UTF_8), linkResolver);
     }

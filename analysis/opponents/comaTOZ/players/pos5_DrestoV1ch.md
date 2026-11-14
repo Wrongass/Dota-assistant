@@ -8,21 +8,21 @@
 
 ## Чем играет сейчас: 14 дней и 2 месяца
 
-На 2026-11-02: за 14 дней 13 игр, за 2 месяца 46 (из них с игроками своей команды — 46), Турбо за 2 месяца — 0 (в игры не входит). 🔥 — много игр за 14 дней, но не из топа; ★ — из топа «играет лучше всего»; 👥 — играл в пати со своими.
+На 2026-11-14: за 14 дней 0 игр, за 2 месяца 32 (из них с игроками своей команды — 32), Турбо за 2 месяца — 0 (в игры не входит). 🔥 — много игр за 14 дней, но не из топа; ★ — из топа «играет лучше всего»; 👥 — играл в пати со своими.
 
 | Герой | 14 дней | WR | 2 месяца | WR | Турбо | С командой | С кем | Последняя |
 |---|---|---|---|---|---|---|---|---|
-| Undying ★ 👥 | 1 | 100.0% | 22 | 68.2% |  | 22 | YOURSELF, Asmodeus, britishboi, kezi | 21.10 |
-| Techies ★ 👥 | 6 | 100.0% | 8 | 75.0% |  | 8 | YOURSELF, Asmodeus, britishboi, kezi | 31.10 |
-| Shadow Shaman ★ 👥 | 1 | 0.0% | 5 | 60.0% |  | 5 | britishboi, kezi | 21.10 |
-| Bane ★ 👥 | 1 | 0.0% | 4 | 0.0% |  | 4 | YOURSELF, Asmodeus, britishboi, kezi | 31.10 |
+| Undying ★ 👥 | 0 | — | 9 | 44.4% |  | 9 | YOURSELF, Asmodeus, britishboi, kezi | 21.10 |
+| Techies ★ 👥 | 0 | — | 8 | 75.0% |  | 8 | YOURSELF, Asmodeus, britishboi, kezi | 31.10 |
+| Bane ★ 👥 | 0 | — | 4 | 0.0% |  | 4 | YOURSELF, Asmodeus, britishboi, kezi | 31.10 |
+| Shadow Shaman ★ 👥 | 0 | — | 4 | 50.0% |  | 4 | britishboi, kezi | 21.10 |
 | Centaur Warrunner 👥 | 0 | — | 1 | 0.0% |  | 1 | britishboi, kezi | 20.09 |
 | Dazzle 👥 | 0 | — | 1 | 0.0% |  | 1 | britishboi, kezi | 20.09 |
-| Clockwerk ★ 👥 | 1 | 0.0% | 1 | 0.0% |  | 1 | YOURSELF, Asmodeus, britishboi, kezi | 25.10 |
+| Clockwerk 👥 | 0 | — | 1 | 0.0% |  | 1 | YOURSELF, Asmodeus, britishboi, kezi | 25.10 |
 | Tusk 👥 | 0 | — | 1 | 0.0% |  | 1 | britishboi, kezi | 24.09 |
-| Dark Willow 👥 | 1 | 0.0% | 1 | 0.0% |  | 1 | YOURSELF, Asmodeus, britishboi, kezi | 25.10 |
-| Witch Doctor ★ 👥 | 1 | 0.0% | 1 | 0.0% |  | 1 | YOURSELF, Asmodeus, britishboi, kezi | 31.10 |
-| Oracle 👥 | 1 | 100.0% | 1 | 100.0% |  | 1 | YOURSELF, Asmodeus, britishboi, kezi | 25.10 |
+| Dark Willow 👥 | 0 | — | 1 | 0.0% |  | 1 | YOURSELF, Asmodeus, britishboi, kezi | 25.10 |
+| Witch Doctor 👥 | 0 | — | 1 | 0.0% |  | 1 | YOURSELF, Asmodeus, britishboi, kezi | 31.10 |
+| Oracle 👥 | 0 | — | 1 | 100.0% |  | 1 | YOURSELF, Asmodeus, britishboi, kezi | 25.10 |
 
 ## Топ-15 героев, на которых играет лучше всего
 
@@ -34,8 +34,6 @@
 | 2 | Undying | 73 | 23 / 22 / 22 | 65.2% | 68.2% | топ 55% | 4.84 | 3/4/5 | 49.1%  |
 | 3 | Shadow Shaman | 70 | 59 / 5 / 5 | 59.3% | 60.0% | топ 9% | 2.34 | 4/5 | 51.5%  |
 | 4 | Bane | 39 | 7 / 4 / 4 | 28.6% | 0.0% | топ 29% | 1.59 | 5 | 50.1%  |
-| 5 | Witch Doctor | 37 | 11 / 1 / 1 | 36.4% | 0.0% | топ 42% | 2.58 | 4/5 | 51.0%  |
-| 6 | Clockwerk | 18 | 6 / 1 / 1 | 0.0% | 0.0% | топ 89% | 2.37 | 4/5 | 48.1%  |
 
 ## Топ-15 героев под патч 7.41 на позиции 5
 

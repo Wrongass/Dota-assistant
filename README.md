@@ -32,6 +32,10 @@
 ./gradlew analyze --args="--date 2026-10-14"    # отчёты на дату (давность матчей считается от неё)
 ./gradlew web                                   # сайт на http://127.0.0.1:8070 (--args="--port 8080")
 ./gradlew draftBacktest                         # проверка прогнозов драфта на матчах группы
+python tools/forecast/fetch.py                  # ранги и пабы игроков лиги из STRATZ для прогноза (data/forecast)
+python tools/forecast/forecast.py               # прогноз плей-офф → analysis/forecast/playoff.md (страница /forecast)
+./gradlew draftBacktest --args="--contradict"   # тест модели драфта на противоречивых данных (testdata/contradictory)
+python tools/contradict/forecast_check.py       # то же для прогноза плей-офф (docs/research/contradictory-data.md)
 ./gradlew build                                 # сборка и тесты
 ```
 

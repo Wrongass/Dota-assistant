@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.UnaryOperator;
 import java.util.Map;
 import java.util.Set;
 
@@ -126,6 +127,7 @@ public class WebApp {
         app.post("/api/share/{code}", ctx -> shareDraft(ctx, ctx.pathParam("code")));
         app.get("/api/share/{code}", this::sharedDraft);
         app.get("/method", ctx -> render(ctx, "method.jte", new Models.Method(page("Методика", "method"))));
+        app.get("/forecast", this::forecast);
         app.post("/reload", ctx -> {
             site.reload();
             String back = ctx.header("Referer");
@@ -314,6 +316,22 @@ public class WebApp {
         Squad ours = site.ctx().ours;
         String plan = site.planFile(ours).map(this::markdown).orElse(null);
         render(http, "draft_data.jte", new Models.DraftDataPage(page("Наш драфт", "draft-data"), ours.draftData(), plan));
+    }
+
+    /** analysis/forecast/playoff.md — генерирует tools/forecast/forecast.py, на сайте разделы под спойлерами. */
+    private void forecast(Context http) throws IOException {
+        Path file = site.analysisDir.resolve("forecast").resolve("playoff.md");
+        String intro = null;
+        List<Models.Section> sections = new ArrayList<>();
+        if (Files.exists(file)) {
+            List<String[]> parts = Markdown.sections(Files.readString(file, java.nio.charset.StandardCharsets.UTF_8));
+            UnaryOperator<String> links = href -> siteLink(file, href);
+            intro = Markdown.toHtml(parts.get(0)[1], links);
+            for (String[] p : parts.subList(1, parts.size())) {
+                sections.add(new Models.Section(p[0], Markdown.toHtml(p[1], links)));
+            }
+        }
+        render(http, "forecast.jte", new Models.ForecastPage(page("Прогноз плей-офф", "forecast"), intro, sections));
     }
 
     private void tournament(Context http) {

@@ -32,6 +32,7 @@ public final class AnalysisContext {
     public final Path dataDir;
     /** Игроки из конфига, чьих данных ещё нет в data/ (новые игроки до первой выгрузки): их пропускаем. */
     private final List<String> missingData;
+    private List<String> leagueWarnings = List.of();
     /** Контекст «на дату» (бэктест): игры игроков только до даты. */
     private boolean strict;
 
@@ -61,6 +62,11 @@ public final class AnalysisContext {
     }
 
     /** «ник (команда)» игроков без скачанных данных — для предупреждения на сайте. */
+    /** Предупреждения проверки карт лиги (LeagueCheck): сколько карт отброшено и почему. */
+    public List<String> leagueWarnings() {
+        return leagueWarnings;
+    }
+
     public List<String> missingData() {
         return missingData;
     }
@@ -119,10 +125,14 @@ public final class AnalysisContext {
                         .forEach(s.manualMaps::add);
             }
         }
+        // проверка карт лиги: невозможные и неправдоподобные карты в модель не идут (docs/research/contradictory-data.md)
+        List<String> leagueWarnings = league == null ? List.of()
+                : LeagueCheck.clean(league, new java.util.HashSet<>(meta.heroIdsByName()), all).warnings();
         Path traitsFile = configPath.toAbsolutePath().getParent().resolve("hero_traits.yaml");
         AnalysisContext ctx = new AnalysisContext(config, meta, league, LaneStats.load(dataDir), HeroTraits.load(traitsFile), ours,
                 opponents, date, dataDir, missing);
         ctx.strict = strict;
+        ctx.leagueWarnings = leagueWarnings;
         return ctx;
     }
 
