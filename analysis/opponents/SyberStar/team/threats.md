@@ -1,16 +1,16 @@
 # Угрозы: SyberStar (НПП «Звезда»)
 
-Сгенерировано 2026-11-02, патч 7.41.
+Сгенерировано 2026-11-14, патч 7.41.
 
 ## Пулы по позициям (топ-6 по пригодности в патче)
 
 | Поз. | Игрок | Ранг | Кандидаты (пригодность; ▲ — сильный в патче) | В турнире |
 |---|---|---|---|---|
-| 1 | [死](../players/pos1_死.md) | Божество 4 (Divine) | Juggernaut 81 ▲, Sven 77 ▲, Dragon Knight 77 ▲, Windranger 73, Ursa 71, Slark 71 | Luna ×2, Windranger ×2, Dragon Knight, Phantom Assassin |
-| 2 | [SuperPoni](../players/pos2_SuperPoni.md) | Властелин 2 (Ancient) | Dragon Knight 87 ▲, Outworld Devourer 85 ▲, Slark 62, Slardar 59, Pudge 58, Keeper of the Light 55 | Dragon Knight ×2, Centaur Warrunner, Outworld Devourer, Slardar, Windranger |
-| 3 | [Elsa](../players/pos3_Elsa.md) | Рыцарь 5 (Crusader) | Wraith King 76 ▲, Necrophos 76, Dragon Knight 74 ▲, Phoenix 66, Dawnbreaker 65 ▲, Chaos Knight 58 | Dawnbreaker, Drow Ranger, Luna, Phoenix |
-| 4 | [СГРЫЗ_КАСТРЮЛЮ](../players/pos4_СГРЫЗ_КАСТРЮЛЮ.md) | Рыцарь 3 (Crusader) | Techies 68, Hoodwink 63, Dazzle 62, Pudge 60, Vengeful Spirit 59 ▲, Nyx Assassin 57 ▲ | Hoodwink ×3, Lion, Skywrath Mage, Techies |
-| 5 | [kalibri](../players/pos5_kalibri.md) | Легенда 1 (Legend) | Vengeful Spirit 69 ▲, Lich 64 ▲, Bane 56, Ogre Magi 55, Clockwerk 53, Skywrath Mage 52 | Ogre Magi ×2, Jakiro, Skywrath Mage, Undying, Vengeful Spirit |
+| 1 | [死](../players/pos1_死.md) | Божество 4 (Divine) | Juggernaut 81 ▲, Sven 77 ▲, Dragon Knight 77 ▲, Windranger 73, Ursa 71, Slark 71 | Windranger ×3, Luna ×2, Dragon Knight, Phantom Assassin, Razor, Sven |
+| 2 | [SuperPoni](../players/pos2_SuperPoni.md) | Властелин 2 (Ancient) | Dragon Knight 86 ▲, Outworld Devourer 85 ▲, Slark 62, Slardar 59, Pudge 58, Keeper of the Light 55 | Dragon Knight ×2, Windranger ×2, Centaur Warrunner, Doom, Night Stalker, Outworld Devourer, Slardar |
+| 3 | [Elsa](../players/pos3_Elsa.md) | Рыцарь 5 (Crusader) | Wraith King 76 ▲, Necrophos 76, Dragon Knight 74 ▲, Phoenix 66, Dawnbreaker 65 ▲, Chaos Knight 57 | Dawnbreaker, Drow Ranger, Luna, Phoenix |
+| 4 | [СГРЫЗ_КАСТРЮЛЮ](../players/pos4_СГРЫЗ_КАСТРЮЛЮ.md) | Рыцарь 3 (Crusader) | Techies 68, Hoodwink 62, Dazzle 61, Pudge 60, Vengeful Spirit 59 ▲, Nyx Assassin 57 ▲ | Hoodwink ×4, Techies ×2, Lich, Lion, Skywrath Mage |
+| 5 | [kalibri](../players/pos5_kalibri.md) | Легенда 1 (Legend) | Vengeful Spirit 69 ▲, Lich 64 ▲, Bane 56, Ogre Magi 55, Clockwerk 53, Skywrath Mage 52 | Lich ×2, Ogre Magi ×2, Vengeful Spirit ×2, Jakiro, Skywrath Mage, Undying |
 
 ## Самые опасные герои (кандидаты в баны)
 
@@ -20,25 +20,25 @@
 |---|---|---|---|---|---|---|---|---|---|
 | 1 | Dragon Knight | SuperPoni | 0.98 | 95 | 0.78 | 39 / 23 | 65.2% | ×2 | 1/2/3 |
 | 2 | Outworld Devourer | SuperPoni | 0.96 | 92 | 0.77 | 38 / 17 | 76.5% | ×1 | 2 |
-| 3 | Windranger | 死 | 0.86 | 88 | 0.59 | 40 / 10 | 80.0% | ×2 | 1/4 |
-| 4 | Juggernaut | 死 | 0.84 | 97 | 0.65 | 133 / 35 | 65.7% |  | 1 |
-| 5 | Vengeful Spirit | kalibri | 0.82 | 83 | 0.55 | 25 / 25 | 56.0% | ×1 | 1/4/5 |
-| 6 | Phantom Assassin | 死 | 0.79 | 96 | 0.29 | 175 / 20 | 65.0% | ×1 | 1 |
-| 7 | Luna | Elsa | 0.79 | 84 | 0.48 | 32 / 5 | 80.0% | ×1 | 1 |
-| 8 | Techies | СГРЫЗ_КАСТРЮЛЮ | 0.79 | 72 | 0.63 | 31 / 18 | 50.0% | ×1 | 4/5 |
-| 9 | Doom | 死 | 0.76 | 83 | 0.66 | 39 / 34 | 52.9% |  | 3 |
-| 10 | Ursa | 死 | 0.76 | 98 | 0.44 | 112 / 38 | 71.1% |  | 1 |
-| 11 | Hoodwink | СГРЫЗ_КАСТРЮЛЮ | 0.76 | 80 | 0.45 | 15 / 12 | 66.7% | ×3 | 4/5 |
-| 12 | Phoenix | Elsa | 0.76 | 73 | 0.54 | 23 / 18 | 55.6% | ×1 | 4 |
-| 13 | Dawnbreaker | kalibri | 0.75 | 77 | 0.70 | 11 / 11 | 81.8% |  | 3 |
-| 14 | Axe | SuperPoni | 0.74 | 92 | 0.46 | 430 / 19 | 63.2% |  | 3 |
-| 15 | Legion Commander | 死 | 0.74 | 88 | 0.53 | 60 / 30 | 56.7% |  | 3 |
+| 3 | Sven | 死 | 0.89 | 87 | 0.68 | 30 / 7 | 85.7% | ×1 | 1 |
+| 4 | Windranger | 死 | 0.86 | 88 | 0.59 | 40 / 10 | 80.0% | ×3 | 1/4 |
+| 5 | Juggernaut | 死 | 0.84 | 96 | 0.65 | 133 / 35 | 65.7% |  | 1 |
+| 6 | Vengeful Spirit | kalibri | 0.82 | 83 | 0.55 | 25 / 25 | 56.0% | ×2 | 1/4/5 |
+| 7 | Razor | 死 | 0.82 | 99 | 0.31 | 84 / 64 | 60.9% | ×1 | 1/3 |
+| 8 | Phantom Assassin | 死 | 0.79 | 96 | 0.29 | 175 / 20 | 65.0% | ×1 | 1 |
+| 9 | Luna | Elsa | 0.79 | 83 | 0.48 | 32 / 5 | 80.0% | ×1 | 1 |
+| 10 | Techies | СГРЫЗ_КАСТРЮЛЮ | 0.79 | 72 | 0.63 | 31 / 17 | 52.9% | ×2 | 4/5 |
+| 11 | Doom | 死 | 0.76 | 83 | 0.66 | 39 / 34 | 52.9% |  | 3 |
+| 12 | Ursa | 死 | 0.76 | 98 | 0.44 | 112 / 38 | 71.1% |  | 1 |
+| 13 | Hoodwink | СГРЫЗ_КАСТРЮЛЮ | 0.76 | 80 | 0.45 | 15 / 12 | 66.7% | ×4 | 4/5 |
+| 14 | Phoenix | Elsa | 0.75 | 73 | 0.54 | 23 / 18 | 55.6% | ×1 | 4 |
+| 15 | Lich | kalibri | 0.75 | 70 | 0.58 | 15 / 15 | 46.7% | ×2 | 4/5 |
 
 ## Что они банят в турнире
 
-Phantom Lancer ×4, Lifestealer ×3, Bane ×2, Doom ×2, Earth Spirit ×2, Ember Spirit ×2, Invoker ×2, Lone Druid ×2, Spirit Breaker ×2, Techies ×2, Underlord ×2, Ursa ×2, Anti-Mage, Juggernaut, Legion Commander, Mars, Medusa, Nature's Prophet, Necrophos, Night Stalker, Outworld Devourer, Silencer, Slark, Spectre, Sven, Undying, Windranger
+Bane ×5, Outworld Devourer ×4, Phantom Lancer ×4, Ember Spirit ×3, Enigma ×3, Lifestealer ×3, Lycan ×3, Necrophos ×3, Doom ×2, Earth Spirit ×2, Invoker ×2, Lina ×2, Lone Druid ×2, Night Stalker ×2, Spirit Breaker ×2, Techies ×2, Underlord ×2, Ursa ×2, Anti-Mage, Grimstroke, Juggernaut, Legion Commander, Magnus, Mars, Medusa, Nature's Prophet, Puck, Silencer, Slark, Spectre, Sven, Undying, Windranger
 
-Из наших пулов они уже банили: Bane, Doom, Invoker, Lifestealer, Necrophos, Night Stalker, Outworld Devourer, Phantom Lancer, Silencer, Slark, Spectre, Spirit Breaker, Sven, Windranger
+Из наших пулов они уже банили: Bane, Doom, Enigma, Grimstroke, Invoker, Lifestealer, Necrophos, Night Stalker, Outworld Devourer, Phantom Lancer, Puck, Silencer, Slark, Spectre, Spirit Breaker, Sven, Windranger
 
 ## Чем контрить их главных героев (из наших пулов)
 
@@ -48,12 +48,12 @@ Phantom Lancer ×4, Lifestealer ×3, Bane ×2, Doom ×2, Earth Spirit ×2, Ember
 |---|---|---|
 | Dragon Knight | SuperPoni | Viper +3.7% (Wrongass), Necrophos +3.6% (kren/Wrongass), Witch Doctor +3.0% (Babayka/Enaria), Leshrac +2.9% (Wrongass), Spectre +2.4% (kren), Lich +2.3% (Enaria) |
 | Outworld Devourer | SuperPoni | Nyx Assassin +6.4% (Babayka), Phantom Lancer +3.6% (kren), Grimstroke +2.6% (Babayka/Enaria) |
+| Sven | 死 | Enigma +3.5% (Артист), Doom +2.5% (Артист), Night Stalker +2.3% (Артист), Wraith King +2.3% (kren/Артист), Dragon Knight +2.1% (kren/Wrongass), Vengeful Spirit +2.1% (kren/Babayka/Enaria) |
 | Windranger | 死 | Phantom Lancer +5.0% (kren), Bane +4.6% (Enaria), Wraith King +4.6% (kren/Артист), Outworld Devourer +3.4% (Wrongass), Nyx Assassin +3.1% (Babayka), Puck +3.1% (Wrongass) |
 | Juggernaut | 死 | Omniknight +6.3% (Артист), Bane +2.9% (Enaria), Wraith King +2.5% (kren/Артист), Phantom Lancer +2.4% (kren) |
 | Vengeful Spirit | kalibri | Phantom Lancer +6.0% (kren), Spectre +3.3% (kren) |
+| Razor | 死 | Enigma +6.3% (Артист), Sven +4.6% (kren), Dark Seer +3.5% (Артист), Sniper +3.2% (kren), Vengeful Spirit +2.9% (kren/Babayka/Enaria), Viper +2.9% (Wrongass) |
 | Phantom Assassin | 死 | Doom +5.1% (Артист), Wraith King +4.3% (kren/Артист), Omniknight +3.6% (Артист), Vengeful Spirit +3.5% (kren/Babayka/Enaria), Grimstroke +2.8% (Babayka/Enaria), Nyx Assassin +2.8% (Babayka) |
-| Luna | Elsa | Abaddon +5.8% (Артист), Nyx Assassin +5.3% (Babayka), Wraith King +4.7% (kren/Артист), Crystal Maiden +3.5% (Babayka/Enaria), Spectre +2.3% (kren), Slark +2.2% (Wrongass) |
-| Techies | СГРЫЗ_КАСТРЮЛЮ | Leshrac +6.0% (Wrongass), Nyx Assassin +5.5% (Babayka), Omniknight +3.9% (Артист), Enigma +3.4% (Артист), Spectre +2.9% (kren), Lifestealer +2.6% (kren) |
 
 ## Против кого они проигрывают
 

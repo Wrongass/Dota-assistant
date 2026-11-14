@@ -1,15 +1,15 @@
 # Данные для драфта: Team Visual (Долг)
 
-Сгенерировано 2026-11-02, патч 7.41. Выводы — в [draft_plan.md](draft_plan.md).
+Сгенерировано 2026-11-14, патч 7.41. Выводы — в [draft_plan.md](draft_plan.md).
 
 ## Пулы по позициям (топ-6 по пригодности в патче)
 
 | Поз. | Игрок | Кандидаты (пригодность; ▲ — сильный в патче) |
 |---|---|---|
 | 1 | kren | Wraith King 75 ▲, Windranger 74, Necrophos 71, Sniper 68, Sven 67 ▲, Dragon Knight 65 ▲ |
-| 2 | Wrongass | Outworld Devourer 85 ▲, Dragon Knight 78 ▲, Leshrac 71 ▲, Necrophos 70, Viper 67, Slark 65 |
-| 3 | Артист | Enigma 83 ▲, Dawnbreaker 77, Wraith King 71 ▲, Doom 71, Spirit Breaker 69 ▲, Omniknight 67 ▲ |
-| 4 | Babayka | Grimstroke 77 ▲, Vengeful Spirit 69 ▲, Disruptor 66, Witch Doctor 63 ▲, Earthshaker 59, Ogre Magi 59 |
+| 2 | Wrongass | Outworld Devourer 85 ▲, Dragon Knight 78 ▲, Leshrac 70 ▲, Necrophos 70, Viper 67, Slark 65 |
+| 3 | Артист | Enigma 83 ▲, Dawnbreaker 77, Wraith King 71 ▲, Doom 70, Spirit Breaker 69 ▲, Omniknight 67 ▲ |
+| 4 | Babayka | Grimstroke 76 ▲, Vengeful Spirit 69 ▲, Disruptor 66, Witch Doctor 63 ▲, Earthshaker 59, Ogre Magi 59 |
 | 5 | Enaria | Lich 75 ▲, Lion 66, Witch Doctor 64 ▲, Crystal Maiden 63 ▲, Grimstroke 57, Silencer 56 |
 
 ## Связки внутри наших пулов
@@ -51,8 +51,8 @@
 
 | # | Герой соперника | Наш WR против | Игр | WR героя в пабах (Герой–Властелин) |
 |---|---|---|---|---|
-| 1 | Muerta | 42.5% | 63 | 47.8% |
-| 2 | Warlock | 42.6% | 112 | 49.8% |
+| 1 | Warlock | 42.6% | 112 | 49.8% |
+| 2 | Muerta | 43.0% | 62 | 47.8% |
 | 3 | Clinkz | 43.1% | 57 | 50.2% |
 | 4 | Earth Spirit | 43.3% | 52 | 49.6% |
 | 5 | Medusa | 44.3% | 93 | 48.9% |
@@ -60,14 +60,14 @@
 | 7 | Broodmother | 46.1% | 47 | 49.1% |
 | 8 | Tidehunter | 46.2% | 116 | 49.2% |
 | 9 | Weaver | 46.4% | 124 | 47.7% |
-| 10 | Anti-Mage | 46.7% | 215 | 51.3% |
-| 11 | Vengeful Spirit | 46.8% | 127 | 52.6% |
-| 12 | Slark | 46.8% | 112 | 49.4% |
-| 13 | Outworld Devourer | 46.9% | 67 | 54.1% |
+| 10 | Vengeful Spirit | 46.8% | 127 | 52.6% |
+| 11 | Slark | 46.8% | 112 | 49.4% |
+| 12 | Outworld Devourer | 46.9% | 67 | 54.1% |
+| 13 | Anti-Mage | 46.9% | 214 | 51.3% |
 | 14 | Meepo | 47.2% | 41 | 53.1% |
 | 15 | Juggernaut | 47.4% | 184 | 53.0% |
 
-**Против кого играем лучше всего:** Morphling 62.7%, Bristleback 61.0%, Monkey King 60.6%, Nature's Prophet 60.4%, Faceless Void 60.2%, Bane 59.9%, Ember Spirit 59.8%, Hoodwink 59.6%, Kez 58.2%, Beastmaster 57.9%
+**Против кого играем лучше всего:** Morphling 62.7%, Bristleback 61.0%, Monkey King 60.6%, Nature's Prophet 60.4%, Faceless Void 60.3%, Bane 59.9%, Ember Spirit 59.8%, Hoodwink 59.6%, Kez 58.2%, Beastmaster 57.9%
 
 ## Кандидаты в баны
 
@@ -79,8 +79,8 @@
 | 1 | Earth Spirit | 0.82 | 43.3% (52) | 49.6% | 55.5% | 2 |
 | 2 | Clinkz | 0.74 | 43.1% (57) | 50.2% | 6.6% | 1 |
 | 3 | Warlock | 0.69 | 42.6% (112) | 49.8% | 3.9% | 4/5 |
-| 4 | Muerta | 0.66 | 42.5% (63) | 47.8% | 2.2% | 1 |
-| 5 | Anti-Mage | 0.65 | 46.7% (215) | 51.3% | 30.1% | 1 |
+| 4 | Muerta | 0.66 | 43.0% (62) | 47.8% | 2.2% | 1 |
+| 5 | Anti-Mage | 0.64 | 46.9% (214) | 51.3% | 30.1% | 1 |
 | 6 | Nyx Assassin | 0.60 | 47.8% (82) | 52.5% | 17.0% | 4/5 |
 | 7 | Juggernaut | 0.60 | 47.4% (184) | 53.0% | 3.9% | 1 |
 | 8 | Medusa | 0.59 | 44.3% (93) | 48.9% | 0.4% | 1 |
@@ -90,7 +90,7 @@
 | 12 | Winter Wyvern | 0.51 | 48.5% (105) | 49.7% | 50.7% | 4/5 |
 | 13 | Broodmother | 0.51 | 46.1% (47) | 49.1% | 0.9% | 1/2/3 |
 | 14 | Night Stalker | 0.46 | 48.7% (82) | 52.3% | 12.7% | 3 |
-| 15 | Rubick | 0.43 | 49.2% (272) | 49.6% | 33.2% | 4/5 |
+| 15 | Rubick | 0.44 | 49.2% (272) | 49.6% | 33.2% | 4/5 |
 
 ## Чем контрят наших лучших героев
 

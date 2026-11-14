@@ -1,6 +1,6 @@
 # Турнир: Team Visual (Долг)
 
-Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 7, побед: 4. Переигровки (пустая статистика) не учитываются.
+Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 10, побед: 5. Переигровки (пустая статистика) не учитываются.
 
 ## 2026-10-10 14:31 UTC — против Team Polyus (НИИ Полюс им. М.Ф. Стельмаха): победа
 
@@ -126,12 +126,66 @@ Radiant, 34 мин, [OpenDota](https://www.opendota.com/matches/9069619079), [Do
 
 b Lone Druid → b Doom → **b Invoker** → **b Techies** → b Earth Spirit → **b Dark Willow** → **b Dragon Knight** → P Lina → **P Outworld Devourer** → b Rubick → b Silencer → **b Phantom Lancer** → **P Wraith King** → P Bane → P Hoodwink → **P Ogre Magi** → **P Warlock** → P Anti-Mage → b Slark → **b Centaur Warrunner** → b Sven → **b Dawnbreaker** → P Night Stalker → **P Enigma**
 
+## 2026-11-07 16:45 UTC — против SyberStar (НПП «Звезда»): поражение
+
+Dire, 47 мин, [OpenDota](https://www.opendota.com/matches/9080362534), [Dotabuff](https://ru.dotabuff.com/matches/9080362534)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| Wrongass | Dragon Knight | mid | 564 | 5/6/7 |
+| Артист | Centaur Warrunner | off | 535 | 5/3/12 |
+| Enaria | Dazzle | safe | 190 | 1/9/8 |
+| kren | Luna | safe | 538 | 3/8/4 |
+| Babayka | Disruptor | off | 256 | 4/7/11 |
+
+Соперник: Sven (死), Slardar (Леонид Ильич), Hoodwink (СГРЫЗ_КАСТРЮЛЮ), Windranger (SuperPoni), Lich (kalibri)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+**b Skywrath Mage** → **b Night Stalker** → b Lycan → b Enigma → **b Undying** → b Outworld Devourer → b Grimstroke → **P Dragon Knight** → P Lich → **b Axe** → **b Lifestealer** → b Bane → P Hoodwink → **P Disruptor** → **P Dazzle** → P Slardar → P Windranger → **P Centaur Warrunner** → **b Viper** → b Necrophos → **b Ember Spirit** → b Lina → **P Luna** → P Sven
+
+## 2026-11-07 18:12 UTC — против SyberStar (НПП «Звезда»): победа
+
+Radiant, 44 мин, [OpenDota](https://www.opendota.com/matches/9080497976), [Dotabuff](https://ru.dotabuff.com/matches/9080497976)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| Wrongass | Lina | mid | 798 | 14/2/12 |
+| Артист | Dawnbreaker | off | 705 | 9/1/15 |
+| Enaria | Grimstroke | safe | 271 | 4/4/17 |
+| Babayka | Vengeful Spirit | off | 324 | 4/2/13 |
+| kren | Lifestealer | safe | 578 | 4/1/17 |
+
+Соперник: Zeus (Леонид Ильич), Razor (死), Lich (kalibri), Doom (SuperPoni), Techies (СГРЫЗ_КАСТРЮЛЮ)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+**b Skywrath Mage** → **b Undying** → b Lycan → b Enigma → **b Dragon Knight** → b Outworld Devourer → b Night Stalker → **P Grimstroke** → P Lich → **b Hoodwink** → **b Windranger** → b Bane → P Techies → **P Lifestealer** → **P Dawnbreaker** → P Razor → P Doom → **P Vengeful Spirit** → **b Slardar** → b Ember Spirit → **b Viper** → b Magnus → **P Lina** → P Zeus
+
+## 2026-11-07 19:30 UTC — против SyberStar (НПП «Звезда»): поражение
+
+Dire, 69 мин, [OpenDota](https://www.opendota.com/matches/9080616282), [Dotabuff](https://ru.dotabuff.com/matches/9080616282)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| Wrongass | Dawnbreaker | mid | 635 | 17/11/27 |
+| Артист | Centaur Warrunner | off | 700 | 7/7/31 |
+| Enaria | Grimstroke | safe | 218 | 0/11/24 |
+| kren | Lifestealer | safe | 581 | 19/8/16 |
+| Babayka | Spirit Breaker | off | 294 | 8/13/35 |
+
+Соперник: Vengeful Spirit (kalibri), Storm Spirit (Леонид Ильич), Lich (СГРЫЗ_КАСТРЮЛЮ), Windranger (死), Night Stalker (SuperPoni)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+**b Skywrath Mage** → **b Hoodwink** → b Enigma → b Lycan → **b Dragon Knight** → b Outworld Devourer → b Lina → **P Grimstroke** → P Night Stalker → **b Viper** → **b Undying** → b Bane → P Lich → **P Dawnbreaker** → **P Lifestealer** → P Vengeful Spirit → P Windranger → **P Spirit Breaker** → **b Ember Spirit** → b Necrophos → **b Razor** → b Puck → **P Centaur Warrunner** → P Storm Spirit
+
 ## Сводка
 
-**Пики команды** (в скобках — победы): Vengeful Spirit ×5 (3), Lich ×4 (3), Wraith King ×4 (3), Ogre Magi ×3 (2), Centaur Warrunner ×2 (2), Lifestealer ×2 (1), Lion ×2 (0), Outworld Devourer ×2 (1), Dawnbreaker (1), Disruptor (0), Drow Ranger (0), Enigma (1), Lina (0), Night Stalker (0), Razor (0), Tiny (1), Underlord (0), Viper (1), Warlock (1)
+**Пики команды** (в скобках — победы): Vengeful Spirit ×6 (4), Centaur Warrunner ×4 (2), Lich ×4 (3), Lifestealer ×4 (2), Wraith King ×4 (3), Dawnbreaker ×3 (2), Ogre Magi ×3 (2), Disruptor ×2 (0), Grimstroke ×2 (1), Lina ×2 (1), Lion ×2 (0), Outworld Devourer ×2 (1), Dazzle (0), Dragon Knight (0), Drow Ranger (0), Enigma (1), Luna (0), Night Stalker (0), Razor (0), Spirit Breaker (0), Tiny (1), Underlord (0), Viper (1), Warlock (1)
 
-**Баны команды** (по 6 картам из 7: у остальных драфт не записан): Phantom Lancer ×4, Sniper ×4, Dark Willow ×3, Slark ×3, Dawnbreaker ×2, Kunkka ×2, Undying ×2, Winter Wyvern ×2, Anti-Mage, Beastmaster, Bounty Hunter, Centaur Warrunner, Dragon Knight, Drow Ranger, Ember Spirit, Hoodwink, Huskar, Invoker, Lina, Mirana, Morphling, Necrophos, Phoenix, Queen of Pain, Spirit Breaker, Techies, Underlord
+**Баны команды** (по 9 картам из 10: у остальных драфт не записан): Undying ×5, Phantom Lancer ×4, Sniper ×4, Dark Willow ×3, Dragon Knight ×3, Ember Spirit ×3, Hoodwink ×3, Skywrath Mage ×3, Slark ×3, Viper ×3, Dawnbreaker ×2, Kunkka ×2, Winter Wyvern ×2, Anti-Mage, Axe, Beastmaster, Bounty Hunter, Centaur Warrunner, Drow Ranger, Huskar, Invoker, Lifestealer, Lina, Mirana, Morphling, Necrophos, Night Stalker, Phoenix, Queen of Pain, Razor, Slardar, Spirit Breaker, Techies, Underlord, Windranger
 
-**Банят против команды** (чего боятся соперники): Dawnbreaker ×3, Lifestealer ×3, Lone Druid ×3, Outworld Devourer ×3, Silencer ×3, Axe ×2, Centaur Warrunner ×2, Doom ×2, Dragon Knight ×2, Lich ×2, Night Stalker ×2, Sven ×2, Wraith King ×2, Earth Spirit, Juggernaut, Lina, Mars, Necrophos, Ogre Magi, Rubick, Slark, Snapfire, Tidehunter, Viper
+**Банят против команды** (чего боятся соперники): Outworld Devourer ×6, Bane ×3, Dawnbreaker ×3, Enigma ×3, Lifestealer ×3, Lina ×3, Lone Druid ×3, Lycan ×3, Necrophos ×3, Night Stalker ×3, Silencer ×3, Axe ×2, Centaur Warrunner ×2, Doom ×2, Dragon Knight ×2, Lich ×2, Sven ×2, Wraith King ×2, Earth Spirit, Ember Spirit, Grimstroke, Juggernaut, Magnus, Mars, Ogre Magi, Puck, Rubick, Slark, Snapfire, Tidehunter, Viper
 
-**Пики соперников** (в скобках — их победы): Hoodwink ×3 (1), Lina ×3 (1), Windranger ×3 (1), Dragon Knight ×2 (1), Luna ×2 (2), Underlord ×2 (0), Abaddon (0), Anti-Mage (0), Bane (0), Beastmaster (1), Dark Seer (1), Dark Willow (1), Dawnbreaker (1), Disruptor (1), Drow Ranger (0), Grimstroke (0), Jakiro (0), Juggernaut (0), Lion (0), Mirana (1), Night Stalker (0), Outworld Devourer (1), Pangolier (0), Rubick (0), Slardar (1), Warlock (1)
+**Пики соперников** (в скобках — их победы): Windranger ×5 (3), Hoodwink ×4 (2), Lich ×3 (2), Lina ×3 (1), Dragon Knight ×2 (1), Luna ×2 (2), Night Stalker ×2 (1), Slardar ×2 (2), Underlord ×2 (0), Abaddon (0), Anti-Mage (0), Bane (0), Beastmaster (1), Dark Seer (1), Dark Willow (1), Dawnbreaker (1), Disruptor (1), Doom (0), Drow Ranger (0), Grimstroke (0), Jakiro (0), Juggernaut (0), Lion (0), Mirana (1), Outworld Devourer (1), Pangolier (0), Razor (0), Rubick (0), Storm Spirit (1), Sven (1), Techies (0), Vengeful Spirit (1), Warlock (1), Zeus (0)

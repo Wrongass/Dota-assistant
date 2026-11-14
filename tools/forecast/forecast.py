@@ -20,6 +20,9 @@ TEAMS = {  # организация: (team_id, team_name в конфиге; None
     'НПП «Звезда»': (6990376, 'SyberStar'), 'Долг': (10255027, None)}
 OURS = 'Долг'
 FIRST_ROUND = [('НИИЭП', 'ИТОЗ'), ('УППО', 'НИИ Полюс'), ('МЦСТ', 'GGsel'), ('НПП «Звезда»', 'Долг')]
+# Сыгранные серии: победитель известен, симуляция его не разыгрывает. Дополнять после каждого игрового дня.
+PLAYED = {'W1': 'НИИЭП', 'W2': 'НИИ Полюс', 'W3': 'МЦСТ', 'W4': 'НПП «Звезда»'}  # 1 раунд, 7.11
+NEXT = ('L2', 'GGsel')  # наша ближайшая серия и соперник
 SERIES = ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'W8']
 SERIES_NAME = {'W1': 'W1', 'W2': 'W2', 'W3': 'W3', 'W4': 'W4', 'W5': 'W5 (верх, 2 раунд)', 'W6': 'W6 (верх, 2 раунд)',
                'W7': 'W7 (финал верхней сетки)', 'L1': 'L1', 'L2': 'L2', 'L3': 'L3', 'L4': 'L4', 'L5': 'L5',
@@ -423,6 +426,10 @@ def simulate(model, lineups, n=SIMS):
 
         def play(a, b, key):
             meet[key][tuple(sorted((a, b)))] += 1
+            if key in PLAYED:
+                w = PLAYED[key]
+                series[key][w] += 1
+                return w
             p = bo3(1 / (1 + math.exp(-(rt[a] - rt[b]))))
             w = a if random.random() < p else b
             series[key][w] += 1
@@ -433,7 +440,7 @@ def simulate(model, lineups, n=SIMS):
         inv = {v: k for k, v in pl.items()}
         podium[tuple(t for t, _ in sorted(pl.items(), key=lambda x: x[1])[:3])] += 1
         brackets[tuple(won[k][0] for k in SERIES)] += 1
-        cond[won['W4'][0] == OURS][pl[OURS]] += 1
+        cond[won[NEXT[0]][0] == OURS][pl[OURS]] += 1
     return dict(place=place, series=series, meet=meet, brackets=brackets, podium=podium, cond=cond, n=n)
 
 
@@ -553,7 +560,7 @@ def write_report(maps, lineups, lv, CI, CW, grid, core_grid, vals, fitted, sims,
     N = S['n']
     orgs = sorted(TEAMS, key=lambda o: (-S['place'][o][1], -(S['place'][o][1] + S['place'][o][2] + S['place'][o][3])))
     top3 = lambda o: (S['place'][o][1] + S['place'][o][2] + S['place'][o][3]) / N
-    zv = 'НПП «Звезда»'
+    key, zv = NEXT
     pm = mean_rating(F, OURS, zv, lineups)
     L = []
     w = L.append
@@ -561,8 +568,11 @@ def write_report(maps, lineups, lv, CI, CW, grid, core_grid, vals, fitted, sims,
       f'Главная модель — «{final}» (среднее трёх лучших моделей честной проверки, см. «Сравнение моделей»). Все серии считаются BO3, '
       f'сетка на двойное выбывание как на сайте турнира, {N} симуляций.')
     w('')
-    w(f'**Следующий матч: Долг — НПП «Звезда»: карта {pct(pm)} на {pct(1 - pm)}, серия BO3 {pct(S["series"]["W4"][OURS] / N)} на '
-      f'{pct(S["series"]["W4"][zv] / N)}.**')
+    played = ', '.join(f'{k} — {v}' for k, v in PLAYED.items())
+    w(f'Уже сыграно (победители): {played}. Эти серии в симуляции не разыгрываются.')
+    w('')
+    w(f'**Следующий матч ({key}, нижняя сетка, проигравший выбывает): Долг — {zv}: карта {pct(pm)} на {pct(1 - pm)}, '
+      f'серия BO3 {pct(S["series"][key][OURS] / N)} на {pct(S["series"][key][zv] / N)}.**')
     w('')
     w('| # | Команда | Победа в турнире | Топ-3 |')
     w('|---|---|---|---|')
@@ -627,9 +637,9 @@ def write_report(maps, lineups, lv, CI, CW, grid, core_grid, vals, fitted, sims,
     w('\n## Наш путь')
     cw, cl = S['cond'][True], S['cond'][False]
     nw, nl = sum(cw.values()), sum(cl.values())
-    w(f'Выигрываем у «Звезды» в {pct(nw / N)} симуляций, проигрываем в {pct(nl / N)}.')
+    w(f'Выигрываем у {NEXT[1]} в {pct(nw / N)} симуляций, проигрываем в {pct(nl / N)}.')
     w('')
-    w('| Наше место | Если выиграли W4 | Если проиграли W4 | Всего |')
+    w(f'| Наше место | Если выиграли {NEXT[0]} | Если проиграли {NEXT[0]} | Всего |')
     w('|---|---|---|---|')
     for k, name in ((1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5–6'), (7, '7–8')):
         w(f'| {name} | {pct(cw[k] / max(1, nw))} | {pct(cl[k] / max(1, nl))} | {pct(S["place"][OURS][k] / N)} |')
@@ -705,10 +715,10 @@ def write_report(maps, lineups, lv, CI, CW, grid, core_grid, vals, fitted, sims,
     w('')
     w('В ячейке: победа в турнире / топ-3.')
     w('')
-    w('| Модель | Долг — «Звезда», серия |')
+    w(f'| Модель | Долг — {zv}, серия |')
     w('|---|---|')
     for n in names:
-        w(f'| {n} | {pct(sims[n]["series"]["W4"][OURS] / N)} на {pct(sims[n]["series"]["W4"][zv] / N)} |')
+        w(f'| {n} | {pct(sims[n]["series"][key][OURS] / N)} на {pct(sims[n]["series"][key][zv] / N)} |')
     w('')
     w('Подбор «реального уровня» (log-loss признака уровня в одиночку):')
     w('')
