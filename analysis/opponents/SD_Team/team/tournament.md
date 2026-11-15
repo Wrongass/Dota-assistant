@@ -1,6 +1,6 @@
 # Турнир: SD Team (GGsel)
 
-Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 12, побед: 6. Переигровки (пустая статистика) не учитываются.
+Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 15, побед: 7. Переигровки (пустая статистика) не учитываются.
 
 ## 2026-10-10 14:44 UTC — против UPPO TEAM (УППО): поражение
 
@@ -202,12 +202,66 @@ Radiant, 41 мин, [OpenDota](https://www.opendota.com/matches/9079985386), [Do
 
 b Rubick → b Windranger → **b Lone Druid** → **b Techies** → b Mirana → **b Witch Doctor** → **b Outworld Devourer** → P Dragon Knight → **P Dark Willow** → b Lifestealer → b Ember Spirit → **b Hoodwink** → **P Phoenix** → P Snapfire → P Spirit Breaker → **P Ogre Magi** → **P Dark Seer** → P Juggernaut → b Earthshaker → **b Meepo** → b Sand King → **b Magnus** → P Invoker → **P Slark**
 
+## 2026-11-14 10:01 UTC — против Team Visual (Долг): победа
+
+Radiant, 43 мин, [OpenDota](https://www.opendota.com/matches/9089513213), [Dotabuff](https://ru.dotabuff.com/matches/9089513213)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| Nynge | Lifestealer | safe | 635 | 5/4/20 |
+| IRD | Rubick | off | 380 | 1/8/34 |
+| XANDR | Axe | off | 581 | 15/4/24 |
+| montekri | Witch Doctor | safe | 394 | 8/6/22 |
+| Caraxes | Sand King | mid | 704 | 15/7/21 |
+
+Соперник: Windranger (Wrongass), Lich (Enaria), Viper (kren), Vengeful Spirit (Babayka), Tidehunter (Артист)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+b Dark Willow → b Mirana → **b Outworld Devourer** → **b Necrophos** → b Dragon Knight → **b Dawnbreaker** → **b Wraith King** → P Windranger → **P Witch Doctor** → b Hoodwink → b Slardar → **b Lina** → **P Rubick** → P Lich → P Vengeful Spirit → **P Axe** → **P Lifestealer** → P Viper → b Huskar → **b Centaur Warrunner** → b Sniper → **b Night Stalker** → P Tidehunter → **P Sand King**
+
+## 2026-11-14 11:12 UTC — против Team Visual (Долг): поражение
+
+Dire, 68 мин, [OpenDota](https://www.opendota.com/matches/9089596807), [Dotabuff](https://ru.dotabuff.com/matches/9089596807)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| Nynge | Dragon Knight | safe | 656 | 8/10/12 |
+| IRD | Phoenix | off | 441 | 6/9/24 |
+| XANDR | Axe | off | 485 | 9/7/12 |
+| montekri | Ring Master | safe | 353 | 5/8/25 |
+| Caraxes | Sand King | mid | 684 | 8/9/22 |
+
+Соперник: Vengeful Spirit (Артист), Ogre Magi (Babayka), Snapfire (Wrongass), Wraith King (kren), Witch Doctor (Enaria)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+**b Outworld Devourer** → **b Dawnbreaker** → b Dark Willow → b Mirana → **b Lina** → b Windranger → b Slardar → **P Dragon Knight** → P Wraith King → **b Grimstroke** → **b Viper** → b Lifestealer → P Witch Doctor → **P Phoenix** → **P Axe** → P Snapfire → P Vengeful Spirit → **P Sand King** → **b Centaur Warrunner** → b Rubick → **b Underlord** → b Techies → **P Ring Master** → P Ogre Magi
+
+## 2026-11-14 12:50 UTC — против Team Visual (Долг): поражение
+
+Dire, 67 мин, [OpenDota](https://www.opendota.com/matches/9089729651), [Dotabuff](https://ru.dotabuff.com/matches/9089729651)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| Nynge | Lifestealer | safe | 652 | 10/10/13 |
+| montekri | Phoenix | safe | 366 | 5/9/23 |
+| XANDR | Pudge | off | 518 | 11/8/18 |
+| Caraxes | Dragon Knight | mid | 783 | 8/7/25 |
+| IRD | Spirit Breaker | off | 469 | 2/8/31 |
+
+Соперник: Necrophos (Wrongass), Witch Doctor (Enaria), Underlord (Артист), Windranger (kren), Vengeful Spirit (Babayka)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+b Mirana → b Dark Willow → **b Outworld Devourer** → **b Dawnbreaker** → b Slardar → **b Wraith King** → **b Lina** → P Windranger → **P Dragon Knight** → b Sand King → b Rubick → **b Viper** → **P Lifestealer** → P Witch Doctor → P Vengeful Spirit → **P Phoenix** → **P Spirit Breaker** → P Necrophos → b Huskar → **b Snapfire** → b Ember Spirit → **b Timbersaw** → P Underlord → **P Pudge**
+
 ## Сводка
 
-**Пики команды** (в скобках — победы): Dark Willow ×6 (3), Windranger ×6 (3), Dragon Knight ×4 (2), Ember Spirit ×4 (3), Dark Seer ×3 (1), Dawnbreaker ×3 (3), Rubick ×3 (1), Lifestealer ×2 (1), Phoenix ×2 (0), Pudge ×2 (1), Sand King ×2 (1), Slardar ×2 (1), Clinkz (0), Crystal Maiden (1), Earthshaker (0), Grimstroke (0), Huskar (0), Mirana (1), Night Stalker (1), Ogre Magi (0), Pangolier (0), Ring Master (1), Slark (0), Spirit Breaker (0), Tidehunter (0), Undying (0), Warlock (1), Witch Doctor (0)
+**Пики команды** (в скобках — победы): Dark Willow ×6 (3), Dragon Knight ×6 (2), Windranger ×6 (3), Ember Spirit ×4 (3), Lifestealer ×4 (2), Phoenix ×4 (0), Rubick ×4 (2), Sand King ×4 (2), Dark Seer ×3 (1), Dawnbreaker ×3 (3), Pudge ×3 (1), Axe ×2 (1), Ring Master ×2 (1), Slardar ×2 (1), Spirit Breaker ×2 (0), Witch Doctor ×2 (1), Clinkz (0), Crystal Maiden (1), Earthshaker (0), Grimstroke (0), Huskar (0), Mirana (1), Night Stalker (1), Ogre Magi (0), Pangolier (0), Slark (0), Tidehunter (0), Undying (0), Warlock (1)
 
-**Баны команды** (по 10 картам из 12: у остальных драфт не записан): Necrophos ×5, Outworld Devourer ×5, Techies ×5, Lifestealer ×4, Lina ×4, Hoodwink ×3, Lone Druid ×3, Meepo ×3, Viper ×3, Witch Doctor ×3, Axe ×2, Centaur Warrunner ×2, Sniper ×2, Timbersaw ×2, Winter Wyvern ×2, Beastmaster, Brewmaster, Dawnbreaker, Dazzle, Disruptor, Doom, Dragon Knight, Earth Spirit, Grimstroke, Invoker, Kez, Kunkka, Magnus, Mirana, Nature's Prophet, Ogre Magi, Snapfire, Spectre, Sven, Undying, Ursa, Wraith King
+**Баны команды** (по 13 картам из 15: у остальных драфт не записан): Outworld Devourer ×8, Lina ×7, Necrophos ×6, Techies ×5, Viper ×5, Centaur Warrunner ×4, Dawnbreaker ×4, Lifestealer ×4, Hoodwink ×3, Lone Druid ×3, Meepo ×3, Timbersaw ×3, Witch Doctor ×3, Wraith King ×3, Axe ×2, Grimstroke ×2, Snapfire ×2, Sniper ×2, Winter Wyvern ×2, Beastmaster, Brewmaster, Dazzle, Disruptor, Doom, Dragon Knight, Earth Spirit, Invoker, Kez, Kunkka, Magnus, Mirana, Nature's Prophet, Night Stalker, Ogre Magi, Spectre, Sven, Underlord, Undying, Ursa
 
-**Банят против команды** (чего боятся соперники): Dragon Knight ×5, Ember Spirit ×5, Huskar ×5, Rubick ×5, Mirana ×4, Outworld Devourer ×4, Sand King ×4, Windranger ×4, Dark Seer ×3, Sven ×3, Bounty Hunter ×2, Doom ×2, Lifestealer ×2, Luna ×2, Pangolier ×2, Phantom Lancer ×2, Phoenix ×2, Witch Doctor ×2, Brewmaster, Dark Willow, Dawnbreaker, Earthshaker, Muerta, Night Stalker, Nyx Assassin, Slark, Spirit Breaker, Tidehunter, Timbersaw, Wraith King
+**Банят против команды** (чего боятся соперники): Huskar ×7, Mirana ×7, Rubick ×7, Dragon Knight ×6, Ember Spirit ×6, Sand King ×5, Windranger ×5, Dark Willow ×4, Outworld Devourer ×4, Dark Seer ×3, Lifestealer ×3, Slardar ×3, Sven ×3, Bounty Hunter ×2, Doom ×2, Luna ×2, Pangolier ×2, Phantom Lancer ×2, Phoenix ×2, Witch Doctor ×2, Brewmaster, Dawnbreaker, Earthshaker, Hoodwink, Muerta, Night Stalker, Nyx Assassin, Slark, Sniper, Spirit Breaker, Techies, Tidehunter, Timbersaw, Wraith King
 
-**Пики соперников** (в скобках — их победы): Lich ×3 (1), Lion ×3 (2), Snapfire ×3 (2), Death Prophet ×2 (1), Kunkka ×2 (1), Lifestealer ×2 (1), Lina ×2 (1), Ogre Magi ×2 (2), Phantom Lancer ×2 (0), Queen of Pain ×2 (2), Ring Master ×2 (2), Spirit Breaker ×2 (1), Underlord ×2 (0), Vengeful Spirit ×2 (1), Centaur Warrunner (1), Dark Willow (1), Dawnbreaker (1), Dragon Knight (1), Hoodwink (0), Invoker (1), Jakiro (0), Juggernaut (1), Magnus (1), Necrophos (1), Night Stalker (1), Outworld Devourer (1), Rubick (0), Shadow Fiend (0), Silencer (0), Slark (1), Sven (0), Techies (0), Tidehunter (0), Tiny (1), Undying (0), Ursa (0), Viper (0), Wraith King (1)
+**Пики соперников** (в скобках — их победы): Vengeful Spirit ×5 (3), Lich ×4 (1), Snapfire ×4 (3), Lion ×3 (2), Ogre Magi ×3 (3), Underlord ×3 (1), Death Prophet ×2 (1), Kunkka ×2 (1), Lifestealer ×2 (1), Lina ×2 (1), Necrophos ×2 (2), Phantom Lancer ×2 (0), Queen of Pain ×2 (2), Ring Master ×2 (2), Spirit Breaker ×2 (1), Tidehunter ×2 (0), Viper ×2 (0), Windranger ×2 (1), Witch Doctor ×2 (2), Wraith King ×2 (2), Centaur Warrunner (1), Dark Willow (1), Dawnbreaker (1), Dragon Knight (1), Hoodwink (0), Invoker (1), Jakiro (0), Juggernaut (1), Magnus (1), Night Stalker (1), Outworld Devourer (1), Rubick (0), Shadow Fiend (0), Silencer (0), Slark (1), Sven (0), Techies (0), Tiny (1), Undying (0), Ursa (0)

@@ -6,8 +6,8 @@
 
 | Команда | Карт | Побед | Поражений |
 |---|---|---|---|
-| Team Visual | 6 | 3 | 3 |
-| SD Team | 7 | 3 | 4 |
+| Team Visual | 9 | 5 | 4 |
+| SD Team | 10 | 4 | 6 |
 | UPPO TEAM | 9 | 6 | 3 |
 | Team Polyus | 10 | 4 | 6 |
 
@@ -31,3 +31,6 @@
 | 2026-11-07 07:39 UTC | Team Polyus | UPPO TEAM | Team Polyus | 54 | Sven, Sniper, Death Prophet, Techies, Lich | Lina, Disruptor, Doom, Witch Doctor, Windranger | [9079625097](https://www.opendota.com/matches/9079625097) |
 | 2026-11-07 09:00 UTC | UPPO TEAM | Team Polyus | UPPO TEAM | 32 | Undying, Lina, Kunkka, Phantom Assassin, Hoodwink | Wraith King, Alchemist, Underlord, Dark Willow, Ogre Magi | [9079701697](https://www.opendota.com/matches/9079701697) |
 | 2026-11-07 09:53 UTC | UPPO TEAM | Team Polyus | Team Polyus | 29 | Dark Willow, Axe, Lina, Dazzle, Phantom Lancer | Windranger, Earthshaker, Centaur Warrunner, Hoodwink, Lich | [9079755743](https://www.opendota.com/matches/9079755743) |
+| 2026-11-14 10:01 UTC | SD Team | Team Visual | SD Team | 43 | Lifestealer, Rubick, Axe, Witch Doctor, Sand King | Windranger, Lich, Viper, Vengeful Spirit, Tidehunter | [9089513213](https://www.opendota.com/matches/9089513213) |
+| 2026-11-14 11:12 UTC | Team Visual | SD Team | Team Visual | 68 | Vengeful Spirit, Ogre Magi, Snapfire, Wraith King, Witch Doctor | Dragon Knight, Phoenix, Axe, Ring Master, Sand King | [9089596807](https://www.opendota.com/matches/9089596807) |
+| 2026-11-14 12:50 UTC | Team Visual | SD Team | Team Visual | 67 | Necrophos, Witch Doctor, Underlord, Windranger, Vengeful Spirit | Lifestealer, Phoenix, Pudge, Dragon Knight, Spirit Breaker | [9089729651](https://www.opendota.com/matches/9089729651) |

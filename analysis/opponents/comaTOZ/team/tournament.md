@@ -1,6 +1,6 @@
 # Турнир: comaTOZ (ИТОЗ)
 
-Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 13, побед: 5. Переигровки (пустая статистика) не учитываются.
+Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 16, побед: 7. Переигровки (пустая статистика) не учитываются.
 
 ## 2026-10-10 09:48 UTC — против Elbrus team (МЦСТ): поражение
 
@@ -236,12 +236,66 @@ Radiant, 37 мин, [OpenDota](https://www.opendota.com/matches/9079649974), [Do
 
 **b Mirana** → **b Witch Doctor** → b Invoker → b Arc Warden → **b Tusk** → b Hoodwink → b Earth Spirit → **P Lina** → P Dragon Knight → **b Rubick** → **b Outworld Devourer** → b Slark → P Techies → **P Bane** → **P Dark Willow** → P Ring Master → P Tinker → **P Spectre** → **b Viper** → b Doom → **b Ursa** → b Night Stalker → **P Timbersaw** → P Anti-Mage
 
+## 2026-11-14 16:51 UTC — против UPPO TEAM (УППО): поражение
+
+Dire, 65 мин, [OpenDota](https://www.opendota.com/matches/9090130134), [Dotabuff](https://ru.dotabuff.com/matches/9090130134)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| DrestoV1ch | Witch Doctor | safe | 263 | 5/13/18 |
+| YOURSELF | Windranger | off | 384 | 5/8/20 |
+| kezi | Queen of Pain | mid | 507 | 10/10/16 |
+| britishboi | Phantom Lancer | safe | 958 | 24/8/11 |
+| Asmodeus | Dragon Knight | off | 329 | 4/13/23 |
+
+Соперник: Wraith King (Sacred), Pangolier (Togo), Legion Commander (Kaiju), Mirana (Odar.sp), Ancient Apparition (Nate)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+**b Hoodwink** → **b Dark Willow** → b Invoker → b Arc Warden → **b Dazzle** → b Lina → b Techies → **P Dragon Knight** → P Ancient Apparition → **b Outworld Devourer** → **b Disruptor** → b Lifestealer → P Mirana → **P Witch Doctor** → **P Windranger** → P Wraith King → P Legion Commander → **P Phantom Lancer** → **b Earthshaker** → b Viper → **b Leshrac** → b Earth Spirit → **P Queen of Pain** → P Pangolier
+
+## 2026-11-14 18:35 UTC — против UPPO TEAM (УППО): победа
+
+Dire, 57 мин, [OpenDota](https://www.opendota.com/matches/9090295640), [Dotabuff](https://ru.dotabuff.com/matches/9090295640)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| DrestoV1ch | Techies | safe | 399 | 8/5/23 |
+| YOURSELF | Nyx Assassin | off | 357 | 5/11/33 |
+| kezi | Earth Spirit | mid | 620 | 18/4/25 |
+| britishboi | Windranger | safe | 665 | 14/4/19 |
+| Asmodeus | Wraith King | off | 490 | 10/6/22 |
+
+Соперник: Drow Ranger (Sacred), Witch Doctor (Kaiju), Kunkka (Odar.sp), Ember Spirit (Togo), Shadow Shaman (Nate)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+b Invoker → b Arc Warden → **b Lina** → **b Hoodwink** → b Viper → **b Dragon Knight** → **b Dark Willow** → P Shadow Shaman → **P Techies** → b Phantom Lancer → b Lifestealer → **b Pangolier** → **P Wraith King** → P Kunkka → P Witch Doctor → **P Windranger** → **P Earth Spirit** → P Ember Spirit → b Earthshaker → **b Anti-Mage** → b Medusa → **b Spectre** → P Drow Ranger → **P Nyx Assassin**
+
+## 2026-11-14 19:57 UTC — против UPPO TEAM (УППО): победа
+
+Dire, 48 мин, [OpenDota](https://www.opendota.com/matches/9090414404), [Dotabuff](https://ru.dotabuff.com/matches/9090414404)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| DrestoV1ch | Undying | safe | 336 | 3/4/30 |
+| YOURSELF | Dark Willow | off | 367 | 1/4/15 |
+| kezi | Outworld Devourer | mid | 623 | 17/3/9 |
+| britishboi | Drow Ranger | safe | 774 | 11/4/15 |
+| Asmodeus | Tidehunter | off | 443 | 2/5/18 |
+
+Соперник: Axe (Kaiju), Luna (Togo), Hoodwink (Nate), Snapfire (Odar.sp), Sniper (Sacred)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+b Invoker → b Arc Warden → **b Lina** → **b Wraith King** → b Earth Spirit → **b Dazzle** → **b Techies** → P Hoodwink → **P Undying** → b Phantom Lancer → b Windranger → **b Pangolier** → **P Dark Willow** → P Snapfire → P Axe → **P Tidehunter** → **P Outworld Devourer** → P Luna → b Lifestealer → **b Anti-Mage** → b Spectre → **b Viper** → P Sniper → **P Drow Ranger**
+
 ## Сводка
 
-**Пики команды** (в скобках — победы): Hoodwink ×6 (3), Lina ×5 (3), Techies ×5 (4), Dark Willow ×4 (0), Slardar ×4 (1), Bane ×3 (0), Dragon Knight ×3 (1), Anti-Mage ×2 (1), Centaur Warrunner ×2 (2), Doom ×2 (0), Drow Ranger ×2 (1), Earth Spirit ×2 (0), Lifestealer ×2 (1), Nature's Prophet ×2 (0), Spirit Breaker ×2 (1), Windranger ×2 (1), Clockwerk (0), Earthshaker (1), Ember Spirit (0), Invoker (1), Largo (1), Muerta (0), Night Stalker (0), Oracle (1), Pudge (1), Rubick (0), Sand King (0), Slark (1), Spectre (0), Timbersaw (0), Undying (0), Viper (0), Witch Doctor (0)
+**Пики команды** (в скобках — победы): Hoodwink ×6 (3), Techies ×6 (5), Dark Willow ×5 (1), Lina ×5 (3), Dragon Knight ×4 (1), Slardar ×4 (1), Windranger ×4 (2), Bane ×3 (0), Drow Ranger ×3 (2), Earth Spirit ×3 (1), Anti-Mage ×2 (1), Centaur Warrunner ×2 (2), Doom ×2 (0), Lifestealer ×2 (1), Nature's Prophet ×2 (0), Spirit Breaker ×2 (1), Undying ×2 (1), Witch Doctor ×2 (0), Clockwerk (0), Earthshaker (1), Ember Spirit (0), Invoker (1), Largo (1), Muerta (0), Night Stalker (0), Nyx Assassin (1), Oracle (1), Outworld Devourer (1), Phantom Lancer (0), Pudge (1), Queen of Pain (0), Rubick (0), Sand King (0), Slark (1), Spectre (0), Tidehunter (1), Timbersaw (0), Viper (0), Wraith King (1)
 
-**Баны команды**: Earth Spirit ×8, Lina ×7, Lone Druid ×6, Outworld Devourer ×6, Dark Willow ×4, Slark ×4, Doom ×3, Luna ×3, Phantom Lancer ×3, Rubick ×3, Viper ×3, Dragon Knight ×2, Ember Spirit ×2, Enigma ×2, Hoodwink ×2, Lifestealer ×2, Storm Spirit ×2, Tinker ×2, Tusk ×2, Ursa ×2, Witch Doctor ×2, Anti-Mage, Bane, Faceless Void, Grimstroke, Huskar, Invoker, Keeper of the Light, Lich, Meepo, Mirana, Monkey King, Necrophos, Night Stalker, Pangolier, Puck, Silencer, Slardar, Sven, Terrorblade, Timbersaw, Undying
+**Баны команды**: Lina ×9, Earth Spirit ×8, Outworld Devourer ×7, Dark Willow ×6, Lone Druid ×6, Hoodwink ×4, Slark ×4, Viper ×4, Anti-Mage ×3, Doom ×3, Dragon Knight ×3, Luna ×3, Pangolier ×3, Phantom Lancer ×3, Rubick ×3, Dazzle ×2, Ember Spirit ×2, Enigma ×2, Lifestealer ×2, Storm Spirit ×2, Tinker ×2, Tusk ×2, Ursa ×2, Witch Doctor ×2, Bane, Disruptor, Earthshaker, Faceless Void, Grimstroke, Huskar, Invoker, Keeper of the Light, Leshrac, Lich, Meepo, Mirana, Monkey King, Necrophos, Night Stalker, Puck, Silencer, Slardar, Spectre, Sven, Techies, Terrorblade, Timbersaw, Undying, Wraith King
 
-**Банят против команды** (чего боятся соперники): Phantom Lancer ×7, Invoker ×6, Spectre ×6, Sven ×6, Lifestealer ×5, Slark ×4, Disruptor ×3, Drow Ranger ×3, Earth Spirit ×3, Earthshaker ×3, Hoodwink ×3, Undying ×3, Arc Warden ×2, Bane ×2, Bounty Hunter ×2, Dawnbreaker ×2, Doom ×2, Dragon Knight ×2, Ember Spirit ×2, Lich ×2, Phoenix ×2, Spirit Breaker ×2, Techies ×2, Terrorblade ×2, Witch Doctor ×2, Anti-Mage, Axe, Centaur Warrunner, Dark Willow, Juggernaut, Lone Druid, Mirana, Nature's Prophet, Necrophos, Night Stalker, Ring Master, Ursa, Windranger
+**Банят против команды** (чего боятся соперники): Invoker ×9, Phantom Lancer ×9, Lifestealer ×8, Spectre ×7, Sven ×6, Arc Warden ×5, Earth Spirit ×5, Earthshaker ×4, Slark ×4, Disruptor ×3, Drow Ranger ×3, Hoodwink ×3, Techies ×3, Undying ×3, Bane ×2, Bounty Hunter ×2, Dawnbreaker ×2, Doom ×2, Dragon Knight ×2, Ember Spirit ×2, Lich ×2, Phoenix ×2, Spirit Breaker ×2, Terrorblade ×2, Viper ×2, Windranger ×2, Witch Doctor ×2, Anti-Mage, Axe, Centaur Warrunner, Dark Willow, Juggernaut, Lina, Lone Druid, Medusa, Mirana, Nature's Prophet, Necrophos, Night Stalker, Ring Master, Ursa
 
-**Пики соперников** (в скобках — их победы): Dragon Knight ×5 (4), Techies ×4 (4), Anti-Mage ×3 (2), Jakiro ×3 (1), Lion ×3 (0), Outworld Devourer ×3 (2), Axe ×2 (0), Drow Ranger ×2 (1), Invoker ×2 (1), Lich ×2 (1), Mirana ×2 (1), Ogre Magi ×2 (2), Skywrath Mage ×2 (1), Bloodseeker (0), Bristleback (0), Chaos Knight (0), Enigma (1), Grimstroke (0), Juggernaut (0), Lifestealer (1), Lone Druid (1), Luna (1), Magnus (0), Meepo (1), Necrophos (1), Phantom Assassin (0), Phantom Lancer (0), Ring Master (1), Rubick (1), Silencer (1), Slardar (1), Snapfire (1), Spectre (1), Spirit Breaker (0), Tidehunter (1), Tinker (1), Underlord (1), Undying (1), Viper (1), Void Spirit (0), Warlock (1), Windranger (1), Wraith King (1)
+**Пики соперников** (в скобках — их победы): Dragon Knight ×5 (4), Techies ×4 (4), Anti-Mage ×3 (2), Axe ×3 (0), Drow Ranger ×3 (1), Jakiro ×3 (1), Lion ×3 (0), Mirana ×3 (2), Outworld Devourer ×3 (2), Invoker ×2 (1), Lich ×2 (1), Luna ×2 (1), Ogre Magi ×2 (2), Skywrath Mage ×2 (1), Snapfire ×2 (1), Wraith King ×2 (2), Ancient Apparition (1), Bloodseeker (0), Bristleback (0), Chaos Knight (0), Ember Spirit (0), Enigma (1), Grimstroke (0), Hoodwink (0), Juggernaut (0), Kunkka (0), Legion Commander (1), Lifestealer (1), Lone Druid (1), Magnus (0), Meepo (1), Necrophos (1), Pangolier (1), Phantom Assassin (0), Phantom Lancer (0), Ring Master (1), Rubick (1), Shadow Shaman (0), Silencer (1), Slardar (1), Sniper (0), Spectre (1), Spirit Breaker (0), Tidehunter (1), Tinker (1), Underlord (1), Undying (1), Viper (1), Void Spirit (0), Warlock (1), Windranger (1), Witch Doctor (0)

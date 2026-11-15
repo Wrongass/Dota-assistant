@@ -1,6 +1,6 @@
 # Турнир: Team Future (НИИЭП)
 
-Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 8, побед: 8. Переигровки (пустая статистика) не учитываются.
+Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 10, побед: 8. Переигровки (пустая статистика) не учитываются.
 
 ## 2026-10-10 10:38 UTC — против РТ-Инжиниринг: победа
 
@@ -146,12 +146,48 @@ Dire, 37 мин, [OpenDota](https://www.opendota.com/matches/9079649974), [Dotab
 
 b Mirana → b Witch Doctor → **b Invoker** → **b Arc Warden** → b Tusk → **b Hoodwink** → **b Earth Spirit** → P Lina → **P Dragon Knight** → b Rubick → b Outworld Devourer → **b Slark** → **P Techies** → P Bane → P Dark Willow → **P Ring Master** → **P Tinker** → P Spectre → b Viper → **b Doom** → b Ursa → **b Night Stalker** → P Timbersaw → **P Anti-Mage**
 
+## 2026-11-14 07:02 UTC — против Team Polyus (НИИ Полюс им. М.Ф. Стельмаха): поражение
+
+Dire, 37 мин, [OpenDota](https://www.opendota.com/matches/9089340070), [Dotabuff](https://ru.dotabuff.com/matches/9089340070)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| Saja | Primal Beast | mid | 438 | 5/8/6 |
+| めつきすてみ | Windranger | off | 397 | 3/7/9 |
+| Furs | Tusk | off | 243 | 4/12/9 |
+| twilight | Luna | safe | 614 | 5/6/7 |
+| R3N | Witch Doctor | safe | 254 | 6/4/7 |
+
+Соперник: Wraith King (Unlearnable), Lina (ryota), Death Prophet (NanoElectronic), Ring Master (Sladkiy_arbyzik), Lich (ГYYYYYСЬ)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+b Dragon Knight → b Rubick → **b Earthshaker** → **b Lion** → b Tinker → **b Hoodwink** → **b Techies** → P Death Prophet → **P Witch Doctor** → b Outworld Devourer → b Mirana → **b Queen of Pain** → **P Windranger** → P Ring Master → P Lina → **P Tusk** → **P Luna** → P Lich → b Viper → **b Anti-Mage** → b Storm Spirit → **b Lifestealer** → P Wraith King → **P Primal Beast**
+
+## 2026-11-14 08:15 UTC — против Team Polyus (НИИ Полюс им. М.Ф. Стельмаха): поражение
+
+Radiant, 35 мин, [OpenDota](https://www.opendota.com/matches/9089406282), [Dotabuff](https://ru.dotabuff.com/matches/9089406282)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| Saja | Invoker | mid | 606 | 12/4/6 |
+| R3N | Witch Doctor | safe | 184 | 0/7/11 |
+| Furs | Techies | off | 299 | 2/7/14 |
+| めつきすてみ | Doom | off | 394 | 1/4/9 |
+| twilight | Anti-Mage | safe | 644 | 6/1/3 |
+
+Соперник: Juggernaut (Unlearnable), Shadow Fiend (ryota), Death Prophet (NanoElectronic), Dark Willow (Sladkiy_arbyzik), Ogre Magi (ГYYYYYСЬ)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+b Dragon Knight → b Rubick → **b Queen of Pain** → **b Lina** → b Tinker → **b Lion** → **b Hoodwink** → P Death Prophet → **P Witch Doctor** → b Outworld Devourer → b Mirana → **b Ring Master** → **P Techies** → P Ogre Magi → P Dark Willow → **P Doom** → **P Anti-Mage** → P Juggernaut → b Pangolier → **b Earthshaker** → b Viper → **b Ember Spirit** → P Shadow Fiend → **P Invoker**
+
 ## Сводка
 
-**Пики команды** (в скобках — победы): Dragon Knight ×6 (6), Witch Doctor ×5 (5), Techies ×3 (3), Tinker ×3 (3), Lifestealer ×2 (2), Mirana ×2 (2), Rubick ×2 (2), Tidehunter ×2 (2), Anti-Mage (1), Bristleback (1), Grimstroke (1), Lich (1), Luna (1), Night Stalker (1), Pangolier (1), Queen of Pain (1), Razor (1), Ring Master (1), Slardar (1), Spectre (1), Troll Warlord (1), Tusk (1), Viper (1)
+**Пики команды** (в скобках — победы): Witch Doctor ×7 (5), Dragon Knight ×6 (6), Techies ×4 (3), Tinker ×3 (3), Anti-Mage ×2 (1), Lifestealer ×2 (2), Luna ×2 (1), Mirana ×2 (2), Rubick ×2 (2), Tidehunter ×2 (2), Tusk ×2 (1), Bristleback (1), Doom (0), Grimstroke (1), Invoker (0), Lich (1), Night Stalker (1), Pangolier (1), Primal Beast (0), Queen of Pain (1), Razor (1), Ring Master (1), Slardar (1), Spectre (1), Troll Warlord (1), Viper (1), Windranger (0)
 
-**Баны команды**: Hoodwink ×4, Lina ×4, Outworld Devourer ×4, Slark ×4, Ursa ×4, Grimstroke ×3, Phantom Lancer ×3, Viper ×3, Arc Warden ×2, Beastmaster ×2, Earth Spirit ×2, Huskar ×2, Invoker ×2, Lich ×2, Lycan ×2, Night Stalker ×2, Axe, Doom, Ember Spirit, Legion Commander, Lion, Necrophos, Queen of Pain, Snapfire, Spectre, Techies, Underlord
+**Баны команды**: Hoodwink ×6, Lina ×5, Outworld Devourer ×4, Slark ×4, Ursa ×4, Grimstroke ×3, Lion ×3, Phantom Lancer ×3, Queen of Pain ×3, Viper ×3, Arc Warden ×2, Beastmaster ×2, Earth Spirit ×2, Earthshaker ×2, Ember Spirit ×2, Huskar ×2, Invoker ×2, Lich ×2, Lycan ×2, Night Stalker ×2, Techies ×2, Anti-Mage, Axe, Doom, Legion Commander, Lifestealer, Necrophos, Ring Master, Snapfire, Spectre, Underlord
 
-**Банят против команды** (чего боятся соперники): Invoker ×5, Outworld Devourer ×4, Tinker ×4, Lifestealer ×3, Lina ×3, Mirana ×3, Witch Doctor ×3, Dazzle ×2, Disruptor ×2, Doom ×2, Earth Spirit ×2, Ring Master ×2, Rubick ×2, Sniper ×2, Tusk ×2, Viper ×2, Anti-Mage, Beastmaster, Dragon Knight, Grimstroke, Keeper of the Light, Lion, Necrophos, Phantom Lancer, Razor, Skywrath Mage, Sven, Techies, Ursa
+**Банят против команды** (чего боятся соперники): Outworld Devourer ×6, Tinker ×6, Invoker ×5, Mirana ×5, Rubick ×4, Viper ×4, Dragon Knight ×3, Lifestealer ×3, Lina ×3, Witch Doctor ×3, Dazzle ×2, Disruptor ×2, Doom ×2, Earth Spirit ×2, Ring Master ×2, Sniper ×2, Tusk ×2, Anti-Mage, Beastmaster, Grimstroke, Keeper of the Light, Lion, Necrophos, Pangolier, Phantom Lancer, Razor, Skywrath Mage, Storm Spirit, Sven, Techies, Ursa
 
-**Пики соперников** (в скобках — их победы): Disruptor ×3 (0), Axe ×2 (0), Dark Willow ×2 (0), Drow Ranger ×2 (0), Slardar ×2 (0), Techies ×2 (0), Viper ×2 (0), Anti-Mage (0), Bane (0), Bounty Hunter (0), Clinkz (0), Juggernaut (0), Kez (0), Lich (0), Lifestealer (0), Lina (0), Medusa (0), Necrophos (0), Night Stalker (0), Ring Master (0), Sand King (0), Shadow Shaman (0), Skywrath Mage (0), Slark (0), Snapfire (0), Spectre (0), Tidehunter (0), Timbersaw (0), Tusk (0), Ursa (0), Warlock (0), Wraith King (0)
+**Пики соперников** (в скобках — их победы): Dark Willow ×3 (1), Disruptor ×3 (0), Axe ×2 (0), Death Prophet ×2 (2), Drow Ranger ×2 (0), Juggernaut ×2 (1), Lich ×2 (1), Lina ×2 (1), Ring Master ×2 (1), Slardar ×2 (0), Techies ×2 (0), Viper ×2 (0), Wraith King ×2 (1), Anti-Mage (0), Bane (0), Bounty Hunter (0), Clinkz (0), Kez (0), Lifestealer (0), Medusa (0), Necrophos (0), Night Stalker (0), Ogre Magi (1), Sand King (0), Shadow Fiend (1), Shadow Shaman (0), Skywrath Mage (0), Slark (0), Snapfire (0), Spectre (0), Tidehunter (0), Timbersaw (0), Tusk (0), Ursa (0), Warlock (0)

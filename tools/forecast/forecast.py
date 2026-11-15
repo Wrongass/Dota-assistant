@@ -20,9 +20,17 @@ TEAMS = {  # организация: (team_id, team_name в конфиге; None
     'НПП «Звезда»': (6990376, 'SyberStar'), 'Долг': (10255027, None)}
 OURS = 'Долг'
 FIRST_ROUND = [('НИИЭП', 'ИТОЗ'), ('УППО', 'НИИ Полюс'), ('МЦСТ', 'GGsel'), ('НПП «Звезда»', 'Долг')]
-# Сыгранные серии: победитель известен, симуляция его не разыгрывает. Дополнять после каждого игрового дня.
-PLAYED = {'W1': 'НИИЭП', 'W2': 'НИИ Полюс', 'W3': 'МЦСТ', 'W4': 'НПП «Звезда»'}  # 1 раунд, 7.11
-NEXT = ('L2', 'GGsel')  # наша ближайшая серия и соперник
+# Сыгранные серии: (серия, дата, победитель, проигравший, счёт). Симуляция их не разыгрывает, а раздел «Как сбываются
+# прогнозы» сравнивает с ними прошлые прогнозы из analysis/forecast/archive. Дополнять после каждого игрового дня.
+RESULTS = [
+    ('W1', '2026-11-07', 'НИИЭП', 'ИТОЗ', '2:0'), ('W2', '2026-11-07', 'НИИ Полюс', 'УППО', '2:1'),
+    ('W3', '2026-11-07', 'МЦСТ', 'GGsel', '2:1'), ('W4', '2026-11-07', 'НПП «Звезда»', 'Долг', '2:1'),
+    ('W5', '2026-11-14', 'НИИ Полюс', 'НИИЭП', '2:0'), ('W6', '2026-11-14', 'МЦСТ', 'НПП «Звезда»', '2:1'),
+    ('L1', '2026-11-14', 'ИТОЗ', 'УППО', '2:1'), ('L2', '2026-11-14', 'Долг', 'GGsel', '2:1'),
+]
+PLAYED = {k: w for k, _, w, _, _ in RESULTS}
+NEXT = ('L4', 'НИИЭП')  # наша ближайшая серия и соперник
+ARCHIVE = os.path.join(ROOT, 'analysis', 'forecast', 'archive')  # прошлые прогнозы: {дата}.md, новый тоже кладётся сюда
 SERIES = ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'W8']
 SERIES_NAME = {'W1': 'W1', 'W2': 'W2', 'W3': 'W3', 'W4': 'W4', 'W5': 'W5 (верх, 2 раунд)', 'W6': 'W6 (верх, 2 раунд)',
                'W7': 'W7 (финал верхней сетки)', 'L1': 'L1', 'L2': 'L2', 'L3': 'L3', 'L4': 'L4', 'L5': 'L5',
@@ -555,6 +563,75 @@ def main():
     write_report(maps, lineups, lv, CI, CW, grid, core_grid, vals, fitted, sims, final.name, f_medal, eff)
 
 
+def read_archive():
+    """Прошлые прогнозы: {дата: (серии {(a, b): шанс a выиграть серию}, шансы {команда: (победа, топ-3)})}."""
+    out = {}
+    for f in sorted(glob.glob(os.path.join(ARCHIVE, '*.md'))):
+        day = os.path.basename(f)[:-3]
+        if day >= f'{datetime.date.today():%Y-%m-%d}':
+            continue  # сегодняшний — это мы сами
+        text = open(f, encoding='utf-8').read()
+        pairs, chances, header = {}, {}, None
+        for line in text.split('\n'):
+            cells = [c.strip() for c in line.strip().strip('|').split('|')] if line.startswith('|') else None
+            if not cells:
+                header = None if not line.startswith('|') else header
+                continue
+            if cells[0] == '' and len(cells) == 9:  # шапка таблицы пар
+                header = cells[1:]
+            elif header and cells[0].startswith('**') and len(cells) == 9:
+                a = cells[0].strip('*')
+                for b, c in zip(header, cells[1:]):
+                    if c != '—':
+                        pairs[(a, b)] = float(c.split('%')[0]) / 100
+            elif len(cells) == 4 and cells[0].isdigit() and not chances.get(cells[1].strip('*')):
+                chances[cells[1].strip('*')] = (float(cells[2].rstrip('%')) / 100, float(cells[3].rstrip('%')) / 100)
+        out[day] = (pairs, chances)
+    return out
+
+
+def archive_section(w, now, orgs):
+    """Раздел «Как сбываются прогнозы»: шанс реального победителя в каждом прошлом прогнозе и шансы команд по датам."""
+    arch = read_archive()
+    if not arch:
+        return
+    days = sorted(arch)
+    dname = lambda d: f'{d[8:10]}.{d[5:7]}'
+    w('\n## Как сбываются прогнозы')
+    w('Прошлые прогнозы сохранены в `analysis/forecast/archive`. В таблице — какой шанс давал прогноз реальному '
+      'победителю серии (шанс серии из таблицы «Все пары»). Прогноз считается только для серий, сыгранных после него. '
+      '**Жирным** — прогноз угадал фаворита.')
+    w('')
+    w('| Серия | Дата | Итог | ' + ' | '.join(f'Прогноз {dname(d)}' for d in days) + ' |')
+    w('|---|---|---|' + '---|' * len(days))
+    score = {d: [0, 0, 0.0] for d in days}  # угадано, всего, log-loss
+    for key, date, win, lose, sc in RESULTS:
+        cells = []
+        for d in days:
+            p = arch[d][0].get((win, lose))
+            if p is None or d > date:
+                cells.append('—')
+                continue
+            score[d][0] += p > 0.5
+            score[d][1] += 1
+            score[d][2] += -math.log(max(p, 1e-3))
+            cells.append(f'**{pct(p)}**' if p > 0.5 else pct(p))
+        w(f'| {key} | {dname(date)} | {win} {sc} {lose} | ' + ' | '.join(cells) + ' |')
+    w('')
+    for d in days:
+        g, n, ll = score[d]
+        if n:
+            w(f'- Прогноз {dname(d)}: фаворит выиграл {g} из {n} серий, log-loss {ll / n:.2f} (монетка — 0.69).')
+    w('')
+    w('Как менялись шансы команд (победа в турнире / топ-3):')
+    w('')
+    w('| Команда | ' + ' | '.join(dname(d) for d in days) + ' | Сейчас |')
+    w('|---|' + '---|' * (len(days) + 1))
+    for o in orgs:
+        cells = [f'{pct(arch[d][1][o][0], 1)} / {pct(arch[d][1][o][1])}' if o in arch[d][1] else '—' for d in days]
+        w(f'| {o} | ' + ' | '.join(cells) + f' | **{pct(now[o][0], 1)} / {pct(now[o][1])}** |')
+
+
 def write_report(maps, lineups, lv, CI, CW, grid, core_grid, vals, fitted, sims, final, f_medal, eff):
     F, S = fitted[final], sims[final]
     N = S['n']
@@ -582,6 +659,8 @@ def write_report(maps, lineups, lv, CI, CW, grid, core_grid, vals, fitted, sims,
     w('')
     w('Подробности — в разделах ниже, они раскрываются по клику. Это прогноз ради интереса: модель видит ранги и '
       'результаты карт, но не драфт, форму в день игры и замены.')
+
+    archive_section(w, {o: (S['place'][o][1] / N, top3(o)) for o in orgs}, orgs)
 
     # --- места
     w('\n## Шансы на каждое место')
@@ -766,6 +845,9 @@ def write_report(maps, lineups, lv, CI, CW, grid, core_grid, vals, fitted, sims,
     w('- Модель не видит драфт, пулы героев, форму в день игры, связь между игроками.')
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     open(OUT, 'w', encoding='utf-8', newline='\n').write('\n'.join(L) + '\n')
+    # копия в архив: следующий прогноз сравнит себя с этим (повторный запуск в тот же день перезапишет копию)
+    os.makedirs(ARCHIVE, exist_ok=True)
+    open(os.path.join(ARCHIVE, f'{datetime.date.today():%Y-%m-%d}.md'), 'w', encoding='utf-8', newline='\n').write('\n'.join(L) + '\n')
     print('записано', OUT, file=sys.stderr)
 
 

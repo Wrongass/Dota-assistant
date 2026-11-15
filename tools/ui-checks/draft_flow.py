@@ -118,15 +118,9 @@ try:
     js("document.getElementById('search').dispatchEvent(new KeyboardEvent('keydown', {key:'Enter', bubbles:true}))")
     wait_idle()
     st = state()
-    # первый ход — наш бан; второй вариант может быть нашим героем → предупреждение
-    if st["warn"]:
-        check("предупреждение при бане своего героя", "НАШ бан" in st["warn"], st["warn"])
-        js("document.getElementById('search').dispatchEvent(new KeyboardEvent('keydown', {key:'Enter', bubbles:true}))")
-        wait_idle()
-        st = state()
     check("↓ + Enter вносит второй вариант", st["ribbon"][:1] == [second], (second, st["ribbon"]))
 
-    # 2. явное предупреждение: наш бан героя нашего игрока (Viper — у Wrongass)
+    # 2. наш бан героя нашего игрока (Viper — у Wrongass) вносится сразу, без подтверждения (решение 15.11)
     top = lambda: js("Math.round(document.getElementById('panel-bans').getBoundingClientRect().top)")
     before = top()
     js("(() => { const s=document.getElementById('search'); s.value='viper'; s.dispatchEvent(new Event('input')); })()")
@@ -134,14 +128,8 @@ try:
     check("подсказка поиска не сдвигает «Нам банить»", top() == before, (before, top()))
     type_enter("viper")
     st = state()
-    check("бан своего героя требует подтверждения", "НАШ бан" in st["warn"] and len(st["ribbon"]) == 1, st["warn"])
-    check("предупреждение не сдвигает «Нам банить»", top() == before, (before, top()))
-    btn = js("(() => [...document.querySelectorAll('#warn button')].map(b => b.textContent))()")
-    check("в предупреждении кнопки «Забанить Viper» и «Отмена»", btn == ["Забанить Viper", "Отмена"], btn)
-    js("document.querySelector('#warn button[data-act=confirm]').click()")
-    wait_idle()
-    st = state()
-    check("кнопка в предупреждении банит", len(st["ribbon"]) == 2 and st["ribbon"][1] == "Viper", st["ribbon"])
+    check("бан своего героя вносится сразу, без подтверждения", not st["warn"] and len(st["ribbon"]) == 2
+          and st["ribbon"][1] == "Viper", (st["warn"], st["ribbon"]))
     toast = js("(() => document.getElementById('toast').hidden ? '' : document.getElementById('toast').innerText)()")
     check("после хода сообщение «Внесено … Отменить»", "Внесено: бан Viper" in toast and "Отменить" in toast, toast)
     # двойной клик: сразу после хода клик по списку советов не принимается
@@ -160,20 +148,19 @@ try:
     # 3. их баны (ходы 3–4), наш бан 5, их 6–7
     for h in ["Bounty Hunter", "Winter Wyvern", "Techies", "Lina", "Sniper"]:
         type_enter(h)
-        if state()["warn"]:
-            type_enter(h)
     st = state()
     check("после 7 банов — наш первый пик", "ПИК НАШ" in st["turn"], st["turn"])
     check("на нашем пике в фокусе «Нам брать»", st["focus"] == ["Нам брать"], st["focus"])
     order = js("(() => [...document.querySelectorAll('.center .advice-panel')].map(p => p.id + ':' + (p.style.order || '')))()")
     check("панели не переставляются", all(x.endswith(':') for x in order), order)
 
-    # 4. наш пик не из пулов → предупреждение (Meepo)
+    # 4. наш пик не из пулов (Meepo) тоже вносится сразу, ошибка откатывается «Отменить ход»
     type_enter("meepo")
     st = state()
-    check("пик не из наших пулов просит подтверждения", "нет в наших пулах" in st["warn"], st["warn"])
-    js("document.getElementById('search').dispatchEvent(new KeyboardEvent('keydown', {key:'Escape', bubbles:true}))")
+    check("пик не из наших пулов вносится без подтверждения", not st["warn"] and "Meepo" in st["ourPicks"], (st["warn"], st["ourPicks"]))
+    js("document.getElementById('undo').click()")
     wait_idle()
+    check("«Отменить ход» убирает ошибочный пик", "Meepo" not in state()["ourPicks"], state()["ourPicks"])
     type_enter("lich")
     st = state()
     check("Lich внесён нашим пиком", "Lich" in st["ourPicks"], st["ourPicks"])

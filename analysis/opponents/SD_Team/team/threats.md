@@ -1,16 +1,16 @@
 # Угрозы: SD Team (GGsel)
 
-Сгенерировано 2026-11-14, патч 7.41.
+Сгенерировано 2026-11-15, патч 7.41.
 
 ## Пулы по позициям (топ-6 по пригодности в патче)
 
 | Поз. | Игрок | Ранг | Кандидаты (пригодность; ▲ — сильный в патче) | В турнире |
 |---|---|---|---|---|
-| 1 | [Nynge](../players/pos1_Nynge.md) | Властелин 4 (Ancient) | Dragon Knight 83 ▲, Sven 79 ▲, Windranger 74, Juggernaut 69 ▲, Vengeful Spirit 68 ▲, Wraith King 67 ▲ | Dragon Knight ×3, Windranger ×3, Lifestealer ×2, Clinkz, Night Stalker, Ogre Magi |
-| 2 | [Caraxes](../players/pos2_Caraxes.md) | Властелин 1 (Ancient) | Dragon Knight 72 ▲, Ember Spirit 72, Earthshaker 59, Kez 57, Monkey King 56, Pangolier 55 | Ember Spirit ×4, Sand King ×2, Earthshaker, Huskar, Pangolier, Slardar, Slark |
-| 3 | [XANDR](../players/pos3_XANDR.md) | Властелин 2 (Ancient) | Enigma 77 ▲, Dawnbreaker 73 ▲, Dark Seer 72, Wraith King 71 ▲, Legion Commander 69 ▲, Night Stalker 69 ▲ | Dark Seer ×3, Dawnbreaker ×3, Pudge ×2, Dragon Knight, Slardar, Tidehunter |
-| 4 | [IRD](../players/pos4_IRD.md) | Титан (Immortal) | Bounty Hunter 94 ▲, Spirit Breaker 78 ▲, Mirana 75, Dark Willow 74, Windranger 71, Witch Doctor 70 | Rubick ×3, Windranger ×3, Dark Willow ×2, Mirana, Phoenix, Spirit Breaker |
-| 5 | [montekri](../players/pos5_montekri.md) | Легенда 4 (Legend) | Mirana 80, Techies 73, Crystal Maiden 70, Phoenix 68, Winter Wyvern 68, Dark Willow 63 | Dark Willow ×4, Crystal Maiden, Grimstroke, Phoenix, Ring Master, Undying, Warlock, Witch Doctor |
+| 1 | [Nynge](../players/pos1_Nynge.md) | Властелин 4 (Ancient) | Dragon Knight 83 ▲, Sven 79 ▲, Windranger 74, Juggernaut 69 ▲, Vengeful Spirit 68 ▲, Wraith King 67 ▲ | Dragon Knight ×4, Lifestealer ×4, Windranger ×3, Clinkz, Night Stalker, Ogre Magi |
+| 2 | [Caraxes](../players/pos2_Caraxes.md) | Властелин 1 (Ancient) | Dragon Knight 72 ▲, Ember Spirit 72, Earthshaker 59, Kez 57, Monkey King 56, Pangolier 55 | Ember Spirit ×4, Sand King ×4, Dragon Knight, Earthshaker, Huskar, Pangolier, Slardar, Slark |
+| 3 | [XANDR](../players/pos3_XANDR.md) | Властелин 2 (Ancient) | Enigma 77 ▲, Dawnbreaker 73 ▲, Dark Seer 72, Wraith King 71 ▲, Legion Commander 69 ▲, Night Stalker 69 ▲ | Dark Seer ×3, Dawnbreaker ×3, Pudge ×3, Axe ×2, Dragon Knight, Slardar, Tidehunter |
+| 4 | [IRD](../players/pos4_IRD.md) | Титан (Immortal) | Bounty Hunter 94 ▲, Spirit Breaker 78 ▲, Mirana 75, Dark Willow 74, Windranger 71, Witch Doctor 70 | Rubick ×4, Windranger ×3, Dark Willow ×2, Phoenix ×2, Spirit Breaker ×2, Mirana |
+| 5 | [montekri](../players/pos5_montekri.md) | Легенда 4 (Legend) | Mirana 80, Techies 73, Crystal Maiden 70, Phoenix 68, Winter Wyvern 68, Dark Willow 64 | Dark Willow ×4, Phoenix ×2, Ring Master ×2, Witch Doctor ×2, Crystal Maiden, Grimstroke, Undying, Warlock |
 
 ## Самые опасные герои (кандидаты в баны)
 
@@ -19,26 +19,26 @@
 | # | Герой | Игрок | Угроза | Умение | Сила в мете | Игр всего / год | WR за год | В турнире | Позиции героя |
 |---|---|---|---|---|---|---|---|---|---|
 | 1 | Bounty Hunter | IRD | 0.93 | 89 | 0.99 | 62 / 12 | 66.7% |  | 4/5 |
-| 2 | Dragon Knight | Nynge | 0.93 | 86 | 0.78 | 84 / 17 | 58.8% | ×3 | 1/2/3 |
-| 3 | Spirit Breaker | IRD | 0.91 | 96 | 0.59 | 153 / 28 | 67.9% | ×1 | 4/5 |
+| 2 | Dragon Knight | Nynge | 0.93 | 86 | 0.78 | 84 / 17 | 58.8% | ×4 | 1/2/3 |
+| 3 | Spirit Breaker | IRD | 0.91 | 96 | 0.59 | 153 / 28 | 67.9% | ×2 | 4/5 |
 | 4 | Windranger | IRD | 0.90 | 93 | 0.60 | 190 / 24 | 62.5% | ×3 | 1/4 |
-| 5 | Mirana | IRD | 0.88 | 89 | 0.62 | 178 / 17 | 52.9% | ×1 | 4/5 |
+| 5 | Mirana | IRD | 0.88 | 89 | 0.62 | 178 / 16 | 56.3% | ×1 | 4/5 |
 | 6 | Night Stalker | Nynge | 0.87 | 91 | 0.56 | 310 / 87 | 56.3% | ×1 | 3 |
 | 7 | Dark Seer | XANDR | 0.86 | 89 | 0.55 | 56 / 7 | 85.7% | ×3 | 3 |
 | 8 | Dawnbreaker | IRD | 0.85 | 98 | 0.66 | 126 / 13 | 61.5% |  | 3 |
 | 9 | Dark Willow | IRD | 0.85 | 87 | 0.57 | 17 / 8 | 75.0% | ×2 | 4/5 |
-| 10 | Phoenix | montekri | 0.85 | 87 | 0.56 | 227 / 33 | 45.5% | ×1 | 4 |
-| 11 | Crystal Maiden | montekri | 0.84 | 92 | 0.47 | 58 / 15 | 86.7% | ×1 | 4/5 |
+| 10 | Phoenix | montekri | 0.85 | 87 | 0.56 | 227 / 33 | 45.5% | ×2 | 4 |
+| 11 | Crystal Maiden | montekri | 0.84 | 92 | 0.47 | 58 / 14 | 85.7% | ×1 | 4/5 |
 | 12 | Ember Spirit | Caraxes | 0.84 | 82 | 0.62 | 22 / 22 | 54.5% | ×4 | 2 |
 | 13 | Legion Commander | Nynge | 0.81 | 99 | 0.55 | 348 / 50 | 68.0% |  | 3 |
 | 14 | Sven | Nynge | 0.81 | 90 | 0.68 | 88 / 11 | 81.8% |  | 1 |
-| 15 | Ring Master | montekri | 0.78 | 90 | 0.35 | 45 / 13 | 84.6% | ×1 | 4/5 |
+| 15 | Ring Master | montekri | 0.78 | 90 | 0.35 | 45 / 13 | 84.6% | ×2 | 4/5 |
 
 ## Что они банят в турнире
 
-Necrophos ×5, Outworld Devourer ×5, Techies ×5, Lifestealer ×4, Lina ×4, Hoodwink ×3, Lone Druid ×3, Meepo ×3, Viper ×3, Witch Doctor ×3, Axe ×2, Centaur Warrunner ×2, Sniper ×2, Timbersaw ×2, Winter Wyvern ×2, Beastmaster, Brewmaster, Dawnbreaker, Dazzle, Disruptor, Doom, Dragon Knight, Earth Spirit, Grimstroke, Invoker, Kez, Kunkka, Magnus, Mirana, Nature's Prophet, Ogre Magi, Snapfire, Spectre, Sven, Undying, Ursa, Wraith King
+Outworld Devourer ×8, Lina ×7, Necrophos ×6, Techies ×5, Viper ×5, Centaur Warrunner ×4, Dawnbreaker ×4, Lifestealer ×4, Hoodwink ×3, Lone Druid ×3, Meepo ×3, Timbersaw ×3, Witch Doctor ×3, Wraith King ×3, Axe ×2, Grimstroke ×2, Snapfire ×2, Sniper ×2, Winter Wyvern ×2, Beastmaster, Brewmaster, Dazzle, Disruptor, Doom, Dragon Knight, Earth Spirit, Invoker, Kez, Kunkka, Magnus, Mirana, Nature's Prophet, Night Stalker, Ogre Magi, Spectre, Sven, Underlord, Undying, Ursa
 
-Из наших пулов они уже банили: Dawnbreaker, Disruptor, Doom, Dragon Knight, Grimstroke, Invoker, Lifestealer, Necrophos, Ogre Magi, Outworld Devourer, Sniper, Spectre, Sven, Viper, Witch Doctor, Wraith King
+Из наших пулов они уже банили: Dawnbreaker, Disruptor, Doom, Dragon Knight, Grimstroke, Invoker, Lifestealer, Necrophos, Night Stalker, Ogre Magi, Outworld Devourer, Sniper, Spectre, Sven, Viper, Witch Doctor, Wraith King
 
 ## Чем контрить их главных героев (из наших пулов)
 
@@ -68,8 +68,8 @@ Necrophos ×5, Outworld Devourer ×5, Techies ×5, Lifestealer ×4, Lina ×4, Ho
 | 5 | Warlock | 44.7% | 163 |  |
 | 6 | Shadow Demon | 44.7% | 60 |  |
 | 7 | Lone Druid | 44.9% | 53 |  |
-| 8 | Silencer | 45.5% | 241 | ✔ |
-| 9 | Legion Commander | 45.6% | 308 |  |
-| 10 | Keeper of the Light | 45.7% | 93 |  |
-| 11 | Skywrath Mage | 45.8% | 224 |  |
+| 8 | Silencer | 45.3% | 240 | ✔ |
+| 9 | Skywrath Mage | 45.5% | 223 |  |
+| 10 | Legion Commander | 45.6% | 308 |  |
+| 11 | Keeper of the Light | 45.7% | 93 |  |
 | 12 | Spectre | 46.2% | 200 | ✔ |
