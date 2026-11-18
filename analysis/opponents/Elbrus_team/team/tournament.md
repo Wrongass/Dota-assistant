@@ -1,6 +1,6 @@
 # Турнир: Elbrus team (МЦСТ)
 
-Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 9, побед: 8. Переигровки (пустая статистика) не учитываются.
+Лига OpenDota 18845, матчи с начала сезона. Сыграно карт: 12, побед: 10. Переигровки (пустая статистика) не учитываются.
 
 ## 2026-10-10 09:48 UTC — против comaTOZ (ИТОЗ): победа
 
@@ -164,12 +164,66 @@ Dire, 41 мин, [OpenDota](https://www.opendota.com/matches/9079985386), [Dotab
 
 **b Rubick** → **b Windranger** → b Lone Druid → b Techies → **b Mirana** → b Witch Doctor → b Outworld Devourer → **P Dragon Knight** → P Dark Willow → **b Lifestealer** → **b Ember Spirit** → b Hoodwink → P Phoenix → **P Snapfire** → **P Spirit Breaker** → P Ogre Magi → P Dark Seer → **P Juggernaut** → **b Earthshaker** → b Meepo → **b Sand King** → b Magnus → **P Invoker** → P Slark
 
+## 2026-11-14 16:42 UTC — против SyberStar (НПП «Звезда»): поражение
+
+Radiant, 53 мин, [OpenDota](https://www.opendota.com/matches/9090117068), [Dotabuff](https://ru.dotabuff.com/matches/9090117068)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| zero_excuses | Night Stalker | off | 609 | 7/8/22 |
+| Tort | Spirit Breaker | safe | 277 | 3/12/27 |
+| Участковый | Razor | safe | 582 | 14/6/15 |
+| Sladenky | Ring Master | off | 242 | 4/9/21 |
+| Блинолопатный | Sniper | mid | 628 | 16/7/17 |
+
+Соперник: Undying (kalibri), Luna (死), Axe (SuperPoni), Vengeful Spirit (СГРЫЗ_КАСТРЮЛЮ), Necrophos (Леонид Ильич)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+b Lone Druid → b Invoker → **b Hoodwink** → **b Windranger** → b Techies → **b Dragon Knight** → **b Slardar** → P Vengeful Spirit → **P Spirit Breaker** → b Outworld Devourer → b Lifestealer → **b Dawnbreaker** → **P Night Stalker** → P Axe → P Undying → **P Ring Master** → **P Razor** → P Luna → b Brewmaster → **b Storm Spirit** → b Lina → **b Viper** → P Necrophos → **P Sniper**
+
+## 2026-11-14 18:05 UTC — против SyberStar (НПП «Звезда»): победа
+
+Dire, 39 мин, [OpenDota](https://www.opendota.com/matches/9090250687), [Dotabuff](https://ru.dotabuff.com/matches/9090250687)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| Tort | Dawnbreaker | off | 406 | 5/2/29 |
+| Блинолопатный | Meepo | mid | 675 | 8/2/18 |
+| zero_excuses | Dragon Knight | off | 675 | 11/2/21 |
+| Sladenky | Clockwerk | safe | 350 | 3/2/26 |
+| Участковый | Juggernaut | safe | 677 | 13/5/12 |
+
+Соперник: Lifestealer (死), Outworld Devourer (Леонид Ильич), Silencer (kalibri), Night Stalker (SuperPoni), Vengeful Spirit (СГРЫЗ_КАСТРЮЛЮ)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+**b Windranger** → **b Axe** → b Lone Druid → b Invoker → **b Hoodwink** → b Techies → b Spirit Breaker → **P Dragon Knight** → P Outworld Devourer → **b Luna** → **b Undying** → b Brewmaster → P Night Stalker → **P Dawnbreaker** → **P Clockwerk** → P Lifestealer → P Silencer → **P Meepo** → **b Lich** → b Dazzle → **b Necrophos** → b Bane → **P Juggernaut** → P Vengeful Spirit
+
+## 2026-11-14 19:11 UTC — против SyberStar (НПП «Звезда»): победа
+
+Radiant, 31 мин, [OpenDota](https://www.opendota.com/matches/9090349506), [Dotabuff](https://ru.dotabuff.com/matches/9090349506)
+
+| Игрок | Герой | Линия | GPM | K/D/A |
+|---|---|---|---|---|
+| zero_excuses | Lifestealer | safe | 669 | 13/3/17 |
+| Tort | Spirit Breaker | off | 294 | 4/8/24 |
+| Участковый | Dark Seer | off | 722 | 13/2/22 |
+| Sladenky | Techies | safe | 344 | 6/5/18 |
+| Блинолопатный | Earth Spirit | mid | 583 | 12/4/18 |
+
+Соперник: Magnus (Леонид Ильич), Vengeful Spirit (kalibri), Phantom Assassin (死), Slardar (SuperPoni), Winter Wyvern (СГРЫЗ_КАСТРЮЛЮ)
+
+Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
+
+b Lone Druid → b Invoker → **b Windranger** → **b Dragon Knight** → b Outworld Devourer → **b Hoodwink** → **b Axe** → P Vengeful Spirit → **P Techies** → b Night Stalker → b Dawnbreaker → **b Luna** → **P Lifestealer** → P Slardar → P Winter Wyvern → **P Dark Seer** → **P Spirit Breaker** → P Magnus → b Meepo → **b Ursa** → b Brewmaster → **b Slark** → P Phantom Assassin → **P Earth Spirit**
+
 ## Сводка
 
-**Пики команды** (в скобках — победы): Snapfire ×3 (3), Techies ×3 (3), Invoker ×2 (2), Lifestealer ×2 (2), Lone Druid ×2 (2), Magnus ×2 (2), Night Stalker ×2 (2), Rubick ×2 (2), Silencer ×2 (1), Tidehunter ×2 (2), Witch Doctor ×2 (2), Brewmaster (1), Clockwerk (1), Dragon Knight (1), Drow Ranger (1), Hoodwink (0), Juggernaut (1), Kunkka (0), Lina (1), Lion (1), Meepo (1), Ogre Magi (1), Outworld Devourer (1), Phantom Lancer (0), Phoenix (1), Shadow Fiend (1), Shadow Shaman (1), Spirit Breaker (1), Templar Assassin (1), Underlord (1), Undying (0), Void Spirit (1)
+**Пики команды** (в скобках — победы): Techies ×4 (4), Lifestealer ×3 (3), Night Stalker ×3 (2), Snapfire ×3 (3), Spirit Breaker ×3 (2), Clockwerk ×2 (2), Dragon Knight ×2 (2), Invoker ×2 (2), Juggernaut ×2 (2), Lone Druid ×2 (2), Magnus ×2 (2), Meepo ×2 (2), Rubick ×2 (2), Silencer ×2 (1), Tidehunter ×2 (2), Witch Doctor ×2 (2), Brewmaster (1), Dark Seer (1), Dawnbreaker (1), Drow Ranger (1), Earth Spirit (1), Hoodwink (0), Kunkka (0), Lina (1), Lion (1), Ogre Magi (1), Outworld Devourer (1), Phantom Lancer (0), Phoenix (1), Razor (0), Ring Master (0), Shadow Fiend (1), Shadow Shaman (1), Sniper (0), Templar Assassin (1), Underlord (1), Undying (0), Void Spirit (1)
 
-**Баны команды**: Mirana ×6, Ember Spirit ×4, Lifestealer ×4, Phantom Lancer ×4, Dawnbreaker ×3, Drow Ranger ×3, Rubick ×3, Sand King ×3, Slark ×3, Dark Seer ×2, Dragon Knight ×2, Night Stalker ×2, Queen of Pain ×2, Spectre ×2, Sven ×2, Undying ×2, Earthshaker, Hoodwink, Juggernaut, Lina, Phoenix, Silencer, Sniper, Spirit Breaker, Terrorblade, Tidehunter, Timbersaw, Ursa, Vengeful Spirit, Windranger, Witch Doctor, Wraith King
+**Баны команды**: Mirana ×6, Dawnbreaker ×4, Dragon Knight ×4, Ember Spirit ×4, Hoodwink ×4, Lifestealer ×4, Phantom Lancer ×4, Slark ×4, Windranger ×4, Drow Ranger ×3, Rubick ×3, Sand King ×3, Undying ×3, Axe ×2, Dark Seer ×2, Luna ×2, Night Stalker ×2, Queen of Pain ×2, Spectre ×2, Sven ×2, Ursa ×2, Earthshaker, Juggernaut, Lich, Lina, Necrophos, Phoenix, Silencer, Slardar, Sniper, Spirit Breaker, Storm Spirit, Terrorblade, Tidehunter, Timbersaw, Vengeful Spirit, Viper, Witch Doctor, Wraith King
 
-**Банят против команды** (чего боятся соперники): Lone Druid ×6, Outworld Devourer ×6, Earth Spirit ×5, Invoker ×4, Techies ×4, Meepo ×3, Bounty Hunter ×2, Dawnbreaker ×2, Dragon Knight ×2, Lina ×2, Underlord ×2, Ursa ×2, Anti-Mage, Axe, Brewmaster, Dark Willow, Doom, Earthshaker, Ember Spirit, Enigma, Hoodwink, Kez, Legion Commander, Lich, Lifestealer, Magnus, Mars, Monkey King, Necrophos, Night Stalker, Pangolier, Phoenix, Snapfire, Windranger, Witch Doctor
+**Банят против команды** (чего боятся соперники): Lone Druid ×9, Outworld Devourer ×8, Invoker ×7, Techies ×6, Earth Spirit ×5, Brewmaster ×4, Meepo ×4, Dawnbreaker ×3, Lina ×3, Bounty Hunter ×2, Dragon Knight ×2, Lifestealer ×2, Night Stalker ×2, Underlord ×2, Ursa ×2, Anti-Mage, Axe, Bane, Dark Willow, Dazzle, Doom, Earthshaker, Ember Spirit, Enigma, Hoodwink, Kez, Legion Commander, Lich, Magnus, Mars, Monkey King, Necrophos, Pangolier, Phoenix, Snapfire, Spirit Breaker, Windranger, Witch Doctor
 
-**Пики соперников** (в скобках — их победы): Windranger ×4 (1), Dragon Knight ×3 (0), Dark Willow ×2 (1), Ember Spirit ×2 (1), Hoodwink ×2 (0), Lifestealer ×2 (1), Phoenix ×2 (0), Undying ×2 (0), Vengeful Spirit ×2 (0), Witch Doctor ×2 (0), Bane (0), Centaur Warrunner (0), Dark Seer (0), Dawnbreaker (1), Earthshaker (0), Jakiro (0), Leshrac (0), Lich (0), Lina (0), Lion (0), Luna (0), Nature's Prophet (0), Ogre Magi (0), Pudge (0), Silencer (0), Skywrath Mage (0), Slardar (0), Slark (0), Spirit Breaker (0), Viper (0), Wraith King (0), Zeus (0)
+**Пики соперников** (в скобках — их победы): Vengeful Spirit ×5 (1), Windranger ×4 (1), Dragon Knight ×3 (0), Lifestealer ×3 (1), Undying ×3 (1), Dark Willow ×2 (1), Ember Spirit ×2 (1), Hoodwink ×2 (0), Luna ×2 (1), Phoenix ×2 (0), Silencer ×2 (0), Slardar ×2 (0), Witch Doctor ×2 (0), Axe (1), Bane (0), Centaur Warrunner (0), Dark Seer (0), Dawnbreaker (1), Earthshaker (0), Jakiro (0), Leshrac (0), Lich (0), Lina (0), Lion (0), Magnus (0), Nature's Prophet (0), Necrophos (1), Night Stalker (0), Ogre Magi (0), Outworld Devourer (0), Phantom Assassin (0), Pudge (0), Skywrath Mage (0), Slark (0), Spirit Breaker (0), Viper (0), Winter Wyvern (0), Wraith King (0), Zeus (0)

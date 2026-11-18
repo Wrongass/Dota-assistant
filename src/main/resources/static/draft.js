@@ -22,7 +22,6 @@
   const MAPS = 3;
   let advice = null;
   let editIndex = null; // исправляемый ход (клик по ленте)
-  let pendingWarn = null; // герой, для которого показано предупреждение: второй ввод — подтверждение
   let selected = 0; // выбранная строка в списке поиска
   // После хода списки советов устарели, пока сервер не ответит, и ещё LOCK_MS: клики по ним не принимаем,
   // чтобы второй клик в то же место не внёс другого героя (список под курсором успел перестроиться)
@@ -72,32 +71,13 @@
     return free.length ? free : null;
   }
 
-  /** Предупреждение перед подозрительным ходом: наш бан героя свободного нашего игрока или наш пик не из наших пулов. */
-  function warning(i, heroId) {
-    if (i >= ORDER.length) return null;
-    const owners = freeOwners(heroId);
-    if (isOurs(i) && !slot(i).pick && owners) {
-      return { text: `${name(heroId)} — герой наших: ${owners.join(", ")}. Это НАШ бан.`, action: `Забанить ${name(heroId)}` };
-    }
-    if (isOurs(i) && slot(i).pick && !POOL[heroId]) {
-      return { text: `${name(heroId)} нет в наших пулах. Это НАШ пик?`, action: `Внести ${name(heroId)}` };
-    }
-    return null;
-  }
-
   function apply(heroId) {
     const target = editIndex ?? state.heroes.length;
     if (target >= ORDER.length) return;
     if (state.sim && !isOurs(target)) { toast("Сейчас ход соперника: его баны и пики делает сайт", false); return; }
     if (state.sim) { botLog.length = 0; botNew.clear(); }
     if (used().has(heroId) && state.heroes[target] !== heroId) return;
-    const w = warning(target, heroId);
-    if (w && pendingWarn !== heroId) {
-      pendingWarn = heroId;
-      showWarn(w);
-      return;
-    }
-    pendingWarn = null;
+    // ход вносится сразу, без подтверждения (по отзывам мешало): ошибку исправляют «Отменить» или клик по ленте
     const s = slot(target), what = `${s.pick ? "пик" : "бан"} ${name(heroId)} (ход ${target + 1}, ${isOurs(target) ? "наш" : "их"})`;
     if (editIndex !== null) {
       const old = state.heroes[editIndex];
@@ -112,21 +92,20 @@
     afterChange();
   }
   /** Предупреждение поверх списков (ничего не сдвигает) с кнопками «Забанить X» / «Отмена». */
-  let warnAction = null; // что сделать по кнопке подтверждения; null — внести героя из pendingWarn
+  let warnAction = null; // что сделать по кнопке подтверждения
   function showWarn(w, action) {
     warnAction = action || null;
     if (!w) { $("warn").hidden = true; $("warn").innerHTML = ""; return; }
     $("warn").innerHTML = `<span>${esc(w.text)}</span>
       <button type="button" class="primary" data-act="confirm">${esc(w.action)}</button>
       <button type="button" data-act="cancel">Отмена</button>
-      ${action ? "" : '<span class="muted small">или ещё раз Enter</span>'}`;
+`;
     $("warn").hidden = false;
   }
   $("warn").addEventListener("click", (e) => {
     const act = e.target.closest("button")?.dataset.act;
     if (act === "confirm" && warnAction) { const f = warnAction; showWarn(null); f(); }
-    else if (act === "confirm" && pendingWarn) apply(pendingWarn);
-    if (act === "cancel") { pendingWarn = null; showWarn(null); }
+    if (act === "cancel") showWarn(null);
     $("search").focus();
   });
   /** Короткое сообщение о внесённом ходе с кнопкой отмены. */
@@ -169,7 +148,6 @@
   function afterChange(keepRedo) {
     if (!keepRedo) redo.length = 0; // новый ход — отменённые уже не вернуть
     turnStarted = Date.now();
-    pendingWarn = null;
     showWarn(null);
     markStale();
     // ручное назначение — только для героев, которые ещё в пиках
@@ -292,7 +270,6 @@
       b.classList.toggle("match", q.trim() !== "" && found.some((h) => h.id === Number(b.dataset.id)));
     });
   }
-  // pendingWarn не сбрасываем: повторный ввод того же героя после предупреждения — тоже подтверждение
   $("search").addEventListener("input", () => { selected = 0; renderSearch(); });
   $("search").addEventListener("keydown", (e) => {
     const found = search($("search").value).slice(0, 6);
@@ -302,11 +279,9 @@
       renderSearch();
     } else if (e.key === "Enter") {
       if (found.length) apply(found[Math.min(selected, found.length - 1)].id);
-      else if (pendingWarn) apply(pendingWarn);
     } else if (e.key === "Escape") {
       $("search").value = "";
       editIndex = null;
-      pendingWarn = null;
       showWarn(null);
       renderSearch();
       renderBoard();
@@ -343,7 +318,6 @@
     if (state.sim) { toast("В симуляции старые ходы не исправляются: «Отменить ход» откатывает и ответы соперника", false); return; }
     const i = Number(b.dataset.i);
     editIndex = editIndex === i ? null : i;
-    pendingWarn = null;
     showWarn(null);
     renderBoard();
     $("search").focus();
