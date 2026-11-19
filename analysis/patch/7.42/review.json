@@ -108,7 +108,9 @@
   },
   "sign_overrides": {
     "Now the effect is removed only if the revealing enemy stays within the radius for the entire vanish buffer": 1,
-    "Vanish Radius increased from 500 to 600": -1
+    "Vanish Radius increased from 500 to 600": -1,
+    "Min Duration decreased from 5s to 1s": 1,
+    "Basic dispel at the end of the spell instead of a Strong": -1
   },
   "tier_overrides": {
     "Starting with the 2nd death, always drops Aghanim's Shard": "notable",

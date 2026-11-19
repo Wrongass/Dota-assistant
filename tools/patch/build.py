@@ -89,8 +89,9 @@ TRIVIAL = ('fragile pip', 'pip health standardization', 'on-screen effect', 'dis
            'damage spread', 'consistently spears', 'shuggoth', 'no longer immune to damage from certain types')
 LOWER_BETTER = ('cooldown', 'mana cost', 'mana сost', 'cost', 'cast point', 'delay', 'base attack time', 'penalty',
                 'restore time', 'replenish', 'health cost', 'self damage', 'formation time', 'buffer', 'windup',
-                'creep damage percentage')
-NUM = r'-?\d+(?:[.,]\d+)?'
+                'return time', 'establishing time')
+# минус — только не после цифры: «175-575» — диапазон, а не 175 и −575 (аудит 19.11: Sun Strike, Eidolon, паучки)
+NUM = r'(?<![\d.])-?\d+(?:[.,]\d+)?'
 
 
 def numbers(s):
@@ -125,7 +126,8 @@ def classify(en, info='', talent=False, hero=True):
             elif 'worsened' in t:
                 sign = -1
             else:
-                lower = any(k in t for k in LOWER_BETTER) and 'damage' not in t.split('cost')[0][-12:]
+                lower = (any(k in t for k in LOWER_BETTER) and 'damage' not in t.split('cost')[0][-12:]
+                         and 'cooldown reduction' not in t)  # «снижение перезарядки» больше — лучше
                 sign = (1 if mb > ma else -1 if mb < ma else 0) * (-1 if lower else 1)
             if re.search(r'(strength|agility|intelligence) gain', t):
                 tier = 'notable' if abs(mb - ma) >= 0.2 else 'minor'
@@ -159,7 +161,8 @@ def classify(en, info='', talent=False, hero=True):
         return 'notable', 1 if good else -1, 0.0
     if t.startswith('now ') or 'now also' in t or t.startswith('can now'):
         t2 = re.sub(r'\((melee|ranged) only\)', '', t)  # «+25 Attack Range (Melee Only)» — усиление
-        bad = any(k in t2 for k in ('dispellable', 'disabled by break', 'only', 'can no longer'))
+        bad = (any(k in t2 for k in ('dispellable', 'disabled by break', 'only', 'can no longer'))
+               or re.search(r'now has an? (internal )?[\d.]+s cooldown', t2))  # «теперь не чаще раза в 15 с»
         return ('minor' if 'break' in t else 'notable'), -1 if bad else 1, 0.0
     return 'minor', 0, 0.0
 
