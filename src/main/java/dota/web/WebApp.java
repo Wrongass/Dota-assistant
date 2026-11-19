@@ -128,6 +128,8 @@ public class WebApp {
         app.get("/api/share/{code}", this::sharedDraft);
         app.get("/method", ctx -> render(ctx, "method.jte", new Models.Method(page("Методика", "method"))));
         app.get("/forecast", this::forecast);
+        app.get("/patch", this::patchPage);
+        app.get("/api/patch", this::patchApi);
         app.post("/reload", ctx -> {
             site.reload();
             String back = ctx.header("Referer");
@@ -332,6 +334,43 @@ public class WebApp {
             }
         }
         render(http, "forecast.jte", new Models.ForecastPage(page("Прогноз плей-офф", "forecast"), intro, sections));
+    }
+
+    /** Последний разобранный патч: analysis/patch/{версия}/patch.json (собирает tools/patch/build.py), иначе null. */
+    Path latestPatch() throws IOException {
+        Path dir = site.analysisDir.resolve("patch");
+        if (!Files.isDirectory(dir)) {
+            return null;
+        }
+        try (var list = Files.list(dir)) {
+            return list.map(p -> p.resolve("patch.json")).filter(Files::isRegularFile)
+                    .max(java.util.Comparator.comparing(p -> versionKey(p.getParent().getFileName().toString())))
+                    .orElse(null);
+        }
+    }
+
+    /** «7.42b» → «00007.00042b»: версии сравниваются как числа. */
+    static String versionKey(String v) {
+        StringBuilder out = new StringBuilder();
+        for (String part : v.split("\\.")) {
+            String digits = part.replaceAll("\\D.*", ""), rest = part.substring(digits.length());
+            out.append(String.format("%05d", digits.isEmpty() ? 0 : Integer.parseInt(digits))).append(rest).append('.');
+        }
+        return out.toString();
+    }
+
+    private void patchPage(Context http) throws IOException {
+        Path file = latestPatch();
+        String version = file == null ? null : file.getParent().getFileName().toString();
+        render(http, "patch.jte", new Models.PatchPage(page(version == null ? "Патч" : "Патч " + version, "patch"), version));
+    }
+
+    private void patchApi(Context http) throws IOException {
+        Path file = latestPatch();
+        if (file == null) {
+            throw new NotFoundResponse("нет analysis/patch/*/patch.json");
+        }
+        http.header("Cache-Control", "no-cache").contentType("application/json; charset=utf-8").result(Files.readAllBytes(file));
     }
 
     private void tournament(Context http) {

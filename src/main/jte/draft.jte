@@ -152,4 +152,4 @@
             <div id="drawer-body"></div>
         </aside>
     </div>
-`, scripts = "<script src=\"/static/draft.js\"></script>")
+`, scripts = "<script src=\"/static/patchcard.js\"></script><script src=\"/static/draft.js\"></script>")

@@ -2,6 +2,7 @@ package dota.fetch;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.time.Duration;
 import java.time.LocalDate;
 
@@ -164,10 +165,19 @@ public class Main {
         }
         try {
             long maxId = MetaEndpoints.parseMaxMatchId(client.get(MetaEndpoints.maxMatchIdUrl()));
-            long minParsedId = MetaEndpoints.parseMinMatchId(
-                    client.get(MetaEndpoints.minParsedMatchIdUrl(patch.start().getEpochSecond())));
             var sample = new MetaEndpoints.Sample(maxId, window, minRank, patch.start().getEpochSecond());
-            for (Endpoints.Target t : MetaEndpoints.explorerTargets(dir, sample, minParsedId)) {
+            List<Endpoints.Target> targets = new java.util.ArrayList<>();
+            try {
+                long minParsedId = MetaEndpoints.parseMinMatchId(
+                        client.get(MetaEndpoints.minParsedMatchIdUrl(patch.start().getEpochSecond())));
+                targets.addAll(MetaEndpoints.explorerTargets(dir, sample, minParsedId));
+            } catch (IOException e) {
+                // первые сутки нового патча разобранных матчей ещё нет: позиции героев не качаем, анализ возьмёт их из
+                // прошлого патча (Meta.load), остальные выборки по public_matches качаем
+                Log.info("no parsed matches of patch %s yet: hero_positions skipped", patch.name());
+                targets.addAll(MetaEndpoints.explorerTargets(dir, sample, Long.MAX_VALUE).subList(0, 3));
+            }
+            for (Endpoints.Target t : targets) {
                 fetcher.fetch(t);
             }
             MetaEndpoints.writeInfo(dir, patch, sample);

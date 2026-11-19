@@ -39,6 +39,7 @@
         <a href="/tournament" class="${page.active().equals("tournament") ? "active" : null}">Турнир</a>
         <a href="/group" class="${page.active().equals("group") ? "active" : null}">Группа</a>
         <a href="/forecast" class="${page.active().equals("forecast") ? "active" : null}" title="Шансы команд и вероятная сетка плей-офф">Прогноз</a>
+        <a href="/patch" class="${page.active().equals("patch") ? "active" : null}" title="Что изменилось в новом патче: наши герои, соперник, предметы">Патч</a>
         <details>
             <summary class="${page.active().equals("opponents") ? "active" : null}">Соперники ▾</summary>
             <div class="dropdown">

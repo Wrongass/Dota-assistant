@@ -202,6 +202,8 @@ final class Site {
             warnings.add("Переигровок в лиге отброшено: " + group.remakes());
         }
         warnings.addAll(c.leagueWarnings());
+        c.metaFallbacks().forEach((file, patch) -> warnings.add("Мета: " + file + " взят из патча " + patch
+                + " — в новом патче этих данных ещё нет (позиции героев считаются по разобранным матчам, их пока мало)"));
         List<Squad> squads = new ArrayList<>(c.opponents);
         squads.add(0, c.ours);
         for (Squad s : squads) {
