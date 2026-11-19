@@ -834,8 +834,29 @@ public class WebApp {
         Site.Status s = site.status();
         List<Models.Link> opponents = c.opponents.stream()
                 .map(o -> new Models.Link("/opponent/" + o.slug(), o.team().name())).toList();
-        return new Models.Page(title, active, auth.enabled(), c.ours.teamName(), s.patch(), s.playersFetched(), s.metaFetched(),
-                s.warnings(), opponents);
+        // Разбор нового патча (analysis/patch, приходит с кодом) может опережать мету в data/: тогда в шапке оба номера,
+        // иначе на странице 7.42 в шапке стоит «Патч 7.41» (аудит 19.11)
+        String patch = s.patch();
+        List<String> warnings = s.warnings();
+        String fresh = patchVersion();
+        if (fresh != null && versionKey(fresh).compareTo(versionKey(patch)) > 0) {
+            patch = fresh + " · мета " + s.patch();
+            warnings = new java.util.ArrayList<>(warnings);
+            warnings.add("Вышел патч " + fresh + ", а мета сайта (винрейты героев, синергии, контрпики) ещё по " + s.patch()
+                    + ": перекачайте мету");
+        }
+        return new Models.Page(title, active, auth.enabled(), c.ours.teamName(), patch, s.playersFetched(), s.metaFetched(),
+                warnings, opponents);
+    }
+
+    /** Версия последнего разобранного патча или null. */
+    String patchVersion() {
+        try {
+            Path file = latestPatch();
+            return file == null ? null : file.getParent().getFileName().toString();
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     private String markdown(Path file) {

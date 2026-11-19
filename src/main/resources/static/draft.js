@@ -1010,6 +1010,9 @@
     Patch.load().then((d) => {
       if (!d) return;
       document.querySelectorAll("#grid .hero-tile").forEach((b) => b.insertAdjacentHTML("beforeend", Patch.markHtml(Number(b.dataset.id))));
+      // аудит 19.11: значки не заметили — подпись рядом с сеткой
+      const hint = $("patch-hint");
+      if (hint) hint.textContent = `· значок ▲ ▼ ◆ • в углу — что изменил патч ${d.version}: клик по значку открывает изменения, ход не вносится`;
       renderSearch();
     });
   }

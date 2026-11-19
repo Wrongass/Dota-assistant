@@ -117,6 +117,29 @@ try:
         const shown = [...document.querySelectorAll('#all-list .hero-row')].filter(r => !r.hidden).map(r => r.querySelector('.hr-name').textContent);
         i.value = ''; i.dispatchEvent(new Event('input')); return shown; })()""")
     check("поиск героя в «Все герои» по сленгу («лина»)", any("Lina" in x for x in f), f)
+    # аудит 19.11: пустой результат объясняется и сбрасывается одной кнопкой
+    e = js("""(() => { const i = document.getElementById('hero-filter'); i.value = 'Outworld'; i.dispatchEvent(new Event('input'));
+        document.querySelector('[data-verdict] .chip[data-v="up"]').click();
+        const r = {empty: !document.getElementById('all-empty').hidden, text: document.getElementById('all-empty').innerText,
+                   count: document.getElementById('all-count').textContent};
+        document.getElementById('all-reset').click();
+        r.after = [...document.querySelectorAll('#all-list .hero-row')].filter(x => !x.hidden).length;
+        r.total = document.querySelectorAll('#all-list .hero-row').length;
+        r.emptyAfter = !document.getElementById('all-empty').hidden; r.q = i.value; return r; })()""")
+    check("пустой результат: сообщение с запросом и фильтром", e["empty"] and "Outworld" in e["text"] and "сильнее" in e["text"] and "Показано 0" in e["count"], e)
+    check("кнопка сброса возвращает всех героев", e["after"] == e["total"] and not e["emptyAfter"] and e["q"] == "", e)
+    t = js("""(() => { const m = document.getElementById('mechanics'); m.open = true;
+        return {info: [...m.querySelectorAll('.pn-info')].map(x => x.textContent).filter(x => /золото/i.test(x) && /Shard/.test(x)).length,
+                status: document.querySelector('.topline .status').innerText, h1: document.querySelector('h1').textContent,
+                page: document.body.innerText}; })()""")
+    check("Терзатель: условие «золото вместо Shard» видно текстом", t["info"] >= 1, t["info"])
+    ver = st["h1"].replace("Патч", "").strip()
+    check("версия в шапке совпадает с заголовком", ("Патч " + ver) in t["status"], (st["h1"], t["status"][:40]))
+    check("на странице нет команд сборки и внутренних файлов", not any(x in t["page"] for x in ("gradlew", "build.py", "review.json", "data/meta")), "")
+    mt = js("""(() => { const m = document.getElementById('method'); m.open = true; return m.innerText; })()""")
+    check("«Как считалось»: окна выборок, формула z, оговорка про причину", "avg_rank_tier" in mt and "√" in mt and "Выгружено" in mt and "не случайный разброс" in mt, mt[:80])
+    sf = js("""(() => Patch.verdict(Patch.byId.get(11)).label)()""")
+    check("Shadow Fiend: ручной вердикт «сильнее» (строки спорили со статистикой)", sf == "сильнее", sf)
     call("Page.navigate", url="http://127.0.0.1:8070/patch#hero-76")
     time.sleep(3)
     od = js("""(() => { const r = document.getElementById('hero-76'); return r ? {open: r.open, text: r.innerText.slice(0, 60)} : null; })()""")
@@ -149,7 +172,7 @@ try:
         return new Promise(res => setTimeout(() => res({pop: !document.getElementById('patch-pop').hidden,
           text: document.getElementById('patch-pop').innerText.slice(0, 80),
           ribbon: [...document.querySelectorAll('#ribbon .slot .who')].length}), 1200)); })()""")
-    check("клик по значку открывает изменения героя и не вносит ход", r["pop"] and "Outworld" in r["text"] or "OD" in r["text"] or "Destroyer" in r["text"], r)
+    check("клик по значку открывает изменения героя и не вносит ход", r["pop"] and ("Outworld" in r["text"] or "OD" in r["text"] or "Destroyer" in r["text"]), r)
     check("ход не внесён", r["ribbon"] == 0, r["ribbon"])
     shot = call("Page.captureScreenshot", captureBeyondViewport=False)
     open(os.path.join(SCRATCH, "cdp_patch_draft.png"), "wb").write(base64.b64decode(shot["data"]))
@@ -159,6 +182,19 @@ try:
     js("document.querySelector('#grid .hero-tile[data-id=\"76\"]').click()")
     time.sleep(1)
     check("клик по самой плитке по-прежнему вносит ход", js("[...document.querySelectorAll('#ribbon .slot .who')].length") == 1)
+    hint = js("document.getElementById('patch-hint').textContent")
+    check("в драфте подпись, что значок открывает изменения без хода", "ход не вносится" in hint, hint)
+    k = js("""(() => { localStorage.clear(); return true; })()""")
+    call("Page.reload")
+    time.sleep(3)
+    k = js("""(() => { const s = document.getElementById('search'); s.value = 'od'; s.dispatchEvent(new Event('input'));
+        return new Promise(res => setTimeout(() => { const m = document.querySelector('#suggest .patch-mark');
+          if (!m) return res({mark: false}); m.focus();
+          const before = [...document.querySelectorAll('#ribbon .slot .who')].length;
+          m.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true}));
+          setTimeout(() => res({mark: true, pop: !document.getElementById('patch-pop').hidden,
+            before, ribbon: [...document.querySelectorAll('#ribbon .slot .who')].length}), 1000); }, 500)); })()""")
+    check("значок в подсказке поиска: Enter открывает карточку, ход не вносится", k.get("mark") and k.get("pop") and k.get("ribbon") == k.get("before"), k)
     js("localStorage.clear()")
     print(f"{sum(ok for _, ok, _ in results)}/{len(results)} проверок прошли")
 finally:

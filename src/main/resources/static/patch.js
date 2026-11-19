@@ -130,13 +130,19 @@
   function render(d) {
     const r = d.review || {};
     const s = d.stats || {};
+    const cur = s.sample || {}, prev = s.sample_prev || {};
+    const ago = cur.patch_start && cur.fetched_at ? (Date.parse(cur.fetched_at) - Date.parse(cur.patch_start)) / 3600e3 : null;
+    // первые три дня патча: винрейты ещё плавают, вердикты по статистике — гипотезы
+    const early = ago != null && ago < 72 ? `статистика ${esc(d.version)} за первые ${ago < 24 ? Math.max(1, Math.round(ago)) + " ч" : Math.round(ago / 24) + " дн."} патча. Стрелки по ней — гипотезы, а не пик-лист.` : "";
+    const when = (iso) => (iso ? new Date(iso).toLocaleString("ru", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit", timeZone: "UTC" }) + " UTC" : "—");
     const header = `<div class="panel patch-head">
       <p>${r.headline ? esc(r.headline) : ""}</p>
       <p class="small muted">Опубликован ${esc(d.released)}. Источник — <a href="${esc(d.source)}" target="_blank" rel="noopener">официальный список изменений</a> (фид dota2.com).
         Разбор от ${esc(r.checked || d.built)}. Статистика: ${s.matches ? `${s.matches.toLocaleString("ru")} матчей ${esc(d.version)}` : "нет"} против ${s.matches_prev ? s.matches_prev.toLocaleString("ru") : "—"} в ${esc(d.previous || "")}, ранг Legend и выше (OpenDota).</p>
       ${r.stats_note ? `<p class="small">${esc(r.stats_note)}</p>` : ""}
-      ${r.recheck ? `<p class="small recheck"><b>Перепроверка:</b> ${esc(r.recheck)}</p>` : ""}
-      <p class="small legend">${Patch.chip({ review: { verdict: "up" } })} ${Patch.chip({ review: { verdict: "down" } })} ${Patch.chip({ review: { verdict: "rework" } })} ${Patch.chip({ review: { verdict: "same" } })}
+      ${early ? `<p class="small recheck"><b>Предварительная выборка:</b> ${esc(early)}</p>` : ""}
+      ${r.recheck ? `<p class="small recheck"><b>Обновление:</b> ${esc(r.recheck)}</p>` : ""}
+      <p class="small legend">${Patch.chip({ review: { verdict: "up" } })} ${Patch.chip({ review: { verdict: "down" } })} ${Patch.chip({ review: { verdict: "rework" } })} ${Patch.chip({ review: { verdict: "same" } })} ${Patch.chip({ review: { verdict: "mixed" } })}
         · строки: <span class="sgn up">▲</span> усиление, <span class="sgn down">▼</span> ослабление, <span class="sgn">◆</span> нейтрально, <span class="tier-tag key">критично</span> — сильно влияет на игру. Мелочи свёрнуты, косметика скрыта.</p>
       <nav class="patch-nav small">${[["main", "Главное"], ["questions", "Вопросы"], ["ours", "Наши герои"], ["theirs", "Соперник"], ["movers", "Сильнее / слабее"], ["items", "Предметы"], ["neutral", "Нейтралки"], ["mechanics", "Механики и карта"], ["all", "Все герои"], ["method", "Как считалось"]]
         .map(([id, t]) => `<a href="#${id}" data-sec="${id}">${t}</a>`).join("")}</nav></div>`;
@@ -152,15 +158,29 @@
 
     const all = `<input type="search" id="hero-filter" placeholder="Найти героя: имя по-русски или по-английски" autocomplete="off">
       <div class="chips" data-verdict><button type="button" class="chip on" data-v="">все</button><button type="button" class="chip" data-v="up">▲ сильнее</button><button type="button" class="chip" data-v="down">▼ слабее</button><button type="button" class="chip" data-v="rework">◆ переделаны</button></div>
-      <div class="hero-list" id="all-list">${d.heroes.map((h) => heroRow(h, "all")).join("")}</div>`;
+      <div class="small muted" id="all-count"></div>
+      <div class="hero-list" id="all-list">${d.heroes.map((h) => heroRow(h, "all")).join("")}</div>
+      <div class="empty-state" id="all-empty" hidden>Ничего не нашлось <span id="all-empty-why"></span>. <button type="button" class="chip" id="all-reset">Сбросить поиск и фильтр</button></div>`;
 
-    const method = `<ul>
-      <li>Изменения — из официального фида dota2.com (структура «герой → способность → строка», русский текст Valve; часть строк Valve не перевела).</li>
-      <li>Важность строки считается по тексту: переработки и новые способности — критично; изменения на 12% и больше — заметно; меньше — мелочь; базовый урон ±1–5, визуальные правки — косметика. Строки с пометкой «снижение силы заклинаний» не бывают критичными: это общая правка для всех. Для части строк важность поправлена вручную.</li>
-      <li>Направление (усиление или ослабление) — по словам «увеличен/уменьшен» и по тому, что для этого параметра лучше: для перезарядки и стоимости меньше — лучше.</li>
-      <li>Вердикт героя — ручной для наших героев, героев соперника и самых заметных по статистике; для остальных автоматический (сумма строк и статистика), он помечен «авто».</li>
-      <li>Статистика — винрейт в одинаковых выборках OpenDota: последние ~1 млн матчей, средний ранг Legend и выше. «Уверенно» — изменение больше 4 стандартных ошибок, «похоже» — больше 2, иначе шум.</li>
-      </ul>${r.recheck_list?.length ? `<h3>Что перепроверить</h3><ul>${r.recheck_list.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}`;
+    const sample = (x, n) => x.patch ? `<li><b>${esc(x.patch)}</b>: ${n ? n.toLocaleString("ru") : "—"} публичных матчей OpenDota со средним рангом Legend и выше
+        (avg_rank_tier ≥ ${esc(x.min_avg_rank_tier ?? 50)}), из последнего окна в ${(x.match_id_window || 0).toLocaleString("ru")} match_id перед выгрузкой
+        и только после начала патча (${when(x.patch_start)}). Выгружено ${when(x.fetched_at)}.</li>` : "";
+    const method = `<h3>Что входит</h3><ul>
+      <li>Изменения — из официального фида dota2.com (структура «герой → способность → строка», русский текст Valve; часть строк Valve не перевела).
+        Здесь только игровой баланс: герои, предметы, нейтралки, механики, карта. Горячие клавиши, интерфейс и исправления ошибок не разбираются, их смотрите <a href="${esc(d.source)}" target="_blank" rel="noopener">в официальном списке</a>.</li>
+      <li>Важность строки считается по тексту: переработки и новые способности — критично; изменения на 40% и больше — тоже критично; от 12% — заметно; от 3% — мелочь (свёрнута); меньше 3%, базовый урон ±1–5 и визуальные правки — косметика (скрыта, только счётчик). Строки с пометкой «снижение силы заклинаний» не бывают критичными: это общая правка для всех. Для части строк важность поправлена вручную.</li>
+      <li>Направление (усиление или ослабление) — по словам «увеличен/уменьшен» и по тому, что для этого параметра лучше: для перезарядки и стоимости меньше — лучше.</li></ul>
+      <h3>Вердикт героя</h3><ul>
+      <li>Ручной — для наших героев, героев соперника и самых заметных по статистике: изменения героя, общие механики и предметы вместе.</li>
+      <li>Автоматический (помечен «авто») — сумма строк: критично ±3, заметно ±2, мелочь ±1. Сумма ≥ 4 — сильнее, ≤ −4 — слабее, иначе без больших изменений.
+        Если по строкам изменений мало, а статистика уверенно сдвинулась (|z| ≥ 4), берётся знак статистики. Если строки и уверенная статистика спорят — «по-разному».</li></ul>
+      <h3>Статистика</h3><ul>
+      ${sample(cur, s.matches)}${sample(prev, s.matches_prev)}
+      <li>Винрейт героя — его победы / его игры в этой выборке. Сдвиг — разница винрейтов ${esc(d.version)} и ${esc(d.previous || "")}.
+        z — сдвиг, делённый на стандартную ошибку разницы: √(p₁(1−p₁)/n₁ + p₀(1−p₀)/n₀). «Уверенно» — |z| ≥ 4, «похоже» — |z| ≥ 2, иначе шум.
+        Число игр обеих выборок видно в подсказке у винрейта.</li>
+      <li>«Уверенно» значит только, что сдвиг не случайный разброс. Причиной может быть не патч, а то, что игроки ещё пробуют героя и новые предметы. Пабы Legend+ — не турнир: для драфта это повод проверить героя, а не готовый пик.</li></ul>
+      ${r.recheck_list?.length ? `<h3>Что проверим при обновлении</h3><ul>${r.recheck_list.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}`;
 
     root.innerHTML = header
       + section("main", "Главное в патче", main, true)
@@ -187,7 +207,18 @@
         const match = !q || row.dataset.name.includes(q) || (hits && hits.has(id));
         row.hidden = !match || (v && Patch.verdict(Patch.byId.get(id)).cls !== v);
       });
+      const shown = root.querySelectorAll("#all-list .hero-row:not([hidden])").length;
+      document.getElementById("all-count").textContent = q || v ? `Показано ${shown} из ${d.heroes.length}` : "";
+      document.getElementById("all-empty").hidden = shown > 0;
+      const vLabel = document.querySelector("[data-verdict] .chip.on")?.textContent.trim();
+      document.getElementById("all-empty-why").textContent = [q && `по запросу «${filter.value.trim()}»`, v && `с фильтром «${vLabel}»`].filter(Boolean).join(" ");
     };
+    document.getElementById("all-reset").addEventListener("click", () => {
+      filter.value = "";
+      root.querySelectorAll("[data-verdict] .chip").forEach((x) => x.classList.toggle("on", !x.dataset.v));
+      applyFilter();
+      filter.focus();
+    });
     filter.addEventListener("input", applyFilter);
     root.querySelector("[data-verdict]").addEventListener("click", (e) => {
       const b = e.target.closest(".chip");
