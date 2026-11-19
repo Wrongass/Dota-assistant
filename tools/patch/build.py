@@ -30,6 +30,13 @@ DATA = os.path.join(ROOT, 'data')
 FEED = 'https://www.dota2.com/datafeed/'
 CDN = 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/'
 TIER_WEIGHT = {'key': 3, 'notable': 2, 'minor': 1, 'trivial': 0}
+# «больше не …»: что из этого усиление, а что просто смена правила без направления
+NO_LONGER_GOOD = ('penalty', 'costs', 'reduced proc', 'cause the ability to go on cooldown', 'take damage when',
+                  'applies ethereal')
+NO_LONGER_NEUTRAL = ('requires a', 'separate values', 'separate health threshold', 'component of previously',
+                     'scaling effect based on health', 'collision radius', 'options for a tier', 'leashes that',
+                     'abilities that pierce', 'buildings no longer', 'gold bounty no longer', 'passive gold',
+                     'number of melee creeps', 'siege creeps', 'first pip', 'upgraded with aghanim')
 
 
 # ---------------------------------------------------------------- загрузка
@@ -144,10 +151,15 @@ def classify(en, info='', talent=False, hero=True):
     if talent:
         return 'minor', 0, 0.0
     if t.startswith('no longer') or ' no longer ' in t:
-        good = any(k in t for k in ('penalty', 'costs', 'reduced proc', 'cooldown'))
+        # «больше не»: обычно ослабление. Исключения проверены построчно по 7.42 (аудит 19.11): «больше не сбрасывает /
+        # не возвращает перезарядку» — ослабление, а не усиление, как считалось раньше по слову cooldown
+        if any(k in t for k in NO_LONGER_NEUTRAL):
+            return 'notable', 0, 0.0
+        good = any(k in t for k in NO_LONGER_GOOD)
         return 'notable', 1 if good else -1, 0.0
     if t.startswith('now ') or 'now also' in t or t.startswith('can now'):
-        bad = any(k in t for k in ('dispellable', 'disabled by break', 'only', 'can no longer'))
+        t2 = re.sub(r'\((melee|ranged) only\)', '', t)  # «+25 Attack Range (Melee Only)» — усиление
+        bad = any(k in t2 for k in ('dispellable', 'disabled by break', 'only', 'can no longer'))
         return ('minor' if 'break' in t else 'notable'), -1 if bad else 1, 0.0
     return 'minor', 0, 0.0
 
@@ -214,6 +226,7 @@ def build(version):
     od_names = {int(k): v['localized_name'] for k, v in (load(os.path.join(DATA, 'raw', 'constants', 'heroes.json'), {}) or {}).items()}
     review = load(os.path.join(ROOT, 'analysis', 'patch', version, 'review.json'), {}) or {}
     overrides = review.get('tier_overrides', {})  # {"текст-фрагмент EN": "tier"}
+    sign_overrides = review.get('sign_overrides', {})  # {"текст-фрагмент EN": 1 | -1 | 0}
 
     def note(n_en, n_ru, talent=False, hero=True, icon=None):
         text_en, text_ru = clean(n_en['note']), clean(n_ru['note'])
@@ -225,6 +238,9 @@ def build(version):
         for frag, t in overrides.items():
             if frag.lower() in text_en.lower():
                 tier = t
+        for frag, sg in sign_overrides.items():  # направление, которое разбор по словам понял неверно
+            if frag.lower() in text_en.lower():
+                sign = sg
         out = dict(ru=text_ru if re.search('[а-яА-Я]', text_ru) else text_en, tier=tier, sign=sign,
                    indent=n_en.get('indent_level', 1))
         out['_en'] = text_en  # для разбора, в файл не пишется
@@ -348,7 +364,7 @@ def build(version):
         built=datetime.datetime.now().strftime('%Y-%m-%d %H:%M'), source='https://www.dota2.com/patches/' + version,
         stats=dict(matches=n_new, matches_prev=n_old, sample=load(os.path.join(DATA, 'meta', version, '_sample.json'), {}),
                    sample_prev=load(os.path.join(DATA, 'meta', prev, '_sample.json'), {}) if prev else {}),
-        opponent=opp, review=dict((k, v) for k, v in review.items() if k not in ('heroes', 'items', 'tier_overrides')),
+        opponent=opp, review=dict((k, v) for k, v in review.items() if k not in ('heroes', 'items', 'tier_overrides', 'sign_overrides')),
         general=general, items=item_list(en['items'], ru['items']),
         neutral=item_list(en['neutral_items'], ru['neutral_items'], neutral=True),
         creeps=[dict(name=c_ru.get('localized_name') or c_en.get('localized_name'),

@@ -138,6 +138,9 @@ try:
     check("на странице нет команд сборки и внутренних файлов", not any(x in t["page"] for x in ("gradlew", "build.py", "review.json", "data/meta")), "")
     mt = js("""(() => { const m = document.getElementById('method'); m.open = true; return m.innerText; })()""")
     check("«Как считалось»: окна выборок, формула z, оговорка про причину", "avg_rank_tier" in mt and "√" in mt and "Выгружено" in mt and "не случайный разброс" in mt, mt[:80])
+    pa = js("""(() => { const h = Patch.byId.get(44); const b = h.blocks.find(x => x.ability && x.ability.en === 'Blur');
+        return b.notes.filter(n => /vanish buffer|Vanish Radius/.test(n.ru)).map(n => n.sign); })()""")
+    check("PA Blur: «эффект снимается, только если враг рядом всё время» — ▲, радиус раскрытия больше — ▼ (аудит 19.11)", pa == [1, -1], pa)
     sf = js("""(() => Patch.verdict(Patch.byId.get(11)).label)()""")
     check("Shadow Fiend: ручной вердикт «сильнее» (строки спорили со статистикой)", sf == "сильнее", sf)
     call("Page.navigate", url="http://127.0.0.1:8070/patch#hero-76")
@@ -182,6 +185,18 @@ try:
     js("document.querySelector('#grid .hero-tile[data-id=\"76\"]').click()")
     time.sleep(1)
     check("клик по самой плитке по-прежнему вносит ход", js("[...document.querySelectorAll('#ribbon .slot .who')].length") == 1)
+    # аудит 19.11: на телефоне драфт не шире экрана (раньше прогноз по позициям раздвигал страницу до 427 px)
+    call("Network.setCacheDisabled", cacheDisabled=True)
+    widths = {}
+    for wpx in (360, 390, 430):
+        call("Emulation.setDeviceMetricsOverride", width=wpx, height=800, deviceScaleFactor=1, mobile=True)
+        call("Page.navigate", url="http://127.0.0.1:8070/draft?opponent=Team_Future")
+        time.sleep(3)
+        widths[wpx] = js("document.documentElement.scrollWidth")
+    call("Emulation.clearDeviceMetricsOverride")
+    check("драфт на 360/390/430 px не шире экрана", all(v <= k for k, v in widths.items()), widths)
+    call("Page.navigate", url="http://127.0.0.1:8070/draft")
+    time.sleep(3)
     hint = js("document.getElementById('patch-hint').textContent")
     check("в драфте подпись, что значок открывает изменения без хода", "ход не вносится" in hint, hint)
     k = js("""(() => { localStorage.clear(); return true; })()""")
