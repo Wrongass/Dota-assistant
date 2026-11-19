@@ -138,6 +138,23 @@ try:
     check("на странице нет команд сборки и внутренних файлов", not any(x in t["page"] for x in ("gradlew", "build.py", "review.json", "data/meta")), "")
     mt = js("""(() => { const m = document.getElementById('method'); m.open = true; return m.innerText; })()""")
     check("«Как считалось»: окна выборок, формула z, оговорка про причину", "avg_rank_tier" in mt and "√" in mt and "Выгружено" in mt and "не случайный разброс" in mt, mt[:80])
+    pa = js("""(() => { const h = Patch.byId.get(44); const b = h.blocks.find(x => x.ability && x.ability.en === 'Blur');
+        return b.notes.filter(n => /vanish buffer|Vanish Radius/.test(n.ru)).map(n => n.sign); })()""")
+    check("PA Blur: «эффект снимается, только если враг рядом всё время» — ▲, радиус раскрытия больше — ▼ (аудит 19.11)", pa == [1, -1], pa)
+    # аудит 19.11, полный проход 127 карточек: 15 неверных стрелок + Blur. Фрагмент строки → ожидаемое направление
+    AUDIT = [("Bane", "Aghanim's Shard усилено с 3 до 4", 1), ("Bane", "Aghanim's Scepter ослаблено с 40 до 35", -1),
+             ("Batrider", "Урон крипам увеличен с 20% до 25%", 1), ("Brewmaster", "не чаще, чем раз в 15", -1),
+             ("Broodmother", "Базовый урон паучков увеличен", 1), ("Death Prophet", "0.75% ability cooldown reduction", -1),
+             ("Dazzle", "Min Duration decreased from 5s to 1s", 1), ("Dazzle", "Soul Return Time decreased", 1),
+             ("Enigma", "Eidolon damage decreased", -1), ("Invoker", "Damage decreased from 175-575", -1),
+             ("Juggernaut", "Basic dispel at the end", -1), ("Pudge", "no longer refunds 50% of cooldown", -1),
+             ("Pugna", "no longer take damage when the target ally", 1), ("Undying", "Перезарядку теперь нельзя уменьшить", -1),
+             ("Weaver", "Thread establishing time decreased", 1), ("Phantom Assassin", "entire vanish buffer", 1)]
+    got = js("""((list) => list.map(([hero, frag, want]) => { const h = [...Patch.byId.values()].find(x => x.en === hero);
+        const n = h && h.blocks.flatMap(b => b.notes).find(x => x.ru.includes(frag));
+        return [hero, frag, want, n ? n.sign : null]; }))(%s)""" % json.dumps(AUDIT, ensure_ascii=False))
+    bad = [g for g in got if g[2] != g[3]]
+    check("стрелки 16 строк из аудита совпадают с Valve", not bad, bad)
     sf = js("""(() => Patch.verdict(Patch.byId.get(11)).label)()""")
     check("Shadow Fiend: ручной вердикт «сильнее» (строки спорили со статистикой)", sf == "сильнее", sf)
     call("Page.navigate", url="http://127.0.0.1:8070/patch#hero-76")
@@ -182,6 +199,18 @@ try:
     js("document.querySelector('#grid .hero-tile[data-id=\"76\"]').click()")
     time.sleep(1)
     check("клик по самой плитке по-прежнему вносит ход", js("[...document.querySelectorAll('#ribbon .slot .who')].length") == 1)
+    # аудит 19.11: на телефоне драфт не шире экрана (раньше прогноз по позициям раздвигал страницу до 427 px)
+    call("Network.setCacheDisabled", cacheDisabled=True)
+    widths = {}
+    for wpx in (360, 390, 430):
+        call("Emulation.setDeviceMetricsOverride", width=wpx, height=800, deviceScaleFactor=1, mobile=True)
+        call("Page.navigate", url="http://127.0.0.1:8070/draft?opponent=Team_Future")
+        time.sleep(3)
+        widths[wpx] = js("document.documentElement.scrollWidth")
+    call("Emulation.clearDeviceMetricsOverride")
+    check("драфт на 360/390/430 px не шире экрана", all(v <= k for k, v in widths.items()), widths)
+    call("Page.navigate", url="http://127.0.0.1:8070/draft")
+    time.sleep(3)
     hint = js("document.getElementById('patch-hint').textContent")
     check("в драфте подпись, что значок открывает изменения без хода", "ход не вносится" in hint, hint)
     k = js("""(() => { localStorage.clear(); return true; })()""")
