@@ -137,7 +137,7 @@
         </div>
 
         <details class="panel" id="grid-box" open>
-            <summary><b>Все герои</b> <span class="muted small">клик по герою — внести в текущий ход</span></summary>
+            <summary><b>Все герои</b> <span class="muted small">клик по герою — внести в текущий ход</span> <span class="muted small" id="patch-hint"></span></summary>
             <div id="grid" class="hero-grid"></div>
         </details>
         <p class="muted small">Порядок ходов Captains Mode — как в 39 матчах нашей лиги. Прогноз — статистика по data/

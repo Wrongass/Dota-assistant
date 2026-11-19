@@ -559,3 +559,9 @@ table.movers td { white-space: nowrap; }
   table.movers td:nth-child(5), table.movers th:nth-child(5) { display: none; }
   .question { flex-direction: column; }
 }
+/* аудит 19.11: пояснение Valve текстом, пустой результат поиска, подсказка про значки патча в драфте */
+.pn-info { color: var(--muted); font-size: 0.92em; }
+.empty-state { padding: 14px; border: 1px dashed var(--line); border-radius: 8px; color: var(--muted); }
+.empty-state .chip { margin-left: 6px; }
+#suggest .patch-mark { padding: 2px 6px; }
+.patch-mark:focus-visible { outline: 2px solid currentColor; }

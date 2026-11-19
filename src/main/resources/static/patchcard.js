@@ -26,7 +26,7 @@ window.Patch = (() => {
     down: { cls: "down", mark: "▼", label: "слабее" },
     same: { cls: "same", mark: "•", label: "без больших изменений" },
     rework: { cls: "rework", mark: "◆", label: "переделан" },
-    mixed: { cls: "same", mark: "•", label: "по-разному" },
+    mixed: { cls: "same", mark: "±", label: "по-разному" },
   };
 
   /** Вердикт героя: ручной из review.json, иначе по сумме строк патча и статистике (помечается «авто»). */
@@ -35,7 +35,9 @@ window.Patch = (() => {
     const z = h.stats?.z ?? 0, s = h.score;
     let v = h.rework ? "rework" : s >= 4 ? "up" : s <= -4 ? "down" : "same";
     if (v === "same" && Math.abs(z) >= 4) v = z > 0 ? "up" : "down";
-    return { ...VERDICT[v], manual: false, strength: Math.abs(s) >= 8 || Math.abs(z) >= 6 ? 2 : 1 };
+    // строки патча и уверенная статистика тянут в разные стороны: честнее «по-разному», чем знак по одной из них
+    else if ((v === "up" && z <= -4) || (v === "down" && z >= 4)) v = "mixed";
+    return { ...VERDICT[v], manual: false, strength: v !== "mixed" && (Math.abs(s) >= 8 || Math.abs(z) >= 6) ? 2 : 1 };
   }
 
   function statsLine(h) {
@@ -44,14 +46,16 @@ window.Patch = (() => {
     if (s.wr_prev == null) return `винрейт ${pct(s.wr)} <span class="muted">(${s.games} игр)</span>`;
     const cls = s.delta >= 0.02 ? "up" : s.delta <= -0.02 ? "down" : "";
     const sure = Math.abs(s.z) >= 4 ? "уверенно" : Math.abs(s.z) >= 2 ? "похоже" : "шум";
+    const prev = data?.previous || "прошлый патч", cur = data?.version || "патч";
     return `винрейт ${pct(s.wr_prev)} → <b>${pct(s.wr)}</b> <span class="delta ${cls}">${pp(s.delta)}</span>
-      <span class="muted" title="z = ${s.z}: насколько изменение больше случайного разброса">(${s.games} игр, ${sure})</span>`;
+      <span class="muted" title="${esc(`${prev}: ${s.games_prev} игр, ${cur}: ${s.games} игр. z = ${s.z}: изменение винрейта, делённое на его стандартную ошибку. «Уверенно» — |z| ≥ 4, «похоже» — |z| ≥ 2, иначе шум. Это про случайный разброс, а не про причину: часть сдвига может давать то, что игроки ещё пробуют героя.`)}">(${s.games} игр против ${s.games_prev}, ${sure})</span>`;
   }
 
   const ARROW = { 1: '<span class="sgn up" title="сильнее">▲</span>', "-1": '<span class="sgn down" title="слабее">▼</span>', 0: '<span class="sgn" title="нейтрально или неясно">◆</span>' };
 
   function noteHtml(n) {
-    const info = n.info ? ` <span class="info" title="${esc(n.info)}">ⓘ</span>` : "";
+    // пояснение Valve показываем текстом: в подсказке под ⓘ его не видно (так пропустили «золото вместо Shard» у Терзателя)
+    const info = n.info ? ` <span class="pn-info">(${esc(n.info)})</span>` : "";
     const agh = n.aghanims ? `<span class="agh" title="Aghanim's ${n.aghanims === "shard" ? "Shard" : "Scepter"}">${n.aghanims === "shard" ? "◇" : "⬢"}</span> ` : "";
     return `<li class="pn tier-${n.tier} ind-${Math.min(n.indent || 1, 3)}">${ARROW[n.sign] || ARROW[0]} ${agh}${esc(n.ru)}${info}
       ${n.tier === "key" ? '<span class="tier-tag key">критично</span>' : ""}</li>`;
@@ -93,7 +97,7 @@ window.Patch = (() => {
       <div><div class="pc-name">${esc(h.name)} ${chip(h)}</div><div class="small">${statsLine(h)}</div>
       <div class="small">${owners(h.ours, "у нас", "ours")} ${owners(h.opponent, data?.opponent || "соперник", "theirs")}</div></div></div>`;
     const comment = h.review?.comment ? `<div class="pc-comment"><b>Оценка:</b> ${esc(h.review.comment)}</div>`
-      : `<div class="pc-comment muted small">Автоматическая оценка по строкам патча (${h.score > 0 ? "+" : ""}${h.score}) и статистике. Ручного разбора для этого героя нет.</div>`;
+      : `<div class="pc-comment muted small">Автоматическая оценка по строкам патча (сумма ${h.score > 0 ? "+" : ""}${h.score}: критично ±3, заметно ±2, мелочь ±1) и статистике. Ручного разбора для этого героя нет.${v.label === "по-разному" ? " Строки патча и статистика тянут в разные стороны, смотрите изменения сами." : ""}</div>`;
     // ответ на вопрос о герое (например, «стоит ли пикать OD») — в карточке тоже, в драфте его больше негде увидеть
     const q = opts.noQuestion ? null : (data?.review?.questions || []).find((x) => x.hero === h.id);
     const question = q ? `<details class="pc-question"${opts.compact ? "" : " open"}><summary><b>${esc(q.title)}</b></summary><p>${esc(q.answer)}</p></details>` : "";
@@ -132,13 +136,21 @@ window.Patch = (() => {
     const h = byId.get(heroId);
     if (!h) return "";
     const v = verdict(h);
-    return `<span class="patch-mark ${v.cls}" data-patch="${heroId}" title="Патч ${esc(data.version)}: ${v.label}. Нажмите, чтобы посмотреть изменения" role="button">${v.mark}</span>`;
+    return `<span class="patch-mark ${v.cls}" data-patch="${heroId}" title="Патч ${esc(data.version)}: ${v.label}. Нажмите, чтобы посмотреть изменения (ход не вносится)" role="button" tabindex="0" aria-label="Изменения героя в патче ${esc(data.version)}: ${v.label}">${v.mark}</span>`;
   }
 
   // клик по значку не должен вносить героя в драфт: перехватываем раньше обработчиков страницы
   document.addEventListener("click", (e) => {
     const m = e.target.closest(".patch-mark[data-patch]");
     if (!m) return;
+    e.preventDefault();
+    e.stopPropagation();
+    openPopup(Number(m.dataset.patch));
+  }, true);
+  // с клавиатуры: Enter или пробел на значке
+  document.addEventListener("keydown", (e) => {
+    const m = e.target.closest?.(".patch-mark[data-patch]");
+    if (!m || (e.key !== "Enter" && e.key !== " ")) return;
     e.preventDefault();
     e.stopPropagation();
     openPopup(Number(m.dataset.patch));
