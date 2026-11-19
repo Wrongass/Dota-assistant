@@ -62,6 +62,11 @@ public final class AnalysisContext {
     }
 
     /** «ник (команда)» игроков без скачанных данных — для предупреждения на сайте. */
+    /** Файлы меты, взятые из прошлого патча (в начале нового патча их ещё нет): имя файла → патч. */
+    public java.util.Map<String, String> metaFallbacks() {
+        return meta.fallbacks;
+    }
+
     /** Предупреждения проверки карт лиги (LeagueCheck): сколько карт отброшено и почему. */
     public List<String> leagueWarnings() {
         return leagueWarnings;

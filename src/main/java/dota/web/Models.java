@@ -35,6 +35,10 @@ public final class Models {
     }
 
     /** Прогноз плей-офф: вступление открыто, каждый раздел «## …» файла — под спойлером. null — файла нет. */
+    /** Страница патча: version == null — данных патча нет (их собирает tools/patch/build.py). */
+    public record PatchPage(Page page, String version) {
+    }
+
     public record ForecastPage(Page page, String introHtml, List<Section> sections) {
     }
 

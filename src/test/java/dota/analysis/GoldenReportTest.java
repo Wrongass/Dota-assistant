@@ -41,6 +41,8 @@ class GoldenReportTest {
                     .filter(f -> !f.getFileName().toString().endsWith("_plan.md"))
                     // прогноз плей-офф генерирует отдельный скрипт (tools/forecast), не Analyze
                     .filter(f -> !f.startsWith(ANALYSIS.resolve("forecast")))
+                    // разбор патча тоже отдельный скрипт (tools/patch/build.py) и ручной review.json
+                    .filter(f -> !f.startsWith(ANALYSIS.resolve("patch")))
                     .toList();
         }
         assertFalse(expected.isEmpty());

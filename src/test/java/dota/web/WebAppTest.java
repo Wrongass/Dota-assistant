@@ -52,6 +52,22 @@ class WebAppTest {
     }
 
     @Test
+    void patchPageAndApi() throws Exception {
+        assertEquals(200, get("/patch").statusCode());
+        assumeTrue(Files.isDirectory(Path.of("analysis/patch")), "нет разбора патча");
+        HttpResponse<String> api = get("/api/patch");
+        assertEquals(200, api.statusCode());
+        assertTrue(api.body().contains("\"heroes\"") && api.body().contains("\"items\""), "в разборе есть герои и предметы");
+    }
+
+    @Test
+    void patchVersionsCompareAsNumbers() {
+        assertTrue(WebApp.versionKey("7.42").compareTo(WebApp.versionKey("7.9")) > 0, "7.42 новее 7.9");
+        assertTrue(WebApp.versionKey("7.42b").compareTo(WebApp.versionKey("7.42")) > 0, "7.42b новее 7.42");
+        assertTrue(WebApp.versionKey("7.42").compareTo(WebApp.versionKey("7.41c")) > 0);
+    }
+
+    @Test
     void homeShowsNextOpponentAndGroup() throws Exception {
         String body = get("/").body();
         assertTrue(body.contains("UPPO TEAM"));

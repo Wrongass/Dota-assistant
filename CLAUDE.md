@@ -17,6 +17,8 @@
   `python tools/forecast/forecast.py` → `analysis/forecast/playoff.md`; модели и проверка — `docs/research/playoff-forecast.md`
 - Тест на противоречивых данных: `./gradlew draftBacktest --args="--contradict"` и `python tools/contradict/forecast_check.py`
   (файлы — `testdata/contradictory/`, проверка карт лиги — `LeagueCheck`, отчёт — `docs/research/contradictory-data.md`)
+- Разбор патча (страница `/patch`, значки в драфте): `python tools/patch/build.py [--fetch]` → `analysis/patch/{версия}/patch.json`;
+  ручные оценки — `analysis/patch/{версия}/review.json`, методика — `docs/research/patch-review.md`
 - Проверки сайта в браузере (после правок JS/шаблонов, при запущенном сайте): `python tools/ui-checks/<скрипт>.py`
 
 Архитектура (ADR 0003): `AnalysisContext` грузит всё один раз → `Squad` считает view-модели (`Views`) →

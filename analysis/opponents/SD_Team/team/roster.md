@@ -1,14 +1,14 @@
 # Состав: SD Team (GGsel)
 
-Данные на 2026-11-15, патч 7.41. Турбо не учитывается.
+Данные на 2026-11-19, патч 7.42. Турбо не учитывается.
 
 | Поз. | Игрок | Steam-ник | account_id | Ранг | MMR (оценка) | Матчей всего / год / патч | WR в патче | Captains Mode | Роль в команде |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | [Nynge](../players/pos1_Nynge.md) | Nynge | 74322151 | Властелин 4 (Ancient) | 4430 | 5933 / 597 / 453 | 52.1% | 57 (54.4%) | В турнире Clinkz, Windranger (safe). |
-| 2 | [Caraxes](../players/pos2_Caraxes.md) | Caraxes | 1219463136 | Властелин 1 (Ancient) | 3703 | 948 / 889 / 717 | 48.1% | 11 (63.6%) | В турнире Sand King, Ember Spirit (mid). |
-| 3 | [XANDR](../players/pos3_XANDR.md) | XANDR | 194714203 | Властелин 2 (Ancient) | 4102 | 5944 / 73 / 73 | 47.9% | 200 (54.5%) | В турнире Tidehunter, Dawnbreaker (off). |
-| 4 | [IRD](../players/pos4_IRD.md) | IRD | 158409388 | Титан (Immortal) | 4213 | 10226 / 386 / 262 | 54.6% | 871 (66.8%) | В турнире Rubick, Mirana. |
-| 5 | [montekri](../players/pos5_montekri.md) | montekri | 1130725097 | Легенда 4 (Legend) | 4287 | 1738 / 493 / 371 | 47.4% | 12 (75.0%) | В турнире Undying, Crystal Maiden. |
+| 1 | [Nynge](../players/pos1_Nynge.md) | Nynge | 74322151 | Властелин 4 (Ancient) | 4430 | 5933 / 597 / 0 | — | 57 (54.4%) | В турнире Clinkz, Windranger (safe). |
+| 2 | [Caraxes](../players/pos2_Caraxes.md) | Caraxes | 1219463136 | Властелин 1 (Ancient) | 3703 | 948 / 889 / 0 | — | 11 (63.6%) | В турнире Sand King, Ember Spirit (mid). |
+| 3 | [XANDR](../players/pos3_XANDR.md) | XANDR | 194714203 | Властелин 2 (Ancient) | 4102 | 5944 / 73 / 0 | — | 200 (54.5%) | В турнире Tidehunter, Dawnbreaker (off). |
+| 4 | [IRD](../players/pos4_IRD.md) | IRD | 158409388 | Титан (Immortal) | 4213 | 10226 / 374 / 0 | — | 871 (66.8%) | В турнире Rubick, Mirana. |
+| 5 | [montekri](../players/pos5_montekri.md) | montekri | 1130725097 | Легенда 4 (Legend) | 4287 | 1738 / 476 / 0 | — | 12 (75.0%) | В турнире Undying, Crystal Maiden. |
 
 ## На каких позициях реально играют (пабы за последний год)
 
@@ -19,8 +19,8 @@
 | Nynge | 1 | 19.4% | 17.0% | 33.7% | 16.3% | 13.7% | 23/12/24/0 |
 | Caraxes | 2 | 44.0% | 24.5% | 19.5% | 6.5% | 5.6% | 38/28/23/0 |
 | XANDR | 3 | 8.8% | 19.9% | 56.1% | 8.9% | 6.3% | 1/9/25/0 |
-| IRD | 4 | 10.3% | 6.0% | 20.0% | 32.1% | 31.6% | 96/4/89/0 |
-| montekri | 5 | 7.0% | 5.2% | 9.1% | 39.7% | 39.0% | 33/2/5/0 |
+| IRD | 4 | 9.9% | 5.8% | 20.2% | 32.3% | 31.7% | 96/4/89/0 |
+| montekri | 5 | 7.3% | 5.3% | 9.3% | 39.5% | 38.7% | 32/2/5/0 |
 
 ## Сыгранность: матчей в одной команде (WR)
 

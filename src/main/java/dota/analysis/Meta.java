@@ -61,12 +61,22 @@ final class Meta {
     }
 
     final String patch;
+    /** Файл меты → патч, из которого он взят, если в текущем его ещё нет (начало нового патча). */
+    final java.util.Map<String, String> fallbacks = new java.util.LinkedHashMap<>();
     final Instant patchStart;
     final Map<Integer, Hero> heroes = new HashMap<>();
     final Map<Integer, HeroStats> stats = new HashMap<>();
     /** [hero][pos 1..5] игры и победы в разобранных матчах патча. */
     final Map<Integer, long[]> posGames = new HashMap<>();
     final Map<Integer, long[]> posWins = new HashMap<>();
+    /**
+     * Сдвиг винрейта героя в первые дни нового патча: hero_stats.json OpenDota — скользящая сводка примерно за неделю, в
+     * первые дни в ней почти один прошлый патч. Сдвиг = (винрейт в выборке нового патча − в выборке прошлого с тем же
+     * фильтром), стянутый к нулю по числу игр (games / (games + PATCH_SHIFT_GAMES)) и с весом, который за неделю после
+     * патча падает до нуля (сводка OpenDota к тому времени уже про новый патч).
+     */
+    final Map<Integer, Double> patchShift = new HashMap<>();
+    static final double PATCH_SHIFT_GAMES = 3000, PATCH_SHIFT_DAYS = 7;
     /** Базовый винрейт в public-выборке (та же выборка, что для синергий/контрпиков). */
     final Map<Integer, Double> baseWinrate = new HashMap<>();
     /** Пары в одной команде, a < b. */
@@ -89,6 +99,22 @@ final class Meta {
         JsonNode last = patches.get(patches.size() - 1);
         Meta m = new Meta(last.get("name").asText(), Instant.parse(last.get("date").asText()));
         Path dir = dataDir.resolve("meta").resolve(m.patch);
+        // первые сутки нового патча части файлов нет (позиции считаются по разобранным матчам): берём их из прошлого
+        // патча, где они есть, и запоминаем это в fallbacks
+        java.util.function.Function<String, Path> file = name -> {
+            Path own = dir.resolve(name);
+            if (java.nio.file.Files.exists(own)) {
+                return own;
+            }
+            for (int i = patches.size() - 2; i >= 0; i--) {
+                Path prev = dataDir.resolve("meta").resolve(patches.get(i).get("name").asText()).resolve(name);
+                if (java.nio.file.Files.exists(prev)) {
+                    m.fallbacks.put(name, patches.get(i).get("name").asText());
+                    return prev;
+                }
+            }
+            return own;
+        };
 
         read(constants.resolve("heroes.json")).forEach(h -> {
             List<String> roles = new ArrayList<>();
@@ -98,7 +124,7 @@ final class Meta {
         });
 
         long proPicks = 0;
-        for (JsonNode h : read(dir.resolve("hero_stats.json"))) {
+        for (JsonNode h : read(file.apply("hero_stats.json"))) {
             long[] p = new long[9], w = new long[9];
             for (int b = 1; b <= 8; b++) {
                 p[b] = h.path(b + "_pick").asLong();
@@ -114,23 +140,44 @@ final class Meta {
             m.bracketMatches[b] /= 10;
         }
 
-        for (JsonNode r : rows(dir.resolve("hero_positions.json"))) {
+        for (JsonNode r : rows(file.apply("hero_positions.json"))) {
             int hero = r.get("hero_id").asInt(), pos = r.get("pos").asInt();
             m.posGames.computeIfAbsent(hero, k -> new long[6])[pos] += r.get("games").asLong();
             m.posWins.computeIfAbsent(hero, k -> new long[6])[pos] += r.get("wins").asLong();
         }
-        for (JsonNode r : rows(dir.resolve("hero_winrate.json"))) {
+        for (JsonNode r : rows(file.apply("hero_winrate.json"))) {
             m.baseWinrate.put(r.get("hero_id").asInt(), r.get("wins").asDouble() / r.get("games").asDouble());
         }
-        for (JsonNode r : rows(dir.resolve("hero_synergy.json"))) {
+        if (patches.size() >= 2 && !m.fallbacks.containsKey("hero_winrate.json")) {
+            Path prevDir = dataDir.resolve("meta").resolve(patches.get(patches.size() - 2).get("name").asText());
+            Path sample = dir.resolve("_sample.json");
+            if (Files.exists(prevDir.resolve("hero_winrate.json")) && Files.exists(sample)) {
+                double days = (Instant.parse(read(sample).path("fetched_at").asText()).getEpochSecond()
+                        - m.patchStart.getEpochSecond()) / 86400.0;
+                double weight = Math.max(0, 1 - days / PATCH_SHIFT_DAYS);
+                Map<Integer, Double> prev = new HashMap<>();
+                for (JsonNode r : rows(prevDir.resolve("hero_winrate.json"))) {
+                    prev.put(r.get("hero_id").asInt(), r.get("wins").asDouble() / r.get("games").asDouble());
+                }
+                for (JsonNode r : rows(file.apply("hero_winrate.json"))) {
+                    int id = r.get("hero_id").asInt();
+                    double games = r.get("games").asDouble();
+                    if (weight > 0 && prev.containsKey(id)) {
+                        double delta = r.get("wins").asDouble() / games - prev.get(id);
+                        m.patchShift.put(id, weight * delta * games / (games + PATCH_SHIFT_GAMES));
+                    }
+                }
+            }
+        }
+        for (JsonNode r : rows(file.apply("hero_synergy.json"))) {
             m.synergy.put(new Pair(r.get("h1").asInt(), r.get("h2").asInt()),
                     new PairStats(r.get("games").asLong(), r.get("wins").asLong()));
         }
-        for (JsonNode r : rows(dir.resolve("hero_counters.json"))) {
+        for (JsonNode r : rows(file.apply("hero_counters.json"))) {
             m.counters.put(new Pair(r.get("h1").asInt(), r.get("h2").asInt()),
                     new PairStats(r.get("games").asLong(), r.get("wins").asLong()));
         }
-        Path laneRoles = dir.resolve("lane_roles.json");
+        Path laneRoles = file.apply("lane_roles.json");
         if (java.nio.file.Files.exists(laneRoles)) {
             for (JsonNode r : read(laneRoles)) {
                 long[] g = m.durationGames.computeIfAbsent(r.path("hero_id").asInt(), k -> new long[4]);
@@ -244,9 +291,10 @@ final class Meta {
         return s == null || matches == 0 ? 0 : (double) s.picks(from, to) / matches;
     }
 
+    /** Винрейт героя в корзинах рангов from..to; в первые дни патча — со сдвигом patchShift. */
     double winrate(int heroId, int from, int to) {
         HeroStats s = stats.get(heroId);
-        return s == null ? Double.NaN : s.winrate(from, to);
+        return s == null ? Double.NaN : s.winrate(from, to) + patchShift.getOrDefault(heroId, 0.0);
     }
 
     /** Синергия пары: винрейт пары минус средний базовый винрейт героев. NaN, если игр меньше minGames. */

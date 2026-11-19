@@ -263,7 +263,7 @@
     const note = (h) => { const i = state.heroes.indexOf(h.id); return `${slot(i).pick ? "взят" : "забанен"} (ход ${i + 1})`; };
     $("suggest").innerHTML = found.map((h, i) =>
       `<li class="${i === selected ? "sel" : ""}" data-id="${h.id}">${icon(h.id)} ${esc(h.name)}${freeOwners(h.id)
-        ? ` <span class="muted small">наш: ${esc(freeOwners(h.id).join(", "))}</span>` : ""}</li>`).join("")
+        ? ` <span class="muted small">наш: ${esc(freeOwners(h.id).join(", "))}</span>` : ""}${patchMark(h.id)}</li>`).join("")
       + gone.map((h) => `<li class="taken">${icon(h.id)} ${esc(h.name)} <span class="small">уже ${note(h)}</span></li>`).join("")
       + (q.trim() && !found.length && !gone.length ? `<li class="none">Не нашёл героя «${esc(q.trim())}»</li>` : "");
     document.querySelectorAll("#grid .hero-tile").forEach((b) => {
@@ -1003,6 +1003,16 @@
   $("grid").innerHTML = Object.entries(ATTR).map(([attr, title]) =>
     `<div class="attr"><div class="small muted">${title}</div><div class="tiles">${HEROES.filter((h) => h.attr === attr)
       .map((h) => `<button class="hero-tile" data-id="${h.id}" title="${esc(h.name)}">${heroPortrait(h.id, h.name)}<span>${esc(h.name)}</span></button>`).join("")}</div></div>`).join("");
+
+  // значки патча на плитках: клик по значку открывает изменения героя (patchcard.js), по плитке — ход как раньше
+  function patchMark(id) { return window.Patch && Patch.data ? Patch.markHtml(id) : ""; } // объявление функции: renderSearch зовёт её и до этой строки
+  if (window.Patch) {
+    Patch.load().then((d) => {
+      if (!d) return;
+      document.querySelectorAll("#grid .hero-tile").forEach((b) => b.insertAdjacentHTML("beforeend", Patch.markHtml(Number(b.dataset.id))));
+      renderSearch();
+    });
+  }
 
   $("opponent").innerHTML = OPPONENTS.map((o) => `<option value="${esc(o.href)}">${esc(o.label)}</option>`).join("");
   $("opponent").value = state.opponent;
