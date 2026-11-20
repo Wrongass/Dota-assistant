@@ -9,7 +9,7 @@
         @if(x.hasStratz())Данные — ${x.sample()}.@endif</p>
     <div class="panel hero-index">
         <input type="search" id="hero-filter" placeholder="Найти героя: имя, сленг, начало имени" autocomplete="off">
-        <div class="hero-list" id="hero-grid">
+        <div class="hindex-grid" id="hero-grid">
             @for(var h : x.heroes())
                 <a href="/hero/${h.id()}" data-name="${h.name()}"><img class="hero-ico" src="/img/icons/${h.id()}.png" alt="" loading="lazy"> ${h.name()}</a>
             @endfor

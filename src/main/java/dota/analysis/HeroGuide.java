@@ -37,6 +37,8 @@ public final class HeroGuide {
     static final int TOP = 10;
     /** Позиция героя попадает на страницу, если на ней столько его игр от всех. */
     static final double MIN_POS_SHARE = 0.10;
+    /** В списки «на линии» — пары хотя бы с таким числом линий: 30–40 линий дают перевес ±40% случайно. */
+    static final int MIN_LANES_SHOWN = 100;
 
     public record Item(int id, String name, String nameRu, String icon) {
     }
@@ -304,10 +306,10 @@ public final class HeroGuide {
         }
         Comparator<Matchup> byLane = Comparator.comparingDouble(Matchup::laneAdv).reversed();
         Comparator<Matchup> byGame = Comparator.comparingDouble(Matchup::gameAdv).reversed();
-        List<Matchup> laneCounters = against.stream().filter(m -> m.laneMatches() > 0).sorted(byLane).limit(TOP).toList();
+        List<Matchup> laneCounters = against.stream().filter(m -> m.laneMatches() >= MIN_LANES_SHOWN).sorted(byLane).limit(TOP).toList();
         List<Matchup> gameCounters = against.stream().filter(m -> !Double.isNaN(m.gameAdv())).sorted(byGame).limit(TOP).toList();
         // кого он обыгрывает: его матчап против героя; имя — соперника
-        List<Matchup> laneVictims = victims.stream().filter(m -> m.laneMatches() > 0).sorted(byLane).limit(TOP).toList();
+        List<Matchup> laneVictims = victims.stream().filter(m -> m.laneMatches() >= MIN_LANES_SHOWN).sorted(byLane).limit(TOP).toList();
         List<Matchup> gameVictims = victims.stream().filter(m -> !Double.isNaN(m.gameAdv())).sorted(byGame).limit(TOP).toList();
 
         List<Ally> allies = new ArrayList<>();

@@ -4,7 +4,7 @@
 !{var v = model.view();}
 @template.layout(page = model.page(), content = @`
     <p class="muted small"><a href="/heroes">← все герои</a></p>
-    <h1 class="hero-title"><img class="hero-portrait" src="/img/heroes/${v.heroId()}.png" alt="" onerror="this.remove()"> ${v.name()}</h1>
+    <h1 class="hero-title no-hero-icons"><img class="hero-portrait" src="/img/heroes/${v.heroId()}.png" alt="" onerror="this.remove()"> ${v.name()}</h1>
     <p class="muted">${String.join(", ", v.roles())}
         @if(!v.positionShares().isEmpty())
             · позиции в патче:
@@ -40,7 +40,7 @@
         <div class="panel table-wrap">
             <h3>На линии</h3>
             <p class="muted small">Кто чаще выигрывает линию против ${v.name()}. Перевес — выигранные минус проигранные линии,
-                сглажено к обычному результату героя; поз. — позиция контрпика.</p>
+                сглажено к обычному результату героя; поз. — позиция контрпика; пары меньше чем со 100 линиями не показаны.</p>
             @if(v.laneCounters().isEmpty())<p class="muted">Нет данных о линиях.</p>@else
             <table class="sortable">
                 <thead><tr><th>Герой</th><th class="num">Поз.</th><th class="num">Перевес</th><th class="num">W / L</th><th class="num">Линий</th></tr></thead>

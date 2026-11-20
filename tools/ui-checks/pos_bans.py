@@ -74,7 +74,7 @@ try:
         time.sleep(0.6)
 
     call("Page.enable")
-    call("Page.navigate", url="http://127.0.0.1:8070/draft?opponent=UPPO_TEAM#first=us&heroes=")
+    call("Page.navigate", url="http://127.0.0.1:8070/draft?opponent=Team_Future#first=us&heroes=")  # у УППО с 14.11 два состава — две строки на позицию; у НИИЭП один
     time.sleep(2.5)
     js("localStorage.clear()")  # чистый старт: драфты прошлых прогонов не мешают
     call("Page.reload")
