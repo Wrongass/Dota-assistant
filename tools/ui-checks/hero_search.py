@@ -142,6 +142,11 @@ try:
     js("(() => document.querySelector('.counters-form').requestSubmit())()")
     time.sleep(1)
     check("контрпики: пустой запрос не отправляется", js("location.search") == "" and "Укажите героя" in js("document.querySelector('input[name=h]').placeholder"))
+    # Enter в подсказке выбирает героя и сразу показывает контрпики
+    js("(() => { const i=document.querySelector('input[name=h]'); i.value='снайп'; i.dispatchEvent(new Event('input'));"
+       " i.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true})); })()")
+    time.sleep(2)
+    check("контрпики: Enter выбирает героя и показывает", "h=Sniper" in js("location.href"), js("location.href"))
     print(f"{sum(1 for _, ok, _ in results if ok)}/{len(results)} проверок прошли")
 finally:
     proc.kill()

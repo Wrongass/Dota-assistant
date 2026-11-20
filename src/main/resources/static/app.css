@@ -86,6 +86,8 @@ nav.menu .dropdown {
 }
 
 main { padding: 16px; max-width: 1400px; margin: 0 auto; }
+/* монитор: шире контент, в драфте больше героев в ряд и короче страница */
+@media (min-width: 1500px) { main { max-width: min(1760px, calc(100vw - 48px)); } }
 
 h1 { font-size: 22px; margin: 4px 0 12px; }
 h2 { font-size: 17px; margin: 22px 0 8px; }
@@ -475,6 +477,8 @@ details.panel[open] > summary::after, details.toggle-box[open] > summary::after 
 .panel.forecast { overflow-x: auto; }
 .panel.forecast table { font-size: 13px; }
 .panel.forecast td, .panel.forecast th { white-space: nowrap; }
+/* длинный последний столбец (составы, пояснения) переносится, иначе таблица шире экрана */
+.panel.forecast td:last-child { white-space: normal; }
 details.panel.forecast > summary { font-size: 16px; }
 
 /* ------------------------------------------------------------ патч (/patch) и карточка героя в драфте */
@@ -535,6 +539,7 @@ details.minor > summary { cursor: pointer; }
 .two-col > div { min-width: 0; overflow-x: auto; }
 table.movers { width: 100%; font-size: 13px; }
 table.movers td { white-space: nowrap; }
+table.movers td.small { white-space: normal; }
 .item-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: 10px; margin-bottom: 10px; }
 .item-card { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
 .ic-head { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
@@ -574,10 +579,10 @@ table.movers td { white-space: nowrap; }
 
 /* Герои: список и страница героя */
 .hero-index input[type=search] { width: 100%; max-width: 420px; margin-bottom: 10px; }
-.hero-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 4px 12px; }
-.hero-list a { display: flex; align-items: center; gap: 6px; padding: 3px 4px; border-radius: 4px; text-decoration: none; }
-.hero-list a:hover { background: var(--chip); }
-.hero-list a[hidden] { display: none; }
+.hindex-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 4px 12px; }
+.hindex-grid a { display: flex; align-items: center; gap: 6px; padding: 3px 4px; border-radius: 4px; text-decoration: none; }
+.hindex-grid a:hover { background: var(--chip); }
+.hindex-grid a[hidden] { display: none; }
 .hero-title { display: flex; align-items: center; gap: 12px; }
 .hero-title .hero-portrait { width: 96px; height: 54px; }
 .item-ico { width: 27px; height: 20px; border-radius: 3px; object-fit: cover; vertical-align: middle; }

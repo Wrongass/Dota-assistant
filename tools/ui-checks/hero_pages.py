@@ -134,6 +134,13 @@ try:
     go("/hero/44")
     text = js("document.querySelector('main').innerText")
     check("PA: Bloodthorn в «Плохо»", "Плохо" in text and "Bloodthorn" in text)
+    mkb = js("[...document.querySelectorAll('.item-advice li')].find(li => li.textContent.includes('Monkey King Bar'))"
+             "?.querySelectorAll('.hero-tag').length")
+    check("PA: Monkey King Bar без иконки героя Monkey King", mkb == 0, mkb)
+    check("PA: в заголовке нет второй иконки", js("document.querySelectorAll('h1 .hero-tag').length") == 0)
+    lanes = js("[...document.querySelectorAll('main .grid3 table')].filter(t => t.querySelector('th:last-child')"
+               "?.textContent === 'Линий').flatMap(t => [...t.querySelectorAll('tbody tr')].map(r => +r.cells[r.cells.length - 1].textContent))")
+    check("PA: на линии только пары от 100 линий", lanes and min(lanes) >= 100, lanes and min(lanes))
     go("/hero/Phantom_Lancer")
     check("адрес по имени героя", js("document.querySelector('h1').textContent").strip().endswith("Phantom Lancer"))
     go("/hero/nosuchhero")
@@ -144,6 +151,20 @@ try:
     links = js("[...document.querySelectorAll('main table a[href^=\"/hero/\"]')].length")
     check("контрпики: герои — ссылки на страницы", links and links > 5, links)
     check("контрпики: ссылка на страницу их героя", js("!!document.querySelector('main a[href=\"/hero/35\"]')"))
+
+    # монитор 1920: список героев патча — строки во всю ширину (не сетка «Героев»), таблицы прогноза не шире контента
+    call("Emulation.setDeviceMetricsOverride", width=1920, height=1000, deviceScaleFactor=1, mobile=False)
+    go("/patch")
+    w = js("Math.round(document.querySelector('#all-list .hero-row').getBoundingClientRect().width)")
+    check("1920 px: «Патч» — герой на всю строку", w and w > 1200, w)
+    go("/forecast")
+    over = js("(() => { document.querySelectorAll('main details').forEach(d => d.open = true);"
+              " const r = document.querySelector('main').getBoundingClientRect().right;"
+              " return [...document.querySelectorAll('main table')].filter(t => t.getBoundingClientRect().right > r + 1).length; })()")
+    check("1920 px: таблицы прогноза не шире страницы", over == 0, over)
+    go("/heroes")
+    cols = js("getComputedStyle(document.getElementById('hero-grid')).gridTemplateColumns.split(' ').length")
+    check("1920 px: «Герои» — сетка в много колонок", cols and cols >= 8, cols)
 
     # узкий экран: без горизонтальной прокрутки
     call("Emulation.setDeviceMetricsOverride", width=390, height=800, deviceScaleFactor=1, mobile=True)

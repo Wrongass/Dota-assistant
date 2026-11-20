@@ -219,7 +219,8 @@
     const names = heroes.map((h) => h.name).sort((a, b) => b.length - a.length)
       .map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
     // имя целиком: до и после — не буква (Lion не внутри Dandelion)
-    const pattern = `(^|[^\\p{L}])(${names.join("|")})(?![\\p{L}])`;
+    // Monkey King Bar — предмет, не герой
+    const pattern = `(^|[^\\p{L}])(${names.join("|")})(?![\\p{L}]|(?<=Monkey King) Bar)`;
     const re = new RegExp(pattern, "gu");
     const has = new RegExp(pattern, "u"); // без флага g: test() не помнит позицию между узлами
     const main = document.querySelector("main");

@@ -1,4 +1,4 @@
-// Контрпики: поиск героя как в драфте (сленг, начало имени, инициалы, раскладка), ↑↓ и Enter — выбрать.
+// Контрпики: поиск героя как в драфте (сленг, начало имени, инициалы, раскладка), ↑↓ и Enter — выбрать и показать.
 (() => {
   const form = document.querySelector(".counters-form");
   if (!form) return;
@@ -28,8 +28,9 @@
           selected = (selected + (e.key === "ArrowDown" ? 1 : found.length - 1)) % found.length;
           render();
         } else if (e.key === "Enter" && found.length) {
-          e.preventDefault(); // Enter выбирает героя из подсказки, второй Enter отправляет форму
+          e.preventDefault(); // Enter выбирает героя из подсказки и сразу показывает; второго героя — через Tab до Enter
           pick(found[selected].name);
+          form.requestSubmit();
         } else if (e.key === "Escape") {
           found = []; list.innerHTML = "";
         }
