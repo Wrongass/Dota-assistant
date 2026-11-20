@@ -107,7 +107,8 @@ public class Main {
                 Log.info("STRATZ_TOKEN not set, skip STRATZ lanes");
             } else {
                 new StratzFetcher(new StratzClient(StratzClient.URL, token, Duration.ofMillis(1100)), fetcher, refresh)
-                        .fetch(constants.resolve("heroes.json"), raw.resolve("stratz"), java.time.Instant.now());
+                        .fetch(constants.resolve("heroes.json"), constants.resolve("patch.json"), raw.resolve("stratz"),
+                                java.time.Instant.now());
             }
         }
 

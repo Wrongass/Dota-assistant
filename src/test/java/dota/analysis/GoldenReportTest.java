@@ -43,6 +43,8 @@ class GoldenReportTest {
                     .filter(f -> !f.startsWith(ANALYSIS.resolve("forecast")))
                     // разбор патча тоже отдельный скрипт (tools/patch/build.py) и ручной review.json
                     .filter(f -> !f.startsWith(ANALYSIS.resolve("patch")))
+                    // сильные предметы патча — выборка инвентарей tools/items (Python)
+                    .filter(f -> !f.startsWith(ANALYSIS.resolve("items")))
                     .toList();
         }
         assertFalse(expected.isEmpty());

@@ -275,7 +275,8 @@ players:
   #   11.10: 死 1, SuperPoni 2, Elsa 3, kalibri 4, СГРЫЗ 5;
   #   17.10: 死 1, Леонид Ильич 2, SuperPoni 3, СГРЫЗ 4, kalibri 5 (Elsa не играла);
   #   25.10: Elsa 1, SuperPoni 2, 死 3, СГРЫЗ 4, kalibri 5.
-  # Позиции ниже — состав по умолчанию на сайте; драфт сам учитывает все три состава (TeamLineups).
+  # Плей-офф, все 6 карт (7.11 против нас 2:1, 14.11 против Elbrus 1:2): 死 1, Леонид Ильич 2, SuperPoni 3, СГРЫЗ 4,
+  # kalibri 5, Elsa не играла. С 19.11 это состав по умолчанию (подготовка к L5); драфт по-прежнему учитывает все составы.
   - account_id: 323776798
     nick: 死
     team: opp
@@ -286,13 +287,14 @@ players:
     nick: SuperPoni
     team: opp
     team_name: SyberStar
-    position: 2
-    note: В турнире Dragon Knight ×2, Windranger, Outworld Devourer (мид), Centaur Warrunner, Slardar (оффлейн).
+    position: 3
+    note: В группе мид (Dragon Knight ×2, Outworld Devourer), в плей-офф оффлейн все 6 карт (Night Stalker ×2, Windranger, Doom, Axe, Slardar).
   - account_id: 395555261
     nick: Elsa
     team: opp
     team_name: SyberStar
     position: 3
+    reserve: true
     note: В турнире Dawnbreaker, Phoenix, Luna, Drow Ranger. 4 карты из 6, 17.10 не играл. 11.10 оффлейн, 25.10 керри.
   - account_id: 843021665
     nick: СГРЫЗ_КАСТРЮЛЮ
@@ -311,8 +313,7 @@ players:
     team: opp
     team_name: SyberStar
     position: 2
-    reserve: true
-    note: Играл 2 карты на миде 17.10 против Elbrus team (Lina, Leshrac), тогда SuperPoni ушёл в оффлейн, Elsa не играла.
+    note: Мид во всех 6 картах плей-офф (Slardar, Zeus, Storm Spirit, Necrophos, Outworld Devourer, Magnus), в группе 2 карты 17.10 (Lina, Leshrac).
 
   # Team Future (НИИЭП), группа C: 3–0, карты 6–0. Один и тот же состав и линии во всех картах.
   - account_id: 213246942

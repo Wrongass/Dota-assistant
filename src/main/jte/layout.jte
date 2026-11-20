@@ -49,6 +49,7 @@
             </div>
         </details>
         <a href="/meta" class="${page.active().equals("meta") ? "active" : null}">Мета</a>
+        <a href="/heroes" class="${page.active().equals("heroes") ? "active" : null}" title="Страница каждого героя: контрпики, предметы, с кем брать; новые предметы патча">Герои</a>
         <a href="/counters" class="${page.active().equals("counters") ? "active" : null}">Контрпики</a>
         <a href="/drafts" class="${page.active().equals("drafts") ? "active" : null}">История</a>
         <a href="/method" class="${page.active().equals("method") ? "active" : null}">Методика</a>

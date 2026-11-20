@@ -106,7 +106,7 @@ Dire, 39 мин, [OpenDota](https://www.opendota.com/matches/9069562149), [Dotab
 | XANDR | Dawnbreaker | off | 551 | 11/3/23 |
 | Caraxes | Ember Spirit | mid | 704 | 12/3/21 |
 
-Соперник: Ursa (Akira), Lich (Ray), Techies (pogonyallo), Spirit Breaker (CHE KAVO), Death Prophet (DC)
+Соперник: Ursa (Akira), Lich (Ray), Techies (pogonyallo), Spirit Breaker (Че Каво СУЧАРЫ), Death Prophet (DC)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 
@@ -142,7 +142,7 @@ Radiant, 42 мин, [OpenDota](https://www.opendota.com/matches/9069818000), [Do
 | montekri | Dark Willow | safe | 369 | 5/1/11 |
 | XANDR | Pudge | off | 574 | 10/2/15 |
 
-Соперник: Snapfire (sherdar?), Shadow Fiend (Aspera), Phantom Lancer (COCKPIT), Jakiro (krs), Tidehunter (Kabal)
+Соперник: Snapfire (sherdar?), Shadow Fiend (Aspera), Phantom Lancer (COCKPIT), Jakiro (krs), Tidehunter (Мамкин сыщик)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 

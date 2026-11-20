@@ -87,6 +87,12 @@ public final class Models {
     }
 
     /** Контрпики: введённые имена героев (как в форме), «авто» ли позиция, ошибка ввода или null. */
+    public record HeroesPage(Page page, dota.analysis.HeroGuide.Index index) {
+    }
+
+    public record HeroPage(Page page, dota.analysis.HeroGuide.View view) {
+    }
+
     public record CountersPage(Page page, List<dota.analysis.AnalysisContext.HeroInfo> heroes, String first,
                                String second, boolean posAuto, dota.analysis.Counters.View view, String error) {
     }

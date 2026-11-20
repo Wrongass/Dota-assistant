@@ -571,3 +571,17 @@ table.movers td { white-space: nowrap; }
 .draft-setup label { max-width: 100%; min-width: 0; }
 .draft-setup select { max-width: 100%; }
 @media (max-width: 600px) { .draft-setup #opponent { max-width: calc(100vw - 110px); } }
+
+/* Герои: список и страница героя */
+.hero-index input[type=search] { width: 100%; max-width: 420px; margin-bottom: 10px; }
+.hero-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 4px 12px; }
+.hero-list a { display: flex; align-items: center; gap: 6px; padding: 3px 4px; border-radius: 4px; text-decoration: none; }
+.hero-list a:hover { background: var(--chip); }
+.hero-list a[hidden] { display: none; }
+.hero-title { display: flex; align-items: center; gap: 12px; }
+.hero-title .hero-portrait { width: 96px; height: 54px; }
+.item-ico { width: 27px; height: 20px; border-radius: 3px; object-fit: cover; vertical-align: middle; }
+.item-advice { list-style: none; padding: 0; margin: 4px 0 10px; }
+.item-advice li { margin: 6px 0; line-height: 1.4; }
+a .hero-ico { margin-right: 2px; }
+.nowrap { white-space: nowrap; }

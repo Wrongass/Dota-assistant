@@ -1,16 +1,16 @@
 # Угрозы: comaTOZ (ИТОЗ)
 
-Сгенерировано 2026-11-19, патч 7.42.
+Сгенерировано 2026-11-20, патч 7.42.
 
 ## Пулы по позициям (топ-6 по пригодности в патче)
 
 | Поз. | Игрок | Ранг | Кандидаты (пригодность; ▲ — сильный в патче) | В турнире |
 |---|---|---|---|---|
-| 1 | [britishboi](../players/pos1_britishboi.md) | Божество 4 (Divine) | Phantom Lancer 77 ▲, Sven 74 ▲, Windranger 74, Anti-Mage 70, Wraith King 69 ▲, Spectre 68 ▲ | Drow Ranger ×3, Windranger ×3, Anti-Mage ×2, Lifestealer ×2, Nature's Prophet ×2, Muerta, Phantom Lancer, Slark, Spectre |
-| 2 | [kezi](../players/pos2_kezi.md) | Божество 4 (Divine) | Invoker 87 ▲, Viper 65, Primal Beast 64 ▲, Arc Warden 62, Earth Spirit 61, Earthshaker 60 ▲ | Lina ×5, Earth Spirit ×3, Dragon Knight, Earthshaker, Invoker, Outworld Devourer, Queen of Pain, Sand King |
-| 3 | [YOURSELF](../players/pos3_YOURSELF.md) | Герой 1 (Archon) | Wraith King 63 ▲, Dragon Knight 58, Centaur Warrunner 58, Axe 56, Slardar 50, Visage 48 ▲ | Slardar ×3, Centaur Warrunner ×2, Doom ×2, Dragon Knight ×2, Dark Willow, Ember Spirit, Largo, Night Stalker, Nyx Assassin, Timbersaw, Windranger |
-| 4 | [Asmodeus](../players/pos4_Asmodeus.md) | Рыцарь 3 (Crusader) | Vengeful Spirit 55 ▲, Hoodwink 54, Pudge 49, Earthshaker 46, Rubick 44, Windranger 43 | Hoodwink ×6, Dark Willow ×3, Spirit Breaker ×2, Dragon Knight, Pudge, Rubick, Tidehunter, Wraith King |
-| 5 | [DrestoV1ch](../players/pos5_DrestoV1ch.md) | Божество 2 (Divine) | Techies 79, Shadow Shaman 60 ▲, Dazzle 59 ▲, Bounty Hunter 55, Io 55, Mirana 54 | Techies ×6, Bane ×3, Undying ×2, Witch Doctor ×2, Clockwerk, Dark Willow, Oracle |
+| 1 | [britishboi](../players/pos1_britishboi.md) | Божество 4 (Divine) | Windranger 75, Phantom Lancer 72, Sven 71 ▲, Slark 70, Wraith King 68 ▲, Anti-Mage 67 | Drow Ranger ×3, Windranger ×3, Anti-Mage ×2, Lifestealer ×2, Nature's Prophet ×2, Muerta, Phantom Lancer, Slark, Spectre |
+| 2 | [kezi](../players/pos2_kezi.md) | Божество 5 (Divine) | Invoker 85, Arc Warden 72, Earth Spirit 64, Primal Beast 63 ▲, Pangolier 62, Meepo 61 ▲ | Lina ×5, Earth Spirit ×3, Dragon Knight, Earthshaker, Invoker, Outworld Devourer, Queen of Pain, Sand King |
+| 3 | [YOURSELF](../players/pos3_YOURSELF.md) | Герой 3 (Archon) | Wraith King 62 ▲, Lycan 57 ▲, Centaur Warrunner 56, Axe 56, Dragon Knight 55, Abaddon 51 ▲ | Slardar ×3, Centaur Warrunner ×2, Doom ×2, Dragon Knight ×2, Dark Willow, Ember Spirit, Largo, Night Stalker, Nyx Assassin, Timbersaw, Windranger |
+| 4 | [Asmodeus](../players/pos4_Asmodeus.md) | Рыцарь 3 (Crusader) | Vengeful Spirit 57 ▲, Hoodwink 56, Pudge 49, Earthshaker 46, Rubick 44, Dazzle 42 ▲ | Hoodwink ×6, Dark Willow ×3, Spirit Breaker ×2, Dragon Knight, Pudge, Rubick, Tidehunter, Wraith King |
+| 5 | [DrestoV1ch](../players/pos5_DrestoV1ch.md) | Божество 2 (Divine) | Techies 80, Shadow Shaman 61 ▲, Dazzle 61 ▲, Undying 56, Bounty Hunter 54, Io 52 | Techies ×6, Bane ×3, Undying ×2, Witch Doctor ×2, Clockwerk, Dark Willow, Oracle |
 
 ## Самые опасные герои (кандидаты в баны)
 
@@ -18,27 +18,27 @@
 
 | # | Герой | Игрок | Угроза | Умение | Сила в мете | Игр всего / год | WR за год | В турнире | Позиции героя |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | Invoker | kezi | 0.99 | 99 | 0.75 | 511 / 39 | 69.2% | ×1 | 2 |
-| 2 | Phantom Lancer | britishboi | 0.92 | 98 | 0.56 | 159 / 32 | 65.6% | ×1 | 1 |
-| 3 | Windranger | britishboi | 0.86 | 83 | 0.65 | 89 / 12 | 58.3% | ×3 | 1/4 |
-| 4 | Techies | DrestoV1ch | 0.85 | 86 | 0.60 | 11 / 8 | 75.0% | ×6 | 4/5 |
-| 5 | Spectre | britishboi | 0.83 | 91 | 0.46 | 104 / 8 | 87.5% | ×1 | 1 |
-| 6 | Anti-Mage | britishboi | 0.82 | 81 | 0.59 | 185 / 5 | 60.0% | ×2 | 1 |
-| 7 | Lifestealer | britishboi | 0.81 | 87 | 0.47 | 53 / 6 | 83.3% | ×2 | 1 |
-| 8 | Slark | britishboi | 0.78 | 75 | 0.57 | 147 / 1 | 100.0% | ×1 | 1 |
-| 9 | Centaur Warrunner | YOURSELF | 0.72 | 77 | 0.38 | 14 / 7 | 71.4% | ×2 | 3 |
-| 10 | Lina | kezi | 0.71 | 91 | 0.16 | 33 / 22 | 68.2% | ×5 | 2 |
-| 11 | Earth Spirit | kezi | 0.70 | 58 | 0.64 | 23 / 12 | 41.7% | ×3 | 2 |
-| 12 | Dragon Knight | YOURSELF | 0.69 | 50 | 0.73 | 24 / 2 | 50.0% | ×2 | 1/2/3 |
-| 13 | Drow Ranger | britishboi | 0.69 | 78 | 0.31 | 177 / 10 | 50.0% | ×3 | 1 |
-| 14 | Earthshaker | kezi | 0.69 | 53 | 0.67 | 8 / 2 | 50.0% | ×1 | 2 |
-| 15 | Undying | DrestoV1ch | 0.66 | 73 | 0.31 | 23 / 22 | 68.2% | ×2 | 3/4/5 |
+| 1 | Invoker | kezi | 0.98 | 99 | 0.71 | 572 / 60 | 63.3% | ×1 | 2 |
+| 2 | Windranger | britishboi | 0.88 | 87 | 0.64 | 92 / 15 | 60.0% | ×3 | 1/4 |
+| 3 | Techies | DrestoV1ch | 0.87 | 87 | 0.61 | 15 / 12 | 66.7% | ×6 | 4/5 |
+| 4 | Phantom Lancer | britishboi | 0.86 | 94 | 0.50 | 162 / 35 | 60.0% | ×1 | 1 |
+| 5 | Slark | britishboi | 0.82 | 81 | 0.58 | 148 / 2 | 100.0% | ×1 | 1 |
+| 6 | Spectre | britishboi | 0.79 | 87 | 0.43 | 106 / 10 | 70.0% | ×1 | 1 |
+| 7 | Anti-Mage | britishboi | 0.79 | 77 | 0.57 | 186 / 6 | 50.0% | ×2 | 1 |
+| 8 | Lifestealer | britishboi | 0.78 | 82 | 0.48 | 54 / 7 | 71.4% | ×2 | 1 |
+| 9 | Earth Spirit | kezi | 0.75 | 68 | 0.60 | 32 / 21 | 47.6% | ×3 | 2 |
+| 10 | Lina | kezi | 0.72 | 96 | 0.11 | 46 / 35 | 65.7% | ×5 | 2 |
+| 11 | Undying | DrestoV1ch | 0.72 | 83 | 0.29 | 25 / 24 | 70.8% | ×2 | 3/4/5 |
+| 12 | Centaur Warrunner | YOURSELF | 0.70 | 77 | 0.35 | 14 / 7 | 71.4% | ×2 | 3 |
+| 13 | Drow Ranger | britishboi | 0.70 | 81 | 0.28 | 178 / 11 | 54.5% | ×3 | 1 |
+| 14 | Earthshaker | kezi | 0.67 | 51 | 0.66 | 13 / 6 | 33.3% | ×1 | 2 |
+| 15 | Hoodwink | Asmodeus | 0.67 | 63 | 0.48 | 6 / 6 | 50.0% | ×6 | 4/5 |
 
 ## Что они банят в турнире
 
 Lina ×9, Earth Spirit ×8, Outworld Devourer ×7, Dark Willow ×6, Lone Druid ×6, Hoodwink ×4, Slark ×4, Viper ×4, Anti-Mage ×3, Doom ×3, Dragon Knight ×3, Luna ×3, Pangolier ×3, Phantom Lancer ×3, Rubick ×3, Dazzle ×2, Ember Spirit ×2, Enigma ×2, Lifestealer ×2, Storm Spirit ×2, Tinker ×2, Tusk ×2, Ursa ×2, Witch Doctor ×2, Bane, Disruptor, Earthshaker, Faceless Void, Grimstroke, Huskar, Invoker, Keeper of the Light, Leshrac, Lich, Meepo, Mirana, Monkey King, Necrophos, Night Stalker, Puck, Silencer, Slardar, Spectre, Sven, Techies, Terrorblade, Timbersaw, Undying, Wraith King
 
-Из наших пулов они уже банили: Bane, Disruptor, Doom, Dragon Knight, Earthshaker, Enigma, Grimstroke, Invoker, Leshrac, Lich, Necrophos, Outworld Devourer, Phantom Lancer, Silencer, Slark, Spectre, Sven, Viper, Witch Doctor, Wraith King
+Из наших пулов они уже банили: Bane, Disruptor, Doom, Dragon Knight, Earthshaker, Enigma, Grimstroke, Invoker, Lich, Necrophos, Outworld Devourer, Phantom Lancer, Puck, Silencer, Slark, Spectre, Sven, Viper, Witch Doctor, Wraith King
 
 ## Чем контрить их главных героев (из наших пулов)
 
@@ -46,30 +46,30 @@ Lina ×9, Earth Spirit ×8, Outworld Devourer ×7, Dark Willow ×6, Lone Druid �
 
 | Их герой | Игрок | Наши ответы (игрок, преимущество) |
 |---|---|---|
-| Invoker | kezi | Phantom Assassin +4.4% (kren), Lycan +3.5% (Артист), Riki +2.8% (Wrongass), Crystal Maiden +2.4% (Babayka/Enaria) |
-| Phantom Lancer | britishboi | Sven +6.8% (kren), Dark Seer +4.8% (Артист), Crystal Maiden +4.3% (Babayka/Enaria), Omniknight +4.0% (Артист), Earthshaker +3.9% (Артист/Babayka), Leshrac +3.9% (Wrongass) |
-| Windranger | britishboi | Sand King +5.9% (Wrongass), Vengeful Spirit +3.8% (kren/Babayka/Enaria), Abaddon +3.8% (Артист), Riki +3.7% (Wrongass), Silencer +3.6% (Babayka/Enaria), Ancient Apparition +3.6% (Enaria) |
-| Techies | DrestoV1ch | Sven +5.9% (kren), Zeus +4.4% (Enaria), Riki +4.2% (Wrongass), Queen of Pain +4.0% (Wrongass), Spectre +3.9% (kren), Outworld Devourer +3.6% (Wrongass) |
-| Spectre | britishboi | Phantom Lancer +6.0% (kren), Vengeful Spirit +5.3% (kren/Babayka/Enaria), Invoker +4.2% (Wrongass), Nyx Assassin +3.9% (Babayka), Sven +3.0% (kren), Queen of Pain +2.7% (Wrongass) |
-| Anti-Mage | britishboi | Sand King +7.1% (Wrongass), Riki +7.1% (Wrongass), Phantom Assassin +6.5% (kren), Enigma +5.8% (Артист), Sven +5.6% (kren), Earthshaker +4.8% (Артист/Babayka) |
-| Lifestealer | britishboi | Riki +7.1% (Wrongass), Vengeful Spirit +5.8% (kren/Babayka/Enaria), Wraith King +4.8% (kren/Артист), Grimstroke +4.5% (Babayka/Enaria), Outworld Devourer +4.4% (Wrongass), Phantom Assassin +4.3% (kren) |
-| Slark | britishboi | Riki +8.4% (Wrongass), Grimstroke +7.8% (Babayka/Enaria), Phantom Lancer +5.8% (kren), Doom +5.6% (Артист), Lich +5.4% (Enaria), Invoker +5.4% (Wrongass) |
+| Invoker | kezi | Riki +5.7% (Wrongass), Lycan +5.2% (Артист), Phantom Assassin +4.1% (kren), Puck +3.8% (Wrongass), Sand King +3.0% (Wrongass), Disruptor +2.6% (Babayka) |
+| Windranger | britishboi | Bane +5.1% (Enaria), Omniknight +4.3% (Артист), Riki +3.6% (Wrongass), Crystal Maiden +3.5% (Babayka/Enaria), Phantom Assassin +3.1% (kren), Phantom Lancer +3.1% (kren) |
+| Techies | DrestoV1ch | Nyx Assassin +4.8% (Babayka), Omniknight +4.0% (Артист), Lich +3.8% (Enaria), Grimstroke +3.5% (Babayka/Enaria), Spectre +3.2% (kren), Magnus +2.4% (Wrongass/Артист) |
+| Phantom Lancer | britishboi | Puck +6.9% (Wrongass), Crystal Maiden +5.1% (Babayka/Enaria), Sand King +4.8% (Wrongass), Sven +4.6% (kren), Earthshaker +4.2% (Артист/Babayka), Phantom Assassin +4.1% (kren) |
+| Slark | britishboi | Lycan +7.6% (Артист), Riki +7.2% (Wrongass), Grimstroke +7.1% (Babayka/Enaria), Disruptor +6.1% (Babayka), Puck +5.1% (Wrongass), Enigma +5.1% (Артист) |
+| Spectre | britishboi | Lycan +5.7% (Артист), Abaddon +4.5% (Артист), Phantom Lancer +3.9% (kren), Wraith King +2.9% (kren/Артист), Phantom Assassin +2.6% (kren), Invoker +2.1% (Wrongass) |
+| Anti-Mage | britishboi | Omniknight +8.3% (Артист), Riki +7.9% (Wrongass), Phantom Assassin +7.0% (kren), Shadow Shaman +6.4% (Babayka), Sven +5.7% (kren), Earthshaker +4.7% (Артист/Babayka) |
+| Lifestealer | britishboi | Omniknight +5.8% (Артист), Riki +5.0% (Wrongass), Lich +4.1% (Enaria), Grimstroke +4.1% (Babayka/Enaria), Phantom Lancer +3.3% (kren), Windranger +2.4% (kren) |
 
 ## Против кого они проигрывают
 
-Их матчи за 2 года (без турбо), сглажено к их среднему (53.8%) весом 30 игр; минимум 40 игр. ✔ — герой есть в наших пулах.
+Их матчи за 2 года (без турбо), сглажено к их среднему (53.6%) весом 30 игр; минимум 40 игр. ✔ — герой есть в наших пулах.
 
 | # | Герой | Их WR против | Игр | В наших пулах |
 |---|---|---|---|---|
-| 1 | Sniper | 48.2% | 43 | ✔ |
-| 2 | Techies | 48.9% | 48 |  |
-| 3 | Phantom Lancer | 50.9% | 45 | ✔ |
-| 4 | Witch Doctor | 51.5% | 46 | ✔ |
-| 5 | Ogre Magi | 52.2% | 45 | ✔ |
-| 6 | Axe | 52.3% | 43 |  |
-| 7 | Earthshaker | 53.6% | 43 | ✔ |
-| 8 | Lina | 53.6% | 43 |  |
-| 9 | Lifestealer | 53.6% | 43 |  |
-| 10 | Rubick | 54.7% | 58 |  |
-| 11 | Invoker | 55.1% | 61 | ✔ |
-| 12 | Necrophos | 56.5% | 41 | ✔ |
+| 1 | Lich | 46.0% | 55 | ✔ |
+| 2 | Spectre | 48.2% | 49 | ✔ |
+| 3 | Sniper | 48.4% | 57 | ✔ |
+| 4 | Techies | 49.0% | 66 |  |
+| 5 | Dawnbreaker | 49.5% | 49 | ✔ |
+| 6 | Legion Commander | 49.5% | 57 |  |
+| 7 | Phantom Lancer | 50.1% | 60 | ✔ |
+| 8 | Crystal Maiden | 50.1% | 44 | ✔ |
+| 9 | Zeus | 50.7% | 51 | ✔ |
+| 10 | Earthshaker | 52.0% | 74 | ✔ |
+| 11 | Witch Doctor | 52.0% | 72 | ✔ |
+| 12 | Anti-Mage | 52.1% | 47 |  |

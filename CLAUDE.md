@@ -19,11 +19,14 @@
   (файлы — `testdata/contradictory/`, проверка карт лиги — `LeagueCheck`, отчёт — `docs/research/contradictory-data.md`)
 - Разбор патча (страница `/patch`, значки в драфте): `python tools/patch/build.py [--fetch]` → `analysis/patch/{версия}/patch.json`;
   ручные оценки — `analysis/patch/{версия}/review.json`, методика — `docs/research/patch-review.md`
+- Сильные предметы патча (страница `/heroes`, страницы героев): `python tools/items/fetch.py`, затем
+  `python tools/items/analyze.py` → `analysis/items/{патч}/items.{md,json}`; нужны, пока сводки STRATZ не знают новые предметы
 - Проверки сайта в браузере (после правок JS/шаблонов, при запущенном сайте): `python tools/ui-checks/<скрипт>.py`
 
 Архитектура (ADR 0003): `AnalysisContext` грузит всё один раз → `Squad` считает view-модели (`Views`) →
 их показывают `MarkdownRenderer` и сайт. Live-драфт — `DraftEngine`, соперник в симуляции — `DraftBot`, оценка драфта — `DraftEvaluation`
-(свойства героев — `config/hero_traits.yaml`). Составы соперника из карт турнира (замены, смена позиций) — `TeamLineups`,
+(свойства героев — `config/hero_traits.yaml`). Страницы героев (`/heroes`, `/hero/{id}`) — `HeroGuide`: STRATZ
+только по неделям текущего патча, предметы героя — `HeroItems`, предметы против героя — ручной `config/item_counters.yaml`. Составы соперника из карт турнира (замены, смена позиций) — `TeamLineups`,
 драфт по умолчанию учитывает их все с весами (`AnalysisContext.lineupsOf`). `GoldenReportTest` сверяет генератор с
 закоммиченным `analysis/`: после изменения данных или расчётов перегенерируйте `analysis/` (`./gradlew analyze`).
 

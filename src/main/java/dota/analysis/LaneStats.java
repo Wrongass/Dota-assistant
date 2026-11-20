@@ -58,8 +58,20 @@ final class LaneStats {
     private final Map<Integer, Map<Integer, Map<Integer, Cell>>> lanes = new HashMap<>();
     /** hero → pos → сумма по всем соперникам. */
     private final Map<Integer, Map<Integer, Cell>> totals = new HashMap<>();
-    /** hero → соперник → {игр, synergy %}. */
+    /** hero → соперник → {игр, сумма synergy % × игр} (по неделям складываем с весом игр). */
     private final Map<Integer, Map<Integer, double[]>> game = new HashMap<>();
+    /** hero → союзник → {игр, сумма synergy % × игр, побед}. */
+    private final Map<Integer, Map<Integer, double[]>> allies = new HashMap<>();
+    /** hero → позиция 1..5 → {игр, побед} по stats STRATZ. */
+    private final Map<Integer, long[][]> positions = new HashMap<>();
+    /** Покупки предметов по минутам. */
+    final HeroItems items = new HeroItems();
+    /** Выборка только из недель текущего патча (а не последние 4 недели прошлого). */
+    boolean patchOnly;
+    String patch;
+    private static final Pattern MATCHUP = Pattern.compile("mu(\\d*)");
+    private static final Pattern ITEMS = Pattern.compile("i(\\d+)p([1-5])");
+    private static final Pattern STATS = Pattern.compile("s(\\d+)");
 
     private LaneStats(String week, String sample) {
         this.week = week;
@@ -87,17 +99,27 @@ final class LaneStats {
             return empty();
         }
         String sample = "";
+        boolean patchOnly = false;
+        String patch = null;
         Path info = dir.resolve("_sample.json");
         if (Files.exists(info)) {
             JsonNode i = JSON.readTree(info.toFile());
             JsonNode starts = i.path("week_starts");
+            patchOnly = i.path("patch_only").asBoolean(false);
+            patch = i.path("patch").asText(null);
             if (starts.size() > 0) {
-                sample = starts.get(0).asText().substring(0, 10) + " — "
-                        + java.time.Instant.parse(starts.get(starts.size() - 1).asText()).plusSeconds(6 * 86400)
-                        .toString().substring(0, 10) + ", Legend–Immortal, STRATZ";
+                java.time.Instant end = java.time.Instant.parse(starts.get(starts.size() - 1).asText()).plusSeconds(6 * 86400);
+                if (!i.path("fetched_at").asText("").isEmpty()) {
+                    java.time.Instant fetched = java.time.Instant.parse(i.path("fetched_at").asText());
+                    end = fetched.isBefore(end) ? fetched : end;
+                }
+                sample = dd(starts.get(0).asText()) + " — " + dd(end.toString())
+                        + (patchOnly ? " (только патч " + patch + ")" : "") + ", Legend–Immortal, STRATZ";
             }
         }
         LaneStats s = new LaneStats(dir.getFileName().toString(), sample);
+        s.patchOnly = patchOnly;
+        s.patch = patch;
         try (Stream<Path> files = Files.list(dir)) {
             for (Path f : (Iterable<Path>) files.filter(p -> p.getFileName().toString().matches("\\d+\\.json"))::iterator) {
                 int hero = Integer.parseInt(f.getFileName().toString().replace(".json", ""));
@@ -124,18 +146,73 @@ final class LaneStats {
                             .merge(r.path("heroId2").asInt(), c, Cell::plus);
                     totals.computeIfAbsent(hero, k -> new HashMap<>()).merge(pos, c, Cell::plus);
                 }
-            } else if (e.getKey().equals("mu")) {
+            } else if (MATCHUP.matcher(e.getKey()).matches()) {
                 for (JsonNode a : e.getValue().path("advantage")) {
                     if (a.path("heroId").asInt() != hero) {
                         continue;
                     }
                     for (JsonNode v : a.path("vs")) {
-                        game.computeIfAbsent(hero, k -> new HashMap<>()).put(v.path("heroId2").asInt(),
-                                new double[]{v.path("matchCount").asDouble(), v.path("synergy").asDouble()});
+                        add(game, hero, v);
+                    }
+                    for (JsonNode v : a.path("with")) {
+                        add(allies, hero, v);
+                    }
+                }
+            } else if (ITEMS.matcher(e.getKey()).matches()) {
+                Matcher im = ITEMS.matcher(e.getKey());
+                im.matches();
+                int pos = Integer.parseInt(im.group(2));
+                for (JsonNode r : e.getValue()) {
+                    items.add(hero, pos, r.path("itemId").asInt(), r.path("instance").asInt(), r.path("time").asInt(),
+                            r.path("matchCount").asLong(), r.path("winCount").asLong());
+                }
+            } else if (STATS.matcher(e.getKey()).matches()) {
+                for (JsonNode r : e.getValue()) {
+                    String p = r.path("position").asText("");
+                    if (p.matches("POSITION_[1-5]")) {
+                        long[] g = positions.computeIfAbsent(hero, k -> new long[6][2])[p.charAt(9) - '0'];
+                        g[0] += r.path("matchCount").asLong();
+                        g[1] += r.path("winCount").asLong();
                     }
                 }
             }
         }
+    }
+
+    private static String dd(String instant) {
+        return instant.substring(8, 10) + "." + instant.substring(5, 7);
+    }
+
+    private static void add(Map<Integer, Map<Integer, double[]>> to, int hero, JsonNode v) {
+        double n = v.path("matchCount").asDouble();
+        double[] cell = to.computeIfAbsent(hero, k -> new HashMap<>()).computeIfAbsent(v.path("heroId2").asInt(),
+                k -> new double[3]);
+        cell[0] += n;
+        cell[1] += v.path("synergy").asDouble() * n;
+        cell[2] += v.path("winCount").asDouble();
+    }
+
+    /** Синергия STRATZ (%, взвешенная по играм за недели) и игры; null, если пары нет. */
+    private static double[] synergy(Map<Integer, Map<Integer, double[]>> from, int hero, int other) {
+        double[] v = from.getOrDefault(hero, Map.of()).get(other);
+        return v == null || v[0] == 0 ? null : new double[]{v[0], v[1] / v[0], v[2]};
+    }
+
+    /** Игры и победы героя на позиции за выборку STRATZ; {0, 0}, если нет. */
+    long[] positionGames(int hero, int pos) {
+        long[][] p = positions.get(hero);
+        return p == null ? new long[2] : p[pos].clone();
+    }
+
+    /** Преимущество hero вместе с союзником ally (доля: 0,03 = +3%); NaN, если игр меньше {@link #MIN_GAMES}. */
+    double allyAdvantage(int hero, int ally) {
+        double[] v = synergy(allies, hero, ally);
+        return v == null || v[0] < MIN_GAMES ? Double.NaN : v[1] / 100;
+    }
+
+    int allyGames(int hero, int ally) {
+        double[] v = synergy(allies, hero, ally);
+        return v == null ? 0 : (int) v[0];
     }
 
     boolean isEmpty() {
@@ -182,7 +259,7 @@ final class LaneStats {
         double sum = 0;
         int n = 0;
         for (int e : enemies) {
-            double[] v = game.getOrDefault(hero, Map.of()).get(e);
+            double[] v = synergy(game, hero, e);
             if (v != null && v[0] >= MIN_GAMES) {
                 sum += v[1] / 100;
                 n++;
@@ -195,7 +272,7 @@ final class LaneStats {
     int gameMatches(int hero, Collection<Integer> enemies) {
         int n = 0;
         for (int e : enemies) {
-            double[] v = game.getOrDefault(hero, Map.of()).get(e);
+            double[] v = synergy(game, hero, e);
             n += v == null ? 0 : (int) v[0];
         }
         return n;
