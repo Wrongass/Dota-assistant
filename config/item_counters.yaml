@@ -1,0 +1,210 @@
+# Предметы против героев: ручной справочник по механикам игры (патч 7.42). Статистики «предмет против героя» нет
+# ни у STRATZ, ни у OpenDota (у OpenDota в 7.42 почти нет разобранных матчей), поэтому это знание игры, а не цифры.
+# Показывается на странице героя (/hero/{id}) в блоке «Предметы против него».
+#
+# Формат: список групп. В группе герои (имена как в constants/heroes.json), общая причина и предметы:
+#   good — хороши против этих героев, bad — слабы или бесполезны против них. У каждого предмета своё объяснение.
+# Имена предметов — английские, как в data/patch/{версия}/itemlist.json. HeroGuideTest проверяет, что все герои и
+# предметы существуют в текущем патче (удалённые в 7.42 Khanda, Helm of the Overlord, Javelin использовать нельзя).
+# Правьте смело: после изменения перезапустите сайт или нажмите «Перечитать данные».
+
+- heroes: [Phantom Lancer, Naga Siren, Chaos Knight, Terrorblade, Meepo]
+  why: иллюзии и клоны — много слабых тел рядом друг с другом
+  good:
+    - item: Battle Fury
+      why: клив бьёт по всем иллюзиям вокруг цели
+    - item: Mjollnir
+      why: Chain Lightning перескакивает по иллюзиям и клонам
+    - item: Maelstrom
+      why: дешёвая ранняя версия Mjollnir
+    - item: Crimson Guard
+      why: блок срезает фиксированный урон с каждого удара, а иллюзии бьют часто и слабо. В 7.42 Guard можно развеять
+    - item: Shiva's Guard
+      why: Arctic Blast бьёт и замедляет всех вокруг
+    - item: Radiance
+      why: горение по площади постоянно бьёт иллюзии
+  bad:
+    - item: Orchid Malevolence
+      why: заклинание в одну цель легко потратить на иллюзию, сначала найдите настоящего героя
+
+- heroes: [Phantom Assassin]
+  why: Blur даёт уклонение, Coup de Grace — криты
+  good:
+    - item: Monkey King Bar
+      why: Pierce проходит сквозь уклонение Blur
+    - item: Silver Edge
+      why: Break отключает Blur и криты Coup de Grace
+    - item: Heaven's Halberd
+      why: Disarm на 3 секунды, пока она прыгает на цель
+    - item: Skypiercer
+      why: новый предмет 7.42, Disarm перезаряжается намного быстрее рядом с врагом
+    - item: Ghost Scepter
+      why: в эфирной форме её атаки не проходят
+  bad:
+    - item: Bloodthorn
+      why: в 7.42 больше не даёт Pierce (true strike), против уклонения не помогает
+
+- heroes: [Windranger]
+  why: Windrun даёт уклонение от атак
+  good:
+    - item: Monkey King Bar
+      why: Pierce проходит сквозь уклонение Windrun
+    - item: Nullifier
+      why: развеивает Windrun и не даёт снова прожать предметы спасения
+
+- heroes: [Ursa, Troll Warlord, Sven, Monkey King, Faceless Void]
+  why: урон почти целиком от атак
+  good:
+    - item: Ghost Scepter
+      why: эфирную форму нельзя атаковать
+    - item: Heaven's Halberd
+      why: Disarm на 3 секунды в ключевой момент драки
+    - item: Skypiercer
+      why: Disarm часто, когда враг рядом; для оффлейна
+    - item: Force Staff
+      why: оттолкнуться от героя ближнего боя; в 7.42 толчок нельзя развеять
+
+- heroes: [Juggernaut]
+  why: Omnislash и Blade Fury
+  good:
+    - item: Ghost Scepter
+      why: удары Omnislash не проходят по эфирной цели
+    - item: Eul's Scepter of Divinity
+      why: самому взлететь в торнадо и переждать Omnislash
+
+- heroes: [Huskar]
+  why: живёт за счёт регенерации и Berserker's Blood
+  good:
+    - item: Spirit Vessel
+      why: режет лечение и регенерацию
+    - item: Eye of Skadi
+      why: снижает пополнение здоровья; в 7.42 проходит сквозь невосприимчивость к эффектам
+    - item: Silver Edge
+      why: Break отключает Berserker's Blood
+    - item: Heaven's Halberd
+      why: Disarm останавливает Burning Spear
+  bad:
+    - item: Dagon
+      why: Berserker's Blood даёт сопротивление магии на низком здоровье, взрывной магический урон теряется
+
+- heroes: [Alchemist, Lifestealer, Timbersaw, Necrophos]
+  why: лечение и регенерация в драке
+  good:
+    - item: Spirit Vessel
+      why: режет лечение и регенерацию
+    - item: Eye of Skadi
+      why: снижает пополнение здоровья от атак
+
+- heroes: [Necrophos]
+  why: магический урон по площади
+  good:
+    - item: Pipe of Insight
+      why: барьер от магического урона на всю команду
+  bad:
+    - item: Ghost Scepter
+      why: в эфирной форме герой получает больше магического урона, а у Necrophos он почти весь магический
+
+- heroes: [Bristleback]
+  why: Bristleback снижает урон со спины и сбоку
+  good:
+    - item: Silver Edge
+      why: Break отключает пассивный Bristleback
+    - item: Spirit Vessel
+      why: урон в процентах от здоровья и меньше лечения
+
+- heroes: [Spectre]
+  why: Dispersion отражает урон, Desolate добивает одиноких
+  good:
+    - item: Silver Edge
+      why: Break отключает Dispersion и Desolate
+
+- heroes: [Medusa]
+  why: Mana Shield тратит ману вместо здоровья
+  good:
+    - item: Diffusal Blade
+      why: Manabreak сжигает ману, щит держит меньше
+    - item: Disperser
+      why: улучшенный Diffusal, сжигает ману
+
+- heroes: [Anti-Mage, Storm Spirit, Puck, Ember Spirit, Queen of Pain, Void Spirit]
+  why: уходят из драки заклинаниями
+  good:
+    - item: Orchid Malevolence
+      why: немота не даёт прыгнуть или уйти
+    - item: Bloodthorn
+      why: немота дольше и с уроном
+    - item: Scythe of Vyse
+      why: превращение отключает всё, включая предметы
+    - item: Gleipnir
+      why: корни по площади отключают прыжки вроде Blink и Ball Lightning
+
+- heroes: [Riki, Clinkz, Bounty Hunter, Nyx Assassin, Weaver, Mirana, Templar Assassin]
+  why: невидимость
+  good:
+    - item: Dust of Appearance
+      why: показывает невидимых рядом
+    - item: Sentry Ward
+      why: дешёвое обнаружение на месте драки или у своей линии
+    - item: Gem of True Sight
+      why: постоянное обнаружение вокруг носителя
+
+- heroes: [Riki]
+  why: Cloak and Dagger — пассивная невидимость
+  good:
+    - item: Silver Edge
+      why: Break отключает пассивную невидимость
+
+- heroes: [Templar Assassin]
+  why: Refraction блокирует несколько ударов
+  good:
+    - item: Maelstrom
+      why: частые мелкие удары молнией быстро снимают заряды Refraction
+    - item: Mjollnir
+      why: то же, что Maelstrom, плюс щит
+
+- heroes: [Slark]
+  why: Shadow Dance прячет и лечит, Essence Shift ворует характеристики
+  good:
+    - item: Eye of Skadi
+      why: снижает пополнение здоровья и замедляет
+    - item: Spirit Vessel
+      why: режет регенерацию Shadow Dance
+    - item: Silver Edge
+      why: Break отключает Essence Shift
+  bad:
+    - item: Dust of Appearance
+      why: Shadow Dance не раскрывается ни пылью, ни Gem
+    - item: Gem of True Sight
+      why: Shadow Dance не раскрывается ни пылью, ни Gem
+
+- heroes: [Legion Commander, Doom]
+  why: главное заклинание — в одну цель
+  good:
+    - item: Linken's Sphere
+      why: блокирует Duel или Doom, если сфера не на перезарядке
+
+- heroes: [Enigma, Faceless Void, Axe]
+  why: главный контроль проходит сквозь невосприимчивость
+  bad:
+    - item: Black King Bar
+      why: Black Hole, Chronosphere и Berserker's Call действуют и под BKB; против них нужна позиция, Blink или Force Staff
+
+- heroes: [Lion, Lina, Zeus, Skywrath Mage, Leshrac]
+  why: взрывной магический урон
+  good:
+    - item: Black King Bar
+      why: невосприимчивость к магии на ключевую драку
+    - item: Pipe of Insight
+      why: барьер от магии на всю команду; в 7.42 перезарядка 50 с, барьер можно развеять
+    - item: Glimmer Cape
+      why: сопротивление магии и невидимость на союзника
+
+- heroes: [Broodmother, Lycan, Nature's Prophet]
+  why: призванные существа
+  good:
+    - item: Battle Fury
+      why: клив бьёт по пачке пауков, волков или энтов
+    - item: Mjollnir
+      why: молнии перескакивают по призванным существам
+    - item: Shiva's Guard
+      why: урон по площади вокруг

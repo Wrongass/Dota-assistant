@@ -85,6 +85,41 @@ class LaneStatsTest {
     }
 
     @Test
+    void matchupsOfSeveralWeeksAreWeightedByGamesWithAlliesAndPositions() throws Exception {
+        Path dir = data.resolve("raw/stratz/lanes/2969");
+        Files.createDirectories(dir);
+        Files.writeString(dir.resolve("_sample.json"), """
+                {"fetched_at": "2026-11-27T10:00:00Z", "patch": "7.42", "patch_only": true, "weeks": [2968, 2969],
+                 "week_starts": ["2026-11-19T00:00:00Z", "2026-11-26T00:00:00Z"]}
+                """);
+        Files.writeString(dir.resolve("47.json"), """
+                {"data": {"heroStats": {
+                  "w2968p2": [{"heroId2": 25, "matchCount": 50, "winCount": 20, "drawCount": 10, "lossCount": 20,
+                               "stompWinCount": 0, "stompLossCount": 0, "matchWinCount": 25}],
+                  "mu2968": {"advantage": [{"heroId": 47, "vs": [{"heroId2": 25, "matchCount": 300, "winCount": 150, "synergy": 1.0}],
+                                            "with": [{"heroId2": 5, "matchCount": 80, "winCount": 50, "synergy": 4.0}]}]},
+                  "mu2969": {"advantage": [{"heroId": 47, "vs": [{"heroId2": 25, "matchCount": 100, "winCount": 60, "synergy": 5.0}],
+                                            "with": [{"heroId2": 5, "matchCount": 40, "winCount": 20, "synergy": -2.0}]}]},
+                  "s2968": [{"position": "POSITION_2", "matchCount": 900, "winCount": 450}],
+                  "s2969": [{"position": "POSITION_2", "matchCount": 100, "winCount": 60},
+                            {"position": "POSITION_3", "matchCount": 10, "winCount": 4}],
+                  "i2968p2": [{"itemId": 1, "instance": 0, "time": 20, "matchCount": 600, "winCount": 300}]
+                }}}
+                """);
+        LaneStats s = LaneStats.load(data);
+        assertTrue(s.patchOnly);
+        assertEquals("7.42", s.patch);
+        assertTrue(s.sample.contains("19.11 — 27.11") && s.sample.contains("патч 7.42"), s.sample);
+        assertEquals((300 * 1.0 + 100 * 5.0) / 400 / 100, s.gameAdvantage(47, List.of(25)), 1e-9, "среднее по играм");
+        assertEquals(400, s.gameMatches(47, List.of(25)));
+        assertEquals((80 * 4.0 - 40 * 2.0) / 120 / 100, s.allyAdvantage(47, 5), 1e-9);
+        assertEquals(120, s.allyGames(47, 5));
+        assertArrayEquals(new long[]{1000, 510}, s.positionGames(47, 2));
+        assertArrayEquals(new long[]{0, 0}, s.positionGames(1, 2));
+        assertFalse(s.items.isEmpty());
+    }
+
+    @Test
     void lanesFaceTheRightPositions() {
         assertEquals(List.of(3, 4), LaneStats.opposingPositions(1));
         assertEquals(List.of(2), LaneStats.opposingPositions(2));

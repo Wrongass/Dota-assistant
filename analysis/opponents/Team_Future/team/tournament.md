@@ -50,7 +50,7 @@ Dire, 40 мин, [OpenDota](https://www.opendota.com/matches/9048850651), [Dotab
 | Furs | Grimstroke | off | 353 | 6/4/27 |
 | twilight | Dragon Knight | safe | 658 | 7/3/18 |
 
-Соперник: Axe (Kabal), Techies (COCKPIT), Slark (Aspera), Shadow Shaman (sherdar?), Medusa (Timer)
+Соперник: Axe (Мамкин сыщик), Techies (COCKPIT), Slark (Aspera), Shadow Shaman (sherdar?), Medusa (Timer)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 
@@ -68,7 +68,7 @@ Radiant, 35 мин, [OpenDota](https://www.opendota.com/matches/9048932564), [Do
 | twilight | Bristleback | safe | 590 | 5/5/21 |
 | R3N | Witch Doctor | safe | 302 | 4/8/15 |
 
-Соперник: Snapfire (sherdar?), Disruptor (Aspera), Night Stalker (Kabal), Drow Ranger (COCKPIT), Kez (Timer)
+Соперник: Snapfire (sherdar?), Disruptor (Aspera), Night Stalker (Мамкин сыщик), Drow Ranger (COCKPIT), Kez (Timer)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 

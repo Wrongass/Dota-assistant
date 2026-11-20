@@ -122,7 +122,7 @@ Radiant, 40 мин, [OpenDota](https://www.opendota.com/matches/9069549338), [Do
 | britishboi | Anti-Mage | safe | 790 | 19/2/11 |
 | Asmodeus | Hoodwink | off | 340 | 5/6/18 |
 
-Соперник: Lion (sherdar?), Phantom Assassin (COCKPIT), Axe (Kabal), Jakiro (krs), Void Spirit (Aspera)
+Соперник: Lion (sherdar?), Phantom Assassin (COCKPIT), Axe (Мамкин сыщик), Jakiro (krs), Void Spirit (Aspera)
 
 Драфт по порядку (**жирным** — ходы этой команды, b — бан, P — пик):
 

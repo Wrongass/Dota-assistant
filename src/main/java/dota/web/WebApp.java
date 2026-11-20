@@ -113,6 +113,8 @@ public class WebApp {
         app.get("/draft", this::draftPage);
         app.get("/drafts", this::draftHistory);
         app.get("/counters", this::counters);
+        app.get("/heroes", this::heroesPage);
+        app.get("/hero/{id}", this::heroPage);
         app.get("/api/heroes", ctx -> ctx.json(site.ctx().heroList()));
         app.get("/api/player/{id}", this::playerApi);
         app.get("/api/counters", this::countersApi);
@@ -645,6 +647,22 @@ public class WebApp {
                 pos < 1 || pos > 5, dota.analysis.Counters.build(c, enemies, pos), error));
     }
 
+    /** Все герои и новые предметы патча: на ком они хороши. */
+    private void heroesPage(Context http) {
+        render(http, "heroes.jte", new Models.HeroesPage(page("Герои", "heroes"), site.heroes().index()));
+    }
+
+    /** Страница героя: /hero/12 или /hero/Phantom Lancer. */
+    private void heroPage(Context http) {
+        AnalysisContext c = site.ctx();
+        Integer id = heroId(c, http.pathParam("id").replace('_', ' '));
+        dota.analysis.HeroGuide.View v = id == null ? null : site.heroes().hero(id);
+        if (v == null) {
+            throw new NotFoundResponse("герой «" + http.pathParam("id") + "»");
+        }
+        render(http, "hero.jte", new Models.HeroPage(page(v.name(), "heroes"), v));
+    }
+
     private static Integer heroId(AnalysisContext c, String text) {
         String t = text.trim().toLowerCase(java.util.Locale.ROOT);
         for (AnalysisContext.HeroInfo h : c.heroList()) {
@@ -910,6 +928,10 @@ public class WebApp {
         }
         if (parts[0].equals("meta")) {
             return "/meta";
+        }
+        // сильные предметы патча (tools/items) показаны на странице «Герои»
+        if (parts[0].equals("items")) {
+            return "/heroes";
         }
         if (parts[0].equals("players") && parts.length == 2) {
             return playerLink(c.ours, parts[1]);

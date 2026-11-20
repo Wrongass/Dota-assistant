@@ -1,73 +1,106 @@
-# План на игру: Team Visual vs comaTOZ (ИТОЗ)
+# План на игру: Team Visual vs comaTOZ (ИТОЗ), запасной план на L5
 
-> Написан вручную на основе [team/threats.md](team/threats.md), [team/tournament.md](team/tournament.md),
-> отчётов игроков, [нашего турнира](../../team/tournament.md) и вкладки «Контрпики» (линия — STRATZ, 1–28 октября,
-> Legend–Immortal). Данные на 2026-10-27. Генератор этот файл не трогает.
+> Написан вручную по картам лиги (5 карт плей-офф: 7.11 против НИИЭП 0:2, 14.11 против УППО 2:1) и статистике патча
+> 7.42. Источники: [team/threats.md](team/threats.md), [team/tournament.md](team/tournament.md),
+> [нашему турниру](../../team/tournament.md), [пулам](../../team/draft_data.md), [предметам патча](../../items/7.42/items.md),
+> страницам «Герои» и «Патч». Данные на 2026-11-20. Генератор этот файл не трогает.
+>
+> Цифры героев в патче — STRATZ, только 7.42 (19–20.11), Legend–Immortal. Матчапы — оттуда же, по игре.
 
 ## Где мы сейчас
 
-Плей-ин, верхняя сетка. Если мы проходим BIM Инжиниринг (W1), в матче W5 играем с победителем пары ИТОЗ — Дом.РФ.
-ИТОЗ в группе A: 1–0–2, карты 2–4. Проиграли 0:2 Эльбрус и 0:2 Звезде, обыграли 2:0 только BIM.
-**По рангам ИТОЗ сильнее Дом.РФ**: у них два игрока Божество 4.
+Это запасной план. Сначала играем L4 с НИИЭП. Если выигрываем, в тот же день (21.11) играем L5 с победителем пары
+ИТОЗ — Звезда. ИТОЗ проиграли НИИЭП 0:2 (34 и 37 минут) и обыграли УППО 2:1 (65, 57 и 48 минут). В плей-ин мы их
+обыграли. Все их карты сыграны в 7.41, новых после 15.11 нет.
 
 ## Кто они
 
-| Поз. | Игрок | Ранг | В турнире | Лучшее в пабах | Комментарий |
+| Поз. | Игрок | Уровень | В плей-офф | В пабах 7.42 | Комментарий |
 |---|---|---|---|---|---|
-| 1 | britishboi | **Божество 4** | Windranger ×2, Nature's Prophet ×2, Drow Ranger, Lifestealer | Phantom Lancer (157 игр), Lifestealer (5 из 6 за год), Anti-Mage, Spectre | **Главная угроза**: 60,6% побед в патче, 700 GPM в турнире |
-| 2 | kezi | **Божество 4** | Dragon Knight, Earth Spirit, Lina, Earthshaker | **Invoker** (508 игр, 67,6% за год), Viper, Ember Spirit | Сыграл 4 карты из 6. Без него мид — YOURSELF (Ember Spirit) |
-| 3 | YOURSELF (в турнире IAM-) | Герой 1 | Dragon Knight ×2, Doom, Slardar, Largo | Wraith King, Dragon Knight, Axe | Низкий ранг, но 283 игры в CM (52,7%) |
-| 4 | Asmodeus | **Рыцарь 3** | Spirit Breaker ×2, Hoodwink, Dark Willow, Rubick, Pudge | Pudge, Vengeful Spirit | **Слабое звено**: самый низкий ранг, 130 игр всего |
-| 5 | DrestoV1ch | Божество 2 | Bane, Undying, Clockwerk, Dark Willow, Techies, Oracle | Techies, Bounty Hunter, Shadow Shaman | Каждую карту новый герой |
+| 1 | britishboi | Божество 4 | Lifestealer, Spectre, Phantom Lancer, Windranger, Drow Ranger | 3 игры: Dazzle, Sven, PL | Широкий пул: PL (умение 94), WK, Spectre, WR |
+| 2 | kezi | Божество 4 | Sand King, Lina, Queen of Pain, Earth Spirit, OD | 1 игра: Viper | **Главная угроза.** Invoker 572 игры; **Arc Warden 68% (умение 89)** |
+| 3/4 | YOURSELF | Герой 1 | Slardar, Timbersaw (оффлейн); Windranger, Nyx, Dark Willow (саппорт) | нет | Против УППО поменялись с Asmodeus |
+| 4/3 | Asmodeus | Рыцарь 3 | Dark Willow 2 (саппорт); Dragon Knight, Wraith King, Tidehunter (оффлейн) | нет | |
+| 5 | DrestoV1ch | Божество 2 | **Techies 2**, Bane, Witch Doctor, Undying | 1 игра: Dazzle | Techies 6 раз за турнир, Undying 71% за год |
 
-Запасной Nick_Abram (оффлейн в 2 картах, Viper и Slardar). Тогда YOURSELF уходит на мид.
-
-**Линии во всех 6 картах одинаковые:** britishboi и DrestoV1ch на лёгкой, мид, YOURSELF и Asmodeus на сложной.
-Против нашего Артиста выйдут их сильнейший керри и Божество 2, против kren — YOURSELF и самый слабый Asmodeus.
+Слабое место: тройка и четвёрка (Рыцарь и Герой). Сильные керри, мид и пятёрка.
 
 ## Что они делают в драфте
 
-- **Свои баны:** Earth Spirit ×5, Lina ×4, **Outworld Devourer ×4**, Viper ×2, Ember Spirit ×2, Hoodwink ×2.
-  Из наших пулов уже банили Outworld Devourer, Viper, Lich, Lifestealer, Dragon Knight, Night Stalker, Necrophos.
-  **Лучшего мид-героя Wrongass (OD) почти наверняка забанят.** Готовим второй вариант.
-- **Первые пики разные:** Bane, Undying, Dragon Knight, Earth Spirit, Lina, один раз Windranger.
-- **Против них банят** Phantom Lancer (5 карт из 6) и Spectre (4 из 6), это герои britishboi.
-- **Против нас** в турнире чаще всего банили Outworld Devourer, Lifestealer и Dawnbreaker (по 3 раза), Lich и
-  Wraith King (по 2).
+- **Первые пики:** Techies (2 из 5), Lina, Dragon Knight, Undying.
+- **Их баны:** OD (3 карты из 5), Lina (3), Pangolier, Dazzle, Hoodwink, Dark Willow, Witch Doctor, Anti-Mage
+  (по 2), Grimstroke, Disruptor, Earthshaker, Wraith King. Из наших героев это **OD и Lina** (Wrongass), **Dazzle, Witch
+  Doctor, Grimstroke** (наши саппорты), **Wraith King**.
+- **Против них банят** Invoker и Arc Warden во всех 5 картах, это первые баны и НИИЭП, и УППО. Ещё Phantom Lancer,
+  Lifestealer, Spectre.
+
+## Патч 7.42 для их героев
+
+| Герой | Игрок | В патче | Вывод |
+|---|---|---|---|
+| **Arc Warden** | kezi | **54,7% (мид 56,7%)** | второй мид патча после Riki |
+| Invoker | kezi | 51,8% (мид 52,2%) | без изменений |
+| Sand King | kezi | 52,9% (мид 54,7%) | сильный |
+| Queen of Pain | kezi | 49,6% | слабее, чем казалось 19.11 |
+| Lina | kezi | **44,8%** | одна из худших, они сами её банят |
+| Phantom Lancer | britishboi | 53,4% | сильный |
+| Spectre | britishboi | **55,0%** | один из лучших керри |
+| Wraith King | britishboi | 54,4% | сильный |
+| Drow Ranger | britishboi, Asmodeus | **47,8%** | 19.11 считался усиленным, по большой выборке слабый |
+| Techies | DrestoV1ch | 49,9% | без изменений |
+| Undying | DrestoV1ch | 48,2% | слабый |
+| Earth Spirit | kezi | 48,7% | слабый |
 
 ## Наши баны (7)
 
-| # | Бан | Почему |
+| Фаза | Бан | Почему |
 |---|---|---|
-| 1 | **Invoker** | Сигнатурка kezi: 508 игр, 67,6% за год, угроза 0,85 |
-| 2 | **Phantom Lancer** | britishboi: 157 игр, умение 98. Соперники банили его в 5 картах из 6 |
-| 3 | **Lifestealer** | britishboi: 5 побед из 6 за год, брал в турнире. Если хотим Lifestealer себе (kren), забираем первым пиком, а не баним |
-| 4 | **Windranger** | britishboi брал 2 раза. Против Windranger у Артиста нет хорошей линии: у всех его героев, кроме Undying, линия в минус |
-| 5 | **Anti-Mage** или **Spectre** | britishboi: 183 и 103 игры. Spectre против них банили в 4 картах из 6 |
-| 6–7 | по ситуации | **Techies** (DrestoV1ch), **Spirit Breaker** (Asmodeus ×2), **Dragon Knight** (их первый пик, YOURSELF и kezi) |
+| 1 | **Invoker** | kezi, банят все, без него он играет запасных героев |
+| 1 | **Arc Warden** | kezi 68% за год, и это сильнейший мид после Riki; все соперники ИТОЗ банят его первым. **Новое**, в плане 19.11 его не было |
+| 1 | **Phantom Lancer** | britishboi, 162 игры, 60% за год (35 игр); WK против PL −6,2% |
+| 1 (4-й бан, если наш) | **Techies** | DrestoV1ch, 6 карт в турнире, их частый первый пик |
+| 2 | **Sand King** | запасной мид kezi, сильный в 7.42 |
+| 3 | по ситуации | **Spectre** или **Wraith King**, если britishboi ещё без героя |
+
+Изменения против плана 19.11: **Earth Spirit убран из первой фазы** (в 7.42 у него 48,7%), его место занял Arc
+Warden. Queen of Pain во второй фазе заменён на Sand King. Drow Ranger из третьей фазы убран.
+Lina не банить: в 7.42 она слабая (44,8%), а они сами её банят.
 
 ## Наш пик
 
-| Поз. | Основной | Почему | Запасной |
+| Поз. | Основной | Запасной | Форма и патч |
 |---|---|---|---|
-| 1 kren | **Wraith King** | 2 победы из 3 в турнире. Контрит Earth Spirit +6%, Windranger +4,6% | Против DK на линии: **Windranger** (23 игры, 61%, 9 за 2 мес., линия ▲), Necrophos |
-| 2 Wrongass | **Outworld Devourer**, если не забанят | Против Lina на линии лучший из наших: выигрывает 48%, проигрывает 25% | **Razor** (95 игр, 60%, линия против Lina ▲), Dragon Knight, Viper (OD и Viper они банят) |
-| 3 Артист | **Undying** против Drow / NP | Единственный герой Артиста с плюсом на линии против Drow (+20%) и NP (+23%) | **Dawnbreaker** (112 игр, против NP ▲), Night Stalker (85 игр, 61%) |
-| 4 Babayka | **Vengeful Spirit** | 3 победы из 5 в турнире | Nyx Assassin (контрит Techies +5,5%, Anti-Mage +4,3%) |
-| 5 Enaria | **Lich** | 3 победы из 4 в турнире. Они банили Lich 1 раз | Crystal Maiden (контрит PL +4,1%), Witch Doctor. Lion не брать (0 из 2) |
+| 4 Babayka | **Vengeful Spirit** | Grimstroke | VS 29 из 47 за 90 дней; Grimstroke 54,3% в патче, но они его банят |
+| 5 Enaria | **Lich** | Witch Doctor | Lich 20 из 31; WD против Slardar +4,4%, Timbersaw +4,3% |
+| 1 kren | **Wraith King** (банили один раз) | Windranger, Sven | WK 19 из 24; Windranger против Lifestealer +4,0%, Spectre +2,2%; Sven против PL +3,6% |
+| 3 Артист | **Dawnbreaker** | Earthshaker, Doom | Dawnbreaker 11 из 17, против Arc Warden +5,0%, Spectre +2,9%; Earthshaker против PL +4,4%; Doom против AW −8,0% |
+| 2 Wrongass | **OD** (если жив) или **Dragon Knight** | Sand King, Riki | Sand King против PL +6,1%, Lina +3,7%; Riki против QoP +6,3%, AW +5,1%, но 1 игра за год |
+
+Изменения против плана 19.11: тройка Артиста — Dawnbreaker вместо Enigma (Enigma 3 из 6, против Spectre −7,6%) и
+Omniknight (4 игры за год). Мид — по форме Wrongass (OD 17 из 23 за год, DK 9 из 17), Riki и Magnus опущены.
 
 Порядок:
-1. Первым пиком **Lich** или **Vengeful Spirit**: наши самые надёжные, их могут забанить во второй фазе.
-2. Затем Wraith King.
-3. Офлейн Артиста — после их керри. Если britishboi взял Windranger, Артисту нужен герой «по игре»,
-   а не на линию: Enigma, Night Stalker.
-4. Мид последним: смотрим, взял ли kezi Lina или DK.
+1. Первые пики VS и Lich, их они не банят.
+2. Wraith King, если жив после банов (против PL он слабый, поэтому PL в бан).
+3. Мид последним. Если Invoker не забанили, Wrongass может забрать его сам.
+
+## Предметы
+
+- **Techies:** Sentry Ward и Gem, детекция на линиях и у Рошана всю игру.
+- **Phantom Lancer:** Battle Fury, Mjollnir, Crimson Guard, Shiva's Guard, Radiance. Orchid и Scythe легко
+  потратить на иллюзию.
+- **Spectre:** Silver Edge (Break снимает Dispersion и Desolate).
+- **Arc Warden, Invoker, Queen of Pain:** Orchid или Bloodthorn, Scythe of Vyse.
+- Наши герои — как в плане на НИИЭП: WK без Armlet, Lich без Tranquil Boots, на WD новый Bloodslinger.
 
 ## Как играть
 
-- **Наша лёгкая — главная линия.** Против kren стоят YOURSELF (Герой 1) и самый слабый Asmodeus (Рыцарь 3). kren
-  и Babayka выигрывают её и давят оффлейн.
-- **Наш офлейн будет тяжёлым.** britishboi (Божество 4) и DrestoV1ch (Божество 2). Артист (Титан) не должен проиграть
-  её в ноль. Против Windranger, Drow и NP — Undying.
-- **Мид:** Wrongass (Властелин 5) против kezi (Божество 4) — ранг выше у kezi. На Lina отвечаем OD или Razor.
-- **britishboi фармит быстро** (700 GPM). Не давать ему спокойно стоять на линии и в лесу после 10-й минуты.
+- **Давить их тройку и четвёрку.** Это самые слабые игроки по уровню, а наша сложная линия (Артист и Babayka)
+  сильнее.
+- **Techies у DrestoV1ch** затягивает игру. С ним карты против УППО шли 57–65 минут. Нужны детекция и ранние объекты.
+- НИИЭП обыграли их быстро, за 34–37 минут. Ранний темп против них работает.
+
+## Риски
+
+- Если Invoker и Arc Warden забанены, kezi берёт Sand King, Lina или OD. Sand King в 7.42 сильный, Lina слабая.
+- Позиции 3 и 4 у них меняются: драфт на сайте учитывает оба варианта, смотрите «Что они возьмут» по ходу.

@@ -26,7 +26,8 @@
     @endif
 
     @if(!v.enemies().isEmpty())
-        <p>Наша позиция <b>${v.position()}</b>@if(v.player() != null) (${v.player()})@endif против <b>${String.join(" + ", v.enemyNames())}</b>.
+        <p>Наша позиция <b>${v.position()}</b>@if(v.player() != null) (${v.player()})@endif против <b>${String.join(" + ", v.enemyNames())}</b>
+            <span class="small">(@for(int i = 0; i < v.enemies().size(); i++)@if(i > 0), @endif<a href="/hero/${v.enemies().get(i)}">страница ${v.enemyNames().get(i)}</a>@endfor: предметы против него, с кем его берут)</span>.
             @if(model.posAuto())<span class="muted small">Позиция выбрана по тому, где этот герой чаще всего стоит в патче; поменять — список «Наша позиция».</span>@endif
             @if(v.hasLane())
                 <span class="muted small">Линия — ${v.sample()}: доля выигранных / ничейных / проигранных линий
@@ -46,7 +47,7 @@
                     <thead><tr><th>Герой</th><th class="num">Перевес</th><th class="num">W / D / L</th><th class="num">Игру</th><th class="num">Линий</th></tr></thead>
                     <tbody>
                     @for(var c : v.lane())
-                        <tr><td>${c.name()}</td>
+                        <tr><td><a href="/hero/${c.heroId()}"><img class="hero-ico" src="/img/icons/${c.heroId()}.png" alt="" loading="lazy"> ${c.name()}</a></td>
                             <td class="num ${c.laneAdv() >= 0 ? "strong" : "weak"}">${Fmt.signedPct(c.laneAdv())}</td>
                             <td class="num">${Math.round(100 * c.laneWin())} / ${Math.round(100 * c.laneDraw())} / ${Math.round(100 * c.laneLoss())}%</td>
                             <td class="num">${Fmt.pct(c.gameWin())}</td><td class="num muted">${c.laneMatches()}</td></tr>
@@ -63,7 +64,7 @@
                     <thead><tr><th>Герой</th><th class="num">По игре</th><th class="num">Линия</th></tr></thead>
                     <tbody>
                     @for(var c : v.game())
-                        <tr><td>${c.name()}</td>
+                        <tr><td><a href="/hero/${c.heroId()}"><img class="hero-ico" src="/img/icons/${c.heroId()}.png" alt="" loading="lazy"> ${c.name()}</a></td>
                             <td class="num ${c.gameAdv() >= 0 ? "strong" : "weak"}">${Fmt.signedPct(c.gameAdv())}</td>
                             <td class="num muted">${c.laneMatches() == 0 ? "—" : Fmt.signedPct(c.laneAdv())}</td></tr>
                     @endfor
@@ -83,7 +84,7 @@
                     <thead><tr><th>Герой</th><th class="num">Линия</th><th class="num">По игре</th><th class="num" title="Все игры игрока на герое, без Турбо">Игр всего</th><th class="num" title="Винрейт игрока на герое за всё время">WR всего</th><th class="num" title="Игры за последние 2 месяца">За 2 мес.</th></tr></thead>
                     <tbody>
                     @for(var o : v.ours())
-                        <tr><td>${o.hero().name()}</td>
+                        <tr><td><a href="/hero/${o.hero().heroId()}"><img class="hero-ico" src="/img/icons/${o.hero().heroId()}.png" alt="" loading="lazy"> ${o.hero().name()}</a></td>
                             <td class="num ${o.hero().laneMatches() == 0 ? "muted" : o.hero().laneAdv() >= 0 ? "strong" : "weak"}">${o.hero().laneMatches() == 0 ? "—" : Fmt.signedPct(o.hero().laneAdv())}</td>
                             <td class="num ${Double.isNaN(o.hero().gameAdv()) ? "muted" : o.hero().gameAdv() >= 0 ? "strong" : "weak"}">${Double.isNaN(o.hero().gameAdv()) ? "—" : Fmt.signedPct(o.hero().gameAdv())}</td>
                             <td class="num">${o.games()}${o.games() < 10 ? " · мало" : ""}</td>

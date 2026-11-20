@@ -44,7 +44,7 @@ class WebAppTest {
     @Test
     void reportPagesRender() throws Exception {
         for (String path : new String[]{"/", "/team", "/player/138244651", "/meta", "/draft-data", "/tournament",
-                "/group", "/opponent/UPPO_TEAM", "/method", "/static/app.css"}) {
+                "/group", "/opponent/UPPO_TEAM", "/method", "/heroes", "/hero/12", "/static/app.css"}) {
             HttpResponse<String> r = get(path);
             assertEquals(200, r.statusCode(), path);
             assertFalse(r.body().isBlank(), path);
@@ -106,6 +106,10 @@ class WebAppTest {
             assertFalse(body.matches("(?s).*href=\"[^\"]*\\.md[\"#].*"), path + " содержит ссылку на .md");
         }
         assertTrue(get("/draft-data").body().contains("href=\"/group\""), "ссылка ../league/group.md → /group");
+        String future = get("/opponent/Team_Future").body();
+        if (future.contains("предметам патча")) {
+            assertTrue(future.contains("href=\"/heroes\""), "ссылка ../../items/7.42/items.md → /heroes");
+        }
     }
 
     @Test

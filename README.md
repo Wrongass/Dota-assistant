@@ -26,7 +26,7 @@
 ./gradlew run --args="--only 138244651"         # один игрок
 ./gradlew run --args="--no-meta"                # без данных по патчу
 ./gradlew run --args="--no-league"              # без матчей лиги
-./gradlew run --args="--no-stratz"              # без линии и матчапов из STRATZ
+./gradlew run --args="--no-stratz"              # без линии, матчапов и предметов из STRATZ
 ./gradlew run --args="--no-meta --no-stratz --no-images --league-players"  # + игроки всей лиги для бэктеста (data/backtest)
 ./gradlew analyze                               # отчёты в analysis/ из data/
 ./gradlew analyze --args="--date 2026-10-14"    # отчёты на дату (давность матчей считается от неё)
@@ -37,6 +37,8 @@ python tools/forecast/forecast.py               # прогноз плей-офф
 ./gradlew draftBacktest --args="--contradict"   # тест модели драфта на противоречивых данных (testdata/contradictory)
 python tools/contradict/forecast_check.py       # то же для прогноза плей-офф (docs/research/contradictory-data.md)
 python tools/patch/build.py --fetch             # разбор патча → analysis/patch/{версия}/patch.json (страница /patch)
+python tools/items/fetch.py                     # выборка ~3000 матчей Legend+ патча с инвентарями (STRATZ) → data/items
+python tools/items/analyze.py                   # сильные предметы патча → analysis/items/{патч}/items.md (страница /heroes)
 ./gradlew build                                 # сборка и тесты
 ```
 
@@ -111,9 +113,15 @@ data/meta/{patch}/
     hero_positions.json /explorer  позиция 1–5 героя в разобранных матчах патча
     _sample.json        параметры выборки
 data/raw/stratz/lanes/{неделя}/
-    {hero_id}.json      STRATZ GraphQL heroStats: laneOutcome по позициям 1–5 за 4 недели (исход линии против каждого
-                        героя линии) и heroVsHeroMatchup (преимущество по игре), Legend–Immortal
-    _sample.json        недели и ранги выборки
+    {hero_id}.json      STRATZ GraphQL heroStats, Legend–Immortal, только недели текущего патча (до 4): laneOutcome по
+                        позициям 1–5 (исход линии против каждого героя линии), heroVsHeroMatchup (по игре против
+                        героя и вместе с союзником), itemFullPurchase по позициям (покупки предметов по минутам),
+                        stats (игры героя по позициям). Пока целой недели нового патча нет — 4 недели прошлого
+    _sample.json        патч, недели и ранги выборки; идущая неделя перекачивается, если папке больше 20 часов
+data/items/{патч}/
+    matches.jsonl       tools/items/fetch.py: id матчей из OpenDota (каждый n-й Legend+ патча), финальные
+                        инвентари из STRATZ match(id); нужна, пока сводки STRATZ не знают новые предметы
+    _ids.json, _sample.json  отобранные id и параметры выборки
 ```
 
 Уже скачанные файлы не перекачиваются без `--refresh`. Подробности и причины решений:
@@ -132,6 +140,7 @@ data/raw/stratz/lanes/{неделя}/
 | Турнир / Группа | наши матчи с драфтами по ходам; все матчи группы |
 | Соперник | план на игру (`game_plan.md`), угрозы, их баны, ответы из наших пулов, их турнир, состав |
 | Мета / Методика | мета патча по позициям, про-сцена, связки, контрпики; как считаются оценки |
+| Герои | страница каждого героя: кто его контрит на линии и по игре, кого контрит он, с кем брать, с какими предметами выигрывает по позициям, предметы против него (`config/item_counters.yaml`); новые предметы патча — на ком хороши |
 | **Драфт** | живой драфт Captains Mode (ниже) |
 
 ### Живой драфт

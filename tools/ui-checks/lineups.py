@@ -74,7 +74,7 @@ try:
         time.sleep(0.6)
 
     call("Page.enable")
-    call("Page.navigate", url="http://127.0.0.1:8070/draft?opponent=UPPO_TEAM#first=us&heroes=")
+    call("Page.navigate", url="http://127.0.0.1:8070/draft?opponent=Team_Future#first=us&heroes=")
     time.sleep(2.5)
     js("localStorage.clear()")  # чистый старт: драфты прошлых прогонов не мешают
     call("Page.reload")
@@ -117,7 +117,7 @@ try:
     def their_slots():
         return js("(() => document.getElementById('their-slots').innerText)()")
 
-    # у UPPO TEAM один состав в турнире — блока нет
+    # у Team Future (НИИЭП) один состав во всех картах турнира — блока нет (у UPPO с 14.11 их два)
     check("у соперника с одним составом блока «Состав» нет", js("document.getElementById('their-lineups').hidden"))
 
     js("location.href = '/draft?opponent=SyberStar#first=us&heroes=23,22,1,2,31,32,33'")

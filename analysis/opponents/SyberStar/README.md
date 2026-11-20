@@ -1,6 +1,6 @@
 # Соперник: SyberStar (НПП «Звезда»)
 
-Сгенерировано 2026-11-19, патч 7.42. Позиции — по турнирным матчам (см. `config/players.yaml`).
+Сгенерировано 2026-11-20, патч 7.42. Позиции — по турнирным матчам (см. `config/players.yaml`).
 
 ## Файлы
 
@@ -11,8 +11,8 @@
 | [team/tournament.md](team/tournament.md) | Их турнирные матчи и драфты |
 | [team/roster.md](team/roster.md) | Состав, ранги, на каких позициях играют в пабах, сыгранность |
 | [players/pos1_死.md](players/pos1_死.md) | Позиция 1, 死: лучшие герои и герои под патч |
-| [players/pos2_SuperPoni.md](players/pos2_SuperPoni.md) | Позиция 2, SuperPoni: лучшие герои и герои под патч |
-| [players/pos3_Elsa.md](players/pos3_Elsa.md) | Позиция 3, Elsa: лучшие герои и герои под патч |
+| [players/pos2_Леонид Ильич.md](players/pos2_Леонид Ильич.md) | Позиция 2, Леонид Ильич: лучшие герои и герои под патч |
+| [players/pos3_SuperPoni.md](players/pos3_SuperPoni.md) | Позиция 3, SuperPoni: лучшие герои и герои под патч |
 | [players/pos4_СГРЫЗ_КАСТРЮЛЮ.md](players/pos4_СГРЫЗ_КАСТРЮЛЮ.md) | Позиция 4, СГРЫЗ_КАСТРЮЛЮ: лучшие герои и герои под патч |
 | [players/pos5_kalibri.md](players/pos5_kalibri.md) | Позиция 5, kalibri: лучшие герои и герои под патч |
 

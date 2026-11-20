@@ -140,7 +140,22 @@ final class Meta {
             m.bracketMatches[b] /= 10;
         }
 
-        for (JsonNode r : rows(file.apply("hero_positions.json"))) {
+        // позиции считаются по разобранным матчам, а их в первые дни патча единицы (7.42 через сутки: 10 матчей,
+        // 100 строк героев) — с такой выборкой у всех героев позиция «?». Тогда берём позиции прошлого патча.
+        Path positions = file.apply("hero_positions.json");
+        if (Files.exists(positions) && !m.fallbacks.containsKey("hero_positions.json")
+                && totalGames(rows(positions)) < MIN_POSITION_GAMES) {
+            for (int i = patches.size() - 2; i >= 0; i--) {
+                String prev = patches.get(i).get("name").asText();
+                Path p = dataDir.resolve("meta").resolve(prev).resolve("hero_positions.json");
+                if (Files.exists(p) && totalGames(rows(p)) >= MIN_POSITION_GAMES) {
+                    m.fallbacks.put("hero_positions.json", prev);
+                    positions = p;
+                    break;
+                }
+            }
+        }
+        for (JsonNode r : rows(positions)) {
             int hero = r.get("hero_id").asInt(), pos = r.get("pos").asInt();
             m.posGames.computeIfAbsent(hero, k -> new long[6])[pos] += r.get("games").asLong();
             m.posWins.computeIfAbsent(hero, k -> new long[6])[pos] += r.get("wins").asLong();
@@ -191,6 +206,17 @@ final class Meta {
             }
         }
         return m;
+    }
+
+    /** Меньше стольких строк героев в hero_positions.json — позиции берутся из прошлого патча. */
+    static final long MIN_POSITION_GAMES = 5000;
+
+    private static long totalGames(JsonNode rows) {
+        long n = 0;
+        for (JsonNode r : rows) {
+            n += r.path("games").asLong();
+        }
+        return n;
     }
 
     /** Корзины lane_roles: 900, 1800, 2700, 3600, 5400 секунд (верхние границы); «длинная игра» — корзины от 3600. */

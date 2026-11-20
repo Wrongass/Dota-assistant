@@ -1,16 +1,16 @@
 # Угрозы: Team Polyus (НИИ Полюс им. М.Ф. Стельмаха)
 
-Сгенерировано 2026-11-19, патч 7.42.
+Сгенерировано 2026-11-20, патч 7.42.
 
 ## Пулы по позициям (топ-6 по пригодности в патче)
 
 | Поз. | Игрок | Ранг | Кандидаты (пригодность; ▲ — сильный в патче) | В турнире |
 |---|---|---|---|---|
-| 1 | [Unlearnable](../players/pos1_Unlearnable.md) | Божество 4 (Divine) | Sven 77 ▲, Juggernaut 74, Wraith King 74 ▲, Dragon Knight 73, Vengeful Spirit 70, Windranger 67 | Wraith King ×3, Juggernaut ×2, Drow Ranger, Phantom Assassin, Sven, Tiny, Ursa, Windranger |
-| 2 | [ryota](../players/pos2_ryota.md) | Титан (Immortal) | Earthshaker 80 ▲, Slark 73, Pudge 70, Outworld Devourer 68, Invoker 65 ▲, Sand King 65 | Lina ×2, Alchemist, Doom, Earthshaker, Lion, Necrophos, Queen of Pain, Shadow Fiend, Sniper, Windranger |
-| 3 | [ГYYYYYСЬ](../players/pos3_ГYYYYYСЬ.md) | Рыцарь 1 (Crusader) | Wraith King 37 ▲, Dragon Knight 33, Abaddon 32 ▲, Earthshaker 31, Brewmaster 31, Visage 30 ▲ | Ogre Magi ×5, Lich ×3, Underlord ×2, Witch Doctor |
-| 4 | [Sladkiy_arbyzik](../players/pos4_Sladkiy_arbyzik.md) | Герой 3 (Archon) | Techies 71, Earthshaker 63, Ogre Magi 62, Keeper of the Light 60, Pudge 59, Winter Wyvern 58 | Ring Master ×3, Techies ×3, Dark Willow ×2, Hoodwink ×2, Lion |
-| 5 | [UshKO](../players/pos5_UshKO.md) | Властелин 1 (Ancient) | Dazzle 79 ▲, Bounty Hunter 71, Abaddon 70 ▲, Disruptor 70, Undying 65, Shadow Shaman 64 ▲ | Abaddon, Jakiro |
+| 1 | [Unlearnable](../players/pos1_Unlearnable.md) | Божество 5 (Divine) | Wraith King 73 ▲, Dragon Knight 72, Sven 72 ▲, Vengeful Spirit 71, Juggernaut 70, Windranger 68 | Wraith King ×3, Juggernaut ×2, Drow Ranger, Phantom Assassin, Sven, Tiny, Ursa, Windranger |
+| 2 | [ryota](../players/pos2_ryota.md) | Титан (Immortal) | Earthshaker 81 ▲, Slark 74, Puck 68, Pudge 67, Sand King 66, Ember Spirit 66 | Lina ×2, Alchemist, Doom, Earthshaker, Lion, Necrophos, Queen of Pain, Shadow Fiend, Sniper, Windranger |
+| 3 | [ГYYYYYСЬ](../players/pos3_ГYYYYYСЬ.md) | Герой 2 (Archon) | Lycan 42 ▲, Abaddon 37 ▲, Wraith King 36 ▲, Visage 34 ▲, Brewmaster 32, Earthshaker 32 | Ogre Magi ×5, Lich ×3, Underlord ×2, Witch Doctor |
+| 4 | [Sladkiy_arbyzik](../players/pos4_Sladkiy_arbyzik.md) | Герой 5 (Archon) | Techies 74, Hoodwink 68, Earthshaker 63, Ogre Magi 62, Keeper of the Light 62, Pudge 59 | Ring Master ×3, Techies ×3, Dark Willow ×2, Hoodwink ×2, Lion |
+| 5 | [UshKO](../players/pos5_UshKO.md) | Властелин 1 (Ancient) | Dazzle 79 ▲, Abaddon 76 ▲, Bounty Hunter 73, Disruptor 69, Shadow Shaman 65 ▲, Undying 63 | Abaddon, Jakiro |
 
 ## Самые опасные герои (кандидаты в баны)
 
@@ -18,21 +18,21 @@
 
 | # | Герой | Игрок | Угроза | Умение | Сила в мете | Игр всего / год | WR за год | В турнире | Позиции героя |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | Earthshaker | ryota | 0.92 | 94 | 0.65 | 86 / 8 | 87.5% | ×1 | 2 |
-| 2 | Juggernaut | Unlearnable | 0.88 | 97 | 0.50 | 42 / 21 | 81.0% | ×2 | 1 |
-| 3 | Wraith King | Unlearnable | 0.88 | 96 | 0.51 | 30 / 24 | 66.7% | ×3 | 1/3 |
-| 4 | Sven | Unlearnable | 0.88 | 80 | 0.73 | 13 / 8 | 62.5% | ×1 | 1 |
-| 5 | Io | ryota | 0.86 | 100 | 0.65 | 169 / 41 | 73.2% |  | 4/5 |
-| 6 | Lion | ryota | 0.86 | 99 | 0.42 | 168 / 68 | 64.7% | ×1 | 4/5 |
-| 7 | Witch Doctor | ГYYYYYСЬ | 0.86 | 75 | 0.76 | 16 / 16 | 62.5% | ×1 | 4/5 |
-| 8 | Nyx Assassin | ryota | 0.83 | 89 | 0.75 | 75 / 11 | 54.5% |  | 4/5 |
-| 9 | Abaddon | UshKO | 0.83 | 90 | 0.47 | 79 / 15 | 46.7% | ×1 | 1/3 |
-| 10 | Techies | Sladkiy_arbyzik | 0.82 | 80 | 0.61 | 182 / 29 | 48.3% | ×3 | 4/5 |
-| 11 | Vengeful Spirit | Unlearnable | 0.79 | 99 | 0.49 | 67 / 21 | 76.2% |  | 1/4/5 |
-| 12 | Axe | ryota | 0.78 | 100 | 0.46 | 104 / 52 | 63.5% |  | 3 |
-| 13 | Windranger | Unlearnable | 0.78 | 70 | 0.65 | 24 / 7 | 42.9% | ×1 | 1/4 |
-| 14 | Legion Commander | Unlearnable | 0.76 | 93 | 0.51 | 106 / 50 | 56.0% |  | 3 |
-| 15 | Omniknight | Unlearnable | 0.76 | 83 | 0.66 | 34 / 27 | 55.6% |  | 3/5 |
+| 1 | Earthshaker | ryota | 0.94 | 96 | 0.66 | 94 / 16 | 81.3% | ×1 | 2 |
+| 2 | Wraith King | Unlearnable | 0.88 | 98 | 0.48 | 37 / 31 | 64.5% | ×3 | 1/3 |
+| 3 | Abaddon | UshKO | 0.88 | 92 | 0.56 | 80 / 16 | 50.0% | ×1 | 1/3 |
+| 4 | Techies | Sladkiy_arbyzik | 0.86 | 85 | 0.63 | 185 / 32 | 53.1% | ×3 | 4/5 |
+| 5 | Juggernaut | Unlearnable | 0.86 | 99 | 0.42 | 50 / 29 | 86.2% | ×2 | 1 |
+| 6 | Lion | ryota | 0.85 | 97 | 0.42 | 188 / 88 | 62.5% | ×1 | 4/5 |
+| 7 | Witch Doctor | ГYYYYYСЬ | 0.84 | 75 | 0.73 | 16 / 16 | 62.5% | ×1 | 4/5 |
+| 8 | Nyx Assassin | ryota | 0.84 | 92 | 0.74 | 82 / 18 | 55.6% |  | 4/5 |
+| 9 | Io | ryota | 0.84 | 100 | 0.61 | 172 / 44 | 72.7% |  | 4/5 |
+| 10 | Lich | ГYYYYYСЬ | 0.84 | 84 | 0.60 | 12 / 11 | 72.7% | ×3 | 4/5 |
+| 11 | Hoodwink | Sladkiy_arbyzik | 0.82 | 88 | 0.48 | 550 / 34 | 58.8% | ×2 | 4/5 |
+| 12 | Sven | Unlearnable | 0.81 | 68 | 0.76 | 19 / 14 | 42.9% | ×1 | 1 |
+| 13 | Vengeful Spirit | Unlearnable | 0.80 | 99 | 0.53 | 67 / 21 | 76.2% |  | 1/4/5 |
+| 14 | Windranger | Unlearnable | 0.79 | 72 | 0.64 | 28 / 11 | 45.5% | ×1 | 1/4 |
+| 15 | Omniknight | Unlearnable | 0.79 | 82 | 0.73 | 34 / 27 | 55.6% |  | 3/5 |
 
 ## Что они банят в турнире
 
@@ -46,30 +46,30 @@ Outworld Devourer ×11, Brewmaster ×6, Rubick ×6, Luna ×5, Dragon Knight ×4,
 
 | Их герой | Игрок | Наши ответы (игрок, преимущество) |
 |---|---|---|
-| Earthshaker | ryota | Omniknight +5.9% (Артист), Wraith King +3.0% (kren/Артист), Shadow Shaman +2.6% (Babayka), Nyx Assassin +2.2% (Babayka), Outworld Devourer +2.1% (Wrongass), Vengeful Spirit +2.0% (kren/Babayka/Enaria) |
-| Juggernaut | Unlearnable | Omniknight +7.9% (Артист), Wraith King +5.6% (kren/Артист), Dark Seer +5.0% (Артист), Abaddon +4.0% (Артист), Shadow Shaman +3.3% (Babayka), Ancient Apparition +3.2% (Enaria) |
-| Wraith King | Unlearnable | Riki +3.9% (Wrongass) |
-| Sven | Unlearnable | Silencer +4.8% (Babayka/Enaria), Vengeful Spirit +4.6% (kren/Babayka/Enaria), Phantom Assassin +3.4% (kren), Wraith King +2.8% (kren/Артист), Dawnbreaker +2.6% (Артист) |
-| Io | ryota | Earthshaker +4.6% (Артист/Babayka), Witch Doctor +3.5% (Babayka/Enaria), Windranger +2.8% (kren) |
-| Lion | ryota | Omniknight +7.3% (Артист), Wraith King +6.5% (kren/Артист), Riki +5.3% (Wrongass), Vengeful Spirit +4.7% (kren/Babayka/Enaria), Spectre +3.6% (kren), Shadow Shaman +3.4% (Babayka) |
-| Witch Doctor | ГYYYYYСЬ | Riki +9.0% (Wrongass), Wraith King +4.9% (kren/Артист), Phantom Assassin +3.8% (kren), Dawnbreaker +2.3% (Артист) |
-| Nyx Assassin | ryota | Grimstroke +6.4% (Babayka/Enaria), Shadow Shaman +4.8% (Babayka), Lich +4.5% (Enaria), Sven +3.7% (kren), Wraith King +3.3% (kren/Артист), Zeus +3.3% (Enaria) |
+| Earthshaker | ryota | Phantom Assassin +4.2% (kren), Sniper +2.6% (kren), Sven +2.4% (kren), Silencer +2.4% (Babayka/Enaria) |
+| Wraith King | Unlearnable | Lycan +4.4% (Артист), Phantom Lancer +3.5% (kren), Viper +2.1% (Wrongass) |
+| Abaddon | UshKO | Lycan +4.0% (Артист), Nyx Assassin +3.6% (Babayka) |
+| Techies | Sladkiy_arbyzik | Nyx Assassin +4.8% (Babayka), Omniknight +4.0% (Артист), Lich +3.8% (Enaria), Grimstroke +3.5% (Babayka/Enaria), Spectre +3.2% (kren), Magnus +2.4% (Wrongass/Артист) |
+| Juggernaut | Unlearnable | Bane +5.8% (Enaria), Shadow Shaman +5.5% (Babayka), Omniknight +5.4% (Артист), Riki +4.6% (Wrongass), Vengeful Spirit +4.6% (kren/Babayka/Enaria), Wraith King +3.8% (kren/Артист) |
+| Lion | ryota | Omniknight +6.9% (Артист), Beastmaster +6.0% (Артист), Phantom Assassin +4.4% (kren), Grimstroke +4.2% (Babayka/Enaria), Spectre +4.0% (kren), Wraith King +4.0% (kren/Артист) |
+| Witch Doctor | ГYYYYYСЬ | Riki +6.4% (Wrongass), Phantom Assassin +4.5% (kren), Wraith King +3.8% (kren/Артист), Beastmaster +3.4% (Артист), Lycan +3.0% (Артист), Enigma +2.6% (Артист) |
+| Nyx Assassin | ryota | Riki +3.2% (Wrongass), Sven +3.1% (kren), Wraith King +2.3% (kren/Артист), Beastmaster +2.0% (Артист) |
 
 ## Против кого они проигрывают
 
-Их матчи за 2 года (без турбо), сглажено к их среднему (51.6%) весом 30 игр; минимум 40 игр. ✔ — герой есть в наших пулах.
+Их матчи за 2 года (без турбо), сглажено к их среднему (51.8%) весом 30 игр; минимум 40 игр. ✔ — герой есть в наших пулах.
 
 | # | Герой | Их WR против | Игр | В наших пулах |
 |---|---|---|---|---|
-| 1 | Wraith King | 40.9% | 140 | ✔ |
-| 2 | Winter Wyvern | 42.1% | 109 |  |
-| 3 | Spectre | 43.2% | 147 | ✔ |
-| 4 | Viper | 44.0% | 103 | ✔ |
-| 5 | Outworld Devourer | 44.1% | 98 | ✔ |
-| 6 | Ember Spirit | 44.2% | 109 |  |
-| 7 | Sniper | 44.5% | 232 | ✔ |
-| 8 | Largo | 44.5% | 43 |  |
-| 9 | Bane | 44.8% | 47 | ✔ |
-| 10 | Legion Commander | 45.3% | 260 |  |
-| 11 | Keeper of the Light | 47.0% | 69 |  |
-| 12 | Nyx Assassin | 47.0% | 103 | ✔ |
+| 1 | Wraith King | 41.9% | 148 | ✔ |
+| 2 | Spectre | 43.3% | 149 | ✔ |
+| 3 | Winter Wyvern | 43.7% | 127 |  |
+| 4 | Sniper | 44.2% | 238 | ✔ |
+| 5 | Viper | 44.7% | 110 | ✔ |
+| 6 | Outworld Devourer | 45.3% | 117 | ✔ |
+| 7 | Legion Commander | 45.3% | 267 |  |
+| 8 | Largo | 45.4% | 46 |  |
+| 9 | Ember Spirit | 45.9% | 115 |  |
+| 10 | Bane | 46.4% | 53 | ✔ |
+| 11 | Night Stalker | 47.1% | 143 |  |
+| 12 | Nyx Assassin | 47.1% | 109 | ✔ |

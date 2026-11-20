@@ -1,14 +1,14 @@
 # Состав: comaTOZ (ИТОЗ)
 
-Данные на 2026-11-19, патч 7.42. Турбо не учитывается.
+Данные на 2026-11-20, патч 7.42. Турбо не учитывается.
 
 | Поз. | Игрок | Steam-ник | account_id | Ранг | MMR (оценка) | Матчей всего / год / патч | WR в патче | Captains Mode | Роль в команде |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | [britishboi](../players/pos1_britishboi.md) | britishboi | 279712792 | Божество 4 (Divine) | 4249 | 3883 / 114 / 0 | — | 97 (44.3%) | В турнире Windranger ×2, Nature's Prophet ×2, Drow Ranger, Lifestealer (safe, 700 GPM). |
-| 2 | [kezi](../players/pos2_kezi.md) | kezi | 456755086 | Божество 4 (Divine) | 4404 | 2381 / 242 / 0 | — | 12 (50.0%) | В турнире Dragon Knight, Earth Spirit, Lina, Earthshaker (mid, 4 карты из 6). |
-| 3 | [YOURSELF](../players/pos3_YOURSELF.md) | YOURSELF | 101847163 | Герой 1 (Archon) | 4091 | 2587 / 76 / 0 | — | 288 (52.8%) | Steam-ник сейчас YOURSELF, в турнире играл как IAM- (Dragon Knight ×2, Doom, Slardar, Largo в оффлейне, Ember Spirit на миде, когда нет kezi). |
-| 4 | [Asmodeus](../players/pos4_Asmodeus.md) | -Asmodeus | 115735715 | Рыцарь 3 (Crusader) | 3963 | 143 / 125 / 0 | — | 29 (58.6%) | В турнире Spirit Breaker ×2, Hoodwink, Dark Willow, Rubick, Pudge (саппорт сложной линии). |
-| 5 | [DrestoV1ch](../players/pos5_DrestoV1ch.md) | -DrestoV1ch (starplayer) | 125843531 | Божество 2 (Divine) | 4115 | 753 / 46 / 0 | — | 66 (48.5%) | В турнире Bane, Undying, Clockwerk, Dark Willow, Techies, Oracle (саппорт лёгкой линии). |
+| 1 | [britishboi](../players/pos1_britishboi.md) | britishboi | 279712792 | Божество 4 (Divine) | 4130 | 3911 / 142 / 3 | 33.3% | 106 (42.5%) | В турнире Windranger ×2, Nature's Prophet ×2, Drow Ranger, Lifestealer (safe, 700 GPM). |
+| 2 | [kezi](../players/pos2_kezi.md) | kezi | 456755086 | Божество 5 (Divine) | 4354 | 2636 / 398 / 1 | 0.0% | 21 (38.1%) | В турнире Dragon Knight, Earth Spirit, Lina, Earthshaker (mid, 4 карты из 6). |
+| 3 | [YOURSELF](../players/pos3_YOURSELF.md) | YOURSELF | 101847163 | Герой 3 (Archon) | 4220 | 2611 / 100 / 0 | — | 293 (52.6%) | Steam-ник сейчас YOURSELF, в турнире играл как IAM- (Dragon Knight ×2, Doom, Slardar, Largo в оффлейне, Ember Spirit на миде, когда нет kezi). |
+| 4 | [Asmodeus](../players/pos4_Asmodeus.md) | -Asmodeus | 115735715 | Рыцарь 3 (Crusader) | 3888 | 168 / 150 / 0 | — | 34 (55.9%) | В турнире Spirit Breaker ×2, Hoodwink, Dark Willow, Rubick, Pudge (саппорт сложной линии). |
+| 5 | [DrestoV1ch](../players/pos5_DrestoV1ch.md) | -DrestoV1ch (starplayer) | 125843531 | Божество 2 (Divine) | 4062 | 771 / 64 / 1 | 0.0% | 75 (45.3%) | В турнире Bane, Undying, Clockwerk, Dark Willow, Techies, Oracle (саппорт лёгкой линии). |
 
 ## На каких позициях реально играют (пабы за последний год)
 
@@ -16,18 +16,18 @@
 
 | Игрок | Поз. в команде | 1 | 2 | 3 | 4 | 5 | Линии в разобранных матчах (safe/mid/off/лес) |
 |---|---|---|---|---|---|---|---|
-| britishboi | 1 | 79.4% | 4.9% | 6.1% | 5.3% | 4.3% | 34/0/0/0 |
-| kezi | 2 | 21.3% | 46.6% | 12.8% | 11.7% | 7.6% | 6/58/10/0 |
-| YOURSELF | 3 | 16.1% | 8.7% | 58.6% | 7.9% | 8.6% | 1/2/10/0 |
-| Asmodeus | 4 | 28.5% | 15.5% | 31.5% | 12.3% | 12.1% | 3/1/16/0 |
-| DrestoV1ch | 5 | 2.1% | 1.5% | 14.1% | 38.6% | 43.7% | 21/0/0/0 |
+| britishboi | 1 | 75.0% | 6.5% | 7.7% | 5.7% | 5.0% | 42/0/5/0 |
+| kezi | 2 | 20.2% | 49.0% | 12.1% | 11.1% | 7.7% | 7/72/10/0 |
+| YOURSELF | 3 | 15.6% | 8.1% | 48.6% | 14.5% | 13.2% | 2/2/15/0 |
+| Asmodeus | 4 | 29.6% | 15.5% | 30.0% | 12.5% | 12.4% | 4/1/22/0 |
+| DrestoV1ch | 5 | 1.8% | 2.1% | 11.5% | 41.3% | 43.3% | 27/0/5/0 |
 
 ## Сыгранность: матчей в одной команде (WR)
 
 |  | britishboi | kezi | YOURSELF | Asmodeus | DrestoV1ch |
 |---|---|---|---|---|---|
-| britishboi | — | 35 (57.1%) | 24 (58.3%) | 11 (45.5%) | 46 (54.3%) |
-| kezi | 35 (57.1%) | — | 9 (55.6%) | 9 (55.6%) | 30 (56.7%) |
-| YOURSELF | 24 (58.3%) | 9 (55.6%) | — | 11 (45.5%) | 11 (45.5%) |
-| Asmodeus | 11 (45.5%) | 9 (55.6%) | 11 (45.5%) | — | 11 (45.5%) |
-| DrestoV1ch | 46 (54.3%) | 30 (56.7%) | 11 (45.5%) | 11 (45.5%) | — |
+| britishboi | — | 69 (53.6%) | 29 (55.2%) | 17 (41.2%) | 64 (46.9%) |
+| kezi | 69 (53.6%) | — | 27 (59.3%) | 15 (46.7%) | 45 (46.7%) |
+| YOURSELF | 29 (55.2%) | 27 (59.3%) | — | 17 (41.2%) | 17 (41.2%) |
+| Asmodeus | 17 (41.2%) | 15 (46.7%) | 17 (41.2%) | — | 17 (41.2%) |
+| DrestoV1ch | 64 (46.9%) | 45 (46.7%) | 17 (41.2%) | 17 (41.2%) | — |

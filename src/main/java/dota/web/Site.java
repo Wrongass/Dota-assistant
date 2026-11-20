@@ -36,6 +36,7 @@ final class Site {
     final SharedDrafts sharedDrafts;
     private volatile Lineups lineups = Lineups.none();
     private volatile AnalysisContext ctx;
+    private volatile dota.analysis.HeroGuide heroes;
     private volatile Status status;
 
     /** Шапка: патч, когда скачаны игроки и мета, предупреждения. */
@@ -64,8 +65,22 @@ final class Site {
         }
         AnalysisContext fresh = AnalysisContext.load(configPath, dataDir,
                 java.time.LocalDate.now(java.time.ZoneOffset.UTC), lineups);
-        this.status = computeStatus(fresh);
+        dota.analysis.HeroGuide guide = dota.analysis.HeroGuide.load(fresh,
+                configPath.toAbsolutePath().getParent().resolve("item_counters.yaml"), analysisDir.resolve("patch"));
+        Status s = computeStatus(fresh);
+        if (!guide.problems().isEmpty()) {
+            List<String> warnings = new ArrayList<>(s.warnings());
+            warnings.add("config/item_counters.yaml: в текущем патче нет " + String.join(", ", guide.problems()));
+            s = new Status(s.patch(), s.playersFetched(), s.metaFetched(), warnings);
+        }
+        this.status = s;
+        this.heroes = guide;
         this.ctx = fresh;
+    }
+
+    /** Страницы героев: контрпики, предметы, союзники (config/item_counters.yaml + STRATZ). */
+    dota.analysis.HeroGuide heroes() {
+        return heroes;
     }
 
     /**
