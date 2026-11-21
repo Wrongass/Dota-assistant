@@ -1,6 +1,6 @@
 # Угрозы: comaTOZ (ИТОЗ)
 
-Сгенерировано 2026-11-20, патч 7.42.
+Сгенерировано 2026-11-21, патч 7.42.
 
 ## Пулы по позициям (топ-6 по пригодности в патче)
 
@@ -19,20 +19,20 @@
 | # | Герой | Игрок | Угроза | Умение | Сила в мете | Игр всего / год | WR за год | В турнире | Позиции героя |
 |---|---|---|---|---|---|---|---|---|---|
 | 1 | Invoker | kezi | 0.98 | 99 | 0.71 | 572 / 60 | 63.3% | ×1 | 2 |
-| 2 | Windranger | britishboi | 0.88 | 87 | 0.64 | 92 / 15 | 60.0% | ×3 | 1/4 |
-| 3 | Techies | DrestoV1ch | 0.87 | 87 | 0.61 | 15 / 12 | 66.7% | ×6 | 4/5 |
+| 2 | Techies | DrestoV1ch | 0.92 | 87 | 0.74 | 15 / 12 | 66.7% | ×6 | 4/5 |
+| 3 | Windranger | britishboi | 0.88 | 86 | 0.64 | 92 / 15 | 60.0% | ×3 | 1/4 |
 | 4 | Phantom Lancer | britishboi | 0.86 | 94 | 0.50 | 162 / 35 | 60.0% | ×1 | 1 |
 | 5 | Slark | britishboi | 0.82 | 81 | 0.58 | 148 / 2 | 100.0% | ×1 | 1 |
-| 6 | Spectre | britishboi | 0.79 | 87 | 0.43 | 106 / 10 | 70.0% | ×1 | 1 |
-| 7 | Anti-Mage | britishboi | 0.79 | 77 | 0.57 | 186 / 6 | 50.0% | ×2 | 1 |
+| 6 | Anti-Mage | britishboi | 0.79 | 77 | 0.57 | 186 / 6 | 50.0% | ×2 | 1 |
+| 7 | Spectre | britishboi | 0.79 | 87 | 0.43 | 106 / 10 | 70.0% | ×1 | 1 |
 | 8 | Lifestealer | britishboi | 0.78 | 82 | 0.48 | 54 / 7 | 71.4% | ×2 | 1 |
 | 9 | Earth Spirit | kezi | 0.75 | 68 | 0.60 | 32 / 21 | 47.6% | ×3 | 2 |
 | 10 | Lina | kezi | 0.72 | 96 | 0.11 | 46 / 35 | 65.7% | ×5 | 2 |
 | 11 | Undying | DrestoV1ch | 0.72 | 83 | 0.29 | 25 / 24 | 70.8% | ×2 | 3/4/5 |
-| 12 | Centaur Warrunner | YOURSELF | 0.70 | 77 | 0.35 | 14 / 7 | 71.4% | ×2 | 3 |
-| 13 | Drow Ranger | britishboi | 0.70 | 81 | 0.28 | 178 / 11 | 54.5% | ×3 | 1 |
-| 14 | Earthshaker | kezi | 0.67 | 51 | 0.66 | 13 / 6 | 33.3% | ×1 | 2 |
-| 15 | Hoodwink | Asmodeus | 0.67 | 63 | 0.48 | 6 / 6 | 50.0% | ×6 | 4/5 |
+| 12 | Drow Ranger | britishboi | 0.70 | 81 | 0.28 | 178 / 11 | 54.5% | ×3 | 1 |
+| 13 | Centaur Warrunner | YOURSELF | 0.70 | 77 | 0.35 | 14 / 7 | 71.4% | ×2 | 3 |
+| 14 | Hoodwink | Asmodeus | 0.67 | 63 | 0.48 | 6 / 6 | 50.0% | ×6 | 4/5 |
+| 15 | Earthshaker | kezi | 0.67 | 51 | 0.66 | 13 / 6 | 33.3% | ×1 | 2 |
 
 ## Что они банят в турнире
 
@@ -47,12 +47,12 @@ Lina ×9, Earth Spirit ×8, Outworld Devourer ×7, Dark Willow ×6, Lone Druid �
 | Их герой | Игрок | Наши ответы (игрок, преимущество) |
 |---|---|---|
 | Invoker | kezi | Riki +5.7% (Wrongass), Lycan +5.2% (Артист), Phantom Assassin +4.1% (kren), Puck +3.8% (Wrongass), Sand King +3.0% (Wrongass), Disruptor +2.6% (Babayka) |
-| Windranger | britishboi | Bane +5.1% (Enaria), Omniknight +4.3% (Артист), Riki +3.6% (Wrongass), Crystal Maiden +3.5% (Babayka/Enaria), Phantom Assassin +3.1% (kren), Phantom Lancer +3.1% (kren) |
 | Techies | DrestoV1ch | Nyx Assassin +4.8% (Babayka), Omniknight +4.0% (Артист), Lich +3.8% (Enaria), Grimstroke +3.5% (Babayka/Enaria), Spectre +3.2% (kren), Magnus +2.4% (Wrongass/Артист) |
+| Windranger | britishboi | Bane +5.1% (Enaria), Omniknight +4.3% (Артист), Riki +3.6% (Wrongass), Crystal Maiden +3.5% (Babayka/Enaria), Phantom Assassin +3.1% (kren), Phantom Lancer +3.1% (kren) |
 | Phantom Lancer | britishboi | Puck +6.9% (Wrongass), Crystal Maiden +5.1% (Babayka/Enaria), Sand King +4.8% (Wrongass), Sven +4.6% (kren), Earthshaker +4.2% (Артист/Babayka), Phantom Assassin +4.1% (kren) |
 | Slark | britishboi | Lycan +7.6% (Артист), Riki +7.2% (Wrongass), Grimstroke +7.1% (Babayka/Enaria), Disruptor +6.1% (Babayka), Puck +5.1% (Wrongass), Enigma +5.1% (Артист) |
-| Spectre | britishboi | Lycan +5.7% (Артист), Abaddon +4.5% (Артист), Phantom Lancer +3.9% (kren), Wraith King +2.9% (kren/Артист), Phantom Assassin +2.6% (kren), Invoker +2.1% (Wrongass) |
 | Anti-Mage | britishboi | Omniknight +8.3% (Артист), Riki +7.9% (Wrongass), Phantom Assassin +7.0% (kren), Shadow Shaman +6.4% (Babayka), Sven +5.7% (kren), Earthshaker +4.7% (Артист/Babayka) |
+| Spectre | britishboi | Lycan +5.7% (Артист), Abaddon +4.5% (Артист), Phantom Lancer +3.9% (kren), Wraith King +2.9% (kren/Артист), Phantom Assassin +2.6% (kren), Invoker +2.1% (Wrongass) |
 | Lifestealer | britishboi | Omniknight +5.8% (Артист), Riki +5.0% (Wrongass), Lich +4.1% (Enaria), Grimstroke +4.1% (Babayka/Enaria), Phantom Lancer +3.3% (kren), Windranger +2.4% (kren) |
 
 ## Против кого они проигрывают

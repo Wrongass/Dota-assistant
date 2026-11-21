@@ -1,6 +1,6 @@
 # Угрозы: UPPO TEAM (УППО)
 
-Сгенерировано 2026-11-20, патч 7.42.
+Сгенерировано 2026-11-21, патч 7.42.
 
 ## Пулы по позициям (топ-6 по пригодности в патче)
 
@@ -18,21 +18,21 @@
 
 | # | Герой | Игрок | Угроза | Умение | Сила в мете | Игр всего / год | WR за год | В турнире | Позиции героя |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | Dazzle | Nate | 0.92 | 81 | 0.84 | 52 / 7 | 57.1% | ×1 | 4/5 |
-| 2 | Wraith King | Sacred | 0.92 | 99 | 0.56 | 150 / 28 | 64.3% | ×1 | 1/3 |
+| 1 | Wraith King | Sacred | 0.96 | 99 | 0.65 | 150 / 28 | 64.3% | ×1 | 1/3 |
+| 2 | Dazzle | Nate | 0.92 | 80 | 0.84 | 52 / 7 | 57.1% | ×1 | 4/5 |
 | 3 | Legion Commander | Odar.sp | 0.88 | 94 | 0.55 | 95 / 20 | 60.0% | ×1 | 3 |
-| 4 | Ancient Apparition | Nate | 0.85 | 92 | 0.50 | 105 / 30 | 53.3% | ×2 | 4/5 |
-| 5 | Beastmaster | Odar.sp | 0.85 | 77 | 0.71 | 203 / 14 | 42.9% | ×1 | 2/3 |
-| 6 | Slark | Togo | 0.84 | 84 | 0.58 | 98 / 7 | 71.4% | ×1 | 1 |
-| 7 | Dawnbreaker | Odar.sp | 0.83 | 87 | 0.54 | 23 / 15 | 60.0% | ×1 | 3 |
-| 8 | Axe | Kaiju | 0.83 | 86 | 0.54 | 68 / 9 | 55.6% | ×1 | 3 |
-| 9 | Omniknight | Togo | 0.82 | 89 | 0.73 | 49 / 16 | 68.8% |  | 3/5 |
-| 10 | Bounty Hunter | Kaiju | 0.82 | 93 | 0.67 | 36 / 16 | 75.0% |  | 4/5 |
-| 11 | Phantom Assassin | Togo | 0.82 | 82 | 0.57 | 54 / 3 | 100.0% | ×1 | 1 |
-| 12 | Shadow Shaman | Nate | 0.82 | 85 | 0.53 | 43 / 16 | 56.3% | ×1 | 4/5 |
-| 13 | Kunkka | Odar.sp | 0.82 | 90 | 0.45 | 196 / 194 | 56.2% | ×4 | 2/3 |
-| 14 | Invoker | Kaiju | 0.81 | 91 | 0.67 | 502 / 67 | 58.2% |  | 2 |
-| 15 | Sven | Togo | 0.81 | 67 | 0.76 | 39 / 11 | 45.5% | ×1 | 1 |
+| 4 | Kunkka | Odar.sp | 0.86 | 90 | 0.55 | 196 / 194 | 56.2% | ×4 | 2/3 |
+| 5 | Ancient Apparition | Nate | 0.85 | 92 | 0.50 | 105 / 30 | 53.3% | ×2 | 4/5 |
+| 6 | Beastmaster | Odar.sp | 0.85 | 77 | 0.71 | 203 / 14 | 42.9% | ×1 | 2/3 |
+| 7 | Slark | Togo | 0.84 | 84 | 0.58 | 98 / 7 | 71.4% | ×1 | 1 |
+| 8 | Dawnbreaker | Odar.sp | 0.83 | 87 | 0.54 | 23 / 15 | 60.0% | ×1 | 3 |
+| 9 | Phantom Assassin | Togo | 0.82 | 82 | 0.57 | 54 / 3 | 100.0% | ×1 | 1 |
+| 10 | Shadow Shaman | Nate | 0.82 | 85 | 0.53 | 43 / 16 | 56.3% | ×1 | 4/5 |
+| 11 | Bounty Hunter | Kaiju | 0.82 | 93 | 0.67 | 36 / 16 | 75.0% |  | 4/5 |
+| 12 | Luna | Togo | 0.81 | 90 | 0.42 | 56 / 21 | 61.9% | ×4 | 1 |
+| 13 | Sven | Togo | 0.81 | 67 | 0.76 | 39 / 11 | 45.5% | ×1 | 1 |
+| 14 | Disruptor | Nate | 0.80 | 84 | 0.48 | 77 / 26 | 46.2% | ×2 | 4/5 |
+| 15 | Axe | Kaiju | 0.80 | 86 | 0.47 | 68 / 9 | 55.6% | ×1 | 3 |
 
 ## Что они банят в турнире
 
@@ -46,14 +46,14 @@ Lifestealer ×6, Dragon Knight ×5, Necrophos ×5, Ember Spirit ×4, Sven ×4, W
 
 | Их герой | Игрок | Наши ответы (игрок, преимущество) |
 |---|---|---|
-| Dazzle | Nate | Bane +5.2% (Enaria), Riki +3.4% (Wrongass), Ancient Apparition +2.8% (Enaria), Puck +2.4% (Wrongass), Silencer +2.2% (Babayka/Enaria), Lycan +2.1% (Артист) |
 | Wraith King | Sacred | Lycan +4.4% (Артист), Phantom Lancer +3.5% (kren), Viper +2.1% (Wrongass) |
+| Dazzle | Nate | Bane +5.2% (Enaria), Riki +3.4% (Wrongass), Ancient Apparition +2.8% (Enaria), Puck +2.4% (Wrongass), Silencer +2.2% (Babayka/Enaria), Lycan +2.1% (Артист) |
 | Legion Commander | Odar.sp | Omniknight +4.7% (Артист), Riki +4.5% (Wrongass), Spectre +4.2% (kren), Wraith King +4.1% (kren/Артист), Dawnbreaker +2.9% (Артист), Vengeful Spirit +2.6% (kren/Babayka/Enaria) |
+| Kunkka | Odar.sp | Riki +6.1% (Wrongass), Enigma +4.1% (Артист), Nyx Assassin +3.5% (Babayka), Abaddon +2.8% (Артист), Ancient Apparition +2.6% (Enaria), Phantom Assassin +2.6% (kren) |
 | Ancient Apparition | Nate | Lycan +5.9% (Артист), Enigma +4.6% (Артист), Riki +3.9% (Wrongass), Bane +3.8% (Enaria), Grimstroke +3.4% (Babayka/Enaria), Phantom Assassin +3.0% (kren) |
 | Beastmaster | Odar.sp | Sand King +9.7% (Wrongass), Dawnbreaker +3.5% (Артист), Sniper +3.3% (kren), Spectre +2.9% (kren), Earthshaker +2.7% (Артист/Babayka), Sven +2.4% (kren) |
 | Slark | Togo | Lycan +7.6% (Артист), Riki +7.2% (Wrongass), Grimstroke +7.1% (Babayka/Enaria), Disruptor +6.1% (Babayka), Puck +5.1% (Wrongass), Enigma +5.1% (Артист) |
 | Dawnbreaker | Odar.sp | Riki +4.8% (Wrongass), Silencer +4.1% (Babayka/Enaria), Nyx Assassin +3.6% (Babayka), Omniknight +3.6% (Артист), Sven +2.9% (kren), Bane +2.7% (Enaria) |
-| Axe | Kaiju | Abaddon +7.1% (Артист), Omniknight +5.2% (Артист), Spectre +5.1% (kren), Grimstroke +4.9% (Babayka/Enaria), Wraith King +3.5% (kren/Артист), Silencer +3.0% (Babayka/Enaria) |
 
 ## Против кого они проигрывают
 

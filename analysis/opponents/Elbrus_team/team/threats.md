@@ -1,6 +1,6 @@
 # Угрозы: Elbrus team (МЦСТ)
 
-Сгенерировано 2026-11-20, патч 7.42.
+Сгенерировано 2026-11-21, патч 7.42.
 
 ## Пулы по позициям (топ-6 по пригодности в патче)
 
@@ -19,20 +19,20 @@
 | # | Герой | Игрок | Угроза | Умение | Сила в мете | Игр всего / год | WR за год | В турнире | Позиции героя |
 |---|---|---|---|---|---|---|---|---|---|
 | 1 | Invoker | Блинолопатный | 0.93 | 89 | 0.74 | 248 / 7 | 71.4% | ×2 | 2 |
-| 2 | Witch Doctor | Tort | 0.92 | 90 | 0.70 | 67 / 9 | 55.6% | ×2 | 4/5 |
-| 3 | Techies | Sladenky | 0.92 | 95 | 0.62 | 44 / 22 | 72.7% | ×4 | 4/5 |
-| 4 | Meepo | Блинолопатный | 0.90 | 90 | 0.64 | 33 / 4 | 100.0% | ×2 | 1/2 |
+| 2 | Techies | Sladenky | 0.92 | 95 | 0.62 | 44 / 22 | 72.7% | ×4 | 4/5 |
+| 3 | Witch Doctor | Tort | 0.92 | 90 | 0.70 | 67 / 9 | 55.6% | ×2 | 4/5 |
+| 4 | Meepo | Блинолопатный | 0.90 | 90 | 0.64 | 33 / 3 | 100.0% | ×2 | 1/2 |
 | 5 | Earth Spirit | Блинолопатный | 0.88 | 89 | 0.61 | 85 / 25 | 52.0% | ×1 | 2 |
-| 6 | Magnus | Блинолопатный | 0.87 | 90 | 0.58 | 114 / 5 | 100.0% | ×2 | 2/3 |
-| 7 | Shadow Shaman | Tort | 0.87 | 93 | 0.53 | 122 / 13 | 69.2% | ×1 | 4/5 |
-| 8 | Lone Druid | zero_excuses | 0.86 | 91 | 0.55 | 340 / 29 | 55.2% | ×2 | 1 |
-| 9 | Brewmaster | Блинолопатный | 0.86 | 76 | 0.77 | 29 / 13 | 46.2% | ×1 | 3 |
-| 10 | Clockwerk | Sladenky | 0.86 | 91 | 0.54 | 30 / 22 | 63.6% | ×2 | 4/5 |
+| 6 | Shadow Shaman | Tort | 0.87 | 93 | 0.53 | 122 / 13 | 69.2% | ×1 | 4/5 |
+| 7 | Lone Druid | zero_excuses | 0.86 | 91 | 0.55 | 340 / 29 | 55.2% | ×2 | 1 |
+| 8 | Brewmaster | Блинолопатный | 0.86 | 76 | 0.77 | 29 / 13 | 46.2% | ×1 | 3 |
+| 9 | Dragon Knight | zero_excuses | 0.85 | 80 | 0.69 | 91 / 16 | 50.0% | ×2 | 1/2/3 |
+| 10 | Magnus | Блинолопатный | 0.84 | 90 | 0.51 | 114 / 5 | 100.0% | ×2 | 2/3 |
 | 11 | Rubick | Sladenky | 0.84 | 91 | 0.49 | 125 / 23 | 65.2% | ×2 | 4/5 |
-| 12 | Dazzle | Tort | 0.84 | 84 | 0.84 | 233 / 11 | 54.5% |  | 4/5 |
-| 13 | Dragon Knight | zero_excuses | 0.84 | 80 | 0.65 | 91 / 16 | 50.0% | ×2 | 1/2/3 |
-| 14 | Lion | Tort | 0.84 | 95 | 0.42 | 102 / 23 | 60.9% | ×1 | 4/5 |
-| 15 | Kunkka | Блинолопатный | 0.80 | 87 | 0.43 | 137 / 5 | 80.0% | ×1 | 2/3 |
+| 12 | Lion | Tort | 0.84 | 95 | 0.42 | 102 / 23 | 60.9% | ×1 | 4/5 |
+| 13 | Dazzle | Tort | 0.84 | 84 | 0.84 | 233 / 11 | 54.5% |  | 4/5 |
+| 14 | Clockwerk | Sladenky | 0.83 | 91 | 0.46 | 30 / 22 | 63.6% | ×2 | 4/5 |
+| 15 | Void Spirit | zero_excuses | 0.82 | 85 | 0.51 | 43 / 43 | 53.5% | ×1 | 2 |
 
 ## Что они банят в турнире
 
@@ -47,13 +47,13 @@ Mirana ×6, Dawnbreaker ×4, Dragon Knight ×4, Ember Spirit ×4, Hoodwink ×4, 
 | Их герой | Игрок | Наши ответы (игрок, преимущество) |
 |---|---|---|
 | Invoker | Блинолопатный | Riki +5.7% (Wrongass), Lycan +5.2% (Артист), Phantom Assassin +4.1% (kren), Puck +3.8% (Wrongass), Sand King +3.0% (Wrongass), Disruptor +2.6% (Babayka) |
-| Witch Doctor | Tort | Riki +6.4% (Wrongass), Phantom Assassin +4.5% (kren), Wraith King +3.8% (kren/Артист), Beastmaster +3.4% (Артист), Lycan +3.0% (Артист), Enigma +2.6% (Артист) |
 | Techies | Sladenky | Nyx Assassin +4.8% (Babayka), Omniknight +4.0% (Артист), Lich +3.8% (Enaria), Grimstroke +3.5% (Babayka/Enaria), Spectre +3.2% (kren), Magnus +2.4% (Wrongass/Артист) |
+| Witch Doctor | Tort | Riki +6.4% (Wrongass), Phantom Assassin +4.5% (kren), Wraith King +3.8% (kren/Артист), Beastmaster +3.4% (Артист), Lycan +3.0% (Артист), Enigma +2.6% (Артист) |
 | Meepo | Блинолопатный | Dawnbreaker +2.0% (Артист) |
 | Earth Spirit | Блинолопатный | Abaddon +8.5% (Артист), Sven +7.4% (kren), Grimstroke +5.7% (Babayka/Enaria), Lich +5.3% (Enaria), Magnus +4.1% (Wrongass/Артист), Wraith King +3.6% (kren/Артист) |
-| Magnus | Блинолопатный | Wraith King +3.6% (kren/Артист), Omniknight +3.0% (Артист), Lich +2.6% (Enaria) |
 | Shadow Shaman | Tort | Lycan +3.7% (Артист), Wraith King +3.7% (kren/Артист), Omniknight +3.6% (Артист), Beastmaster +2.3% (Артист) |
 | Lone Druid | zero_excuses | Lich +11.2% (Enaria), Nyx Assassin +8.9% (Babayka), Windranger +8.4% (kren), Earthshaker +7.3% (Артист/Babayka), Riki +7.2% (Wrongass), Witch Doctor +7.1% (Babayka/Enaria) |
+| Brewmaster | Блинолопатный | Riki +5.3% (Wrongass), Silencer +3.6% (Babayka/Enaria), Magnus +3.5% (Wrongass/Артист), Invoker +2.5% (Wrongass), Nyx Assassin +2.5% (Babayka) |
 
 ## Против кого они проигрывают
 
@@ -61,8 +61,8 @@ Mirana ×6, Dawnbreaker ×4, Dragon Knight ×4, Ember Spirit ×4, Hoodwink ×4, 
 
 | # | Герой | Их WR против | Игр | В наших пулах |
 |---|---|---|---|---|
-| 1 | Slardar | 44.6% | 75 |  |
-| 2 | Shadow Shaman | 44.7% | 151 | ✔ |
+| 1 | Shadow Shaman | 44.6% | 149 | ✔ |
+| 2 | Slardar | 44.6% | 75 |  |
 | 3 | Venomancer | 44.7% | 77 |  |
 | 4 | Legion Commander | 45.3% | 155 |  |
 | 5 | Invoker | 45.9% | 207 | ✔ |

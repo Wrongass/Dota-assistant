@@ -1,6 +1,6 @@
 # Угрозы: Team Polyus (НИИ Полюс им. М.Ф. Стельмаха)
 
-Сгенерировано 2026-11-20, патч 7.42.
+Сгенерировано 2026-11-21, патч 7.42.
 
 ## Пулы по позициям (топ-6 по пригодности в патче)
 
@@ -19,20 +19,20 @@
 | # | Герой | Игрок | Угроза | Умение | Сила в мете | Игр всего / год | WR за год | В турнире | Позиции героя |
 |---|---|---|---|---|---|---|---|---|---|
 | 1 | Earthshaker | ryota | 0.94 | 96 | 0.66 | 94 / 16 | 81.3% | ×1 | 2 |
-| 2 | Wraith King | Unlearnable | 0.88 | 98 | 0.48 | 37 / 31 | 64.5% | ×3 | 1/3 |
-| 3 | Abaddon | UshKO | 0.88 | 92 | 0.56 | 80 / 16 | 50.0% | ×1 | 1/3 |
+| 2 | Abaddon | UshKO | 0.90 | 92 | 0.61 | 80 / 16 | 50.0% | ×1 | 1/3 |
+| 3 | Wraith King | Unlearnable | 0.88 | 98 | 0.48 | 37 / 31 | 64.5% | ×3 | 1/3 |
 | 4 | Techies | Sladkiy_arbyzik | 0.86 | 85 | 0.63 | 185 / 32 | 53.1% | ×3 | 4/5 |
 | 5 | Juggernaut | Unlearnable | 0.86 | 99 | 0.42 | 50 / 29 | 86.2% | ×2 | 1 |
-| 6 | Lion | ryota | 0.85 | 97 | 0.42 | 188 / 88 | 62.5% | ×1 | 4/5 |
-| 7 | Witch Doctor | ГYYYYYСЬ | 0.84 | 75 | 0.73 | 16 / 16 | 62.5% | ×1 | 4/5 |
-| 8 | Nyx Assassin | ryota | 0.84 | 92 | 0.74 | 82 / 18 | 55.6% |  | 4/5 |
-| 9 | Io | ryota | 0.84 | 100 | 0.61 | 172 / 44 | 72.7% |  | 4/5 |
-| 10 | Lich | ГYYYYYСЬ | 0.84 | 84 | 0.60 | 12 / 11 | 72.7% | ×3 | 4/5 |
-| 11 | Hoodwink | Sladkiy_arbyzik | 0.82 | 88 | 0.48 | 550 / 34 | 58.8% | ×2 | 4/5 |
-| 12 | Sven | Unlearnable | 0.81 | 68 | 0.76 | 19 / 14 | 42.9% | ×1 | 1 |
-| 13 | Vengeful Spirit | Unlearnable | 0.80 | 99 | 0.53 | 67 / 21 | 76.2% |  | 1/4/5 |
-| 14 | Windranger | Unlearnable | 0.79 | 72 | 0.64 | 28 / 11 | 45.5% | ×1 | 1/4 |
-| 15 | Omniknight | Unlearnable | 0.79 | 82 | 0.73 | 34 / 27 | 55.6% |  | 3/5 |
+| 6 | Hoodwink | Sladkiy_arbyzik | 0.82 | 88 | 0.48 | 550 / 34 | 58.8% | ×2 | 4/5 |
+| 7 | Lich | ГYYYYYСЬ | 0.81 | 84 | 0.52 | 12 / 11 | 72.7% | ×3 | 4/5 |
+| 8 | Lion | ryota | 0.81 | 97 | 0.32 | 188 / 88 | 62.5% | ×1 | 4/5 |
+| 9 | Sven | Unlearnable | 0.81 | 68 | 0.76 | 19 / 14 | 42.9% | ×1 | 1 |
+| 10 | Witch Doctor | ГYYYYYСЬ | 0.80 | 75 | 0.61 | 16 / 16 | 62.5% | ×1 | 4/5 |
+| 11 | Windranger | Unlearnable | 0.79 | 72 | 0.64 | 28 / 11 | 45.5% | ×1 | 1/4 |
+| 12 | Ogre Magi | ГYYYYYСЬ | 0.77 | 81 | 0.46 | 18 / 18 | 61.1% | ×5 | 4/5 |
+| 13 | Vengeful Spirit | Unlearnable | 0.77 | 99 | 0.44 | 67 / 21 | 76.2% |  | 1/4/5 |
+| 14 | Queen of Pain | ryota | 0.74 | 83 | 0.34 | 150 / 33 | 48.5% | ×1 | 2 |
+| 15 | Lina | ryota | 0.73 | 99 | 0.10 | 75 / 35 | 74.3% | ×2 | 2 |
 
 ## Что они банят в турнире
 
@@ -47,13 +47,13 @@ Outworld Devourer ×11, Brewmaster ×6, Rubick ×6, Luna ×5, Dragon Knight ×4,
 | Их герой | Игрок | Наши ответы (игрок, преимущество) |
 |---|---|---|
 | Earthshaker | ryota | Phantom Assassin +4.2% (kren), Sniper +2.6% (kren), Sven +2.4% (kren), Silencer +2.4% (Babayka/Enaria) |
-| Wraith King | Unlearnable | Lycan +4.4% (Артист), Phantom Lancer +3.5% (kren), Viper +2.1% (Wrongass) |
 | Abaddon | UshKO | Lycan +4.0% (Артист), Nyx Assassin +3.6% (Babayka) |
+| Wraith King | Unlearnable | Lycan +4.4% (Артист), Phantom Lancer +3.5% (kren), Viper +2.1% (Wrongass) |
 | Techies | Sladkiy_arbyzik | Nyx Assassin +4.8% (Babayka), Omniknight +4.0% (Артист), Lich +3.8% (Enaria), Grimstroke +3.5% (Babayka/Enaria), Spectre +3.2% (kren), Magnus +2.4% (Wrongass/Артист) |
 | Juggernaut | Unlearnable | Bane +5.8% (Enaria), Shadow Shaman +5.5% (Babayka), Omniknight +5.4% (Артист), Riki +4.6% (Wrongass), Vengeful Spirit +4.6% (kren/Babayka/Enaria), Wraith King +3.8% (kren/Артист) |
+| Hoodwink | Sladkiy_arbyzik | Enigma +6.7% (Артист), Nyx Assassin +6.3% (Babayka), Bane +6.2% (Enaria), Wraith King +5.4% (kren/Артист), Doom +5.1% (Артист), Sven +4.2% (kren) |
+| Lich | ГYYYYYСЬ | Riki +3.9% (Wrongass), Doom +3.7% (Артист), Abaddon +2.5% (Артист) |
 | Lion | ryota | Omniknight +6.9% (Артист), Beastmaster +6.0% (Артист), Phantom Assassin +4.4% (kren), Grimstroke +4.2% (Babayka/Enaria), Spectre +4.0% (kren), Wraith King +4.0% (kren/Артист) |
-| Witch Doctor | ГYYYYYСЬ | Riki +6.4% (Wrongass), Phantom Assassin +4.5% (kren), Wraith King +3.8% (kren/Артист), Beastmaster +3.4% (Артист), Lycan +3.0% (Артист), Enigma +2.6% (Артист) |
-| Nyx Assassin | ryota | Riki +3.2% (Wrongass), Sven +3.1% (kren), Wraith King +2.3% (kren/Артист), Beastmaster +2.0% (Артист) |
 
 ## Против кого они проигрывают
 
@@ -61,9 +61,9 @@ Outworld Devourer ×11, Brewmaster ×6, Rubick ×6, Luna ×5, Dragon Knight ×4,
 
 | # | Герой | Их WR против | Игр | В наших пулах |
 |---|---|---|---|---|
-| 1 | Wraith King | 41.9% | 148 | ✔ |
+| 1 | Wraith King | 41.5% | 147 | ✔ |
 | 2 | Spectre | 43.3% | 149 | ✔ |
-| 3 | Winter Wyvern | 43.7% | 127 |  |
+| 3 | Winter Wyvern | 43.6% | 127 |  |
 | 4 | Sniper | 44.2% | 238 | ✔ |
 | 5 | Viper | 44.7% | 110 | ✔ |
 | 6 | Outworld Devourer | 45.3% | 117 | ✔ |

@@ -1,6 +1,6 @@
 # Угрозы: Team Future (НИИЭП)
 
-Сгенерировано 2026-11-20, патч 7.42.
+Сгенерировано 2026-11-21, патч 7.42.
 
 ## Пулы по позициям (топ-6 по пригодности в патче)
 
@@ -18,21 +18,21 @@
 
 | # | Герой | Игрок | Угроза | Умение | Сила в мете | Игр всего / год | WR за год | В турнире | Позиции героя |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | Invoker | Saja | 0.97 | 96 | 0.74 | 258 / 21 | 61.9% | ×1 | 2 |
-| 2 | Dragon Knight | めつきすてみ | 0.94 | 95 | 0.66 | 139 / 19 | 63.2% | ×5 | 1/2/3 |
-| 3 | Techies | R3N | 0.91 | 94 | 0.63 | 33 / 33 | 63.6% | ×2 | 4/5 |
+| 1 | Techies | R3N | 0.97 | 94 | 0.75 | 33 / 33 | 63.6% | ×2 | 4/5 |
+| 2 | Invoker | Saja | 0.97 | 96 | 0.74 | 258 / 21 | 61.9% | ×1 | 2 |
+| 3 | Dragon Knight | めつきすてみ | 0.91 | 95 | 0.59 | 139 / 19 | 63.2% | ×5 | 1/2/3 |
 | 4 | Mirana | Furs | 0.90 | 95 | 0.58 | 169 / 22 | 77.3% | ×2 | 4/5 |
-| 5 | Rubick | Furs | 0.89 | 98 | 0.51 | 224 / 30 | 66.7% | ×2 | 4/5 |
-| 6 | Witch Doctor | R3N | 0.89 | 82 | 0.73 | 32 / 31 | 61.3% | ×7 | 4/5 |
-| 7 | Tusk | Furs | 0.85 | 94 | 0.47 | 72 / 14 | 71.4% | ×2 | 4/5 |
-| 8 | Primal Beast | Saja | 0.84 | 86 | 0.56 | 20 / 8 | 75.0% | ×1 | 2/3 |
+| 5 | Witch Doctor | R3N | 0.89 | 82 | 0.73 | 32 / 31 | 61.3% | ×7 | 4/5 |
+| 6 | Rubick | Furs | 0.89 | 98 | 0.51 | 224 / 30 | 66.7% | ×2 | 4/5 |
+| 7 | Tusk | Furs | 0.84 | 94 | 0.44 | 72 / 14 | 71.4% | ×2 | 4/5 |
+| 8 | Primal Beast | Saja | 0.84 | 86 | 0.57 | 20 / 8 | 75.0% | ×1 | 2/3 |
 | 9 | Earthshaker | めつきすてみ | 0.83 | 95 | 0.65 | 114 / 25 | 68.0% |  | 2 |
-| 10 | Windranger | Furs | 0.80 | 90 | 0.66 | 163 / 10 | 70.0% |  | 1/4 |
+| 10 | Luna | twilight | 0.80 | 89 | 0.43 | 68 / 14 | 64.3% | ×2 | 1 |
 | 11 | Spectre | twilight | 0.80 | 87 | 0.45 | 50 / 8 | 75.0% | ×1 | 1 |
-| 12 | Luna | twilight | 0.80 | 89 | 0.43 | 68 / 15 | 66.7% | ×2 | 1 |
+| 12 | Ring Master | Furs | 0.80 | 90 | 0.40 | 25 / 18 | 61.1% | ×1 | 4/5 |
 | 13 | Grimstroke | Furs | 0.80 | 72 | 0.68 | 15 / 6 | 66.7% | ×1 | 4/5 |
-| 14 | Ring Master | Furs | 0.80 | 90 | 0.40 | 25 / 18 | 61.1% | ×1 | 4/5 |
-| 15 | Viper | Saja | 0.79 | 83 | 0.47 | 31 / 9 | 66.7% | ×1 | 2/3 |
+| 14 | Viper | Saja | 0.79 | 83 | 0.47 | 31 / 9 | 66.7% | ×1 | 2/3 |
+| 15 | Queen of Pain | Saja | 0.78 | 90 | 0.34 | 46 / 3 | 100.0% | ×1 | 2 |
 
 ## Что они банят в турнире
 
@@ -46,12 +46,12 @@ Hoodwink ×6, Lina ×5, Outworld Devourer ×4, Slark ×4, Ursa ×4, Grimstroke �
 
 | Их герой | Игрок | Наши ответы (игрок, преимущество) |
 |---|---|---|
+| Techies | R3N | Nyx Assassin +4.8% (Babayka), Omniknight +4.0% (Артист), Lich +3.8% (Enaria), Grimstroke +3.5% (Babayka/Enaria), Spectre +3.2% (kren), Magnus +2.4% (Wrongass/Артист) |
 | Invoker | Saja | Riki +5.7% (Wrongass), Lycan +5.2% (Артист), Phantom Assassin +4.1% (kren), Puck +3.8% (Wrongass), Sand King +3.0% (Wrongass), Disruptor +2.6% (Babayka) |
 | Dragon Knight | めつきすてみ | Enigma +4.7% (Артист), Abaddon +4.7% (Артист), Witch Doctor +4.4% (Babayka/Enaria), Spectre +4.4% (kren), Ancient Apparition +3.9% (Enaria), Vengeful Spirit +2.9% (kren/Babayka/Enaria) |
-| Techies | R3N | Nyx Assassin +4.8% (Babayka), Omniknight +4.0% (Артист), Lich +3.8% (Enaria), Grimstroke +3.5% (Babayka/Enaria), Spectre +3.2% (kren), Magnus +2.4% (Wrongass/Артист) |
 | Mirana | Furs | Puck +6.1% (Wrongass), Omniknight +3.4% (Артист), Wraith King +3.2% (kren/Артист), Lycan +3.0% (Артист), Crystal Maiden +2.4% (Babayka/Enaria), Zeus +2.4% (Enaria) |
-| Rubick | Furs | Phantom Assassin +6.2% (kren), Silencer +4.3% (Babayka/Enaria), Spectre +3.9% (kren), Shadow Shaman +2.8% (Babayka), Slark +2.6% (Wrongass), Ancient Apparition +2.3% (Enaria) |
 | Witch Doctor | R3N | Riki +6.4% (Wrongass), Phantom Assassin +4.5% (kren), Wraith King +3.8% (kren/Артист), Beastmaster +3.4% (Артист), Lycan +3.0% (Артист), Enigma +2.6% (Артист) |
+| Rubick | Furs | Phantom Assassin +6.2% (kren), Silencer +4.3% (Babayka/Enaria), Spectre +3.9% (kren), Shadow Shaman +2.8% (Babayka), Slark +2.6% (Wrongass), Ancient Apparition +2.3% (Enaria) |
 | Tusk | Furs | Enigma +6.8% (Артист), Wraith King +4.8% (kren/Артист), Sand King +3.9% (Wrongass), Crystal Maiden +3.7% (Babayka/Enaria), Silencer +3.6% (Babayka/Enaria), Beastmaster +3.6% (Артист) |
 | Primal Beast | Saja | Grimstroke +10.6% (Babayka/Enaria), Puck +5.6% (Wrongass), Shadow Shaman +5.2% (Babayka), Sven +4.4% (kren), Disruptor +3.5% (Babayka), Lich +2.9% (Enaria) |
 
