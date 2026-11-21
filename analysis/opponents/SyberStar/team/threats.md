@@ -1,6 +1,6 @@
 # Угрозы: SyberStar (НПП «Звезда»)
 
-Сгенерировано 2026-11-20, патч 7.42.
+Сгенерировано 2026-11-21, патч 7.42.
 
 ## Пулы по позициям (топ-6 по пригодности в патче)
 
@@ -19,20 +19,20 @@
 | # | Герой | Игрок | Угроза | Умение | Сила в мете | Игр всего / год | WR за год | В турнире | Позиции героя |
 |---|---|---|---|---|---|---|---|---|---|
 | 1 | Sven | 死 | 0.95 | 91 | 0.76 | 36 / 13 | 76.9% | ×1 | 1 |
-| 2 | Dragon Knight | SuperPoni | 0.94 | 96 | 0.65 | 42 / 26 | 65.4% | ×2 | 1/2/3 |
+| 2 | Dragon Knight | 死 | 0.92 | 92 | 0.68 | 22 / 16 | 62.5% | ×1 | 1/2/3 |
 | 3 | Windranger | 死 | 0.90 | 90 | 0.64 | 43 / 13 | 76.9% | ×3 | 1/4 |
 | 4 | Phantom Assassin | 死 | 0.89 | 93 | 0.57 | 176 / 21 | 61.9% | ×2 | 1 |
 | 5 | Axe | SuperPoni | 0.88 | 97 | 0.51 | 435 / 24 | 66.7% | ×1 | 3 |
 | 6 | Vengeful Spirit | kalibri | 0.87 | 91 | 0.57 | 32 / 32 | 59.4% | ×3 | 1/4/5 |
-| 7 | Outworld Devourer | SuperPoni | 0.85 | 93 | 0.49 | 39 / 18 | 77.8% | ×1 | 2 |
+| 7 | Outworld Devourer | SuperPoni | 0.87 | 93 | 0.53 | 39 / 18 | 77.8% | ×1 | 2 |
 | 8 | Night Stalker | SuperPoni | 0.81 | 85 | 0.51 | 28 / 11 | 63.6% | ×2 | 3 |
 | 9 | Luna | 死 | 0.80 | 88 | 0.42 | 111 / 35 | 51.4% | ×3 | 1 |
-| 10 | Razor | 死 | 0.79 | 95 | 0.31 | 86 / 66 | 59.1% | ×1 | 1/3 |
-| 11 | Skywrath Mage | kalibri | 0.79 | 90 | 0.38 | 61 / 61 | 54.1% | ×1 | 4/5 |
-| 12 | Techies | СГРЫЗ_КАСТРЮЛЮ | 0.79 | 73 | 0.63 | 33 / 17 | 52.9% | ×2 | 4/5 |
-| 13 | Hoodwink | СГРЫЗ_КАСТРЮЛЮ | 0.78 | 80 | 0.48 | 17 / 14 | 64.3% | ×4 | 4/5 |
-| 14 | Lifestealer | 死 | 0.77 | 81 | 0.48 | 57 / 17 | 58.8% | ×1 | 1 |
-| 15 | Lich | kalibri | 0.77 | 73 | 0.59 | 19 / 19 | 47.4% | ×2 | 4/5 |
+| 10 | Techies | СГРЫЗ_КАСТРЮЛЮ | 0.79 | 73 | 0.63 | 33 / 17 | 52.9% | ×2 | 4/5 |
+| 11 | Razor | 死 | 0.79 | 95 | 0.31 | 86 / 66 | 59.1% | ×1 | 1/3 |
+| 12 | Hoodwink | СГРЫЗ_КАСТРЮЛЮ | 0.78 | 80 | 0.48 | 17 / 14 | 64.3% | ×4 | 4/5 |
+| 13 | Lich | kalibri | 0.77 | 73 | 0.59 | 19 / 19 | 47.4% | ×2 | 4/5 |
+| 14 | Undying | kalibri | 0.77 | 90 | 0.33 | 17 / 17 | 64.7% | ×2 | 3/4/5 |
+| 15 | Lifestealer | 死 | 0.77 | 81 | 0.48 | 57 / 17 | 58.8% | ×1 | 1 |
 
 ## Что они банят в турнире
 
@@ -47,7 +47,7 @@ Bane ×6, Outworld Devourer ×6, Invoker ×5, Lone Druid ×5, Lifestealer ×4, P
 | Их герой | Игрок | Наши ответы (игрок, преимущество) |
 |---|---|---|
 | Sven | 死 | Omniknight +5.1% (Артист), Vengeful Spirit +3.1% (kren/Babayka/Enaria), Ancient Apparition +2.5% (Enaria), Wraith King +2.2% (kren/Артист), Windranger +2.0% (kren) |
-| Dragon Knight | SuperPoni | Enigma +4.7% (Артист), Abaddon +4.7% (Артист), Witch Doctor +4.4% (Babayka/Enaria), Spectre +4.4% (kren), Ancient Apparition +3.9% (Enaria), Vengeful Spirit +2.9% (kren/Babayka/Enaria) |
+| Dragon Knight | 死 | Enigma +4.7% (Артист), Abaddon +4.7% (Артист), Witch Doctor +4.4% (Babayka/Enaria), Spectre +4.4% (kren), Ancient Apparition +3.9% (Enaria), Vengeful Spirit +2.9% (kren/Babayka/Enaria) |
 | Windranger | 死 | Bane +5.1% (Enaria), Omniknight +4.3% (Артист), Riki +3.6% (Wrongass), Crystal Maiden +3.5% (Babayka/Enaria), Phantom Assassin +3.1% (kren), Phantom Lancer +3.1% (kren) |
 | Phantom Assassin | 死 | Omniknight +6.7% (Артист), Bane +4.7% (Enaria), Wraith King +3.4% (kren/Артист) |
 | Axe | SuperPoni | Abaddon +7.1% (Артист), Omniknight +5.2% (Артист), Spectre +5.1% (kren), Grimstroke +4.9% (Babayka/Enaria), Wraith King +3.5% (kren/Артист), Silencer +3.0% (Babayka/Enaria) |

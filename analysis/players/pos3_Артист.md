@@ -8,18 +8,18 @@
 
 ## Чем играет сейчас: 14 дней и 2 месяца
 
-На 2026-11-20: за 14 дней 37 игр, за 2 месяца 126 (из них с игроками своей команды — 101), Турбо за 2 месяца — 24 (в игры не входит). 🔥 — много игр за 14 дней, но не из топа; ★ — из топа «играет лучше всего»; 👥 — играл в пати со своими.
+На 2026-11-21: за 14 дней 30 игр, за 2 месяца 125 (из них с игроками своей команды — 101), Турбо за 2 месяца — 23 (в игры не входит). 🔥 — много игр за 14 дней, но не из топа; ★ — из топа «играет лучше всего»; 👥 — играл в пати со своими.
 
 | Герой | 14 дней | WR | 2 месяца | WR | Турбо | С командой | С кем | Последняя |
 |---|---|---|---|---|---|---|---|---|
-| Dawnbreaker ★ 👥 | 7 | 71.4% | 17 | 64.7% |  | 13 | Babayka, Wrongass, kren, Enaria | 19.11 |
-| Witch Doctor 👥 | 1 | 0.0% | 11 | 63.6% |  | 2 | Wrongass, kren, Enaria | 07.11 |
-| Centaur Warrunner ★ 👥 | 3 | 33.3% | 10 | 70.0% |  | 10 | Babayka, Wrongass, kren, Enaria | 07.11 |
-| Ogre Magi ★ 👥 | 2 | 50.0% | 9 | 55.6% |  | 4 | Babayka, Wrongass, kren, Enaria | 19.11 |
+| Dawnbreaker ★ 👥 | 5 | 80.0% | 17 | 64.7% |  | 13 | Babayka, Wrongass, kren, Enaria | 19.11 |
+| Witch Doctor 👥 | 0 | — | 11 | 63.6% |  | 2 | Wrongass, kren, Enaria | 07.11 |
+| Centaur Warrunner ★ 👥 | 0 | — | 10 | 70.0% |  | 10 | Babayka, Wrongass, kren, Enaria | 07.11 |
 | Underlord 👥 | 2 | 100.0% | 9 | 33.3% |  | 8 | Babayka, Wrongass, kren, Enaria | 17.11 |
+| Ogre Magi ★ 👥 | 2 | 50.0% | 8 | 50.0% |  | 4 | Babayka, Wrongass, kren, Enaria | 19.11 |
 | Enigma 👥 | 1 | 0.0% | 6 | 50.0% |  | 6 | Babayka, Wrongass, kren, Enaria | 15.11 |
 | Magnus 👥 | 2 | 50.0% | 5 | 60.0% | 4 | 5 | Babayka, Wrongass, kren, Enaria | 17.11 |
-| Dragon Knight 🔥 👥 | 3 | 33.3% | 5 | 40.0% | 1 | 4 | Babayka, Wrongass, kren, Enaria | 14.11 |
+| Dragon Knight 👥 | 2 | 50.0% | 5 | 40.0% | 1 | 4 | Babayka, Wrongass, kren, Enaria | 14.11 |
 | Wraith King 👥 | 1 | 0.0% | 5 | 40.0% |  | 5 | Babayka, Wrongass, kren, Enaria | 14.11 |
 | Night Stalker 👥 | 1 | 0.0% | 5 | 40.0% |  | 5 | Babayka, Wrongass, kren, Enaria | 14.11 |
 | Axe 👥 | 2 | 50.0% | 4 | 25.0% | 1 | 4 | Babayka, Wrongass, kren, Enaria | 19.11 |
@@ -68,7 +68,7 @@
 | 10 | Magnus | 64 | 0.58 | 52.7% | 49.5% | 10.0% | 70 | 24 | ▲ сильный |
 | 11 | Dark Seer | 60 | 0.61 | 52.8% | 49.2% | 16.4% | 60 | 71 | ▲ сильный |
 | 12 | Spirit Breaker | 60 | 0.40 | 49.0% | 50.7% | 8.2% | 79 | 201 |  |
-| 13 | Legion Commander | 60 | 0.50 | 51.0% | 51.6% | 4.5% | 69 | 87 |  |
+| 13 | Legion Commander | 59 | 0.50 | 51.0% | 51.6% | 4.5% | 69 | 87 |  |
 | 14 | Primal Beast | 59 | 0.56 | 52.9% | 49.5% | 4.5% | 62 | 20 | ▲ сильный |
 | 15 | Night Stalker | 58 | 0.52 | 51.2% | 47.5% | 19.1% | 65 | 86 |  |
 

@@ -2,31 +2,31 @@
 
 - Steam: Nynge, account_id 74322151, [OpenDota](https://www.opendota.com/players/74322151), [Dotabuff](https://ru.dotabuff.com/players/74322151)
 - Ранг: Властелин 5 (Ancient), оценка MMR 4470
-- Матчей (без турбо): всего 5952, за год 614, в патче 7.42 — 0 (WR —); Captains Mode: 60
+- Матчей (без турбо): всего 5952, за год 609, в патче 7.42 — 0 (WR —); Captains Mode: 60
 - Роль: В турнире Clinkz, Windranger (safe).
 - Мета для этого игрока считается на рангах **Легенда–Божество**.
 
 ## Чем играет сейчас: 14 дней и 2 месяца
 
-На 2026-11-20: за 14 дней 39 игр, за 2 месяца 157 (из них с игроками своей команды — 95), Турбо за 2 месяца — 6 (в игры не входит). 🔥 — много игр за 14 дней, но не из топа; ★ — из топа «играет лучше всего»; 👥 — играл в пати со своими.
+На 2026-11-21: за 14 дней 32 игр, за 2 месяца 153 (из них с игроками своей команды — 95), Турбо за 2 месяца — 6 (в игры не входит). 🔥 — много игр за 14 дней, но не из топа; ★ — из топа «играет лучше всего»; 👥 — играл в пати со своими.
 
 | Герой | 14 дней | WR | 2 месяца | WR | Турбо | С командой | С кем | Последняя |
 |---|---|---|---|---|---|---|---|---|
-| Windranger ★ 👥 | 3 | 33.3% | 15 | 66.7% |  | 11 | IRD, XANDR, montekri, Caraxes | 13.11 |
-| Night Stalker ★ 👥 | 2 | 50.0% | 15 | 73.3% |  | 6 | IRD, XANDR, montekri, Caraxes | 15.11 |
+| Windranger ★ 👥 | 2 | 50.0% | 15 | 66.7% |  | 11 | IRD, XANDR, montekri, Caraxes | 13.11 |
+| Night Stalker ★ 👥 | 2 | 50.0% | 14 | 71.4% |  | 6 | IRD, XANDR, montekri, Caraxes | 15.11 |
 | Dragon Knight ★ 👥 | 2 | 50.0% | 13 | 61.5% |  | 10 | IRD, XANDR, montekri, Caraxes | 14.11 |
-| Lifestealer 🔥 👥 | 4 | 50.0% | 11 | 45.5% |  | 9 | IRD, XANDR, montekri, Caraxes | 14.11 |
+| Lifestealer 🔥 👥 | 3 | 33.3% | 11 | 45.5% |  | 9 | IRD, XANDR, montekri, Caraxes | 14.11 |
 | Sven ★ 👥 | 3 | 66.7% | 10 | 80.0% |  | 6 | IRD, XANDR, montekri | 13.11 |
 | Slark 🔥 👥 | 4 | 75.0% | 9 | 66.7% |  | 7 | IRD, XANDR, montekri | 16.11 |
 | Ember Spirit ★ 👥 | 1 | 0.0% | 8 | 75.0% |  | 1 | montekri | 16.11 |
-| Ogre Magi ★ 👥 | 1 | 0.0% | 6 | 66.7% |  | 6 | IRD, XANDR, montekri, Caraxes | 07.11 |
-| Outworld Devourer 👥 | 2 | 100.0% | 5 | 40.0% |  | 1 | montekri | 18.11 |
+| Ogre Magi ★ 👥 | 0 | — | 6 | 66.7% |  | 6 | IRD, XANDR, montekri, Caraxes | 07.11 |
 | Juggernaut 👥 | 1 | 100.0% | 4 | 75.0% |  | 3 | XANDR, montekri | 15.11 |
-| Abaddon 🔥 👥 | 4 | 50.0% | 4 | 50.0% |  | 3 | montekri | 09.11 |
-| Legion Commander ★ 👥 | 1 | 100.0% | 4 | 75.0% |  | 3 | montekri | 07.11 |
+| Outworld Devourer 👥 | 2 | 100.0% | 4 | 50.0% |  | 1 | montekri | 18.11 |
+| Abaddon 🔥 👥 | 3 | 33.3% | 4 | 50.0% |  | 3 | montekri | 09.11 |
 | Faceless Void ★ 👥 | 0 | — | 4 | 75.0% |  | 4 | IRD, XANDR, montekri | 01.11 |
-| Wraith King ★ 👥 | 4 | 75.0% | 4 | 75.0% |  | 4 | montekri | 15.11 |
+| Wraith King ★ 👥 | 2 | 100.0% | 4 | 75.0% |  | 4 | montekri | 15.11 |
 | Anti-Mage 👥 | 1 | 0.0% | 3 | 66.7% |  | 3 | montekri | 14.11 |
+| Pudge 👥 | 0 | — | 3 | 33.3% |  | 3 | montekri | 28.09 |
 
 ## Топ-15 героев, на которых играет лучше всего
 

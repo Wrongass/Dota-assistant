@@ -252,7 +252,10 @@ public final class DraftEngine {
         /** Момент драфта: турнирная история и недавние игры — только до него (в бэктесте — время карты). */
         final long asOf;
         final long exclude;
+        /** Угроза героя — самая высокая среди игроков (для бота и мест, где игрок не известен). */
         final Map<Integer, Double> threat = new HashMap<>();
+        /** Угроза героя от конкретного игрока на его позиции; героя не на его роли здесь нет (0). */
+        final Map<PlayerStats, Map<Integer, Double>> threatBy = new HashMap<>();
         /** Доли героев за 60 дней до asOf: игрок → герой → {все игры, игры с командой}. */
         final Map<PlayerStats, Map<Integer, double[]>> recent = new HashMap<>();
 
@@ -268,8 +271,9 @@ public final class DraftEngine {
             this.bans = tourneyBansOf(squad, history);
             this.maps = history.size();
             this.firstPicks = firstPicksOf(squad, history);
-            for (Squad.Threat t : squad.threatList(tourney)) {
-                threat.put(t.hero(), t.score());
+            for (Squad.Threat t : squad.threatsByPlayer(tourney)) {
+                threat.merge(t.hero(), t.score(), Math::max);
+                threatBy.computeIfAbsent(t.player(), k -> new HashMap<>()).merge(t.hero(), t.score(), Math::max);
             }
             for (PlayerStats p : players) {
                 recent.put(p, p.recentShares(asOf, 60));
@@ -287,6 +291,14 @@ public final class DraftEngine {
                     * (1 + params.shareWeight() * Math.min(share(p, h), params.shareCap()))
                     * (1 + params.recentWeight() * Math.min(r[0], params.shareCap()))
                     * (1 + params.teamWeight() * Math.min(r[1], params.shareCap()));
+        }
+
+        double threatOf(PlayerStats p, int h) {
+            return threatBy.getOrDefault(p, Map.of()).getOrDefault(h, 0.0);
+        }
+
+        double threatOf(String nick, int h) {
+            return players.stream().filter(p -> p.nick().equals(nick)).findFirst().map(p -> threatOf(p, h)).orElse(0.0);
         }
 
         int tourneyPicks(PlayerStats p, int h) {
@@ -1395,19 +1407,23 @@ public final class DraftEngine {
             if (used.contains(h) || ourWanted.contains(h)) {
                 continue;
             }
-            double damage = banDamage(them, h, ourPicks, vs, avg);
+            PlayerStats who = them.players.get(theirs.bestPlayer().get(h));
+            double threat = them.threatOf(who, h);
+            double damage = banDamage(threat, h, ourPicks, vs, avg);
             List<String> reasons = new ArrayList<>();
-            reasons.add("возьмут: " + Md.pct(e.getValue()) + " (" + them.players.get(theirs.bestPlayer().get(h)).nick() + ")");
-            reasons.addAll(banReasons(them, h, ourPicks, vs, avg));
+            reasons.add("возьмут: " + Md.pct(e.getValue()) + " (" + who.nick() + ")");
+            reasons.addAll(banReasons(threat, h, ourPicks, vs, avg));
             result.add(new Reasoned(h, meta.name(h), e.getValue() * damage, null, reasons));
         }
         result.sort(Comparator.comparingDouble(Reasoned::score).reversed());
         return result.stream().limit(8).toList();
     }
 
-    /** Вред для нас, если они возьмут h: угроза игрока на герое, контрпик наших пиков, наша плохая история против него. */
-    private double banDamage(SquadModel them, int h, List<Integer> ourPicks, Map<Integer, int[]> vs, double avg) {
-        double threat = them.threat.getOrDefault(h, 0.0);
+    /**
+     * Вред для нас, если они возьмут h: угроза игрока, который его возьмёт, на его позиции (0, если герой не его роли),
+     * контрпик наших пиков, наша плохая история против него.
+     */
+    private double banDamage(double threat, int h, List<Integer> ourPicks, Map<Integer, int[]> vs, double avg) {
         double counter = Math.max(0, avgCounter(h, ourPicks));
         return 0.4 + threat + 6 * counter + 0.3 * nemesis(h, vs, avg);
     }
@@ -1418,9 +1434,8 @@ public final class DraftEngine {
     }
 
     /** Причины бана кроме «возьмут»: угроза, контрпик наших, нам неудобен. */
-    private List<String> banReasons(SquadModel them, int h, List<Integer> ourPicks, Map<Integer, int[]> vs, double avg) {
+    private List<String> banReasons(double threat, int h, List<Integer> ourPicks, Map<Integer, int[]> vs, double avg) {
         List<String> reasons = new ArrayList<>();
-        double threat = them.threat.getOrDefault(h, 0.0);
         int[] hist = vs.get(h);
         // угроза — та же, что на странице соперника (UX-04): показываем всегда, чтобы цифры сходились
         if (threat > 0) {
@@ -1457,9 +1472,10 @@ public final class DraftEngine {
                     continue;
                 }
                 List<String> reasons = new ArrayList<>();
+                double threat = them.threatOf(player, h);
                 reasons.add("его выбор " + Md.pct(share)); // доля среди его ещё доступных героев
-                reasons.addAll(banReasons(them, h, ourPicks, vs, avg));
-                heroes.add(new Reasoned(h, meta.name(h), share * banDamage(them, h, ourPicks, vs, avg), player.nick(), reasons));
+                reasons.addAll(banReasons(threat, h, ourPicks, vs, avg));
+                heroes.add(new Reasoned(h, meta.name(h), share * banDamage(threat, h, ourPicks, vs, avg), player.nick(), reasons));
             }
             heroes.sort(Comparator.comparingDouble(Reasoned::score).reversed());
             Assignment picked = theirAssignment.stream().filter(a -> a.player().equals(player.nick()) && (a.fixed() || a.probability() >= 0.5))
@@ -1520,10 +1536,10 @@ public final class DraftEngine {
                 n == 0 ? 0 : sum / n, best);
     }
 
-    /** Их самые опасные герои в итоговом драфте: угроза игрока на этом герое. */
+    /** Их самые опасные герои в итоговом драфте: угроза игрока, которому достался герой, на его позиции. */
     private List<Reasoned> threats(SquadModel them, List<Assignment> theirs) {
         return theirs.stream()
-                .map(a -> new Reasoned(a.heroId(), a.name(), them.threat.getOrDefault(a.heroId(), 0.0), a.player(), List.of()))
+                .map(a -> new Reasoned(a.heroId(), a.name(), them.threatOf(a.player(), a.heroId()), a.player(), List.of()))
                 .sorted(Comparator.comparingDouble(Reasoned::score).reversed())
                 .toList();
     }

@@ -1,6 +1,6 @@
 # Угрозы: SD Team (GGsel)
 
-Сгенерировано 2026-11-20, патч 7.42.
+Сгенерировано 2026-11-21, патч 7.42.
 
 ## Пулы по позициям (топ-6 по пригодности в патче)
 
@@ -18,21 +18,21 @@
 
 | # | Герой | Игрок | Угроза | Умение | Сила в мете | Игр всего / год | WR за год | В турнире | Позиции героя |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | Windranger | IRD | 0.95 | 98 | 0.66 | 196 / 29 | 65.5% | ×3 | 1/4 |
-| 2 | Witch Doctor | montekri | 0.92 | 89 | 0.70 | 32 / 24 | 58.3% | ×2 | 4/5 |
+| 1 | Windranger | IRD | 0.91 | 98 | 0.55 | 196 / 29 | 65.5% | ×3 | 1/4 |
+| 2 | Witch Doctor | montekri | 0.91 | 89 | 0.70 | 32 / 24 | 58.3% | ×2 | 4/5 |
 | 3 | Mirana | IRD | 0.89 | 94 | 0.58 | 180 / 18 | 61.1% | ×1 | 4/5 |
-| 4 | Dark Seer | XANDR | 0.87 | 91 | 0.55 | 59 / 10 | 80.0% | ×3 | 3 |
-| 5 | Dragon Knight | Nynge | 0.86 | 84 | 0.65 | 85 / 18 | 55.6% | ×4 | 1/2/3 |
+| 4 | Dragon Knight | Nynge | 0.88 | 84 | 0.69 | 85 / 18 | 55.6% | ×4 | 1/2/3 |
+| 5 | Dark Seer | XANDR | 0.87 | 91 | 0.55 | 59 / 10 | 80.0% | ×3 | 3 |
 | 6 | Bounty Hunter | IRD | 0.86 | 89 | 0.81 | 62 / 12 | 66.7% |  | 4/5 |
-| 7 | Night Stalker | Nynge | 0.85 | 90 | 0.51 | 312 / 89 | 56.2% | ×1 | 3 |
+| 7 | Dark Willow | IRD | 0.85 | 88 | 0.56 | 19 / 10 | 70.0% | ×2 | 4/5 |
 | 8 | Crystal Maiden | montekri | 0.85 | 92 | 0.48 | 59 / 14 | 85.7% | ×1 | 4/5 |
-| 9 | Dark Willow | IRD | 0.84 | 88 | 0.52 | 19 / 10 | 70.0% | ×2 | 4/5 |
+| 9 | Night Stalker | Nynge | 0.84 | 90 | 0.50 | 312 / 89 | 56.2% | ×1 | 3 |
 | 10 | Sven | Nynge | 0.83 | 90 | 0.74 | 88 / 11 | 81.8% |  | 1 |
 | 11 | Spirit Breaker | IRD | 0.82 | 93 | 0.41 | 156 / 31 | 64.5% | ×2 | 4/5 |
 | 12 | Ember Spirit | Caraxes | 0.81 | 85 | 0.51 | 25 / 25 | 56.0% | ×4 | 2 |
 | 13 | Dawnbreaker | XANDR | 0.81 | 83 | 0.54 | 35 / 9 | 66.7% | ×3 | 3 |
-| 14 | Phoenix | montekri | 0.81 | 84 | 0.52 | 230 / 35 | 40.0% | ×2 | 4 |
-| 15 | Legion Commander | Nynge | 0.81 | 99 | 0.55 | 348 / 50 | 68.0% |  | 3 |
+| 14 | Earthshaker | Caraxes | 0.79 | 71 | 0.66 | 11 / 11 | 54.5% | ×1 | 2 |
+| 15 | Phoenix | montekri | 0.78 | 84 | 0.45 | 230 / 35 | 40.0% | ×2 | 4 |
 
 ## Что они банят в турнире
 
@@ -49,10 +49,10 @@ Outworld Devourer ×8, Lina ×7, Necrophos ×6, Techies ×5, Viper ×5, Centaur 
 | Windranger | IRD | Bane +5.1% (Enaria), Omniknight +4.3% (Артист), Riki +3.6% (Wrongass), Crystal Maiden +3.5% (Babayka/Enaria), Phantom Assassin +3.1% (kren), Phantom Lancer +3.1% (kren) |
 | Witch Doctor | montekri | Riki +6.4% (Wrongass), Phantom Assassin +4.5% (kren), Wraith King +3.8% (kren/Артист), Beastmaster +3.4% (Артист), Lycan +3.0% (Артист), Enigma +2.6% (Артист) |
 | Mirana | IRD | Puck +6.1% (Wrongass), Omniknight +3.4% (Артист), Wraith King +3.2% (kren/Артист), Lycan +3.0% (Артист), Crystal Maiden +2.4% (Babayka/Enaria), Zeus +2.4% (Enaria) |
-| Dark Seer | XANDR | Sven +5.8% (kren), Phantom Assassin +4.1% (kren), Earthshaker +2.4% (Артист/Babayka) |
 | Dragon Knight | Nynge | Enigma +4.7% (Артист), Abaddon +4.7% (Артист), Witch Doctor +4.4% (Babayka/Enaria), Spectre +4.4% (kren), Ancient Apparition +3.9% (Enaria), Vengeful Spirit +2.9% (kren/Babayka/Enaria) |
+| Dark Seer | XANDR | Sven +5.8% (kren), Phantom Assassin +4.1% (kren), Earthshaker +2.4% (Артист/Babayka) |
 | Bounty Hunter | IRD | Shadow Shaman +5.3% (Babayka), Disruptor +3.3% (Babayka), Vengeful Spirit +3.2% (kren/Babayka/Enaria), Crystal Maiden +3.1% (Babayka/Enaria), Outworld Devourer +2.8% (Wrongass), Phantom Lancer +2.8% (kren) |
-| Night Stalker | Nynge | Lycan +9.8% (Артист), Beastmaster +7.3% (Артист), Disruptor +5.6% (Babayka), Phantom Assassin +5.6% (kren), Vengeful Spirit +4.2% (kren/Babayka/Enaria), Spectre +3.3% (kren) |
+| Dark Willow | IRD | Omniknight +5.4% (Артист), Abaddon +3.9% (Артист), Wraith King +3.4% (kren/Артист), Grimstroke +3.4% (Babayka/Enaria), Shadow Shaman +3.2% (Babayka), Phantom Lancer +3.2% (kren) |
 | Crystal Maiden | montekri | Riki +4.6% (Wrongass), Puck +3.9% (Wrongass), Phantom Assassin +3.8% (kren), Dawnbreaker +2.5% (Артист), Beastmaster +2.5% (Артист) |
 
 ## Против кого они проигрывают
@@ -62,13 +62,13 @@ Outworld Devourer ×8, Lina ×7, Necrophos ×6, Techies ×5, Viper ×5, Centaur 
 | # | Герой | Их WR против | Игр | В наших пулах |
 |---|---|---|---|---|
 | 1 | Leshrac | 43.6% | 83 |  |
-| 2 | Medusa | 44.5% | 139 |  |
-| 3 | Warlock | 44.7% | 163 |  |
-| 4 | Shadow Demon | 44.8% | 60 |  |
+| 2 | Warlock | 44.7% | 163 |  |
+| 3 | Medusa | 44.8% | 138 |  |
+| 4 | Io | 44.9% | 111 |  |
 | 5 | Lone Druid | 45.0% | 55 |  |
-| 6 | Io | 45.3% | 112 |  |
+| 6 | Shadow Demon | 45.3% | 59 |  |
 | 7 | Silencer | 45.5% | 241 | ✔ |
-| 8 | Wraith King | 45.5% | 289 | ✔ |
+| 8 | Wraith King | 45.5% | 287 | ✔ |
 | 9 | Clockwerk | 45.6% | 100 |  |
 | 10 | Keeper of the Light | 45.8% | 95 |  |
 | 11 | Spectre | 46.0% | 199 | ✔ |

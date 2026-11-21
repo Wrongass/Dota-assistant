@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -68,6 +69,33 @@ class DraftEngineTest {
         assertFalse(a.theirNextPicks().isEmpty());
         assertFalse(a.pickSuggestions().isEmpty());
         assertTrue(a.micros() < 1_000_000, "совет дольше секунды: " + a.micros() + " мкс");
+    }
+
+    /**
+     * Роли в турнире фиксированы: угроза игрока считается только по героям его позиции (по запросу 21.11: Juggernaut у
+     * тройки НИИЭП в пабах есть, но тройкой его не берут). Исключение — герой, которого игрок уже брал в турнире.
+     */
+    @Test
+    void threatOnlyForHeroesOfPlayersRole() throws Exception {
+        assumeTrue(Files.isDirectory(Path.of("data/raw")), "нет data/");
+        AnalysisContext ctx = AnalysisContext.load(Path.of("config/players.yaml"), Path.of("data"));
+        Squad nii = ctx.opponent("Team_Future");
+        Map<Long, Map<Integer, Integer>> tourney = nii.tournamentPicks();
+        List<Squad.Threat> threats = nii.threatsByPlayer(tourney);
+        assertFalse(threats.isEmpty());
+        for (Squad.Threat t : threats) {
+            int role = nii.position(t.player());
+            boolean picked = tourney.getOrDefault(t.player().config.accountId(), Map.of()).getOrDefault(t.hero(), 0) > 0;
+            if (role >= 1 && ctx.meta.posTotal(t.hero()) >= 20 && !picked) {
+                assertTrue(ctx.meta.posShare(t.hero(), role) >= Squad.MIN_ROLE_SHARE,
+                        t.player().nick() + " (поз. " + role + "): " + ctx.meta.name(t.hero()));
+            }
+        }
+        // Juggernaut — не угроза от тройки, а Windranger, взятый им в турнире на оффлейне, — угроза
+        assertTrue(threats.stream().noneMatch(t -> t.hero() == 8 && nii.position(t.player()) == 3));
+        assertTrue(threats.stream().anyMatch(t -> t.hero() == 21 && nii.position(t.player()) == 3));
+        // DK в списке угроз — у めつきすてみ (5 из 5 в турнире), а не у керри с одной игрой
+        assertEquals(3, nii.position(nii.threatList(tourney).stream().filter(t -> t.hero() == 49).findFirst().orElseThrow().player()));
     }
 
     @Test

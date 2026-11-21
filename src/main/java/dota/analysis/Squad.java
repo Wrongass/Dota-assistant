@@ -711,22 +711,42 @@ public final class Squad {
     record Threat(PlayerStats player, int hero, double score, double skill, double metaStrength, int tourneyPicks) {
     }
 
+    /** Герой «играется на позиции», если на ней столько его разобранных игр в мете (Juggernaut на тройке — 0–1%). */
+    static final double MIN_ROLE_SHARE = 0.10;
+
     /**
      * Угроза = (60% умение игрока на герое + 40% сила героя в мете на его ранге) × свежесть (100% при 10+ играх за год или пике в турнире, 60% без игр за год); +0.1, если герой уже был в турнире.
      * Герой может быть у нескольких игроков — остаётся самый опасный.
      */
     List<Threat> threatList(Map<Long, Map<Integer, Integer>> tourneyPicks) {
+        Set<Integer> seenHero = new HashSet<>();
+        return threatsByPlayer(tourneyPicks).stream().filter(t -> seenHero.add(t.hero())).toList();
+    }
+
+    /**
+     * Угрозы каждого игрока на его позиции (по убыванию): роль в турнире фиксирована, поэтому герой, которого на этой
+     * позиции почти не играют (меньше {@link #MIN_ROLE_SHARE} игр в мете), не угроза от этого игрока, даже если он
+     * много играет его в пабах на другой роли. Исключение — герой, которого игрок уже брал в турнире. Сила героя в мете —
+     * на позиции игрока, а не на основной позиции героя. Если позиция игрока не известна (0) или у героя мало разобранных
+     * игр — как раньше, по основной позиции героя.
+     */
+    List<Threat> threatsByPlayer(Map<Long, Map<Integer, Integer>> tourneyPicks) {
         List<Threat> list = new ArrayList<>();
         for (PlayerStats p : players) {
             int[] r = bracketRange(p);
+            int role = pos.getOrDefault(p, 0);
             Map<Integer, Integer> tp = tourneyPicks.getOrDefault(p.config.accountId(), Map.of());
             for (PlayerStats.HeroLine h : p.heroes.values()) {
                 if (h.games < 5 || h.wGames < 1.0) {
                     continue;
                 }
-                int mp = Math.max(1, meta.mainPos(h.heroId));
-                double ms = metaStrength(h.heroId, mp, r[0], r[1]);
                 int picksInTourney = tp.getOrDefault(h.heroId, 0);
+                boolean roleKnown = role >= 1 && role <= 5 && meta.posTotal(h.heroId) >= 20;
+                if (roleKnown && picksInTourney == 0 && meta.posShare(h.heroId, role) < MIN_ROLE_SHARE) {
+                    continue;
+                }
+                int mp = roleKnown ? role : Math.max(1, meta.mainPos(h.heroId));
+                double ms = metaStrength(h.heroId, mp, r[0], r[1]);
                 // свежесть: герой, на котором за год не играли, — не угроза сейчас, даже с высоким рангом на герое
                 // за всё время. 10+ игр за год или пик в турнире — полный вес, 0 игр за год — 60%
                 double fresh = picksInTourney > 0 ? 1 : Math.min(1, h.yearGames / 10.0);
@@ -734,9 +754,11 @@ public final class Squad {
                 list.add(new Threat(p, h.heroId, score, h.skill, ms, picksInTourney));
             }
         }
-        list.sort(Comparator.comparingDouble(Threat::score).reversed());
-        Set<Integer> seenHero = new HashSet<>();
-        return list.stream().filter(t -> seenHero.add(t.hero())).toList();
+        // при равной угрозе первым — тот, кто брал героя в турнире чаще (DK: めつきすてみ 5 из 5, а не керри с 1 игрой)
+        list.sort(Comparator.comparingDouble((Threat t) -> Math.round(t.score() * 100) / 100.0).reversed()
+                .thenComparing(Comparator.comparingInt(Threat::tourneyPicks).reversed())
+                .thenComparing(Comparator.comparingDouble(Threat::score).reversed()));
+        return list;
     }
 
     /** Угрозы этой команды (соперник) с точки зрения нашей команды. */
